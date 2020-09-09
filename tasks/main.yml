@@ -1,2 +1,40 @@
 ---
-# tasks file for UBUNTU20-CIS
+# - debug: var=ansible_facts
+- name: Gather distribution info
+  setup:
+      gather_subset: distribution,!all,!min
+  when:
+      - ansible_distribution is not defined
+  tags:
+      - always
+
+- name: Check OS version and family
+  fail:
+      msg: "This role can only be run against Ubuntu 20. {{ ansible_distribution }} {{ ansible_distribution_major_version }} is not supported."
+  when:
+      - ansible_distribution == 'Ubuntu'
+      - ansible_distribution_major_version is version_compare('20', '!=')
+  tags:
+      - always
+
+- name: Check ansible version
+  fail:
+      msg: You must use ansible 2.1 or greater
+  when: not ansible_version.full is version_compare('2.1', '>=')
+  tags:
+      - always
+
+- import_tasks: prelim.yml
+  tags:
+      - prelim_tasks
+
+- include: parse_etc_password.yml
+  when:
+      - ubtu20cis_section5_patch or
+        ubtu20cis_section6_patch
+
+- name: Include section 1 patches
+  import_tasks: section1.yml
+  when: ubtu20cis_section1_patch
+  tags:
+      - section1
