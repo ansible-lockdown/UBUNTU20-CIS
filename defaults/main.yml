@@ -1,2 +1,104 @@
 ---
-# defaults file for UBUNTU20-CIS
+# If you would like a report at the end accordin to OpenSCAP as to the report results
+# then you should set ubtu20cis_oscap_scan to true/yes.
+# NOTE: This requires the python_xmltojson package on the control host.
+ubtu20cis_oscap_scan: no
+ubtu20cis_report_dir: /tmp
+
+ubtu20cis_section1_patch: true
+ubtu20cis_section2_patch: true
+ubtu20cis_section3_patch: true
+ubtu20cis_section4_patch: true
+ubtu20cis_section5_patch: true
+ubtu20cis_section6_patch: true
+
+# We've defined complexity-high to mean that we cannot automatically remediate
+# the rule in question.  In the future this might mean that the remediation
+# may fail in some cases.
+ubtu20cis_complexity_high: false
+
+# Show "changed" for complex items not remediated per complexity-high setting
+# to make them stand out.  "changed" items on a second run of the role would
+# indicate items requiring manual review.
+ubtu20cis_audit_complex: true
+
+# We've defined disruption-high to indicate items that are likely to cause
+# disruption in a normal workflow.  These items can be remediated automatically
+# but are disabled by default to avoid disruption.
+# Value of true runs duscruptive tasks, value of false will skip disruptive tasks
+ubtu20cis_disruption_high: true
+
+# Show "changed" for disruptive items not remediated per disruption-high
+# setting to make them stand out.
+ubtu20cis_audit_disruptive: yes
+
+ubtu20cis_skip_for_travis: false
+
+ubtu20cis_workaround_for_disa_benchmark: true
+ubtu20cis_workaround_for_ssg_benchmark: true
+
+# tweak role to run in a chroot, such as in kickstart %post script
+ubtu20cis_system_is_chroot: "{{ ansible_is_chroot | default(False) }}"
+
+# tweak role to run in a non-privileged container
+ubtu20cis_system_is_container: false
+
+# Section 1 Fixes
+# Section 1 is Iniitial setup (FileSystem Configuration, Configure Software Updates, Configure sudo, Filesystem Integrity Checking, Secure Boot Settings,
+# Additional Process Hardening, Mandatory Access Control, and Warning Banners)
+ubtu20cis_rule_1_1_1_1: true
+ubtu20cis_rule_1_1_1_2: true
+ubtu20cis_rule_1_1_1_3: true
+ubtu20cis_rule_1_1_1_4: true
+ubtu20cis_rule_1_1_1_5: true
+ubtu20cis_rule_1_1_1_6: true
+ubtu20cis_rule_1_1_1_7: true
+ubtu20cis_rule_1_1_2: true
+ubtu20cis_rule_1_1_3: true
+ubtu20cis_rule_1_1_4: true
+ubtu20cis_rule_1_1_5: true
+ubtu20cis_rule_1_1_6: true
+ubtu20cis_rule_1_1_7: true
+ubtu20cis_rule_1_1_8: true
+ubtu20cis_rule_1_1_9: true
+ubtu20cis_rule_1_1_10: true
+ubtu20cis_rule_1_1_11: true
+ubtu20cis_rule_1_1_12: true
+ubtu20cis_rule_1_1_13: true
+ubtu20cis_rule_1_1_14: true
+ubtu20cis_rule_1_1_15: true
+ubtu20cis_rule_1_1_16: true
+ubtu20cis_rule_1_1_17: true
+ubtu20cis_rule_1_1_18: true
+ubtu20cis_rule_1_1_19: true
+ubtu20cis_rule_1_1_20: true
+ubtu20cis_rule_1_1_21: true
+ubtu20cis_rule_1_1_22: true
+ubtu20cis_rule_1_1_23: true
+ubtu20cis_rule_1_1_24: true
+ubtu20cis_rule_1_2_1: true
+ubtu20cis_rule_1_2_2: true
+ubtu20cis_rule_1_3_1: true
+ubtu20cis_rule_1_3_2: true
+ubtu20cis_rule_1_3_3: true
+ubtu20cis_rule_1_4_1: true
+ubtu20cis_rule_1_4_2: true
+ubtu20cis_rule_1_5_1: true
+ubtu20cis_rule_1_5_2: true
+ubtu20cis_rule_1_5_3: true
+ubtu20cis_rule_1_6_1: true
+ubtu20cis_rule_1_6_2: true
+ubtu20cis_rule_1_6_3: true
+ubtu20cis_rule_1_6_4: true
+ubtu20cis_rule_1_7_1_1: true
+ubtu20cis_rule_1_7_1_2: true
+ubtu20cis_rule_1_7_1_3: true
+ubtu20cis_rule_1_7_1_4: true
+ubtu20cis_rule_1_8_1_1: true
+ubtu20cis_rule_1_8_1_2: true
+ubtu20cis_rule_1_8_1_3: true
+ubtu20cis_rule_1_8_1_4: true
+ubtu20cis_rule_1_8_1_5: true
+ubtu20cis_rule_1_8_1_6: true
+ubtu20cis_rule_1_9: true
+ubtu20cis_rule_1_10: true
