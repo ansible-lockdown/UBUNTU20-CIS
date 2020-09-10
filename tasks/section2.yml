@@ -173,3 +173,184 @@
       - patch
       - rule_2.2.1.4
       - ntp
+
+- name: "2.2.2 | PATCH | Ensure X Window System is not installed"
+  apt:
+      name: xserver-xorg*
+      state: absent
+  when:
+      - ubtu20cis_rule_2_2_2
+      - not ubtu20cis_xwindows_required
+  tags:
+      - level1-server
+
+      - patch
+      - rule_2.2.2
+      - xwindows
+
+- name: "2.2.3 | PATCH | Ensure Avahi Server is not installed"
+  block:
+      - name: "2.2.3 | PATCH | Ensure Avahi Server is not installed | Stop/Disable avahi-daemon.service"
+        service:
+            name: avahi-daemon.service
+            state: stopped
+            enabled: no
+        when: avahi_service_status.stdout == "loaded"
+
+      - name: "2.2.3 | PATCH | Ensure Avahi Server is not installed | Stop/Disable avahi-daemon.socket"
+        service:
+            name: avahi-daemon.socket
+            state: stopped
+            enabled: no
+        when: avahi_service_status.stdout == "loaded"
+
+      - name: "2.2.3 | PATCH | Ensure Avahi Server is not installed | Remove avahi-daemon"
+        apt:
+            name: avahi-daemon
+            state: absent
+  when:
+      - ubtu20cis_rule_2_2_3
+      - not ubtu20cis_avahi_server
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.2.3
+      - avahi
+      - services
+
+- name: "2.2.4 | PATCH | Ensure CUPS is not installed"
+  apt:
+      name: cups
+      state: absent
+  when:
+      - ubtu20cis_rule_2_2_4
+      - not ubtu20cis_cups_server
+  tags:
+      - level1-server
+      - level2-workstation
+      - patch
+      - rule_2.2.4
+      - cups
+      - services
+
+- name: "2.2.5 | PATCH | Ensure DHCP Server is not installed"
+  apt:
+      name: isc-dhcp-server
+      state: absent
+  when:
+      - ubtu20cis_rule_2_2_5
+      - not ubtu20cis_dhcp_server
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.2.5
+      - dhcp
+      - services
+
+- name: "2.2.6 | PATCH | Ensure LDAP server is not installed"
+  apt:
+      name: slapd
+      state: absent
+  when:
+      - ubtu20cis_rule_2_2_6
+      - not ubtu20cis_ldap_server
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.2.6
+      - ldap
+      - services
+
+- name: "2.2.7 | PATCH | Ensure NFS is not installed"
+  apt:
+      name: rpcbind
+      state: absent
+  when:
+      - ubtu20cis_rule_2_2_7
+      - not ubtu20cis_nfs_server
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.2.7
+      - nfs
+      - rpc
+      - services
+
+- name: "2.2.8 | PATCH | Ensure DNS Server is not installed"
+  apt:
+      name: bind9
+      state: absent
+  when:
+      - ubtu20cis_rule_2_2_8
+      - not ubtu20cis_dns_server
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.2.8
+      - dns
+      - service
+
+- name: "2.2.9 | PATCH | Ensure FTP Server is not installed"
+  apt:
+      name: vsftpd
+      state: absent
+  when:
+      - ubtu20cis_rule_2_2_9
+      - not ubtu20cis_vsftpd_server
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.2.9
+      - ftp
+      - service
+
+- name: "2.2.10 | PATCH | Ensure HTTP server is not installed"
+  apt:
+       name: apache2
+       state: absent
+  when:
+      - ubtu20cis_rule_2_2_10
+      - not ubtu20cis_httpd_server
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.2.10
+      - httpd
+      - service
+
+- name: "2.2.11 | PATCH | Ensure IMAP and POP3 server are not installed"
+  apt:
+      name: ['dovecot-imapd', 'dovecot-pop3d']
+      state: absent
+  when:
+      - ubtu20cis_rule_2_2_11
+      - not ubtu20cis_dovecot_server
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.2.11
+      - dovecot
+      - service
+
+- name: "2.2.12 | PATCH | Ensure Samba is not installed"
+  apt:
+      name: samba
+      state: absent
+  when:
+      - ubtu20cis_rule_2_2_12
+      - not ubtu20cis_smb_server
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.2.12
+      - samba
+      - service

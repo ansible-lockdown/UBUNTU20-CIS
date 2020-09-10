@@ -495,6 +495,7 @@
         when: ansible_connection != 'docker'
   when:
       - ubtu20cis_rule_1_1_24
+      - not ubtu20cis_allow_usb_storage
   tags:
       - level1-server
       - level2-workstation

@@ -10,5 +10,17 @@
   register: ubtu20cis_autofs_service_status
   changed_when: false
   check_mode: false
+  when:
+      - ubtu20cis_rule_1_1_23
+  tags:
+      - skip_ansible_lint
+
+- name: "PRELIM | Check for avahi-daemon service"
+  shell: "systemctl show avahi-daemon | grep LoadState | cut -d = -f 2"
+  register: avahi_service_status
+  changed_when: false
+  check_mode: false
+  when:
+      - ubtu20cis_rule_2_2_3
   tags:
       - skip_ansible_lint
