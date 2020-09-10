@@ -160,3 +160,9 @@ ubtu20cis_aide_cron:
 # THIS VALUE IS WHAT THE ROOT PW WILL BECOME!!!!!!!!
 # HAVING THAT PW EXPOSED IN RAW TEXT IS NOT SECURE!!!!
 ubtu20cis_root_pw: "Password1"
+
+# Control 1.8.1.1
+# This will be the motd banner must not contain the below items in order to be compliant with Ubuntu 20 CIS
+# \m, \r, \s, \v or references to the OS platform
+ubtu20cis_warning_banner: |
+        Authorized uses only. All activity may be monitored and reported.

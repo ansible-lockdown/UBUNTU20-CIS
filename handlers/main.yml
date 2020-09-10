@@ -2,3 +2,8 @@
 - name: grub update
   command: update-grub
   failed_when: false
+
+- name: reload gdm3
+  command: dpkg-reconfigure gdm3
+  failed_when: false
+  
