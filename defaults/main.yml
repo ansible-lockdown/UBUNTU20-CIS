@@ -142,3 +142,21 @@ ubtu20cis_sudo_package: "sudo"
 # Control 1.3.3
 # ubtu20cis_sudo_logfile is the path and file name of the sudo log file
 ubtu20cis_sudo_logfile: "/var/log/sudo.log"
+
+# Control 1.4.2
+# These are the crontab settings for file system integrity enforcement
+ubtu20cis_aide_cron:
+    cron_user: root
+    cron_file: /etc/crontab
+    aide_job: '/usr/bin/aide.wrapper --config /etc/aide/aide.conf --check'
+    aide_minute: 0
+    aide_hour: 5
+    aide_day: '*'
+    aide_month: '*'
+    aide_weekday: '*'
+
+# Control 1.5.3
+# THIS VARAIBLE SHOULD BE CHANGED AND INCORPROATED INTO VAULT
+# THIS VALUE IS WHAT THE ROOT PW WILL BECOME!!!!!!!!
+# HAVING THAT PW EXPOSED IN RAW TEXT IS NOT SECURE!!!!
+ubtu20cis_root_pw: "Password1"
