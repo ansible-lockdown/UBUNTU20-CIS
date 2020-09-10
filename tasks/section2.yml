@@ -1,1 +1,175 @@
 ---
+- name: "2.1.1 | PATCH | Ensure xinetd is not installed"
+  apt:
+      name: xinetd
+      state: absent
+  when:
+      - ubtu20cis_rule_2_1_1
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.1.1
+      - xinetd
+
+- name: "2.1.2 | PATCH | Ensure openbsd-inetd is not installed"
+  apt:
+      name: openbsd-inetd
+      state: absent
+  when:
+      - ubtu20cis_rule_2_1_2
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.1.2
+      - openbsd-inetd
+
+- name: "2.2.1.1 | PATCH | Ensure time synchronization is in use"
+  apt:
+      name: "{{ ubtu20cis_time_sync_tool }}"
+      state: present
+  when:
+      - ubtu20cis_rule_2_2_1_1
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.2.1.1
+      - chrony
+
+- name: "2.2.1.2 | PATCH | Ensure systemd-timesyncd is configured"
+  block:
+      - name: "2.2.1.2 | PATCH | Ensure systemd-timesyncd is configured | Remove ntp and chrony"
+        apt:
+            name: ['ntp', 'chrony']
+            state: absent
+
+      - name: "2.2.1.2 | PATCH | Ensure systemd-timesyncd is configured | Set configuration for systemd-timesyncd"
+        lineinfile:
+            path: /etc/systemd/timesyncd.conf
+            regexp: "{{ item.regexp }}"
+            line: "{{ item.line }}"
+            insertafter: "{{ item.insertafter }}"
+        with_items:
+            - { regexp: '^\[Time\]', line: '[Time]', insertafter: EOF }
+            - { regexp: '^#NTP|^NTP', line: 'NTP={{ ubtu20cis_ntp_server_list }}', insertafter: '\[Time\]' }
+            - { regexp: '^#FallbackNTP|^FallbackNTP', line: 'FallbackNTP={{ ubtu20cis_ntp_fallback_server_list }}', insertafter: '\[Time\]' }
+            - { regexp: '^#RootDistanceMaxSec|^RootDistanceMaxSec', line: 'RootDistanceMaxSec=1', insertafter: '\[Time\]'}
+
+      - name: "2.2.1.2 | PATCH | Ensure systemd-timesyncd is configured | Start and enable the systemd-timesyncd service"
+        systemd:
+            name: systemd-timesyncd.service
+            state: started
+            enabled: yes
+            masked: no
+
+      - name: "2.2.1.2 | PATCH | Ensure systemd-timesyncd is configured | Set timedatectl to ntp"
+        command: timedatectl set-ntp true
+  when:
+      - ubtu20cis_rule_2_2_1_2
+      - ubtu20cis_time_sync_tool == "systemd-timesyncd"
+  tags:
+      - level1-server
+      - level1-workstation
+      - manual
+      - patch
+      - rule_2.2.1.2
+      - systemd-timesyncd
+
+- name: "2.2.1.3 | PATCH | Ensure chrony is configured"
+  block:
+      - name: "2.2.1.3 | PATCH | Ensure chrony is configured | Remove ntp"
+        apt:
+            name: ntp
+            state: absent
+
+      - name: "2.2.1.3 | PATCH | Ensure chrony is configured | Disable/Mask systemd-timesyncd"
+        systemd:
+            name: systemd-timesyncd
+            state: stopped
+            enabled: no
+            masked: yes
+
+      - name: "2.2.1.3 | AUDIT | Ensure chrony is configured | Check for chrony user"
+        shell: grep {{ ubtu20cis_chrony_user }} /etc/passwd
+        changed_when: false
+        failed_when: false
+        register: ubtu20cis_2_2_1_3_chrony_user_status
+
+      - name: "2.2.1.3 | PATCH | Ensure chrony is configured | Set chrony.conf file"
+        template:
+            src: chrony.conf.j2
+            dest: /etc/chrony/chrony.conf
+            owner: root
+            group: root
+            mode: 0644
+
+      - name: "2.2.1.3 | PATCH | Ensure chrony is configured | Create chrony user"
+        user:
+            name: "{{ ubtu20cis_chrony_user }}"
+            shell: /usr/sbin/nologin
+            system: true
+        when: ubtu20cis_2_2_1_3_chrony_user_status.stdout != ""
+
+      - name: "2.2.1.3 | PATCH | Ensure chrony is configured | Set option to use chrony user"
+        lineinfile:
+            path: /etc/default/chrony
+            regexp: '^DAEMON_OPTS'
+            line: 'DAEMON_OPTS="-u _chrony"'
+  when:
+      - ubtu20cis_rule_2_2_1_3
+      - ubtu20cis_time_sync_tool == "chrony"
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.2.1.3
+      - chrony
+
+- name: "2.2.1.4 | PATCH | Ensure ntp is configured"
+  block:
+      - name: "2.2.1.4 | PATCH | Ensure ntp is configured | Remove chrony"
+        apt:
+            name: chrony
+            state: absent
+
+      - name: "2.2.1.4 | PATCH | Ensure ntp is configured | Disable/Mask systemd-timesyncd"
+        systemd:
+            name: systemd-timesyncd
+            state: stopped
+            enabled: no
+            masked: yes
+
+      - name: "2.2.1.4 | PATCH | Ensure ntp is configured | Set ntp.conf settings"
+        template:
+            src: ntp.conf.j2
+            dest: /etc/ntp.conf
+            owner: root
+            group: root
+            mode: 0644
+
+      - name: "2.2.1.4 | PATCH | Ensure ntp is configured | Modify sysconfig/ntpd"
+        lineinfile:
+            path: /etc/sysconfig/ntpd
+            regexp: "{{ item.regexp }}"
+            line: "{{ item. line }}"
+            create: yes
+        with_items:
+            - { regexp: '^OPTIONS', line: 'OPTIONS="-u ntp:ntp"'}
+            - { regexp: '^NTPD_OPTIONS', line: 'NTPD_OPTIONS="-u ntp:ntp"' }
+
+      - name: "2.2.1.4 | PATCH | Ensure ntp is configured | Modify /etc/init.d/npt"
+        lineinfile:
+            path: /etc/init.d/ntp
+            regexp: '^RUNAUSER'
+            line: 'RUNAUSER=npt'
+  when:
+      - ubtu20cis_rule_2_2_1_4
+      - ubtu20cis_time_sync_tool == "ntp"
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.2.1.4
+      - ntp

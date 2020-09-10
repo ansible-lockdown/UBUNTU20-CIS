@@ -38,3 +38,9 @@
   when: ubtu20cis_section1_patch
   tags:
       - section1
+
+- name: Include section 2 patches
+  import_tasks: section2.yml
+  when: ubtu20cis_section2_patch
+  tags:
+      - section2
