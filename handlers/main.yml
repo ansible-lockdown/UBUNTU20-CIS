@@ -1,2 +1,4 @@
 ---
-# handlers file for UBUNTU20-CIS
+- name: grub update
+  command: update-grub
+  failed_when: false
