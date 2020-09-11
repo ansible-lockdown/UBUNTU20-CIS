@@ -135,6 +135,56 @@ ubtu20cis_rule_2_3_5: true
 ubtu20cis_rule_2_3_6: true
 ubtu20cis_rule_2_4: true
 
+# Section 3 Fixes
+# Section 3 is Network Configuration (disable unused networks, network parameters (host and router), uncommon network protocols, and firewall configuration)
+ubtu20cis_rule_3_1_1: true
+ubtu20cis_rule_3_1_2: true
+ubtu20cis_rule_3_2_1: true
+ubtu20cis_rule_3_2_2: true
+ubtu20cis_rule_3_3_1: true
+ubtu20cis_rule_3_3_2: true
+ubtu20cis_rule_3_3_3: true
+ubtu20cis_rule_3_3_4: true
+ubtu20cis_rule_3_3_5: true
+ubtu20cis_rule_3_3_6: true
+ubtu20cis_rule_3_3_7: true
+ubtu20cis_rule_3_3_8: true
+ubtu20cis_rule_3_3_9: true
+ubtu20cis_rule_3_4_1: true
+ubtu20cis_rule_3_4_2: true
+ubtu20cis_rule_3_4_3: true
+ubtu20cis_rule_3_4_4: true
+ubtu20cis_rule_3_5_1_1: true
+ubtu20cis_rule_3_5_1_2: true
+ubtu20cis_rule_3_5_1_3: true
+ubtu20cis_rule_3_5_1_4: true
+ubtu20cis_rule_3_5_1_5: true
+ubtu20cis_rule_3_5_1_6: true
+ubtu20cis_rule_3_5_1_7: true
+ubtu20cis_rule_3_5_2_1: true
+ubtu20cis_rule_3_5_2_2: true
+ubtu20cis_rule_3_5_2_3: true
+ubtu20cis_rule_3_5_2_4: true
+ubtu20cis_rule_3_5_2_5: true
+ubtu20cis_rule_3_5_2_6: true
+ubtu20cis_rule_3_5_2_7: true
+ubtu20cis_rule_3_5_2_8: true
+ubtu20cis_rule_3_5_2_9: true
+ubtu20cis_rule_3_5_2_10: true
+ubtu20cis_rule_3_5_3_1_1: true
+ubtu20cis_rule_3_5_3_1_2: true
+ubtu20cis_rule_3_5_3_1_3: true
+ubtu20cis_rule_3_5_3_2_1: true
+ubtu20cis_rule_3_5_3_2_2: true
+ubtu20cis_rule_3_5_3_2_3: true
+ubtu20cis_rule_3_5_3_2_4: true
+ubtu20cis_rule_3_5_3_3_1: true
+ubtu20cis_rule_3_5_3_3_2: true
+ubtu20cis_rule_3_5_3_3_3: true
+ubtu20cis_rule_3_5_3_3_4: true
+
+
+
 # Service configuration variables, set to true to keep service
 ubtu20cis_allow_autofs: false
 ubtu20cis_allow_usb_storage: false
@@ -148,6 +198,21 @@ ubtu20cis_vsftpd_server: false
 ubtu20cis_httpd_server: false
 ubtu20cis_dovecot_server: false
 ubtu20cis_smb_server: false
+ubtu20cis_squid_server: fase
+ubtu20cis_snmp_server: false
+ubtu20cis_rsync_server: false
+ubtu20cis_nis_server: false
+ubtu20cis_rpc_required: false
+
+# Clients in use variables
+ubtu20cis_nis_required: false
+ubtu20cis_rsh_required: false
+ubtu20cis_talk_required: false
+ubtu20cis_telnet_required: false
+ubtu20cis_ldap_clients_required: false
+
+# IPv6 requirement toggle
+ubtu20cis_ipv6_required: false
 
 # Other system wide variables
 # ubtu20cis_xwindows_required is the toggle for requiring x windows. True means you use X Windoes (not recommented for servers)
@@ -240,3 +305,13 @@ ubtu20cis_time_synchronization_servers:
 ubtu20cis_chrony_user: "_chrony"
 # ubtu20cis_ntp_server_options is the server options for ntp
 ubtu20cis_ntp_server_options: "iburst"
+
+# Control 2.2.15
+# ubtu20_cis_mail_transfer_agent is the mail transfer agent in use
+# The options are exim4, postfix or other
+ubtu20_cis_mail_transfer_agent: "other"
+
+# Section 3 Control Variables
+# Control 3.1.2
+# ubtu20cis_install_network_manager determines if this role can install network manager
+ubtu20cis_install_network_manager: true

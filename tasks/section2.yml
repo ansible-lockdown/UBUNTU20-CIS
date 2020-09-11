@@ -354,3 +354,213 @@
       - rule_2.2.12
       - samba
       - service
+
+- name: "2.2.13 | PATCH | Ensure HTTP Proxy Server is not installed"
+  apt:
+      name: squid
+      state: absent
+  when:
+      - ubtu20cis_rule_2_2_13
+      - not ubtu20cis_squid_server
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.2.13
+      - http_proxy
+      - service
+
+- name: "2.2.14 | PATCH | Ensure SNMP Server is not installed"
+  apt:
+      name: snmpd
+      state: absent
+  when:
+      - ubtu20cis_rule_2_2_14
+      - not ubtu20cis_snmp_server
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.2.14
+      - snmp
+      - service
+
+- name: "2.2.15 | PATCH | Ensure mail transfer agent is configured for local-only mode"
+  block:
+      - name: "2.2.15 | PATCH | Ensure mail transfer agent is configured for local-only mode | Make changes if exim4 installed"
+        lineinfile:
+            path: /etc/exim4/update-exim4.conf.conf
+            regexp: "{{ item.regexp }}"
+            line: "{{ item.line }}"
+        with_items:
+            - { regexp: '^dc_eximconfig_configtype', line: "dc_eximconfig_configtype='local'" }
+            - { regexp: '^dc_local_interfaces', line: "dc_local_interfaces='127.0.0.1 ; ::1'" }
+            - { regexp: '^dc_readhost', line: "dc_readhost=''" }
+            - { regexp: '^dc_relay_domains', line: "dc_relay_domains=''" }
+            - { regexp: '^dc_minimaldns', line: "dc_minimaldns='false'" }
+            - { regexp: '^dc_relay_nets', line: "dc_relay_nets=''" }
+            - { regexp: '^dc_smarthost', line: "dc_smarthost=''" }
+            - { regexp: '^dc_use_split_config', line: "dc_use_split_config='false'" }
+            - { regexp: '^dc_hide_mailname', line: "dc_hide_mailname=''" }
+            - { regexp: '^dc_mailname_in_oh', line: "dc_mailname_in_oh='true'" }
+            - { regexp: '^dc_localdelivery', line: "dc_localdelivery='mail_spool'" }
+        notify: restart exim4
+        when: ubtu20_cis_mail_transfer_agent == "exim4"
+
+      - name: "2.2.15 | PATCH | Ensure mail transfer agent is configured for local-only mode | Make changes if postfix is installed"
+        lineinfile:
+            path: /etc/postfix/main.cf
+            regexp: '^(#)?inet_interfaces'
+            line: 'inet_interfaces = loopback-only'
+        notify: restart postfix
+        when: ubtu20_cis_mail_transfer_agent == "postfix"
+
+      - name: "2.2.15 | PATCH | Ensure mail transfer agent is configured for local-only mode | Message out other main agents"
+        debug:
+            msg:
+                - "Warning!! You are not using either exim4 or postfix"
+                - "Please review your vendors documentation to configure local-only mode"
+        when: ubtu20_cis_mail_transfer_agent == "other"
+  when:
+      - ubtu20cis_rule_2_2_15
+  tags:
+      - level1-server
+      - level1-workstation
+      - scored
+      - patch
+      - rule_2.2.15
+      - postfix
+
+- name: "2.2.16 | PATCH | Ensure rsync service is not installed"
+  apt:
+      name: rsync
+      state: absent
+  when:
+      - ubtu20cis_rule_2_2_16
+      - not ubtu20cis_rsync_server
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.2.16
+      - rsync
+
+- name: "2.2.17 | PATCH | Ensure NIS Server is not installed"
+  apt:
+      name: nis
+      state: absent
+  when:
+      - ubtu20cis_rule_2_2_17
+      - not ubtu20cis_nis_server
+  tags:
+      - level1-server
+      - level1-workstation
+      - rule_2.2.17
+      - nis
+      - service
+
+- name: "2.3.1 | PATCH | Ensure NIS Client is not installed"
+  apt:
+      name: nis
+      state: absent
+  when:
+      - ubtu20cis_rule_2_3_1
+      - not ubtu20cis_nis_required
+  tags:
+      - level1-server
+      - level1-workstation
+      - rule_2.3.1
+      - nis
+
+- name: "2.3.2 | PATCH | Ensure rsh client is not installed"
+  apt:
+      name: rsh-client
+      state: absent
+  when:
+      - ubtu20cis_rule_2_3_2
+      - not ubtu20cis_rsh_required
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.3.2
+      - rsh
+
+- name: "2.3.3 | PATCH | Ensure talk client is not installed"
+  apt:
+      name: talk
+      state: absent
+  when:
+      - ubtu20cis_rule_2_3_3
+      - not ubtu20cis_talk_required
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.3.3
+      - talk
+
+- name: "2.3.4 | PATCH | Ensure telnet client is not installed"
+  apt:
+      name: telnet
+      state: absent
+  when:
+      - ubtu20cis_rule_2_3_4
+      - not ubtu20cis_telnet_required
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.3.4
+      - telnet
+
+- name: "2.3.5 | PATCH | Ensure LDAP client is not installed"
+  apt:
+      name: ldap-utils
+      state: absent
+  when:
+      - ubtu20cis_rule_2_3_5
+      - not ubtu20cis_ldap_clients_required
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.3.5
+      - ldap
+
+- name: "2.3.6 | PATCH | Ensure RPC is not installed"
+  apt:
+      name: rpcbind
+      state: absent
+  when:
+      - ubtu20cis_rule_2_3_6
+      - not ubtu20cis_rpc_required
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_2.3.6
+      - rpbc
+
+- name: "2.4 | AUDIT | Ensure nonessential services are removed or masked"
+  block:
+      - name: "2.4 | AUDIT | Ensure nonessential services are removed or masked | Check for services"
+        shell: lsof -i -P -n | grep -v "(ESTABLISHED)"
+        changed_when: false
+        failed_when: false
+        register: ubtu20cis_2_4_services
+
+      - name: "2.4 | AUDIT | Ensure nonessential services are removed or masked | Message out running services"
+        debug:
+            msg:
+                - "Warning!! Below are the running services. Please review and remove as well as mask un-needed services"
+                - "{{ ubtu20cis_2_4_services.stdout_lines }}"
+  when:
+      - ubtu20cis_rule_2_4
+  tags:
+      - level1-server
+      - level1-workstation
+      - manual
+      - audit
+      - rule_2.4
+      - services"
