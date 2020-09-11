@@ -24,3 +24,11 @@
       - ubtu20cis_rule_2_2_3
   tags:
       - skip_ansible_lint
+
+- name: "PRELIM | Install Network-Manager"
+  apt:
+      name: network-manager
+      state: present
+  when:
+      - ubtu20cis_rule_3_1_2
+      - ubtu20cis_install_network_manager

@@ -210,6 +210,7 @@ ubtu20cis_rsh_required: false
 ubtu20cis_talk_required: false
 ubtu20cis_telnet_required: false
 ubtu20cis_ldap_clients_required: false
+ubtu20cis_is_router: false
 
 # IPv6 requirement toggle
 ubtu20cis_ipv6_required: false
