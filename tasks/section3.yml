@@ -406,3 +406,172 @@
       - patch
       - rule_3.4.4
       - tipc
+
+- name: "3.5.1.1 | PATCH | Ensure Uncomplicated Firewall is installed"
+  apt:
+      name: ufw
+      state: present
+  when:
+      - ubtu20cis_rule_3_5_1_1
+      - ubtu20cis_firewall_package == "ufw"
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_3.5.1.1
+      - apt
+      - ufw
+
+- name: "3.5.1.2 | PATCH | Ensure iptables-persistent is not installed"
+  apt:
+      name: iptables-persistent
+      state: absent
+  when:
+      - ubtu20cis_rule_3_5_1_2
+      - ubtu20cis_firewall_package == "ufw"
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_3.5.1.2
+      - ufw
+
+# Adding the allow OpenSSH rule while enabling ufw to allow ansible to run after enabling
+- name: "3.5.1.3 | PATCH | Ensure ufw service is enabled"
+  ufw:
+      rule: allow
+      name: OpenSSH
+      state: enabled
+  when:
+      - ubtu20cis_rule_3_5_2_1
+      - ubtu20cis_firewall_package == "ufw"
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_3.5.1.3
+      - ufw
+
+- name: "3.5.1.4 | PATCH | Ensure loopback traffic is configured"
+  block:
+      - name: "3.5.1.4 | PATCH | Ensure loopback traffic is configured | Set allow in ufw rules"
+        ufw:
+            rule: allow
+            direction: in
+            interface: lo
+        notify: reload ufw
+
+      - name: "3.5.1.4 | PATCH | Ensure loopback traffic is configured | Set allow out ufw rules"
+        ufw:
+            rule: allow
+            direction: out
+            interface: lo
+        notify: reload ufw
+
+      - name: "3.5.1.4 | PATCH | Ensure loopback traffic is configured | Set deny ufw rules IPv4"
+        ufw:
+            rule: deny
+            direction: in
+            from_ip: 127.0.0.0/8
+        notify: reload ufw
+
+      - name: "3.5.1.4 | PATCH | Ensure loopback traffic is configured | Set deny ufw rules IPv6"
+        ufw:
+            rule: deny
+            direction: in
+            from_ip: "::1"
+        notify: reload ufw
+        when: ubtu20cis_ipv6_required
+  when:
+      - ubtu20cis_rule_3_5_1_4
+      - ubtu20cis_firewall_package == "ufw"
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_3.5.1.4
+      - ufw
+
+- name: "3.5.1.5 | PATCH | Ensure outbound connections are configured"
+  block:
+      - name: "3.5.1.5 | PATCH | Ensure outbound connections are configured | Custom ports"
+        ufw:
+            rule: allow
+            direction: out
+            to_port: '{{ item }}'
+        with_items:
+            - "{{ ubtu20cis_ufw_allow_out_ports }}"
+        notify: reload ufw
+        when: ubtu20cis_ufw_allow_out_ports != "all"
+
+      - name: "3.5.1.5 | PATCH | Ensure outbound connections are configured | Allow all"
+        ufw:
+            rule: allow
+            direction: out
+            to_port: all
+        notify: reload ufw
+        when: "'all' in ubtu20cis_ufw_allow_out_ports"
+  when:
+      - ubtu20cis_rule_3_5_1_5
+      - ubtu20cis_firewall_package == "ufw"
+  tags:
+      - level1-server
+      - level1-workstation
+      - manual
+      - patch
+      - rule_3.5.1.5
+      - ufw
+
+- name: "3.5.1.6 | AUDIT | Ensure firewall rules exist for all open ports"
+  block:
+      - name: "3.5.1.6 | AUDIT | Ensure firewall rules exist for all open ports | Get list of open ports"
+        command: ss -4tuln
+        changed_when: false
+        failed_when: false
+        register: ubtu20cis_3_5_1_6_open_listen_ports
+
+      - name: "3.5.1.6 | AUDIT | Ensure firewall rules exist for all open ports | Get list of firewall rules"
+        command: ufw status
+        changed_when: false
+        failed_when: false
+        register: ubtu20cis_3_5_1_6_firewall_rules
+
+      - name: "3.5.1.6 | AUDIT | Ensure firewall rules exist for all open ports | Message out settings"
+        debug:
+            msg:
+                - "ALERT!!!!Below are the listening ports and firewall rules"
+                - "Please create firewall rule for any open ports if not already done"
+                - "*****---Open Listen Ports---*****"
+                - "{{ ubtu20cis_3_5_1_6_open_listen_ports.stdout_lines }}"
+                - "*****---Firewall Rules---*****"
+                - "{{ ubtu20cis_3_5_1_6_firewall_rules.stdout_lines }}"
+  when:
+      - ubtu20cis_rule_3_5_1_6
+      - ubtu20cis_firewall_package == "ufw"
+  tags:
+      - level1-server
+      - level1-workstation
+      - manual
+      - audit
+      - rule_3.5.1.6
+      - ufw
+
+- name: "3.5.1.7 | PATCH | Ensure default deny firewall policy"
+  ufw:
+      default: deny
+      direction: "{{ item }}"
+  notify: reload ufw
+  with_items:
+      - incoming
+      - outgoing
+      - routed
+  when:
+      - ubtu20cis_rule_3_5_1_7
+      - ubtu20cis_firewall_package == "ufw"
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_3.5.1.7
+      - ufw
+

@@ -316,3 +316,17 @@ ubtu20_cis_mail_transfer_agent: "other"
 # Control 3.1.2
 # ubtu20cis_install_network_manager determines if this role can install network manager
 ubtu20cis_install_network_manager: true
+
+# ubtu20cis_firewall_package is the toggle for which firewall system is in use
+# The valid options to use are ufw, nftables, or iptables
+# Warning!! nftables is not supported in this role and will only message out if nftables is selected
+# If using nftables please manually adjust firewall settings
+ubtu20cis_firewall_package: "ufw"
+
+# Control 3.5.1.5
+# ubtu20cis_ufw_allow_out_ports are the ports for the firewall to allow
+# if you want to allow out on all ports set variable to "all", example ubtu18cis_ufw_allow_out_ports: "all"
+ubtu20cis_ufw_allow_out_ports:
+    - 53
+    - 80
+    - 443
