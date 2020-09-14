@@ -553,3 +553,104 @@
       - patch
       - rule_4.2.1.6
       - rsyslog
+
+- name: "4.2.2.1 | PATCH | Ensure journald is configured to send logs to rsyslog"
+  lineinfile:
+      path: /etc/systemd/journald.conf
+      regexp: '^ForwardToSyslog|^#ForwardToSyslog'
+      line: 'ForwardToSyslog=yes'
+      insertafter: '\[Journal\]'
+  when:
+      - ubtu20cis_rule_4_2_2_1
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_4.2.2.1
+      - rsyslog
+      - journald
+
+- name: "4.2.2.2 | PATCH | Ensure journald is configured to compress large log files"
+  lineinfile:
+      path: /etc/systemd/journald.conf
+      regexp: '^Compress|^#Compress'
+      line: 'Compress=yes'
+      insertafter: '\[Journal\]'
+  when:
+      - ubtu20cis_rule_4_2_2_2
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_4.2.2.2
+      - rsyslog
+      - journald
+
+- name: "4.2.2.3 | PATCH | Ensure journald is configured to write logfiles to persistent disk"
+  lineinfile:
+      path: /etc/systemd/journald.conf
+      regexp: '^Storage|^#Storage'
+      line: 'Storage=persistent'
+      insertafter: '\[Journal\]'
+  when:
+      - ubtu20cis_rule_4_2_2_3
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_4.2.2.3
+      - rsyslog
+      - journald
+
+- name: "4.2.3 | PATCH | Ensure permissions on all logfiles are configured"
+  command: find /var/log -type f -exec chmod g-wx,o-rwx "{}" + -o -type d -exec chmod g-w,o-rwx "{}" +
+  changed_when: ubtu20cis_4_2_3_logfile_perms_status.rc == 0
+  register: ubtu20cis_4_2_3_logfile_perms_status
+  when:
+      - ubtu20cis_rule_4_2_3
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_4.2.3
+      - logfiles
+      - permissions
+
+- name: "4.3 | PATCH | Ensure logrotate is configured"
+  block:
+      - name: "4.3 | PATCH | Ensure logrotate is configured | Get logrotate files"
+        find:
+            paths: /etc/logrotate.d/
+        register: ubtu20cis_4_3_logrotate_files
+
+      - name: "4.3 | PATCH | Ensure logrotate is configured | Set rotation configurations"
+        replace:
+            path: "{{ item.path }}"
+            regexp: '^(\s*)(daily|weekly|monthly|yearly)$'
+            replace: "\\1{{ ubtu20cis_logrotate }}"
+        with_items:
+            - "{{ ubtu20cis_4_3_logrotate_files.files }}"
+            - { path: "/etc/logrotate.conf" }
+  when:
+      - ubtu20cis_rule_4_3
+  tags:
+      - level1-server
+      - level1-workstation
+      - manual
+      - patch
+      - rule_4.3
+      - logrotate
+
+- name: "4.4 | PATCH | Ensure logrotate assigns appropriate permissions"
+  lineinfile:
+      path: /etc/logrotate.conf
+      regexp: '^create'
+      line: ' create {{ ubtu20cis_logrotate_create_settings }}'
+  when:
+      - ubtu20cis_rule_4_4
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_4.3
+      - logrotate

@@ -216,6 +216,7 @@ ubtu20cis_rule_4_2_1_6: true
 ubtu20cis_rule_4_2_2_1: true
 ubtu20cis_rule_4_2_2_2: true
 ubtu20cis_rule_4_2_2_3: true
+ubtu20cis_rule_4_2_3: true
 ubtu20cis_rule_4_3: true
 ubtu20cis_rule_4_4: true
 
@@ -411,3 +412,12 @@ ubtu20cis_remote_log_server: 192.168.2.100
 
 # Control 4.2.1.6
 ubtu20cis_system_is_log_server: true
+
+# Control 4.3
+# ubtu18cis_logrotate is the log rotate frequencey. Options are daily, weekly, monthly, and yearly
+ubtu20cis_logrotate: "daily"
+
+# Control 4.3
+# ubtu20cis_logrotate_create_settings are the settings for the create parameter in /etc/logrotate.conf
+# The permissions need to be 640 or more restrictive. 
+ubtu20cis_logrotate_create_settings: "0640 root utmp"
