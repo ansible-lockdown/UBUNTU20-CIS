@@ -387,3 +387,13 @@ ubtu20cis_save_iptables_cis_rules: true
 # ubtu20cis_audit_back_log_limit is the audit_back_log limit and should be set to a sufficient value
 # The example from CIS uses 8192
 ubtu20cis_audit_back_log_limit: 8192
+
+# Control 4.1.2.1
+# ubtu20cis_max_log_file_size is largest the log file will become in MB
+# This shoudl be set based on your sites policy
+ubtu20cis_max_log_file_size: 10
+
+# Control 4.1.2.2
+ubtu20cis_auditd:
+    admin_space_left_action: halt
+    max_log_file_action: keep_logs

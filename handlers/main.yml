@@ -34,3 +34,12 @@
       value: '1'
       sysctl_set: yes
   when: ansible_virtualization_type != "docker"
+
+- name: restart auditd
+  service:
+      name: auditd
+      state: restarted
+  when:
+      - not ubtu20cis_skip_for_travis
+  tags:
+      - skip_ansible_lint
