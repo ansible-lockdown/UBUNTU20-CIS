@@ -471,3 +471,35 @@ ubtu20cis_logrotate: "daily"
 # ubtu20cis_logrotate_create_settings are the settings for the create parameter in /etc/logrotate.conf
 # The permissions need to be 640 or more restrictive. 
 ubtu20cis_logrotate_create_settings: "0640 root utmp"
+
+# Section 5 Control Variables
+# ubtu18cis_sshd will contain all sshd variables. The task association and variable descriptions for each section are listed below
+# Control 5.2.4
+# log_level is the log level variable. This needs to be set to VERBOSE or INFO to conform to CIS standards
+# Control 5.2.6
+# max_auth_tries is the max number of authentication attampts per connection.
+# This value should be 4 or less to conform to CIS standards
+# Control 5.2.12
+# ciphers is a comma seperated list of site approved ciphers
+# ONLY USE STRONG CIPHERS. Weak ciphers are listed below
+# DO NOT USE: 3des-cbc, aes128-cbc, aes192-cbc, and aes256-cbc
+# Control 5.2.13
+# MACs is the comma seperated list of site approved MAC algorithms that SSH can use during communication
+# ONLY USE STRONG ALGORITHMS. Weak algorithms are listed below
+# DO NOT USE: hmac-md5, hmac-md5-96, hmac-ripemd160, hmac-sha1, hmac-sha1-96, umac-64@openssh.com, umac-128@openssh.com, hmac-md5-etm@openssh.com,
+# hmac-md5-96-etm@openssh.com, hmac-ripemd160-etm@openssh.com, hmac-sha1-etm@openssh.com, hmac-sha1-96-etm@openssh.com, umac-64-etm@openssh.com, umac-128-etm@openssh.com
+# Control 5.2.14
+# kex_algorithms is comma seperated list of the algorithms for key exchange methods
+# ONLY USE STRONG ALGORITHMS. Weak algorithms are listed below
+# DO NOT USE: diffie-hellman-group1-sha1, diffie-hellman-group14-sha1, diffie-hellman-group-exchange-sha1
+# Control 5.2.15
+# client_alive_interval is the amount of time idle before ssh session terminated. Set to 300 or less to conform to CIS standards
+# client_alive_count_max will send client alive messages at the configured interval. Set to 3 or less to conform to CIS standards
+ubtu20cis_sshd:
+    log_level: "INFO"
+    max_auth_tries: 4
+    ciphers: "chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr"
+    macs: "hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256"
+    kex_algorithms: "curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256"
+    client_alive_interval: 300
+    client_alive_count_max: 0

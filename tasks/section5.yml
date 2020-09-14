@@ -148,3 +148,257 @@
       - patch
       - rule_5.1.9
       - cron
+
+- name: "5.2.1 | PATCH | Ensure permissions on /etc/ssh/sshd_config are configured"
+  file:
+      path: /etc/ssh/sshd_config
+      owner: root
+      group: root
+      mode: 0600
+  when:
+      - ubtu20cis_rule_5_2_1
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.2.1
+      - ssh
+
+- name: "5.2.2 | PATCH | Ensure permissions on SSH private host key files are configured"
+  block:
+      - name: "5.2.2 | AUDIT | Ensure permissions on SSH private host key files are configured | Find ssh_host private keys"
+        find:
+            paths: /etc/ssh
+            patterns: 'ssh_host_*_key'
+        register: ubtu20cis_5_2_2_ssh_host_priv_keys
+
+      - name: "5.2.2 | PATCH | Ensure permissions on SSH private host key files are configured | Set permissions"
+        file:
+            path: "{{ item.path }}"
+            owner: root
+            group: root
+            mode: 0600
+        with_items:
+            - "{{ ubtu20cis_5_2_2_ssh_host_priv_keys.files }}"
+  when:
+      - ubtu20cis_rule_5_2_2
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.2.2
+      - ssh
+
+- name: "5.2.3 | PATCH | Ensure permissions on SSH public host key files are configured"
+  block:
+      - name: "5.2.3 | PATCH | Ensure permissions on SSH public host key files are configured | Find ssh_host public keys"
+        find:
+            paths: /etc/ssh
+            patterns: 'ssh_host_*_key.pub'
+        register: ubtu20cis_5_2_3_ssh_host_pub_keys
+
+      - name: "5.2.3 | PATCH | Ensure permissions on SSH public host key files are configured | Set permissions"
+        file:
+            path: "{{ item.path }}"
+            owner: root
+            group: root
+            mode: 0644
+        with_items:
+            - "{{ ubtu20cis_5_2_3_ssh_host_pub_keys.files }}"
+  when:
+      - ubtu20cis_rule_5_2_3
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.2.3
+      - ssh
+
+- name: "5.2.4 | PATCH | Ensure SSH LogLevel is appropriate"
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^LogLevel|^#LogLevel'
+      line: 'LogLevel {{ ubtu20cis_sshd.log_level }}'
+      insertafter: '^# Logging'
+  notify: restart sshd
+  when:
+      - ubtu20cis_rule_5_2_4
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.2.4
+      - ssh
+
+- name: "5.2.5 | PATCH | Ensure SSH X11 forwarding is disabled"
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^X11Forwarding|^#X11Forwarding'
+      line: 'X11Forwarding no'
+  notify: restart sshd
+  when:
+      - ubtu20cis_rule_5_2_5
+  tags:
+      - level2-server
+      - level1-workstation
+      - patch
+      - rule_5.2.5
+      - ssh
+
+- name: "5.2.6 | PATCH | Ensure SSH MaxAuthTries is set to 4 or less"
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^MaxAuthTries|^#MaxAuthTries'
+      line: 'MaxAuthTries {{ ubtu20cis_sshd.max_auth_tries }}'
+      insertafter: '^# Authentication'
+  notify: restart sshd
+  when:
+      - ubtu20cis_rule_5_2_6
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.2.6
+      - ssh
+
+- name: "5.2.7 | PATCH | Ensure SSH IgnoreRhosts is enabled"
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^IgnoreRhosts|^#IgnoreRhosts'
+      line: 'IgnoreRhosts yes'
+  notify: restart sshd
+  when:
+      - ubtu20cis_rule_5_2_7
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.2.7
+      - ssh
+
+- name: "5.2.8 | PATCH | Ensure SSH HostbasedAuthentication is disabled"
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^HostbasedAuthentication|^#HostbasedAuthentication'
+      line: 'HostbasedAuthentication no'
+  notify: restart sshd
+  when:
+      - ubtu20cis_rule_5_2_8
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.2.8
+      - ssh
+
+- name: "5.2.9 | PATCH | Ensure SSH root login is disabled"
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^PermitRootLogin|^#PermitRootLogin'
+      line: 'PermitRootLogin no'
+  notify: restart sshd
+  when:
+      - ubtu20cis_rule_5_2_9
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.2.9
+      - ssh
+
+- name: "5.2.10 | PATCH | Ensure SSH PermitEmptyPasswords is disabled"
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^PermitEmptyPasswords|^#PermitEmptyPasswords'
+      line: 'PermitEmptyPasswords no'
+      insertafter: '# To disable tunneled clear text passwords'
+  notify: restart sshd
+  when:
+      - ubtu20cis_rule_5_2_10
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.2.10
+      - ssh
+
+- name: "5.2.11 | PATCH | Ensure SSH PermitUserEnvironment is disabled"
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^PermitUserEnvironment|^#PermitUserEnvironment'
+      line: 'PermitUserEnvironment no'
+  notify: restart sshd
+  when:
+      - ubtu20cis_rule_5_2_11
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.2.11
+      - ssh
+
+- name: "5.2.12 | PATCH | Ensure only strong Ciphers are used"
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^Ciphers|^#Ciphers'
+      line: 'Ciphers {{ ubtu20cis_sshd.ciphers }}'
+      insertafter: '^# Ciphers and keying'
+  notify: restart sshd
+  when:
+      - ubtu20cis_rule_5_2_12
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.2.12
+      - ssh
+
+- name: "5.2.13 | PATCH | Ensure only strong MAC algorithms are used"
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^MACs|^#MACs'
+      line: 'MACs {{ ubtu20cis_sshd.macs }}'
+      insertafter: '^# Ciphers and keying'
+  notify: restart sshd
+  when:
+      - ubtu20cis_rule_5_2_13
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.2.13
+      - ssh
+
+- name: "5.2.14 | PATCH | Ensure only strong Key Exchange algorithms are used"
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^KexAlgorithms|^#KexAlgorithms'
+      line: 'KexAlgorithms {{ ubtu20cis_sshd.kex_algorithms }}'
+      insertafter: '^# Ciphers and keying'
+  notify: restart sshd
+  when:
+      - ubtu20cis_rule_5_2_14
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.2.14
+      - ssh
+
+- name: "5.2.15 | PATCH | Ensure SSH Idle Timeout Interval is configured"
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+  with_items:
+      - { regexp: '^ClientAliveInterval|^#ClientAliveInterval', line: 'ClientAliveInterval {{ ubtu20cis_sshd.client_alive_interval }}' }
+      - { regexp: '^ClientAliveCountMax|^#ClientAliveCountMax', line: 'ClientAliveCountMax {{ ubtu20cis_sshd.client_alive_count_max }}' }
+  notify: restart sshd
+  when:
+      - ubtu20cis_rule_5_2_15
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.2.15
+      - sshd
