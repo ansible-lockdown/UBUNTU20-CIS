@@ -43,3 +43,8 @@
       - not ubtu20cis_skip_for_travis
   tags:
       - skip_ansible_lint
+
+- name: restart rsyslog
+  service:
+      name: rsyslog
+      state: restarted
