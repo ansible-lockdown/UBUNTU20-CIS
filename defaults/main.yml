@@ -212,8 +212,11 @@ ubtu20cis_telnet_required: false
 ubtu20cis_ldap_clients_required: false
 ubtu20cis_is_router: false
 
+# IPv4 requirement toggle
+ubtu20cis_ipv4_required: false
+
 # IPv6 requirement toggle
-ubtu20cis_ipv6_required: false
+ubtu20cis_ipv6_required: true
 
 # Other system wide variables
 # ubtu20cis_xwindows_required is the toggle for requiring x windows. True means you use X Windoes (not recommented for servers)
@@ -321,7 +324,7 @@ ubtu20cis_install_network_manager: true
 # The valid options to use are ufw, nftables, or iptables
 # Warning!! nftables is not supported in this role and will only message out if nftables is selected
 # If using nftables please manually adjust firewall settings
-ubtu20cis_firewall_package: "ufw"
+ubtu20cis_firewall_package: "iptables"
 
 # Control 3.5.1.5
 # ubtu20cis_ufw_allow_out_ports are the ports for the firewall to allow
@@ -330,3 +333,18 @@ ubtu20cis_ufw_allow_out_ports:
     - 53
     - 80
     - 443
+
+# Control 3.5.2.4
+# nftables is not supported in this role. Some tasks have the task commented out, this is one of them
+# ubtu20cis_nftables_table_name is the name of the table in nftables you want to create
+# the default nftables table name is inet filter. This variable name will be the one all
+# nftables configs are applied to
+# ubtu20cis_nftables_table_name: "inet filter"
+
+
+# Controls 3.5.3.2.1 through 3.5.3.3.4
+# The iptables module only writes to memory which means a reboot could revert settings
+# The below toggle will install iptables-persistent and save the rules in memory (/etc/iptables/rules.v4 or rules.v6)
+# This makes the CIS role changes permenant
+ubtu20cis_save_iptables_cis_rules: true
+

@@ -27,3 +27,10 @@
 - name: reload ufw
   ufw:
       state: reloaded
+
+- name: sysctl flush ipv6 route table
+  sysctl:
+      name: net.ipv6.route.flush
+      value: '1'
+      sysctl_set: yes
+  when: ansible_virtualization_type != "docker"
