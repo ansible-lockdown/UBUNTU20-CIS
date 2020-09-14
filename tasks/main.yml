@@ -50,3 +50,9 @@
   when: ubtu20cis_section3_patch
   tags:
       - section3
+
+- name: Include section 4 patches
+  import_tasks: section4.yml
+  when: ubtu20cis_section4_patch
+  tags:
+      - section4

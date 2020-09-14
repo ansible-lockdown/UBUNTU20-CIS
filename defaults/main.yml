@@ -183,7 +183,41 @@ ubtu20cis_rule_3_5_3_3_2: true
 ubtu20cis_rule_3_5_3_3_3: true
 ubtu20cis_rule_3_5_3_3_4: true
 
-
+# Section 4 Fixes
+# Section 4 is Logging and Auditing (configure system accounting (auditd) and configure logging)
+ubtu20cis_rule_4_1_1_1: true
+ubtu20cis_rule_4_1_1_2: true
+ubtu20cis_rule_4_1_1_3: true
+ubtu20cis_rule_4_1_1_4: true
+ubtu20cis_rule_4_1_2_1: true
+ubtu20cis_rule_4_1_2_2: true
+ubtu20cis_rule_4_1_2_3: true
+ubtu20cis_rule_4_1_3: true
+ubtu20cis_rule_4_1_4: true
+ubtu20cis_rule_4_1_5: true
+ubtu20cis_rule_4_1_6: true
+ubtu20cis_rule_4_1_7: true
+ubtu20cis_rule_4_1_8: true
+ubtu20cis_rule_4_1_9: true
+ubtu20cis_rule_4_1_10: true
+ubtu20cis_rule_4_1_11: true
+ubtu20cis_rule_4_1_12: true
+ubtu20cis_rule_4_1_13: true
+ubtu20cis_rule_4_1_14: true
+ubtu20cis_rule_4_1_15: true
+ubtu20cis_rule_4_1_16: true
+ubtu20cis_rule_4_1_17: true
+ubtu20cis_rule_4_2_1_1: true
+ubtu20cis_rule_4_2_1_2: true
+ubtu20cis_rule_4_2_1_3: true
+ubtu20cis_rule_4_2_1_4: true
+ubtu20cis_rule_4_2_1_5: true
+ubtu20cis_rule_4_2_1_6: true
+ubtu20cis_rule_4_2_2_1: true
+ubtu20cis_rule_4_2_2_2: true
+ubtu20cis_rule_4_2_2_3: true
+ubtu20cis_rule_4_3: true
+ubtu20cis_rule_4_4: true
 
 # Service configuration variables, set to true to keep service
 ubtu20cis_allow_autofs: false
@@ -213,10 +247,10 @@ ubtu20cis_ldap_clients_required: false
 ubtu20cis_is_router: false
 
 # IPv4 requirement toggle
-ubtu20cis_ipv4_required: false
+ubtu20cis_ipv4_required: true
 
 # IPv6 requirement toggle
-ubtu20cis_ipv6_required: true
+ubtu20cis_ipv6_required: false
 
 # Other system wide variables
 # ubtu20cis_xwindows_required is the toggle for requiring x windows. True means you use X Windoes (not recommented for servers)
@@ -299,7 +333,7 @@ ubtu20cis_ntp_fallback_server_list: "2.debian.pool.ntp.org 3.debian.pool.ntp.org
 # Control 2.2.1.3/2.2.1.4
 # ubtu20cis_chrony_server_options is the server options for chrony
 ubtu20cis_chrony_server_options: "minpoll 8"
-# ubtu18cis_time_synchronization_servers are the synchronization servers
+# ubtu20cis_time_synchronization_servers are the synchronization servers
 ubtu20cis_time_synchronization_servers:
     - 0.pool.ntp.org
     - 1.pool.ntp.org
@@ -328,7 +362,7 @@ ubtu20cis_firewall_package: "iptables"
 
 # Control 3.5.1.5
 # ubtu20cis_ufw_allow_out_ports are the ports for the firewall to allow
-# if you want to allow out on all ports set variable to "all", example ubtu18cis_ufw_allow_out_ports: "all"
+# if you want to allow out on all ports set variable to "all", example ubtu20cis_ufw_allow_out_ports: "all"
 ubtu20cis_ufw_allow_out_ports:
     - 53
     - 80
@@ -348,3 +382,8 @@ ubtu20cis_ufw_allow_out_ports:
 # This makes the CIS role changes permenant
 ubtu20cis_save_iptables_cis_rules: true
 
+# Section 4 Control Variables
+# Control 4.1.1.4
+# ubtu20cis_audit_back_log_limit is the audit_back_log limit and should be set to a sufficient value
+# The example from CIS uses 8192
+ubtu20cis_audit_back_log_limit: 8192
