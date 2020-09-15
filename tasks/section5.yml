@@ -862,3 +862,175 @@
       - rule_5.4.1.5
       - user
       - login
+
+- name: "5.4.2 | PATCH | Ensure system accounts are secured"
+  block:
+      - name: "5.4.2 | PATCH | Ensure system accounts are secured | Set system accounts to login"
+        user:
+            name: "{{ item }}"
+            shell: /sbin/nologin
+        with_items:
+            - "{{ ubtu20cis_passwd | selectattr('uid', '<', 1000) | map(attribute='id') | list }}"
+        when:
+            - item != "root"
+            - item != "sync"
+            - item != "shutdown"
+            - item != "halt"
+
+      - name: "5.4.2 | PATCH | Ensure system accounts are secured | Lock non-root system accounts"
+        user:
+            name: "{{ item }}"
+            password_lock: true
+        with_items:
+            - "{{ ubtu20cis_passwd| selectattr('uid', '<', 1000) | map(attribute='id') | list }}"
+        when:
+            - item != "root"
+  when:
+      - ubtu20cis_rule_5_4_2
+      - ubtu20cis_disruption_high
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.4.2
+      - user
+      - system
+
+- name: "5.4.3 | PATCH | Ensure default group for the root account is GID 0"
+  block:
+      - name: "5.4.3 | PATCH | Ensure default group for the root account is GID 0 | Set root group to GUID 0"
+        group:
+            name: root
+            gid: 0
+
+      - name: "5.4.3 | PATCH | Ensure default group for the root account is GID 0 | Set root user to root group"
+        user:
+            name: root
+            group: root
+  when:
+      - ubtu20cis_rule_5_4_3
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.4.3
+      - user
+      - system
+
+- name: "5.4.4 | PATCH | Ensure default user umask is 027 or more restrictive"
+  block:
+      - name: "5.4.4 | AUDIT | Ensure default user umask is 027 or more restrictive"
+        shell: grep -E '^session.*optional.*pam_umask.so' /etc/pam.d/common-session
+        changed_when: false
+        failed_when: false
+        register: ubtu20cis_5_4_4_umask_pam_status
+
+      - name: "5.4.4 | PATCH | Ensure default user umask is 027 or more restrictive"
+        lineinfile:
+            path: /etc/pam.d/common-session
+            line: 'session optional                        pam_umask.so'
+            insertbefore: '^# end of pam-auth-update config'
+        when: ubtu20cis_5_4_4_umask_pam_status.stdout != ""
+
+      - name: "5.4.4 | PATCH | Ensure default user umask is 027 or more restrictive"
+        replace:
+            path: "{{ item }}"
+            regexp: '(^\s+umask) 002'
+            replace: '\1 027'
+        with_items:
+            - /etc/bash.bashrc
+            - /etc/profile
+            - /etc/login.defs
+  when:
+      - ubtu20cis_rule_5_4_4
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.4.4
+      - user
+
+- name: "5.4.5 | PATCH | Ensure default user shell timeout is 900 seconds or less"
+  blockinfile:
+      create: yes
+      mode: 0644
+      dest: "{{ item.dest }}"
+      state: "{{ item.state }}"
+      marker: "# {mark} ANSIBLE MANAGED"
+      block: |
+        # Set session timeout - CIS ID 5.4.5
+        TMOUT={{ ubtu20cis_shell_session_timeout.timeout }}
+        readonly TMOUT
+        export TMOUT
+  with_items:
+      - { dest: "{{ ubtu20cis_shell_session_timeout.file }}", state: present }
+      - { dest: /etc/profile, state: "{{ (ubtu20cis_shell_session_timeout.file == '/etc/profile') | ternary('present', 'absent') }}" }
+      - { dest: /etc/bash.bashrc, state: present }
+  when:
+      - ubtu20cis_rule_5_4_4
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.4.5
+      - user
+
+- name: "5.5 | AUDIT | Ensure root login is restricted to system console"
+  block:
+      - name: "5.5 | AUDIT | Ensure root login is restricted to system console | Get list of all terminals"
+        command: cat /etc/securetty
+        changed_when: false
+        failed_when: false
+        register: ubtu20cis_5_5_terminal_list
+
+      - name: "5.5 | AUDIT | Ensure root login is restricted to system console | Message out list"
+        debug:
+            msg:
+                - "WARNING!!!!Below is the list of conoles with root login access"
+                - "Please review for any conoles that are not in a physically secure location"
+                - "{{ ubtu20cis_5_5_terminal_list.stdout_lines }}"
+  when:
+      - ubtu20cis_rule_5_5
+  tags:
+      - level1-server
+      - level1-workstation
+      - manual
+      - audit
+      - rule_5.5
+      - user
+
+- name: "5.6 | PATCH | Ensure access to the su command is restricted"
+  block:
+      - name: "5.6 | PATCH | Ensure access to the su command is restricted | Check for pam_wheel.so module"
+        command: grep 'auth.*required.*pam_wheel' /etc/pam.d/su
+        changed_when: false
+        failed_when: false
+        register: ubtu20cis_5_6_pam_wheel_status
+
+      - name: "5.6 | PATCH | Ensure access to the su command is restricted | Create empty sugroup"
+        group:
+            name: "{{ ubtu20cis_su_group }}"
+
+      - name: "5.6 | PATCH | Ensure access to the su command is restricted | Set pam_wheel if exists"
+        pamd:
+            name: su
+            type: auth
+            control: required
+            module_path: pam_wheel.so
+            module_arguments: 'use_uid group={{ ubtu20cis_su_group }}'
+        when: ubtu20cis_5_6_pam_wheel_status.stdout != ""
+
+      - name: "5.6 | PATCH | Ensure access to the su command is restricted | Set pam_wheel if does not exist"
+        lineinfile:
+            path: /etc/pam.d/su
+            line: 'auth       required   pam_wheel.so use_uid group={{ ubtu20cis_su_group }}'
+            create: yes
+        when: ubtu20cis_5_6_pam_wheel_status.stdout == ""
+  when:
+      - ubtu20cis_rule_5_6
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.6
+      - user
