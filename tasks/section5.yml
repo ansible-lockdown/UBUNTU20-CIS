@@ -402,3 +402,142 @@
       - patch
       - rule_5.2.15
       - sshd
+
+- name: "5.2.16 | PATCH | Ensure SSH LoginGraceTime is set to one minute or less"
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^LoginGraceTime|^#LoginGraceTime'
+      line: 'LoginGraceTime {{ ubtu20cis_sshd.login_grace_time }}'
+      insertafter: '^# Authentication'
+  notify: restart sshd
+  when:
+      - ubtu20cis_rule_5_2_16
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.2.16
+      - ssh
+
+- name: "5.2.17 | PATCH | Ensure SSH access is limited"
+  block:
+      - name: "5.2.17 | PATCH | Ensure SSH access is limited | Add allowed users"
+        lineinfile:
+            path: /etc/ssh/sshd_config
+            regexp: '^AllowUsers|^#AllowUsers'
+            line: 'AllowUsers {{ ubtu20cis_sshd.allow_users }}'
+        notify: restart sshd
+        when: "ubtu20cis_sshd['allow_users']|default('') != ''"
+
+      - name: "5.2.17 | PATCH | Ensure SSH access is limited | Add allowed groups"
+        lineinfile:
+            path: /etc/ssh/sshd_config
+            regexp: '^AllowGroups|^#AllowGroups'
+            line: 'AllowGroups {{ ubtu20cis_sshd.allow_groups }}'
+        notify: restart sshd
+        when: "ubtu20cis_sshd['allow_groups']|default('') != ''"
+
+      - name: "5.2.17 | PATCH | Ensure SSH access is limited | Add deny users"
+        lineinfile:
+            path: /etc/ssh/sshd_config
+            regexp: '^DenyUsers|^#DenyUsers'
+            line: 'DenyUsers {{ ubtu20cis_sshd.deny_users }}'
+        notify: restart sshd
+        when: "ubtu20cis_sshd['deny_users']|default('') != ''"
+
+      - name: "5.2.17 | PATCH | Ensure SSH access is limited | Add deny groups"
+        lineinfile:
+            path: /etc/ssh/sshd_config
+            regexp: '^DenyGroups|^#DenyGroups'
+            line: 'DenyGroups {{ ubtu20cis_sshd.deny_groups }}'
+        notify: restart sshd
+        when: "ubtu20cis_sshd['deny_groups']|default('') != ''"
+  when:
+      - ubtu20cis_rule_5_2_17
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.2.18
+      - ssh
+
+- name: "5.2.18 | PATCH | Ensure SSH warning banner is configured"
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^Banner|^#Banner'
+      line: Banner /etc/issue.net
+      insertafter: '^# no default banner path'
+  notify: restart sshd
+  when:
+      - ubtu20cis_rule_5_2_18
+  tags:
+      - level1-server
+      - level1-workstation
+      - scored
+      - patch
+      - rule_5.2.18
+      - ssh
+
+- name: "5.2.19 | PATCH | Ensure SSH PAM is enabled"
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^UsePAM|^#UsePAM'
+      line: 'UsePAM yes'
+      insertafter: '^# and ChallengeResponseAuthentication'
+  notify: restart sshd
+  when:
+      - ubtu20cis_rule_5_2_10
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.2.19
+      - ssh
+      - pam
+
+- name: "5.2.20 | PATCH | Ensure SSH AllowTcpForwarding is disabled"
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^AllowTcpForwarding|^#AllowTcpForwarding'
+      line: 'AllowTcpForwarding no'
+  notify: restart sshd
+  when:
+      - ubtu20cis_rule_5_2_20
+  tags:
+      - level2-server
+      - level2-workstation
+      - patch
+      - rule_5.2.20
+      - ssh
+
+- name: "5.2.21 | PATCH | Ensure SSH MaxStartups is configured"
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^MaxStartups|^#MaxStartups'
+      line: 'MaxStartups 10:30:60'
+  notify: restart sshd
+  when:
+      - ubtu20cis_rule_5_2_21
+  tags:
+      - level1-server
+      - level1-workstation
+      - scored
+      - patch
+      - rule_5.2.21
+      - ssh
+
+- name: "5.2.22 | PATCH | Ensure SSH MaxSessions is set to 4 or less"
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^MaxSessions|^#MaxSessions'
+      line: 'MaxSessions {{ ubtu20cis_sshd.max_sessions }}'
+      insertafter: '^# Authentication'
+  notify: restart sshd
+  when:
+      - ubtu20cis_rule_5_2_22
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.2.22
+      - ssh
