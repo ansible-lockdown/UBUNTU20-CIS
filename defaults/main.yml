@@ -270,6 +270,40 @@ ubtu20cis_rule_5_4_5: true
 ubtu20cis_rule_5_5: true
 ubtu20cis_rule_5_6: true
 
+# Section 6 Fixes
+# Section is Systme Maintenance (system file permissions and user and group settings)
+ubtu20cis_rule_6_1_1: true
+ubtu20cis_rule_6_1_2: true
+ubtu20cis_rule_6_1_3: true
+ubtu20cis_rule_6_1_4: true
+ubtu20cis_rule_6_1_5: true
+ubtu20cis_rule_6_1_6: true
+ubtu20cis_rule_6_1_7: true
+ubtu20cis_rule_6_1_8: true
+ubtu20cis_rule_6_1_9: true
+ubtu20cis_rule_6_1_10: true
+ubtu20cis_rule_6_1_11: true
+ubtu20cis_rule_6_1_12: true
+ubtu20cis_rule_6_1_13: true
+ubtu20cis_rule_6_1_14: true
+ubtu20cis_rule_6_2_1: true
+ubtu20cis_rule_6_2_2: true
+ubtu20cis_rule_6_2_3: true
+ubtu20cis_rule_6_2_4: true
+ubtu20cis_rule_6_2_5: true
+ubtu20cis_rule_6_2_6: true
+ubtu20cis_rule_6_2_7: true
+ubtu20cis_rule_6_2_8: true
+ubtu20cis_rule_6_2_9: true
+ubtu20cis_rule_6_2_10: true
+ubtu20cis_rule_6_2_11: true
+ubtu20cis_rule_6_2_12: true
+ubtu20cis_rule_6_2_13: true
+ubtu20cis_rule_6_2_14: true
+ubtu20cis_rule_6_2_15: true
+ubtu20cis_rule_6_2_16: true
+ubtu20cis_rule_6_2_17: true
+
 # Service configuration variables, set to true to keep service
 ubtu20cis_allow_autofs: false
 ubtu20cis_allow_usb_storage: false
@@ -473,7 +507,7 @@ ubtu20cis_logrotate: "daily"
 ubtu20cis_logrotate_create_settings: "0640 root utmp"
 
 # Section 5 Control Variables
-# ubtu18cis_sshd will contain all sshd variables. The task association and variable descriptions for each section are listed below
+# ubtu20cis_sshd will contain all sshd variables. The task association and variable descriptions for each section are listed below
 # Control 5.2.4
 # log_level is the log level variable. This needs to be set to VERBOSE or INFO to conform to CIS standards
 # Control 5.2.6
@@ -545,3 +579,28 @@ ubtu20cis_shell_session_timeout:
 # Control 5.6
 # ubtu20cis_su_group is the su group to use with pam_wheel
 ubtu20cis_su_group: "wheel"
+
+# Section 6 Control Variables
+# Control 6.1.10
+# ubtu20cis_no_world_write_adjust will toggle the automated fix to remove world-writable perms from all files
+# Setting to true will remove all world-writable permissions, and false will leave as-is
+ubtu20cis_no_world_write_adjust: true
+
+# Control 6.1.11
+# ubtu20cis_un_owned_owner is the owner to set files to that have no owner
+ubtu20cis_unowned_owner: root
+# ubtu20cis_no_owner_adjust will toggle the automated fix to give a user to unowned files/directories
+# true will give the owner from ubtu20cis_un_owned_owner to all unowned files/directories and false will skip
+ubtu20cis_no_owner_adjust: true
+# Control 6.1.12
+# ubtu20cis_ungrouped_group is the group to set files to that have no group
+ubtu20cis_ungrouped_group: root
+# ubtu20cis_no_group_adjust will toggle the automated fix to give a group to ungrouped files/directories
+# true will give the group from ubtu20cis_un_owned_group to all ungrouped files/directories and false will skip
+ubtu20cis_no_group_adjust: true
+
+# Cotnrol 6.1.13
+# ubtu20cis_suid_adjust is the toggle to remove the SUID bit from all files on all mounts
+# Set to true this role will remove that bit, set to false we will just warn about the files
+ubtu20cis_suid_adjust: false
+
