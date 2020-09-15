@@ -514,3 +514,8 @@ ubtu20cis_sshd:
     allow_groups: "vagrant"
     # deny_users:
     # deny_groups:
+
+# Control 5.3.3
+# ubtu20cis_pamd_pwhistory_remember is number of password chnage cycles a user can re-use a password
+# This needs to be 5 or more to conform to CIS standards
+ubtu20cis_pamd_pwhistory_remember: 5
