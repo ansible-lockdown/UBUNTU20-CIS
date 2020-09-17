@@ -32,3 +32,21 @@
   when:
       - ubtu20cis_rule_3_1_2
       - ubtu20cis_install_network_manager
+
+- name: "PRELIM | Install ACL"
+  apt:
+      name: acl
+      state: present
+  when:
+      - ubtu20cis_rule_6_2_5
+      - ubtu20cis_install_network_manager
+
+- name: "PRELIM | List users accounts"
+  command: "awk -F: '{print $1}' /etc/passwd"
+  changed_when: false
+  register: ubtu20cis_users
+  when:
+      - ubtu20cis_rule_6_2_8 or
+        ubtu20cis_rule_6_2_9 or
+        ubtu20cis_rule_6_2_10 or
+        ubtu20cis_rule_6_2_11

@@ -604,3 +604,6 @@ ubtu20cis_no_group_adjust: true
 # Set to true this role will remove that bit, set to false we will just warn about the files
 ubtu20cis_suid_adjust: false
 
+# Control 6.2.6 Allow ansible to adjust world-writable files. False will just display world-writable files, True will remove world-writable
+# ubtu20cis_passwd_label: "{{ (this_item | default(item)).id }}: {{ (this_item | default(item)).dir }}"
+ubtu20cis_passwd_label: "{{ (this_item | default(item)).id }}: {{ (this_item | default(item)).dir }}"
