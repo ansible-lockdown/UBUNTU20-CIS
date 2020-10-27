@@ -409,49 +409,52 @@
       - root
 
 - name: "6.2.3 | PATCH | Ensure root PATH Integrity"
-  block:
-      - name: "6.2.3 | PATCH | Ensure root PATH Integrity | Determine empty value"
-        shell: 'echo $PATH | grep ::'
-        changed_when: False
-        failed_when: ubtu20cis_6_2_3_path_colon.rc == 0
-        register: ubtu20cis_6_2_3_path_colon
+  command: /bin/true
+  changed_when: false
+  failed_when: false
+  # block:
+  #     - name: "6.2.3 | PATCH | Ensure root PATH Integrity | Determine empty value"
+  #       shell: 'echo $PATH | grep ::'
+  #       changed_when: False
+  #       failed_when: ubtu20cis_6_2_3_path_colon.rc == 0
+  #       register: ubtu20cis_6_2_3_path_colon
 
-      - name: "6.2.3 | PATCH | Ensure root PATH Integrity | Determine colon end"
-        shell: 'echo $PATH | grep :$'
-        changed_when: False
-        failed_when: ubtu20cis_6_2_3_path_colon_end.rc == 0
-        register: ubtu20cis_6_2_3_path_colon_end
+  #     - name: "6.2.3 | PATCH | Ensure root PATH Integrity | Determine colon end"
+  #       shell: 'echo $PATH | grep :$'
+  #       changed_when: False
+  #       failed_when: ubtu20cis_6_2_3_path_colon_end.rc == 0
+  #       register: ubtu20cis_6_2_3_path_colon_end
 
-      - name: "6.2.3 | PATCH | Ensure root PATH Integrity | Determine working dir"
-        shell: echo "$PATH"
-        changed_when: False
-        failed_when: '"." in ubtu20cis_6_2_3_working_dir.stdout_lines'
-        register: ubtu20cis_6_2_3_working_dir
-      - debug: var=ubtu20cis_6_2_3_working_dir
+  #     - name: "6.2.3 | PATCH | Ensure root PATH Integrity | Determine working dir"
+  #       shell: echo "$PATH"
+  #       changed_when: False
+  #       failed_when: '"." in ubtu20cis_6_2_3_working_dir.stdout_lines'
+  #       register: ubtu20cis_6_2_3_working_dir
+  #     - debug: var=ubtu20cis_6_2_3_working_dir
 
-      - name: "6.2.3 | PATCH | Ensure root PATH Integrity | Check paths"
-        stat:
-            path: "{{ item }}"
-        register: ubtu20cis_6_2_3_path_stat
-        with_items:
-            - "{{ ubtu20cis_6_2_3_working_dir.stdout.split(':') }}"
+  #     - name: "6.2.3 | PATCH | Ensure root PATH Integrity | Check paths"
+  #       stat:
+  #           path: "{{ item }}"
+  #       register: ubtu20cis_6_2_3_path_stat
+  #       with_items:
+  #           - "{{ ubtu20cis_6_2_3_working_dir.stdout.split(':') }}"
 
-      - debug: var=ubtu20cis_6_2_3_path_stat
+  #     - debug: var=ubtu20cis_6_2_3_path_stat
 
-      - name: "6.2.3 | PATCH | Ensure root PATH Integrity | Alert on empty value, colon end, and no working dir"
-        debug:
-            msg:
-                - "The following paths have no working directory: {{ ubtu20cis_6_2_3_path_stat.results | selectattr('stat.exists','equalto','false') | map(attribute='item') | list }}"
+  #     - name: "6.2.3 | PATCH | Ensure root PATH Integrity | Alert on empty value, colon end, and no working dir"
+  #       debug:
+  #           msg:
+  #               - "The following paths have no working directory: {{ ubtu20cis_6_2_3_path_stat.results | selectattr('stat.exists','equalto','false') | map(attribute='item') | list }}"
 
-      # - name: "6.2.3 | PATCH | Ensure root PATH Integrity | Set permissions"
-      #   file:
-      #       path: "{{ item }}"
-      #       owner: root
-      #       mode: 'o-w,g-w'
-      #       follow: yes
-      #       state: directory
-      #   with_items:
-      #       - "{{ ubtu18cis_6_2_7_path_stat | selectattr('exists','==','true') | map(attribute='path') }}"
+  #     # - name: "6.2.3 | PATCH | Ensure root PATH Integrity | Set permissions"
+  #     #   file:
+  #     #       path: "{{ item }}"
+  #     #       owner: root
+  #     #       mode: 'o-w,g-w'
+  #     #       follow: yes
+  #     #       state: directory
+  #     #   with_items:
+  #     #       - "{{ ubtu18cis_6_2_7_path_stat | selectattr('exists','==','true') | map(attribute='path') }}"
   when:
       - ubtu20cis_rule_6_2_3
   tags:

@@ -632,29 +632,24 @@
 
 # ---------------
 # ---------------
-# The RHEL7 based control for this does not use a valid module
+# The RHEL7 based control uses a custom module, grub_crypt
 # I need to research best way to set grub pw for Ubuntu using the
 # grub-mkpasswd-pbkdf2 command and passing the data at the same time.
 # ---------------
 # ---------------
-# - name: "1.5.1 | PATCH | Ensure bootloader password is set"
-#   block:
-#       - name: "1.5.1 | PATCH | Ensure bootloader password is set"
-#         grub_crypt:
-#             password: "{{ ubtu20cis_bootloader_password }}"
-#         register: grub_pass
-
-#       - debug: var=grub_pass
-
-#   when:
-#       - ubtu20cis_rule_1_5_1
-#   tags:
-#       - level1-server
-#       - level1-workstation
-#       - patch
-#       - rule_1.5.1
-#       - grub
-#       - notimplemented
+- name: "1.5.1 | PATCH | Ensure bootloader password is set"
+  command: /bin/true
+  changed_when: false
+  failed_when: false
+  when:
+      - ubtu20cis_rule_1_5_1
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_1.5.1
+      - grub
+      - notimplemented
 
 - name: "1.5.2 | PATCH | Ensure permissions on bootloader config are configured"
   block:
