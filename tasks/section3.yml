@@ -872,6 +872,7 @@
       - ubtu20cis_rule_3_5_3_2_1
       - ubtu20cis_firewall_package == "iptables"
       - ubtu20cis_ipv4_required
+      - not system_is_ec2
   tags:
       - level1-server
       - level1-workstation
