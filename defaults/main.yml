@@ -544,8 +544,8 @@ ubtu20cis_sshd:
     login_grace_time: 60
     max_sessions: 4
     # WARNING: make sure you understand the precedence when working with these values!!
-    allow_users: "vagrant"
-    allow_groups: "vagrant"
+    allow_users: "vagrant ubuntu"
+    allow_groups: "vagrant ubuntu"
     # deny_users:
     # deny_groups:
 
