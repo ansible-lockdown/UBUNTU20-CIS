@@ -89,7 +89,7 @@ Ansible > 2.6.5
 Example Playbook
 ----------------
 
-This sample playbook should be run in a folder that is above the main UBUNTU-18-CIS folder.
+This sample playbook should be run in a folder that is above the main UBUNTU-20-CIS folder.
 
 ```
 - hosts: all
