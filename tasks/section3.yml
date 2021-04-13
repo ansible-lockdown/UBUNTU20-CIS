@@ -5,6 +5,7 @@
         shell: grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_3_1_1_grub_cmdline_linux_settings
 
       - name: "3.1.1 | PATCH | Disable IPv6 | Add ipv6.disable if does not exist"
@@ -44,6 +45,7 @@
         shell: dpkg -l | grep network-manager
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_3_1_2_network_manager_status
 
       - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Disable wireless if network-manager installed"
@@ -528,12 +530,14 @@
         command: ss -4tuln
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_3_5_1_6_open_listen_ports
 
       - name: "3.5.1.6 | AUDIT | Ensure firewall rules exist for all open ports | Get list of firewall rules"
         command: ufw status
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_3_5_1_6_firewall_rules
 
       - name: "3.5.1.6 | AUDIT | Ensure firewall rules exist for all open ports | Message out settings"
@@ -634,6 +638,7 @@
   # command: "nft create table {{ ubtu20cis_nftables_table_name }}"
   # changed_when: ubtu20cis_3_5_2_4_new_table.rc == 0
   # failed_when: false
+  # check_mode: false
   # register: ubtu20cis_3_5_2_4_new_table
   when:
       - ubtu20cis_rule_3_5_2_4
@@ -684,18 +689,21 @@
   #       shell: nft list ruleset | awk '/hook input/,/}/' | grep 'iif "lo" accept'
   #       changed_when: false
   #       failed_when: false
+  #       check_mode: false
   #       register: ubtu20cis_3_5_2_6_loopback_iif_status
 
   #     - name: "3.5.2.6 | AUDIT | Ensure loopback traffic is configured | Get input iif lo accept status"
   #       shell: nft list ruleset | awk '/hook input/,/}/' | grep 'ip saddr'
   #       changed_when: false
   #       failed_when: false
+  #       check_mode: false
   #       register: ubtu20cis_3_5_2_6_loopback_input_drop_status
 
   #     - name: "3.5.2.6 | AUDIT | Ensure loopback traffic is configured | Get input iif lo accept status"
   #       shell: nft list ruleset | awk '/hook input/,/}/' | grep 'ip6 saddr'
   #       changed_when: false
   #       failed_when: false
+  #       check_mode: false
   #       register: ubtu20cis_3_5_2_6_loopback_ipv6_drop_status
 
   #     - name: "3.5.2.6 | PATCH | Ensure loopback traffic is configured | Loopback iif lo accept"
@@ -946,12 +954,14 @@
         command: ss -4tuln
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_3_5_3_2_4_open_ports
 
       - name: "3.5.3.2.4 | AUDIT | Ensure firewall rules exist for all open ports | Get list of rules"
         command: iptables -L INPUT -v -n
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_3_5_3_2_4_current_rules
 
       - name: "3.5.3.2.4 | AUDIT | Ensure firewall rules exist for all open ports | Alert about settings"
@@ -1113,12 +1123,14 @@
         command: ss -6tuln
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_3_5_3_3_4_open_ports
 
       - name: "3.5.3.3.4 | AUDIT | Ensure IPv6 firewall rules exist for all open ports | Get list of rules"
         command: ip6tables -L INPUT -v -n
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_3_5_3_3_4_current_rules
 
       - name: "3.5.3.3.4 | AUDIT | Ensure IPv6 firewall rules exist for all open ports | Alert about settings"

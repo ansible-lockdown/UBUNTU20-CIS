@@ -252,6 +252,7 @@
         shell: mount | grep "on /var "
         changed_when: false
         failed_when: false
+        check_mode: false
         args:
             warn: false
         register: ubtu20cis_1_1_10_var_mounted
@@ -277,6 +278,7 @@
         shell: mount | grep "on /var/tmp "
         changed_when: false
         failed_when: false
+        check_mode: false
         args:
             warn: false
         register: ubtu20cis_1_1_11_var_tmp_mounted
@@ -326,6 +328,7 @@
         shell: mount | grep "on /var/log "
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_1_1_15_var_log_mounted
         args:
             warn: false
@@ -351,6 +354,7 @@
         shell: mount | grep "on /var/log/audit "
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_1_1_16_var_log_audit_mounted
         args:
             warn: false
@@ -375,6 +379,7 @@
         shell: mount | grep "on /home"
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_1_1_17_home_mounted
         args:
             warn: false
@@ -453,6 +458,7 @@
 - name: "1.1.22 | PATCH | Ensure sticky bit is set on all world-writable directories"
   shell: df --local -P | awk '{if (NR!=1) print $6}' | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null | xargs -I '{}' chmod a+t '{}'
   failed_when: ubtu20cis_1_1_22_status.rc>0
+  check_mode: false
   register: ubtu20cis_1_1_22_status
   when:
       - ubtu20cis_rule_1_1_22
@@ -509,6 +515,7 @@
         command: apt-cache policy
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_1_2_1_apt_policy
 
       - name: "1.2.1 | AUDIT | Ensure package manager repositories are configured | Message out repository configs"
@@ -533,6 +540,7 @@
         command: apt-key list
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_1_2_2_apt_gpgkeys
 
       - name: "1.2.2 | AUDIT | Ensure GPG keys are configured | Message out apt gpg keys"
@@ -641,6 +649,7 @@
   command: /bin/true
   changed_when: false
   failed_when: false
+  check_mode: false
   when:
       - ubtu20cis_rule_1_5_1
   tags:
@@ -656,6 +665,7 @@
       - name: "1.5.2 | AUDIT | Ensure permissions on bootloader config are configured | Check for Grub file"
         stat:
             path: /boot/grub/grub.cfg
+        check_mode: false
         register: ubtu20cis_1_5_2_grub_cfg_status
 
       - name: "1.5.2 | PATCH | Ensure permissions on bootloader config are configured | Set permissions"
@@ -694,6 +704,7 @@
         shell: "journalctl | grep 'protection: active'"
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_1_6_1_xdnx_status
 
       - name: "1.6.1 | AUDIT | Ensure XD/NX support is enabled | Alert if XD/NX is not enabled"
@@ -788,6 +799,7 @@
         shell: grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_1_7_1_2_cmdline_settings
 
       - name: "1.7.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Set apparmor settings if none exist"
