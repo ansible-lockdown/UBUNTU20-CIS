@@ -565,6 +565,7 @@
         command: grep 'password.*requisite.*pam_pwquality.so' /etc/pam.d/common-password
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_5_3_1_pam_pwquality_state
 
       - name: "5.3.1 | PATCH | Ensure password creation requirements are configured | Set retry to 3 if pwquality exists"
@@ -615,12 +616,14 @@
   command: /bin/true
   changed_when: false
   failed_when: false
+  check_mode: false
   # block:
   #     - name: "5.3.2 | AUDIT | Ensure lockout for failed password attempts is configured | Confirm pam_tally2.so module in common-auth"
   #       # command: grep 'auth.*required.*pam_tally2.so' /etc/pam.d/common-auth
   #       command: grep 'auth.*required.*pam_tally2.so' /etc/pam.d/common-account
   #       changed_when: false
   #       failed_when: false
+  #       check_mode: false
   #       register: ubtu20cis_5_3_2_pam_tally2_state
 
   #     - name: "SCORED | 5.3.2 | PATCH | Ensure lockout for failed password attempts is configured | Set pam_tally2.so settings if exists"
@@ -672,6 +675,7 @@
         command: grep 'password.*required.*pam_pwhistory.so' /etc/pam.d/common-password
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_5_3_3_pam_pwhistory_state
 
       - name: "5.3.3 | PATCH | Ensure password reuse is limited | Set remember value if pam_pwhistory exists"
@@ -705,6 +709,7 @@
         shell: grep -E '^\s*password\s+(\S+\s+)+pam_unix\.so\s+(\S+\s+)*sha512\s*(\S+\s*)*(\s+#.*)?$' /etc/pam.d/common-password
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_5_3_4_pam_unix_state
 
       - name: "5.3.4 | PATCH | Ensure password hashing algorithm is SHA-512 | Set hashing if pam_unix.so exists"
@@ -833,12 +838,14 @@
         shell: echo $(($(date --utc --date "$1" +%s)/86400))
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_5_4_1_5_current_time
 
       - name: "5.4.1.5 | PATCH | Ensure all users last password change date is in the past | Get list of users with last changed PW date in future"
         shell: "cat /etc/shadow | awk -F: '{if($3>{{ ubtu20cis_5_4_1_5_current_time.stdout }})print$1}'"
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_5_4_1_5_user_list
 
       - name: "5.4.1.5 | PATCH | Ensure all users last password change date is in the past | Warn about users"
@@ -926,6 +933,7 @@
         shell: grep -E '^session.*optional.*pam_umask.so' /etc/pam.d/common-session
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_5_4_4_umask_pam_status
 
       - name: "5.4.4 | PATCH | Ensure default user umask is 027 or more restrictive"
@@ -984,6 +992,7 @@
         command: cat /etc/securetty
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_5_5_terminal_list
 
       - name: "5.5 | AUDIT | Ensure root login is restricted to system console | Message out list"
@@ -1008,6 +1017,7 @@
         command: grep 'auth.*required.*pam_wheel' /etc/pam.d/su
         changed_when: false
         failed_when: false
+        check_mode: false
         register: ubtu20cis_5_6_pam_wheel_status
 
       - name: "5.6 | PATCH | Ensure access to the su command is restricted | Create empty sugroup"
