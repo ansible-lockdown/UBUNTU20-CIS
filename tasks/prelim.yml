@@ -44,6 +44,7 @@
 - name: "PRELIM | List users accounts"
   command: "awk -F: '{print $1}' /etc/passwd"
   changed_when: false
+  check_mode: false
   register: ubtu20cis_users
   when:
       - ubtu20cis_rule_6_2_8 or
