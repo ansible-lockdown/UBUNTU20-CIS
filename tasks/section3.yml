@@ -53,12 +53,12 @@
         command: nmcli radio all off
         changed_when: ubtu20cis_3_1_2_nmcli_radio_off.rc == 0
         register: ubtu20cis_3_1_2_nmcli_radio_off
-        when: ubtu20cis_3_1_2_network_manager_status.stdout != ""
+        when: ubtu20cis_3_1_2_network_manager_status.stdout | length > 0
 
       - name: "AUTOMATED | 3.1.2 | PATCH | Ensure wireless interfaces are disabled | Warn about wireless if network-manager not installed"
         debug:
             msg: "ALERT!!!! You need to disable wireless interfaces manually since network-manager is not installed"
-        when: ubtu20cis_3_1_2_network_manager_status.stdout == ""
+        when: ubtu20cis_3_1_2_network_manager_status.stdout | length == 0
   when:
       - ubtu20cis_rule_3_1_2
   tags:
