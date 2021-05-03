@@ -83,28 +83,33 @@ ubtu20cis_rule_1_2_1: true
 ubtu20cis_rule_1_2_2: true
 ubtu20cis_rule_1_3_1: true
 ubtu20cis_rule_1_3_2: true
-ubtu20cis_rule_1_3_3: true
+# ubtu20cis_rule_1_3_3: true
 ubtu20cis_rule_1_4_1: true
 ubtu20cis_rule_1_4_2: true
+ubtu20cis_rule_1_4_3: true
+ubtu20cis_rule_1_4_4: true
 ubtu20cis_rule_1_5_1: true
 ubtu20cis_rule_1_5_2: true
 ubtu20cis_rule_1_5_3: true
-ubtu20cis_rule_1_6_1: true
-ubtu20cis_rule_1_6_2: true
-ubtu20cis_rule_1_6_3: true
-ubtu20cis_rule_1_6_4: true
-ubtu20cis_rule_1_7_1_1: true
-ubtu20cis_rule_1_7_1_2: true
-ubtu20cis_rule_1_7_1_3: true
-ubtu20cis_rule_1_7_1_4: true
-ubtu20cis_rule_1_8_1_1: true
-ubtu20cis_rule_1_8_1_2: true
-ubtu20cis_rule_1_8_1_3: true
-ubtu20cis_rule_1_8_1_4: true
-ubtu20cis_rule_1_8_1_5: true
-ubtu20cis_rule_1_8_1_6: true
+ubtu20cis_rule_1_5_4: true
+ubtu20cis_rule_1_6_1_1: true
+ubtu20cis_rule_1_6_1_2: true
+ubtu20cis_rule_1_6_1_3: true
+ubtu20cis_rule_1_6_1_4: true
+ubtu20cis_rule_1_7_1: true
+ubtu20cis_rule_1_7_2: true
+ubtu20cis_rule_1_7_3: true
+ubtu20cis_rule_1_7_4: true
+ubtu20cis_rule_1_7_5: true
+ubtu20cis_rule_1_7_6: true
+ubtu20cis_rule_1_8_1: true
+ubtu20cis_rule_1_8_2: true
+ubtu20cis_rule_1_8_3: true
+ubtu20cis_rule_1_8_4: true
+# ubtu20cis_rule_1_8_1_5: true
+# ubtu20cis_rule_1_8_1_6: true
 ubtu20cis_rule_1_9: true
-ubtu20cis_rule_1_10: true
+# ubtu20cis_rule_1_10: true
 
 # Section 2 Fixes
 # Section 2 is Services (Special Purpose Services, and service clients)
@@ -382,7 +387,7 @@ ubtu20cis_sudo_package: "sudo"
 # ubtu20cis_sudo_logfile is the path and file name of the sudo log file
 ubtu20cis_sudo_logfile: "/var/log/sudo.log"
 
-# Control 1.4.2
+# Control 1.3.2
 # These are the crontab settings for file system integrity enforcement
 ubtu20cis_aide_cron:
     cron_user: root
@@ -394,13 +399,13 @@ ubtu20cis_aide_cron:
     aide_month: '*'
     aide_weekday: '*'
 
-# Control 1.5.3
+# Control 1.4.4
 # THIS VARAIBLE SHOULD BE CHANGED AND INCORPROATED INTO VAULT
 # THIS VALUE IS WHAT THE ROOT PW WILL BECOME!!!!!!!!
 # HAVING THAT PW EXPOSED IN RAW TEXT IS NOT SECURE!!!!
 ubtu20cis_root_pw: "Password1"
 
-# Control 1.8.1.1
+# Control 1.8.2
 # This will be the motd banner must not contain the below items in order to be compliant with Ubuntu 20 CIS
 # \m, \r, \s, \v or references to the OS platform
 ubtu20cis_warning_banner: |
