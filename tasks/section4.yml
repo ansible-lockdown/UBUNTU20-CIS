@@ -544,7 +544,7 @@
             regexp: "{{ item.regexp }}"
             line: "{{ item.line }}"
         with_items:
-            - { regexp: '^\$ModLoad|^#\$ModLoad', line: '$ModLoad imtc' }
+            - { regexp: '^\$ModLoad|^#\$ModLoad', line: '$ModLoad imtcp' }
             - { regexp: '^\$InputTCPServerRun|^#\$InputTCPServerRun', line: '$InputTCPServerRun 514' }
         notify: restart rsyslog
         when: ubtu20cis_system_is_log_server

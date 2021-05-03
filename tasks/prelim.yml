@@ -3,7 +3,7 @@
   apt:
       update_cache: yes
   when:
-      - ubtu20cis_rule_1_4_1
+      - ubtu20cis_rule_1_3_1
 
 - name: "PRELIM | Check for autofs service"
   shell: "systemctl show autofs | grep LoadState | cut -d = -f 2"

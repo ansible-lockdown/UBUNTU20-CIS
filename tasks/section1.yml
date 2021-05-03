@@ -784,7 +784,7 @@
             msg:
                 - "ALERT!!!!You do not have XD/NX (Execute Disable/No Execute) enabled"
                 - "To conform to CIS standards this needs to be enabled"
-        when: "'active'not in ubtu20cis_1_6_1_xdnx_status.stdout"
+        when: "'active'not in ubtu20cis_1_5_1_xdnx_status.stdout"
   when:
       - ubtu20cis_rule_1_5_1
   tags:
@@ -1064,7 +1064,7 @@
       - { regexp: 'banner-message-text', line: 'banner-message-text={{ ubtu20cis_warning_banner }}', insertafter: 'banner-message-enable' }
   when:
       - ubtu20cis_rule_1_8_2
-      - ubtu18cis_desktop_required
+      - ubtu20cis_desktop_required
   tags:
       - level1-server
       - level1-workstation
