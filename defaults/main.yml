@@ -115,10 +115,10 @@ ubtu20cis_rule_1_9: true
 # Section 2 is Services (Special Purpose Services, and service clients)
 # ubtu20cis_rule_2_1_1: true
 # ubtu20cis_rule_2_1_2: true
-ubtu20cis_rule_2_2_1_1: true
-ubtu20cis_rule_2_2_1_2: true
-ubtu20cis_rule_2_2_1_3: true
-ubtu20cis_rule_2_2_1_4: true
+ubtu20cis_rule_2_1_1_1: true
+ubtu20cis_rule_2_1_1_2: true
+ubtu20cis_rule_2_1_1_3: true
+ubtu20cis_rule_2_1_1_4: true
 ubtu20cis_rule_2_1_2: true
 ubtu20cis_rule_2_1_3: true
 ubtu20cis_rule_2_1_4: true
@@ -142,6 +142,7 @@ ubtu20cis_rule_2_2_4: true
 ubtu20cis_rule_2_2_5: true
 ubtu20cis_rule_2_2_6: true
 ubtu20cis_rule_2_3: true
+ubtu20cis_rule_2_4: true
 
 # Section 3 Fixes
 # Section 3 is Network Configuration (Disable Unused Networks, Network Parameters (Host Only), Network Parameters (Host and Router), Uncommon Network Protocols, and Firewall Configuration)
@@ -417,13 +418,13 @@ ubtu20cis_warning_banner: |
 # The two options are chrony, ntp, or systemd-timesyncd
 ubtu20cis_time_sync_tool: "ntp"
 
-# Control 2.2.1.2
+# Control 2.1.1.2
 # ubtu20cis_ntp_server_list is the list ntp servers
 # ubtu20cis_ntp_fallback_server_list is the list of fallback NTP servers
 ubtu20cis_ntp_server_list: "0.debian.pool.ntp.org 1.debian.pool.ntp.org"
 ubtu20cis_ntp_fallback_server_list: "2.debian.pool.ntp.org 3.debian.pool.ntp.org"
 
-# Control 2.2.1.3/2.2.1.4
+# Control 2.1.1.3/2.1.1.4
 # ubtu20cis_chrony_server_options is the server options for chrony
 ubtu20cis_chrony_server_options: "minpoll 8"
 # ubtu20cis_time_synchronization_servers are the synchronization servers
@@ -437,7 +438,7 @@ ubtu20cis_chrony_user: "_chrony"
 # ubtu20cis_ntp_server_options is the server options for ntp
 ubtu20cis_ntp_server_options: "iburst"
 
-# Control 2.2.15
+# Control 2.1.15
 # ubtu20_cis_mail_transfer_agent is the mail transfer agent in use
 # The options are exim4, postfix or other
 ubtu20_cis_mail_transfer_agent: "other"
