@@ -25,7 +25,7 @@
 #       - rule_2.1.2
 #       - openbsd-inetd
 
-- name: "2.1.1.1 | PATCH | Ensure time synchronization is in use"
+- name: "AUTOMATED | 2.1.1.1 | PATCH | Ensure time synchronization is in use"
   apt:
       name: "{{ ubtu20cis_time_sync_tool }}"
       state: present
@@ -34,18 +34,19 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.1.1.1
       - chrony
 
-- name: "2.1.1.2 | PATCH | Ensure systemd-timesyncd is configured"
+- name: "AUTOMATED | 2.1.1.2 | PATCH | Ensure systemd-timesyncd is configured"
   block:
-      - name: "2.1.1.2 | PATCH | Ensure systemd-timesyncd is configured | Remove ntp and chrony"
+      - name: "AUTOMATED | 2.1.1.2 | PATCH | Ensure systemd-timesyncd is configured | Remove ntp and chrony"
         apt:
             name: ['ntp', 'chrony']
             state: absent
 
-      - name: "2.1.1.2 | PATCH | Ensure systemd-timesyncd is configured | Set configuration for systemd-timesyncd"
+      - name: "AUTOMATED | 2.1.1.2 | PATCH | Ensure systemd-timesyncd is configured | Set configuration for systemd-timesyncd"
         lineinfile:
             path: /etc/systemd/timesyncd.conf
             regexp: "{{ item.regexp }}"
@@ -57,14 +58,14 @@
             - { regexp: '^#FallbackNTP|^FallbackNTP', line: 'FallbackNTP={{ ubtu20cis_ntp_fallback_server_list }}', insertafter: '\[Time\]' }
             - { regexp: '^#RootDistanceMaxSec|^RootDistanceMaxSec', line: 'RootDistanceMaxSec=1', insertafter: '\[Time\]'}
 
-      - name: "2.1.1.2 | PATCH | Ensure systemd-timesyncd is configured | Start and enable the systemd-timesyncd service"
+      - name: "AUTOMATED | 2.1.1.2 | PATCH | Ensure systemd-timesyncd is configured | Start and enable the systemd-timesyncd service"
         systemd:
             name: systemd-timesyncd.service
             state: started
             enabled: yes
             masked: no
 
-      - name: "2.1.1.2 | PATCH | Ensure systemd-timesyncd is configured | Set timedatectl to ntp"
+      - name: "AUTOMATED | 2.1.1.2 | PATCH | Ensure systemd-timesyncd is configured | Set timedatectl to ntp"
         command: timedatectl set-ntp true
   when:
       - ubtu20cis_rule_2_1_1_2
@@ -72,33 +73,34 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - manual
       - patch
       - rule_2.1.1.2
       - systemd-timesyncd
 
-- name: "2.1.1.3 | PATCH | Ensure chrony is configured"
+- name: "AUTOMATED | 2.1.1.3 | PATCH | Ensure chrony is configured"
   block:
-      - name: "2.1.1.3 | PATCH | Ensure chrony is configured | Remove ntp"
+      - name: "AUTOMATED | 2.1.1.3 | PATCH | Ensure chrony is configured | Remove ntp"
         apt:
             name: ntp
             state: absent
 
-      - name: "2.1.1.3 | PATCH | Ensure chrony is configured | Disable/Mask systemd-timesyncd"
+      - name: "AUTOMATED | 2.1.1.3 | PATCH | Ensure chrony is configured | Disable/Mask systemd-timesyncd"
         systemd:
             name: systemd-timesyncd
             state: stopped
             enabled: no
             masked: yes
 
-      - name: "2.1.1.3 | AUDIT | Ensure chrony is configured | Check for chrony user"
+      - name: "AUTOMATED | 2.1.1.3 | AUDIT | Ensure chrony is configured | Check for chrony user"
         shell: grep {{ ubtu20cis_chrony_user }} /etc/passwd
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_2_1_1_3_chrony_user_status
 
-      - name: "2.1.1.3 | PATCH | Ensure chrony is configured | Set chrony.conf file"
+      - name: "AUTOMATED | 2.1.1.3 | PATCH | Ensure chrony is configured | Set chrony.conf file"
         template:
             src: chrony.conf.j2
             dest: /etc/chrony/chrony.conf
@@ -106,14 +108,14 @@
             group: root
             mode: 0644
 
-      - name: "2.1.1.3 | PATCH | Ensure chrony is configured | Create chrony user"
+      - name: "AUTOMATED | 2.1.1.3 | PATCH | Ensure chrony is configured | Create chrony user"
         user:
             name: "{{ ubtu20cis_chrony_user }}"
             shell: /usr/sbin/nologin
             system: true
         when: ubtu20cis_2_1_1_3_chrony_user_status.stdout | length > 0
 
-      - name: "2.2.1.3 | PATCH | Ensure chrony is configured | Set option to use chrony user"
+      - name: "AUTOMATED | 2.2.1.3 | PATCH | Ensure chrony is configured | Set option to use chrony user"
         lineinfile:
             path: /etc/default/chrony
             regexp: '^DAEMON_OPTS'
@@ -124,25 +126,26 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.1.1.3
       - chrony
 
-- name: "2.1.1.4 | PATCH | Ensure ntp is configured"
+- name: "AUTOMATED | 2.1.1.4 | PATCH | Ensure ntp is configured"
   block:
-      - name: "2.1.1.4 | PATCH | Ensure ntp is configured | Remove chrony"
+      - name: "AUTOMATED | 2.1.1.4 | PATCH | Ensure ntp is configured | Remove chrony"
         apt:
             name: chrony
             state: absent
 
-      - name: "2.1.1.4 | PATCH | Ensure ntp is configured | Disable/Mask systemd-timesyncd"
+      - name: "AUTOMATED | 2.1.1.4 | PATCH | Ensure ntp is configured | Disable/Mask systemd-timesyncd"
         systemd:
             name: systemd-timesyncd
             state: stopped
             enabled: no
             masked: yes
 
-      - name: "2.1.1.4 | PATCH | Ensure ntp is configured | Set ntp.conf settings"
+      - name: "AUTOMATED | 2.1.1.4 | PATCH | Ensure ntp is configured | Set ntp.conf settings"
         template:
             src: ntp.conf.j2
             dest: /etc/ntp.conf
@@ -150,7 +153,7 @@
             group: root
             mode: 0644
 
-      - name: "2.1.1.4 | PATCH | Ensure ntp is configured | Modify sysconfig/ntpd"
+      - name: "AUTOMATED | 2.1.1.4 | PATCH | Ensure ntp is configured | Modify sysconfig/ntpd"
         lineinfile:
             path: /etc/sysconfig/ntpd
             regexp: "{{ item.regexp }}"
@@ -160,7 +163,7 @@
             - { regexp: '^OPTIONS', line: 'OPTIONS="-u ntp:ntp"'}
             - { regexp: '^NTPD_OPTIONS', line: 'NTPD_OPTIONS="-u ntp:ntp"' }
 
-      - name: "2.1.1.4 | PATCH | Ensure ntp is configured | Modify /etc/init.d/npt"
+      - name: "AUTOMATED | 2.1.1.4 | PATCH | Ensure ntp is configured | Modify /etc/init.d/npt"
         lineinfile:
             path: /etc/init.d/ntp
             regexp: '^RUNAUSER'
@@ -171,11 +174,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.1.1.4
       - ntp
 
-- name: "2.1.2 | PATCH | Ensure X Window System is not installed"
+- name: "AUTOMATED | 2.1.2 | PATCH | Ensure X Window System is not installed"
   apt:
       name: xserver-xorg*
       state: absent
@@ -184,27 +188,28 @@
       - not ubtu20cis_desktop_required
   tags:
       - level1-server
+      - automated
       - patch
       - rule_2.1.2
       - xwindows
 
-- name: "2.1.3 | PATCH | Ensure Avahi Server is not installed"
+- name: "AUTOMATED | 2.1.3 | PATCH | Ensure Avahi Server is not installed"
   block:
-      - name: "2.1.3 | PATCH | Ensure Avahi Server is not installed | Stop/Disable avahi-daemon.service"
+      - name: "AUTOMATED | 2.1.3 | PATCH | Ensure Avahi Server is not installed | Stop/Disable avahi-daemon.service"
         service:
             name: avahi-daemon.service
             state: stopped
             enabled: no
         when: avahi_service_status.stdout == "loaded"
 
-      - name: "2.1.3 | PATCH | Ensure Avahi Server is not installed | Stop/Disable avahi-daemon.socket"
+      - name: "AUTOMATED | 2.1.3 | PATCH | Ensure Avahi Server is not installed | Stop/Disable avahi-daemon.socket"
         service:
             name: avahi-daemon.socket
             state: stopped
             enabled: no
         when: avahi_service_status.stdout == "loaded"
 
-      - name: "2.1.3 | PATCH | Ensure Avahi Server is not installed | Remove avahi-daemon"
+      - name: "AUTOMATED | 2.1.3 | PATCH | Ensure Avahi Server is not installed | Remove avahi-daemon"
         apt:
             name: avahi-daemon
             state: absent
@@ -214,12 +219,13 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.1.3
       - avahi
       - services
 
-- name: "2.1.4 | PATCH | Ensure CUPS is not installed"
+- name: "AUTOMATED | 2.1.4 | PATCH | Ensure CUPS is not installed"
   apt:
       name: cups
       state: absent
@@ -229,12 +235,13 @@
   tags:
       - level1-server
       - level2-workstation
+      - automated
       - patch
       - rule_2.1.4
       - cups
       - services
 
-- name: "2.1.5 | PATCH | Ensure DHCP Server is not installed"
+- name: "AUTOMATED | 2.1.5 | PATCH | Ensure DHCP Server is not installed"
   apt:
       name: isc-dhcp-server
       state: absent
@@ -244,12 +251,13 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.1.5
       - dhcp
       - services
 
-- name: "2.1.6 | PATCH | Ensure LDAP server is not installed"
+- name: "AUTOMATED | 2.1.6 | PATCH | Ensure LDAP server is not installed"
   apt:
       name: slapd
       state: absent
@@ -259,12 +267,13 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.1.6
       - ldap
       - services
 
-- name: "2.1.7 | PATCH | Ensure NFS is not installed"
+- name: "AUTOMATED | 2.1.7 | PATCH | Ensure NFS is not installed"
   apt:
       name: rpcbind
       state: absent
@@ -274,13 +283,14 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.1.7
       - nfs
       - rpc
       - services
 
-- name: "2.1.8 | PATCH | Ensure DNS Server is not installed"
+- name: "AUTOMATED | 2.1.8 | PATCH | Ensure DNS Server is not installed"
   apt:
       name: bind9
       state: absent
@@ -290,12 +300,13 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.1.8
       - dns
       - service
 
-- name: "2.1.9 | PATCH | Ensure FTP Server is not installed"
+- name: "AUTOMATED | 2.1.9 | PATCH | Ensure FTP Server is not installed"
   apt:
       name: vsftpd
       state: absent
@@ -305,12 +316,13 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.1.9
       - ftp
       - service
 
-- name: "2.1.10 | PATCH | Ensure HTTP server is not installed"
+- name: "AUTOMATED | 2.1.10 | PATCH | Ensure HTTP server is not installed"
   apt:
        name: apache2
        state: absent
@@ -320,12 +332,13 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.1.10
       - httpd
       - service
 
-- name: "2.1.11 | PATCH | Ensure IMAP and POP3 server are not installed"
+- name: "AUTOMATED | 2.1.11 | PATCH | Ensure IMAP and POP3 server are not installed"
   apt:
       name: ['dovecot-imapd', 'dovecot-pop3d']
       state: absent
@@ -335,12 +348,13 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.1.11
       - dovecot
       - service
 
-- name: "2.1.12 | PATCH | Ensure Samba is not installed"
+- name: "AUTOMATED | 2.1.12 | PATCH | Ensure Samba is not installed"
   apt:
       name: samba
       state: absent
@@ -350,12 +364,13 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.1.12
       - samba
       - service
 
-- name: "2.1.13 | PATCH | Ensure HTTP Proxy Server is not installed"
+- name: "AUTOMATED | 2.1.13 | PATCH | Ensure HTTP Proxy Server is not installed"
   apt:
       name: squid
       state: absent
@@ -365,12 +380,13 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.1.13
       - http_proxy
       - service
 
-- name: "2.1.14 | PATCH | Ensure SNMP Server is not installed"
+- name: "AUTOMATED | 2.1.14 | PATCH | Ensure SNMP Server is not installed"
   apt:
       name: snmpd
       state: absent
@@ -380,14 +396,15 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.1.14
       - snmp
       - service
 
-- name: "2.1.15 | PATCH | Ensure mail transfer agent is configured for local-only mode"
+- name: "AUTOMATED | 2.1.15 | PATCH | Ensure mail transfer agent is configured for local-only mode"
   block:
-      - name: "2.1.15 | PATCH | Ensure mail transfer agent is configured for local-only mode | Make changes if exim4 installed"
+      - name: "AUTOMATED | 2.1.15 | PATCH | Ensure mail transfer agent is configured for local-only mode | Make changes if exim4 installed"
         lineinfile:
             path: /etc/exim4/update-exim4.conf.conf
             regexp: "{{ item.regexp }}"
@@ -407,7 +424,7 @@
         notify: restart exim4
         when: ubtu20_cis_mail_transfer_agent == "exim4"
 
-      - name: "2.1.15 | PATCH | Ensure mail transfer agent is configured for local-only mode | Make changes if postfix is installed"
+      - name: "AUTOMATED | 2.1.15 | PATCH | Ensure mail transfer agent is configured for local-only mode | Make changes if postfix is installed"
         lineinfile:
             path: /etc/postfix/main.cf
             regexp: '^(#)?inet_interfaces'
@@ -415,7 +432,7 @@
         notify: restart postfix
         when: ubtu20_cis_mail_transfer_agent == "postfix"
 
-      - name: "2.1.15 | PATCH | Ensure mail transfer agent is configured for local-only mode | Message out other main agents"
+      - name: "AUTOMATED | 2.1.15 | PATCH | Ensure mail transfer agent is configured for local-only mode | Message out other main agents"
         debug:
             msg:
                 - "Warning!! You are not using either exim4 or postfix"
@@ -426,12 +443,13 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - scored
       - patch
       - rule_2.1.15
       - postfix
 
-- name: "2.1.16 | PATCH | Ensure rsync service is not installed"
+- name: "AUTOMATED | 2.1.16 | PATCH | Ensure rsync service is not installed"
   apt:
       name: rsync
       state: absent
@@ -441,11 +459,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.1.16
       - rsync
 
-- name: "2.1.17 | PATCH | Ensure NIS Server is not installed"
+- name: "AUTOMATED | 2.1.17 | PATCH | Ensure NIS Server is not installed"
   apt:
       name: nis
       state: absent
@@ -455,6 +474,7 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - rule_2.1.17
       - nis
       - service
@@ -472,7 +492,7 @@
       - rule_2.2.1
       - nis
 
-- name: "2.2.2 | PATCH | Ensure rsh client is not installed"
+- name: "AUTOMATED | 2.2.2 | PATCH | Ensure rsh client is not installed"
   apt:
       name: rsh-client
       state: absent
@@ -482,11 +502,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.2.2
       - rsh
 
-- name: "2.2.3 | PATCH | Ensure talk client is not installed"
+- name: "AUTOMATED | 2.2.3 | PATCH | Ensure talk client is not installed"
   apt:
       name: talk
       state: absent
@@ -496,11 +517,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.2.3
       - talk
 
-- name: "2.2.4 | PATCH | Ensure telnet client is not installed"
+- name: "AUTOMATED | 2.2.4 | PATCH | Ensure telnet client is not installed"
   apt:
       name: telnet
       state: absent
@@ -510,11 +532,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.2.4
       - telnet
 
-- name: "2.2.5 | PATCH | Ensure LDAP client is not installed"
+- name: "AUTOMATED | 2.2.5 | PATCH | Ensure LDAP client is not installed"
   apt:
       name: ldap-utils
       state: absent
@@ -524,11 +547,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.2.5
       - ldap
 
-- name: "2.2.6 | PATCH | Ensure RPC is not installed"
+- name: "AUTOMATED | 2.2.6 | PATCH | Ensure RPC is not installed"
   apt:
       name: rpcbind
       state: absent
@@ -538,20 +562,21 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_2.2.6
       - rpbc
 
-- name: "2.3 | AUDIT | Ensure nonessential services are removed or masked"
+- name: "MANUAL | 2.3 | AUDIT | Ensure nonessential services are removed or masked"
   block:
-      - name: "2.4 | AUDIT | Ensure nonessential services are removed or masked | Check for services"
+      - name: "MANUAL | 2.4 | AUDIT | Ensure nonessential services are removed or masked | Check for services"
         shell: lsof -i -P -n | grep -v "(ESTABLISHED)"
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_2_4_services
 
-      - name: "2.4 | AUDIT | Ensure nonessential services are removed or masked | Message out running services"
+      - name: "MANUAL | 2.4 | AUDIT | Ensure nonessential services are removed or masked | Message out running services"
         debug:
             msg:
                 - "Warning!! Below are the running services. Please review and remove as well as mask un-needed services"
