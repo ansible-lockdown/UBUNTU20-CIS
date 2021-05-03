@@ -111,7 +111,7 @@
             name: "{{ ubtu20cis_chrony_user }}"
             shell: /usr/sbin/nologin
             system: true
-        when: ubtu20cis_2_1_1_3_chrony_user_status.stdout != ""
+        when: ubtu20cis_2_1_1_3_chrony_user_status.stdout | length > 0
 
       - name: "2.2.1.3 | PATCH | Ensure chrony is configured | Set option to use chrony user"
         lineinfile:
