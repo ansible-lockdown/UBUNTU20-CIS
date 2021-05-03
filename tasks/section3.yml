@@ -409,7 +409,7 @@
       - rule_3.4.4
       - tipc
 
-- name: "3.5.1.1 | PATCH | Ensure Uncomplicated Firewall is installed"
+- name: "3.5.1.1 | PATCH | Ensure ufw is installed"
   apt:
       name: ufw
       state: present
@@ -424,7 +424,22 @@
       - apt
       - ufw
 
-- name: "3.5.1.2 | PATCH | Ensure iptables-persistent is not installed"
+# - name: "3.5.1.1 | PATCH | Ensure Uncomplicated Firewall is installed"
+#   apt:
+#       name: ufw
+#       state: present
+#   when:
+#       - ubtu20cis_rule_3_5_1_1
+#       - ubtu20cis_firewall_package == "ufw"
+#   tags:
+#       - level1-server
+#       - level1-workstation
+#       - patch
+#       - rule_3.5.1.1
+#       - apt
+#       - ufw
+
+- name: "3.5.1.2 | PATCH | Ensure iptables-persistent is not installed with ufw"
   apt:
       name: iptables-persistent
       state: absent
@@ -494,9 +509,9 @@
       - rule_3.5.1.4
       - ufw
 
-- name: "3.5.1.5 | PATCH | Ensure outbound connections are configured"
+- name: "3.5.1.5 | PATCH | Ensure ufw outbound connections are configured"
   block:
-      - name: "3.5.1.5 | PATCH | Ensure outbound connections are configured | Custom ports"
+      - name: "3.5.1.5 | PATCH | Ensure ufw outbound connections are configured | Custom ports"
         ufw:
             rule: allow
             direction: out
@@ -506,7 +521,7 @@
         notify: reload ufw
         when: ubtu20cis_ufw_allow_out_ports != "all"
 
-      - name: "3.5.1.5 | PATCH | Ensure outbound connections are configured | Allow all"
+      - name: "3.5.1.5 | PATCH | Ensure ufw outbound connections are configured | Allow all"
         ufw:
             rule: allow
             direction: out
@@ -524,23 +539,23 @@
       - rule_3.5.1.5
       - ufw
 
-- name: "3.5.1.6 | AUDIT | Ensure firewall rules exist for all open ports"
+- name: "3.5.1.6 | AUDIT | Ensure ufw firewall rules exist for all open ports"
   block:
-      - name: "3.5.1.6 | AUDIT | Ensure firewall rules exist for all open ports | Get list of open ports"
+      - name: "3.5.1.6 | AUDIT | Ensure ufw firewall rules exist for all open ports | Get list of open ports"
         command: ss -4tuln
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_3_5_1_6_open_listen_ports
 
-      - name: "3.5.1.6 | AUDIT | Ensure firewall rules exist for all open ports | Get list of firewall rules"
+      - name: "3.5.1.6 | AUDIT | Ensure ufw firewall rules exist for all open ports | Get list of firewall rules"
         command: ufw status
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_3_5_1_6_firewall_rules
 
-      - name: "3.5.1.6 | AUDIT | Ensure firewall rules exist for all open ports | Message out settings"
+      - name: "3.5.1.6 | AUDIT | Ensure ufw firewall rules exist for all open ports | Message out settings"
         debug:
             msg:
                 - "ALERT!!!!Below are the listening ports and firewall rules"
@@ -560,7 +575,7 @@
       - rule_3.5.1.6
       - ufw
 
-- name: "3.5.1.7 | PATCH | Ensure default deny firewall policy"
+- name: "3.5.1.7 | PATCH | Ensure ufw default deny firewall policy"
   ufw:
       default: deny
       direction: "{{ item }}"
@@ -600,7 +615,7 @@
       - rule_3.5.2.1
       - nftables
 
-- name: "3.5.2.2 | AUDIT | Ensure Uncomplicated Firewall is not installed or disabled"
+- name: "3.5.2.2 | AUDIT | Ensure ufw is uninstalled or disabled with nftables"
   debug:
       msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
   # apt:
@@ -616,7 +631,7 @@
       - rule_3.5.2.2
       - nftables
 
-- name: "3.5.2.3 | AUDIT | Ensure iptables are flushed"
+- name: "3.5.2.3 | AUDIT | Ensure iptables are flushed with nftables"
   debug:
       msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
   # iptables:
@@ -632,7 +647,7 @@
       - rule_3.5.2.3
       - nftables
 
-- name: "3.5.2.4 | AUDIT | Ensure a table exists"
+- name: "3.5.2.4 | AUDIT | Ensure a nftables table exists"
   debug:
       msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
   # command: "nft create table {{ ubtu20cis_nftables_table_name }}"
@@ -650,23 +665,23 @@
       - rule_3.5.2.4
       - nftables
 
-- name: "3.5.2.5 | AUDIT | Ensure base chains exist"
+- name: "3.5.2.5 | AUDIT | Ensure nftables base chains exist"
   debug:
       msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
   # block:
-  #     - name: "3.5.2.5 | PATCH | Ensure base chains exist | Input entry"
+  #     - name: "3.5.2.5 | PATCH | Ensure nftables base chains exist | Input entry"
   #       shell: 'nft create chain {{ ubtu20cis_nftables_table_name }} input { type filter hook input priority 0 \; }'
   #       changed_when: ubtu20cis_3_5_2_5_base_chains_input.rc == 0
   #       failed_when: false
   #       register: ubtu20cis_3_5_2_5_base_chains_input
 
-  #     - name: "3.5.2.5 | PATCH | Ensure base chains exist | Forward entry"
+  #     - name: "3.5.2.5 | PATCH | Ensure nftables base chains exist | Forward entry"
   #       shell: 'nft create chain {{ ubtu20cis_nftables_table_name }} forward { type filter hook forward priority 0 \; }'
   #       changed_when: ubtu20cis_3_5_2_5_base_chains_forward.rc == 0
   #       failed_when: false
   #       register: ubtu20cis_3_5_2_5_base_chains_forward
 
-  #     - name: "3.5.2.5 | PATCH | Ensure base chains exist | Output entry"
+  #     - name: "3.5.2.5 | PATCH | Ensure nftables base chains exist | Output entry"
   #       shell: 'nft create chain {{ ubtu20cis_nftables_table_name }} output { type filter hook output priority 0 \; }'
   #       changed_when: ubtu20cis_3_5_2_5_base_chains_output.rc == 0
   #       failed_when: false
@@ -681,39 +696,39 @@
       - rule_3.5.2.5
       - nftables
 
-- name: "3.5.2.6 | AUDIT | Ensure loopback traffic is configured"
+- name: "3.5.2.6 | AUDIT | Ensure nftables loopback traffic is configured"
   debug:
       msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
   # block:
-  #     - name: "3.5.2.6 | AUDIT | Ensure loopback traffic is configured | Get input iif lo accept status"
+  #     - name: "3.5.2.6 | AUDIT | Ensure nftables loopback traffic is configured | Get input iif lo accept status"
   #       shell: nft list ruleset | awk '/hook input/,/}/' | grep 'iif "lo" accept'
   #       changed_when: false
   #       failed_when: false
   #       check_mode: false
   #       register: ubtu20cis_3_5_2_6_loopback_iif_status
 
-  #     - name: "3.5.2.6 | AUDIT | Ensure loopback traffic is configured | Get input iif lo accept status"
+  #     - name: "3.5.2.6 | AUDIT | Ensure nftables loopback traffic is configured | Get input iif lo accept status"
   #       shell: nft list ruleset | awk '/hook input/,/}/' | grep 'ip saddr'
   #       changed_when: false
   #       failed_when: false
   #       check_mode: false
   #       register: ubtu20cis_3_5_2_6_loopback_input_drop_status
 
-  #     - name: "3.5.2.6 | AUDIT | Ensure loopback traffic is configured | Get input iif lo accept status"
+  #     - name: "3.5.2.6 | AUDIT | Ensure nftables loopback traffic is configured | Get input iif lo accept status"
   #       shell: nft list ruleset | awk '/hook input/,/}/' | grep 'ip6 saddr'
   #       changed_when: false
   #       failed_when: false
   #       check_mode: false
   #       register: ubtu20cis_3_5_2_6_loopback_ipv6_drop_status
 
-  #     - name: "3.5.2.6 | PATCH | Ensure loopback traffic is configured | Loopback iif lo accept"
+  #     - name: "3.5.2.6 | PATCH | Ensure nftables loopback traffic is configured | Loopback iif lo accept"
   #       command: 'nft add rule inet {{ ubtu20cis_nftables_table_name }} input iif lo accept'
   #       changed_when: ubtu20cis_3_5_2_6_loopback_iif.rc == 0
   #       failed_when: false
   #       register: ubtu20cis_3_5_2_6_loopback_iif
   #       when: "'iif \"lo\" accept' not in ubtu20cis_3_5_2_6_loopback_iif_status.stdout"
 
-  #     - name: "3.5.2.6 | PATCH | Ensure loopback traffic is configured | Loopback input drop"
+  #     - name: "3.5.2.6 | PATCH | Ensure nftables loopback traffic is configured | Loopback input drop"
   #       command: 'nft add rule inet {{ ubtu20cis_nftables_table_name }} input ip saddr 127\.0\.0\.0\/8 counter drop'
   #       changed_when: ubtu20cis_3_5_2_6_loopback_input_drop.rc == 0
   #       failed_when: false
@@ -722,7 +737,7 @@
   #        - "'ip saddr 127.0.0.0/8' not in ubtu18cis_3_5_3_4_loopback_input_drop_status.stdout"
   #        - "'drop' not in ubtu20cis_3_5_2_6_loopback_input_drop_status.stdout"
 
-  #     - name: "3.5.2.6 | PATCH | Ensure loopback traffic is configured | Loopback ipv6 drop"
+  #     - name: "3.5.2.6 | PATCH | Ensure nftables loopback traffic is configured | Loopback ipv6 drop"
   #       command: 'nft add rule inet {{ ubtu20cis_nftables_table_name }} input ip6 saddr ::1 counter drop'
   #       changed_when: ubtu20cis_3_5_2_6_loopback_ipv6_drop.rc == 0
   #       failed_when: false
@@ -740,7 +755,7 @@
       - rule_3.5.2.6
       - nftables
 
-- name: "3.5.2.7 | AUDIT | Ensure outbound and established connections are configured"
+- name: "3.5.2.7 | AUDIT | Ensure nftables outbound and established connections are configured"
   debug:
       msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
   when:
@@ -754,7 +769,7 @@
       - rule_3.5.2.7
       - nftables
 
-- name: "3.5.2.8 | AUDIT | Ensure default deny firewall policy"
+- name: "3.5.2.8 | AUDIT | Ensure nftables default deny firewall policy"
   debug:
       msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
   when:
@@ -811,7 +826,7 @@
       - rule_3.5.3.1.1
       - iptables
 
-- name: "3.5.3.1.2 | PATCH | Ensure nftables is not installed"
+- name: "3.5.3.1.2 | PATCH | Ensure nftables is not installed with iptables"
   apt:
       name: nftables
       state: absent
@@ -825,7 +840,7 @@
       - rule_3.5.3.1.2
       - iptables
 
-- name: "3.5.3.1.3 | PATCH | Ensure Uncomplicated Firewall is not installed or disabled"
+- name: "3.5.3.1.3 | PATCH | Ensure ufw is uninstalled or disabled with iptables"
   apt:
       name: ufw
       state: absent
@@ -839,48 +854,81 @@
       - rule_3.5.3.1.3
       - iptables
 
-# ---------
-# ---------
-# Unsuer about the _v6 when being there, revisit and confirm if it's needed for all ipv4 iptables tasks
-# ---------
-# ---------
-- name: "3.5.3.2.1 | PATCH | Ensure default deny firewall policy"
+# # ---------
+# # ---------
+# # Unsure about the _v6 when being there, revisit and confirm if it's needed for all ipv4 iptables tasks
+# # ---------
+# # ---------
+# - name: "3.5.3.2.1 | PATCH | Ensure default deny firewall policy"
+#   block:
+#       - name: "3.5.3.2.1 | PATCH | Ensure default deny firewall policy | Configure SSH to be allowed in"
+#         iptables:
+#             chain: INPUT
+#             protocol: tcp
+#             destination_port: 22
+#             jump: ACCEPT
+#             ctstate: 'NEW,ESTABLISHED'
+
+#       - name: "3.5.3.2.1 | PATCH | Ensure default deny firewall policy | Configure SSH to be allowed out"
+#         iptables:
+#             chain: OUTPUT
+#             protocol: tcp
+#             source_port: 22
+#             jump: ACCEPT
+#             ctstate: 'NEW,ESTABLISHED'
+
+#       - name: "3.5.3.2.1 | PATCH | Ensure default deny firewall policy | Enable apt traffic"
+#         iptables:
+#             chain: INPUT
+#             ctstate: 'ESTABLISHED'
+#             jump: ACCEPT
+
+#       - name: "3.5.3.2.1 | PATCH | Ensure default deny firewall policy | Set drop items"
+#         iptables:
+#             policy: DROP
+#             chain: "{{ item }}"
+#         with_items:
+#             - INPUT
+#             - FORWARD
+#             - OUTPUT
+#   when:
+#       - ubtu20cis_rule_3_5_3_2_1
+#       - ubtu20cis_firewall_package == "iptables"
+#       - ubtu20cis_ipv4_required
+#       - not system_is_ec2
+#   tags:
+#       - level1-server
+#       - level1-workstation
+#       - patch
+#       - rule_3.5.3.2.1
+#       - iptables
+
+- name: "3.5.3.2.1 | PATCH | Ensure iptables loopback traffic is configured"
   block:
-      - name: "3.5.3.2.1 | PATCH | Ensure default deny firewall policy | Configure SSH to be allowed in"
+      - name: "3.5.3.2.1 | PATCH | Ensure iptables loopback traffic is configured | INPUT loopback ACCEPT"
         iptables:
+            action: append
             chain: INPUT
-            protocol: tcp
-            destination_port: 22
+            in_interface: lo
             jump: ACCEPT
-            ctstate: 'NEW,ESTABLISHED'
 
-      - name: "3.5.3.2.1 | PATCH | Ensure default deny firewall policy | Configure SSH to be allowed out"
+      - name: "3.5.3.2.1 | PATCH | Ensure iptables loopback traffic is configured | OUTPUT loopback ACCEPT"
         iptables:
+            action: append
             chain: OUTPUT
-            protocol: tcp
-            source_port: 22
+            out_interface: lo
             jump: ACCEPT
-            ctstate: 'NEW,ESTABLISHED'
 
-      - name: "3.5.3.2.1 | PATCH | Ensure default deny firewall policy | Enable apt traffic"
+      - name: "3.5.3.2.1 | PATCH | Ensure iptables loopback traffic is configured | OUTPUT loopback ACCEPT"
         iptables:
+            action: append
             chain: INPUT
-            ctstate: 'ESTABLISHED'
-            jump: ACCEPT
-
-      - name: "3.5.3.2.1 | PATCH | Ensure default deny firewall policy | Set drop items"
-        iptables:
-            policy: DROP
-            chain: "{{ item }}"
-        with_items:
-            - INPUT
-            - FORWARD
-            - OUTPUT
+            source: 127.0.0.0/8
+            jump: DROP
   when:
       - ubtu20cis_rule_3_5_3_2_1
       - ubtu20cis_firewall_package == "iptables"
       - ubtu20cis_ipv4_required
-      - not system_is_ec2
   tags:
       - level1-server
       - level1-workstation
@@ -888,40 +936,7 @@
       - rule_3.5.3.2.1
       - iptables
 
-- name: "3.5.3.2.2 | PATCH | Ensure loopback traffic is configured"
-  block:
-      - name: "3.5.3.2.2 | PATCH | Ensure loopback traffic is configured | INPUT loopback ACCEPT"
-        iptables:
-            action: append
-            chain: INPUT
-            in_interface: lo
-            jump: ACCEPT
-
-      - name: "3.5.3.2.2 | PATCH | Ensure loopback traffic is configured | OUTPUT loopback ACCEPT"
-        iptables:
-            action: append
-            chain: OUTPUT
-            out_interface: lo
-            jump: ACCEPT
-
-      - name: "3.5.3.2.2 | PATCH | Ensure loopback traffic is configured | OUTPUT loopback ACCEPT"
-        iptables:
-            action: append
-            chain: INPUT
-            source: 127.0.0.0/8
-            jump: DROP
-  when:
-      - ubtu20cis_rule_3_5_3_2_2
-      - ubtu20cis_firewall_package == "iptables"
-      - ubtu20cis_ipv4_required
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - rule_3.5.3.2.2
-      - iptables
-
-- name: "3.5.3.2.3 | PATCH | Ensure outbound and established connections are configured"
+- name: "3.5.3.2.2 | PATCH | Ensure iptables outbound and established connections are configured"
   iptables:
       action: append
       chain: '{{ item.chain }}'
@@ -937,7 +952,7 @@
       - { chain: INPUT, protocol: udp, ctstate: 'ESTABLISHED' }
       - { chain: INPUT, protocol: icmp, ctstate: 'ESTABLISHED' }
   when:
-      - ubtu20cis_rule_3_5_3_2_3
+      - ubtu20cis_rule_3_5_3_2_2
       - ubtu20cis_firewall_package == "iptables"
       - ubtu20cis_ipv4_required
   tags:
@@ -945,26 +960,71 @@
       - level1-workstation
       - manual
       - patch
+      - rule_3.5.3.2.2
+      - iptables
+
+- name: "3.5.3.2.3 | PATCH | Ensure iptables default deny firewall policy"
+  block:
+      - name: "3.5.3.2.3 | PATCH | Ensure iptables default deny firewall policy | Configure SSH to be allowed in"
+        iptables:
+            chain: INPUT
+            protocol: tcp
+            destination_port: 22
+            jump: ACCEPT
+            ctstate: 'NEW,ESTABLISHED'
+
+      - name: "3.5.3.2.3 | PATCH | Ensure iptables default deny firewall policy | Configure SSH to be allowed out"
+        iptables:
+            chain: OUTPUT
+            protocol: tcp
+            source_port: 22
+            jump: ACCEPT
+            ctstate: 'NEW,ESTABLISHED'
+
+      - name: "3.5.3.2.3 | PATCH | Ensure iptables default deny firewall policy | Enable apt traffic"
+        iptables:
+            chain: INPUT
+            ctstate: 'ESTABLISHED'
+            jump: ACCEPT
+
+      - name: "3.5.3.2.3 | PATCH | Ensure iptables default deny firewall policy | Set drop items"
+        iptables:
+            policy: DROP
+            chain: "{{ item }}"
+        with_items:
+            - INPUT
+            - FORWARD
+            - OUTPUT
+  when:
+      - ubtu20cis_rule_3_5_3_2_3
+      - ubtu20cis_firewall_package == "iptables"
+      - ubtu20cis_ipv4_required
+      - not system_is_ec2
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
       - rule_3.5.3.2.3
       - iptables
 
-- name: "3.5.3.2.4 | AUDIT | Ensure firewall rules exist for all open ports"
+
+- name: "3.5.3.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports"
   block:
-      - name: "3.5.3.2.4 | AUDIT | Ensure firewall rules exist for all open ports | Get list of open ports"
+      - name: "3.5.3.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Get list of open ports"
         command: ss -4tuln
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_3_5_3_2_4_open_ports
 
-      - name: "3.5.3.2.4 | AUDIT | Ensure firewall rules exist for all open ports | Get list of rules"
+      - name: "3.5.3.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Get list of rules"
         command: iptables -L INPUT -v -n
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_3_5_3_2_4_current_rules
 
-      - name: "3.5.3.2.4 | AUDIT | Ensure firewall rules exist for all open ports | Alert about settings"
+      - name: "3.5.3.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Alert about settings"
         debug:
             msg:
                 - "ALERT!!!!Below is the list the open ports and current rules"
@@ -1005,40 +1065,76 @@
         register: ubtu20cis_iptables_save
   when:
       - ubtu20cis_firewall_package == "iptables"
-      # - not ubtu18cis_iptables_v6
       - ubtu20cis_save_iptables_cis_rules
       - ubtu20cis_rule_3_5_3_2_1 or
         ubtu20cis_rule_3_5_3_2_2 or
         ubtu20cis_rule_3_5_3_2_3 or
         ubtu20cis_rule_3_5_3_2_4
 
-- name: "3.5.3.3.1 | PATCH | Ensure IPv6 default deny firewall policy"
+# - name: "3.5.3.3.1 | PATCH | Ensure IPv6 default deny firewall policy"
+#   block:
+#       - name: "3.5.3.3.1 | PATCH | Ensure IPv6 default deny firewall policy | Configure SSH to be allowed out"
+#         iptables:
+#             chain: OUTPUT
+#             protocol: tcp
+#             source_port: 22
+#             jump: ACCEPT
+#             ctstate: 'NEW,ESTABLISHED'
+#             ip_version: ipv6
+
+#       - name: "3.5.3.3.1 | PATCH | Ensure IPv6 default deny firewall policy | Enable apt traffic"
+#         iptables:
+#             chain: INPUT
+#             ctstate: 'ESTABLISHED'
+#             jump: ACCEPT
+#             ip_version: ipv6
+
+#       - name: "3.5.3.3.1 | PATCH | Ensure IPv6 default deny firewall policy | Set drop items"
+#         iptables:
+#             policy: DROP
+#             chain: "{{ item }}"
+#             ip_version: ipv6
+#         with_items:
+#             - INPUT
+#             - FORWARD
+#             - OUTPUT
+#   when:
+#       - ubtu20cis_rule_3_5_3_3_1
+#       - ubtu20cis_firewall_package == "iptables"
+#       - ubtu20cis_ipv6_required
+#       - not ubtu20cis_ipv4_required
+#   tags:
+#       - level1-server
+#       - level1-workstation
+#       - patch
+#       - rule_3.5.3.3.1
+#       - ip6tables
+
+- name: "3.5.3.3.1 | PATCH | Ensure ip6tables loopback traffic is configured"
   block:
-      - name: "3.5.3.3.1 | PATCH | Ensure IPv6 default deny firewall policy | Configure SSH to be allowed out"
+      - name: "3.5.3.3.1 | PATCH | Ensure ip6tables loopback traffic is configured | INPUT loopback ACCEPT"
         iptables:
-            chain: OUTPUT
-            protocol: tcp
-            source_port: 22
-            jump: ACCEPT
-            ctstate: 'NEW,ESTABLISHED'
-            ip_version: ipv6
-
-      - name: "3.5.3.3.1 | PATCH | Ensure IPv6 default deny firewall policy | Enable apt traffic"
-        iptables:
+            action: append
             chain: INPUT
-            ctstate: 'ESTABLISHED'
+            in_interface: lo
             jump: ACCEPT
             ip_version: ipv6
 
-      - name: "3.5.3.3.1 | PATCH | Ensure IPv6 default deny firewall policy | Set drop items"
+      - name: "3.5.3.3.1 | PATCH | Ensure ip6tables loopback traffic is configured | OUTPUT loopback ACCEPT"
         iptables:
-            policy: DROP
-            chain: "{{ item }}"
+            action: append
+            chain: OUTPUT
+            out_interface: lo
+            jump: ACCEPT
             ip_version: ipv6
-        with_items:
-            - INPUT
-            - FORWARD
-            - OUTPUT
+
+      - name: "3.5.3.3.1 | PATCH | Ensure ip6tables loopback traffic is configured | INPUT loopback drop"
+        iptables:
+            action: append
+            chain: INPUT
+            source: ::1
+            jump: DROP
+            ip_version: ipv6
   when:
       - ubtu20cis_rule_3_5_3_3_1
       - ubtu20cis_firewall_package == "iptables"
@@ -1051,44 +1147,7 @@
       - rule_3.5.3.3.1
       - ip6tables
 
-- name: "3.5.3.3.2 | PATCH | Ensure IPv6 loopback traffic is configured"
-  block:
-      - name: "3.5.3.3.2 | PATCH | Ensure IPv6 loopback traffic is configured | INPUT loopback ACCEPT"
-        iptables:
-            action: append
-            chain: INPUT
-            in_interface: lo
-            jump: ACCEPT
-            ip_version: ipv6
-
-      - name: "3.5.3.3.2 | PATCH | Ensure IPv6 loopback traffic is configured | OUTPUT loopback ACCEPT"
-        iptables:
-            action: append
-            chain: OUTPUT
-            out_interface: lo
-            jump: ACCEPT
-            ip_version: ipv6
-
-      - name: "3.5.3.3.2 | PATCH | Ensure IPv6 loopback traffic is configured | INPUT loopback drop"
-        iptables:
-            action: append
-            chain: INPUT
-            source: ::1
-            jump: DROP
-            ip_version: ipv6
-  when:
-      - ubtu20cis_rule_3_5_3_3_2
-      - ubtu20cis_firewall_package == "iptables"
-      - ubtu20cis_ipv6_required
-      - not ubtu20cis_ipv4_required
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - rule_3.5.3.3.2
-      - ip6tables
-
-- name: "3.5.3.3.3 | PATCH | Ensure IPv6 outbound and established connections are configured"
+- name: "3.5.3.3.2 | PATCH | Ensure ip6tables outbound and established connections are configured"
   iptables:
       action: append
       chain: '{{ item.chain }}'
@@ -1105,7 +1164,7 @@
       - { chain: INPUT, protocol: udp, ctstate: 'ESTABLISHED' }
       - { chain: INPUT, protocol: icmp, ctstate: 'ESTABLISHED' }
   when:
-      - ubtu20cis_rule_3_5_3_3_3
+      - ubtu20cis_rule_3_5_3_3_2
       - ubtu20cis_firewall_package == "iptables"
       - ubtu20cis_ipv6_required
       - not ubtu20cis_ipv4_required
@@ -1114,26 +1173,65 @@
       - level1-workstation
       - manual
       - patch
+      - rule_3.5.3.3.2
+      - ip6tables
+
+- name: "3.5.3.3.3 | PATCH | Ensure ip6tables default deny firewall policy"
+  block:
+      - name: "3.5.3.3.3 | PATCH | Ensure ip6tables default deny firewall policy | Configure SSH to be allowed out"
+        iptables:
+            chain: OUTPUT
+            protocol: tcp
+            source_port: 22
+            jump: ACCEPT
+            ctstate: 'NEW,ESTABLISHED'
+            ip_version: ipv6
+
+      - name: "3.5.3.3.3 | PATCH | Ensure ip6tables default deny firewall policy | Enable apt traffic"
+        iptables:
+            chain: INPUT
+            ctstate: 'ESTABLISHED'
+            jump: ACCEPT
+            ip_version: ipv6
+
+      - name: "3.5.3.3.3 | PATCH | Ensure ip6tables default deny firewall policy | Set drop items"
+        iptables:
+            policy: DROP
+            chain: "{{ item }}"
+            ip_version: ipv6
+        with_items:
+            - INPUT
+            - FORWARD
+            - OUTPUT
+  when:
+      - ubtu20cis_rule_3_5_3_3_3
+      - ubtu20cis_firewall_package == "iptables"
+      - ubtu20cis_ipv6_required
+      - not ubtu20cis_ipv4_required
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
       - rule_3.5.3.3.3
       - ip6tables
 
-- name: "3.5.3.3.4 | AUDIT | Ensure IPv6 firewall rules exist for all open ports"
+- name: "3.5.3.3.4 | AUDIT | Ensure ip6tables firewall rules exist for all open ports"
   block:
-      - name: "3.5.3.3.4 | AUDIT | Ensure IPv6 firewall rules exist for all open ports | Get list of open ports"
+      - name: "3.5.3.3.4 | AUDIT | Ensure ip6tables firewall rules exist for all open ports | Get list of open ports"
         command: ss -6tuln
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_3_5_3_3_4_open_ports
 
-      - name: "3.5.3.3.4 | AUDIT | Ensure IPv6 firewall rules exist for all open ports | Get list of rules"
+      - name: "3.5.3.3.4 | AUDIT | Ensure ip6tables firewall rules exist for all open ports | Get list of rules"
         command: ip6tables -L INPUT -v -n
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_3_5_3_3_4_current_rules
 
-      - name: "3.5.3.3.4 | AUDIT | Ensure IPv6 firewall rules exist for all open ports | Alert about settings"
+      - name: "3.5.3.3.4 | AUDIT | Ensure ip6tables firewall rules exist for all open ports | Alert about settings"
         debug:
             msg:
                 - "ALERT!!!!Below is the list the open ports and current rules"
