@@ -402,7 +402,7 @@
             msg:
                 - "ALERT!!!! There is no separate partition for /var/log/audit"
                 - "Please create a separate partition for /var/log/audit"
-        when: ubtu20cis_1_1_16_var_log_audit_mounted.stdout == ""
+        when: ubtu20cis_1_1_16_var_log_audit_mounted.stdout | length == 0
   when:
       - ubtu20cis_rule_1_1_16
   tags:
@@ -428,7 +428,7 @@
             msg:
                 - "ALERT!!!! There is no separate partition for /home"
                 - "Please create a separate partition for /home"
-        when: ubtu20cis_1_1_17_home_mounted.stdout == ""
+        when: ubtu20cis_1_1_17_home_mounted.stdout | length == 0
   when:
       - ubtu20cis_rule_1_1_17
   tags:
