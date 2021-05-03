@@ -296,7 +296,7 @@
             msg:
                 - "ALERT!!!! There is no separate partition for /var"
                 - "Please create a separate partition for /var"
-        when: ubtu20cis_1_1_10_var_mounted.stdout == ""
+        when: ubtu20cis_1_1_10_var_mounted.stdout | length == 0
   when:
       - ubtu20cis_rule_1_1_10
   tags:
@@ -323,7 +323,7 @@
             msg:
                 - "ALERT!!!! There is no separate partition for /var/tmp"
                 - "Please create a separate partition for /var/tmp"
-        when: ubtu20cis_1_1_11_var_tmp_mounted.stdout == ""
+        when: ubtu20cis_1_1_11_var_tmp_mounted.stdout | length == 0
   when:
       - ubtu20cis_rule_1_1_11
   tags:
@@ -375,7 +375,7 @@
             msg:
                 - "ALERT!!!! There is no separate partition for /var/log"
                 - "Please create a separate partition for /var/log"
-        when: ubtu20cis_1_1_15_var_log_mounted.stdout == ""
+        when: ubtu20cis_1_1_15_var_log_mounted.stdout | length == 0
   when:
       - ubtu20cis_rule_1_1_15
   tags:
