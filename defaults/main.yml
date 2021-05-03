@@ -113,35 +113,35 @@ ubtu20cis_rule_1_9: true
 
 # Section 2 Fixes
 # Section 2 is Services (Special Purpose Services, and service clients)
-ubtu20cis_rule_2_1_1: true
-ubtu20cis_rule_2_1_2: true
+# ubtu20cis_rule_2_1_1: true
+# ubtu20cis_rule_2_1_2: true
 ubtu20cis_rule_2_2_1_1: true
 ubtu20cis_rule_2_2_1_2: true
 ubtu20cis_rule_2_2_1_3: true
 ubtu20cis_rule_2_2_1_4: true
+ubtu20cis_rule_2_1_2: true
+ubtu20cis_rule_2_1_3: true
+ubtu20cis_rule_2_1_4: true
+ubtu20cis_rule_2_1_5: true
+ubtu20cis_rule_2_1_6: true
+ubtu20cis_rule_2_1_7: true
+ubtu20cis_rule_2_1_8: true
+ubtu20cis_rule_2_1_9: true
+ubtu20cis_rule_2_1_10: true
+ubtu20cis_rule_2_1_11: true
+ubtu20cis_rule_2_1_12: true
+ubtu20cis_rule_2_1_13: true
+ubtu20cis_rule_2_1_14: true
+ubtu20cis_rule_2_1_15: true
+ubtu20cis_rule_2_1_16: true
+ubtu20cis_rule_2_1_17: true
+ubtu20cis_rule_2_2_1: true
 ubtu20cis_rule_2_2_2: true
 ubtu20cis_rule_2_2_3: true
 ubtu20cis_rule_2_2_4: true
 ubtu20cis_rule_2_2_5: true
 ubtu20cis_rule_2_2_6: true
-ubtu20cis_rule_2_2_7: true
-ubtu20cis_rule_2_2_8: true
-ubtu20cis_rule_2_2_9: true
-ubtu20cis_rule_2_2_10: true
-ubtu20cis_rule_2_2_11: true
-ubtu20cis_rule_2_2_12: true
-ubtu20cis_rule_2_2_13: true
-ubtu20cis_rule_2_2_14: true
-ubtu20cis_rule_2_2_15: true
-ubtu20cis_rule_2_2_16: true
-ubtu20cis_rule_2_2_17: true
-ubtu20cis_rule_2_3_1: true
-ubtu20cis_rule_2_3_2: true
-ubtu20cis_rule_2_3_3: true
-ubtu20cis_rule_2_3_4: true
-ubtu20cis_rule_2_3_5: true
-ubtu20cis_rule_2_3_6: true
-ubtu20cis_rule_2_4: true
+ubtu20cis_rule_2_3: true
 
 # Section 3 Fixes
 # Section 3 is Network Configuration (Disable Unused Networks, Network Parameters (Host Only), Network Parameters (Host and Router), Uncommon Network Protocols, and Firewall Configuration)
@@ -346,10 +346,6 @@ ubtu20cis_ipv4_required: true
 ubtu20cis_ipv6_required: false
 
 # Other system wide variables
-# ubtu20cis_xwindows_required is the toggle for requiring x windows. True means you use X Windoes (not recommented for servers)
-# false means you do not require X Windows enabled
-ubtu20cis_xwindows_required: false
-
 # ubtu20cis_desktop_required is the toggle for requiring desktop environments. True means you use a desktop and will not disable/remove needed items to run a desktop (not recommented for servers)
 # false means you do not require a desktop
 ubtu20cis_desktop_required: false
@@ -416,7 +412,7 @@ ubtu20cis_warning_banner: |
         Authorized uses only. All activity may be monitored and reported.
 
 # Section 2 Control Variables
-# Control 2.2.1.1
+# Control 2.1.1.1
 # ubtu20cis_time_sync_tool is the tool in which to synchronize time
 # The two options are chrony, ntp, or systemd-timesyncd
 ubtu20cis_time_sync_tool: "ntp"
