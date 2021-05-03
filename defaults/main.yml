@@ -47,8 +47,8 @@ ubtu20cis_system_is_container: false
 system_is_ec2: false
 
 # Section 1 Fixes
-# Section 1 is Iniitial setup (FileSystem Configuration, Configure Software Updates, Configure sudo, Filesystem Integrity Checking, Secure Boot Settings,
-# Additional Process Hardening, Mandatory Access Control, and Warning Banners)
+# Section 1 is Iniitial setup (FileSystem Configuration, Configure Software Updates, Filesystem Integrity Checking, Secure Boot Settings,
+# Additional Process Hardening, Mandatory Access Control, Command Line Warning Banners, and GNOME Display Manager)
 ubtu20cis_rule_1_1_1_1: true
 ubtu20cis_rule_1_1_1_2: true
 ubtu20cis_rule_1_1_1_3: true
@@ -107,7 +107,7 @@ ubtu20cis_rule_1_9: true
 ubtu20cis_rule_1_10: true
 
 # Section 2 Fixes
-# Section 2 is Services (inetd, special purpose, and service clients)
+# Section 2 is Services (Special Purpose Services, and service clients)
 ubtu20cis_rule_2_1_1: true
 ubtu20cis_rule_2_1_2: true
 ubtu20cis_rule_2_2_1_1: true
@@ -139,7 +139,7 @@ ubtu20cis_rule_2_3_6: true
 ubtu20cis_rule_2_4: true
 
 # Section 3 Fixes
-# Section 3 is Network Configuration (disable unused networks, network parameters (host and router), uncommon network protocols, and firewall configuration)
+# Section 3 is Network Configuration (Disable Unused Networks, Network Parameters (Host Only), Network Parameters (Host and Router), Uncommon Network Protocols, and Firewall Configuration)
 ubtu20cis_rule_3_1_1: true
 ubtu20cis_rule_3_1_2: true
 ubtu20cis_rule_3_2_1: true
@@ -187,7 +187,7 @@ ubtu20cis_rule_3_5_3_3_3: true
 ubtu20cis_rule_3_5_3_3_4: true
 
 # Section 4 Fixes
-# Section 4 is Logging and Auditing (configure system accounting (auditd) and configure logging)
+# Section 4 is Logging and Auditing (Configure System Accounting (auditd), Configure Data Retention, and Configure Logging)
 ubtu20cis_rule_4_1_1_1: true
 ubtu20cis_rule_4_1_1_2: true
 ubtu20cis_rule_4_1_1_3: true
@@ -224,8 +224,8 @@ ubtu20cis_rule_4_3: true
 ubtu20cis_rule_4_4: true
 
 # Section 5 Fixes
-# Section 5 is Access, Authentication, and Authorization (configure cron, configure ssh server, configure PAM
-# and user accounts and environment)
+# Section 5 is Access, Authentication, and Authorization (Configure time-based job schedulers, Configure sudo, Configure SSH Server, configure PAM
+# and User Accounts and Environment)
 ubtu20cis_rule_5_1_1: true
 ubtu20cis_rule_5_1_2: true
 ubtu20cis_rule_5_1_3: true
@@ -274,7 +274,7 @@ ubtu20cis_rule_5_5: true
 ubtu20cis_rule_5_6: true
 
 # Section 6 Fixes
-# Section is Systme Maintenance (system file permissions and user and group settings)
+# Section is Systme Maintenance (System File Permissions and User and Group Settings)
 ubtu20cis_rule_6_1_1: true
 ubtu20cis_rule_6_1_2: true
 ubtu20cis_rule_6_1_3: true
