@@ -38,7 +38,7 @@
       name: acl
       state: present
   when:
-      - ubtu20cis_rule_6_2_5
+      - ubtu20cis_rule_6_2_6
       - ubtu20cis_install_network_manager
 
 - name: "PRELIM | List users accounts"
@@ -49,5 +49,4 @@
   when:
       - ubtu20cis_rule_6_2_8 or
         ubtu20cis_rule_6_2_9 or
-        ubtu20cis_rule_6_2_10 or
-        ubtu20cis_rule_6_2_11
+        ubtu20cis_rule_6_2_10
