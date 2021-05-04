@@ -1,5 +1,5 @@
 ---
-- name: "5.1.1 | PATCH | Ensure cron daemon is enabled and running"
+- name: "AUTOMATED | 5.1.1 | PATCH | Ensure cron daemon is enabled and running"
   service:
       name: cron
       state: started
@@ -9,11 +9,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.1.1
       - cron
 
-- name: "5.1.2 | PATCH | Ensure permissions on /etc/crontab are configured"
+- name: "AUTOMATED | 5.1.2 | PATCH | Ensure permissions on /etc/crontab are configured"
   file:
       path: /etc/crontab
       owner: root
@@ -24,11 +25,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.1.2
       - cron
 
-- name: "5.1.3 | PATCH | Ensure permissions on /etc/cron.hourly are configured"
+- name: "AUTOMATED | 5.1.3 | PATCH | Ensure permissions on /etc/cron.hourly are configured"
   file:
       path: /etc/cron.hourly
       owner: root
@@ -39,11 +41,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.1.3
       - cron
 
-- name: "5.1.4 | PATCH | Ensure permissions on /etc/cron.daily are configured"
+- name: "AUTOMATED | 5.1.4 | PATCH | Ensure permissions on /etc/cron.daily are configured"
   file:
       path: /etc/cron.daily
       owner: root
@@ -54,11 +57,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.1.4
       - cron
 
-- name: "5.1.5 | PATCH | Ensure permissions on /etc/cron.weekly are configured"
+- name: "AUTOMATED | 5.1.5 | PATCH | Ensure permissions on /etc/cron.weekly are configured"
   file:
       path: /etc/cron.weekly
       owner: root
@@ -69,11 +73,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.1.5
       - cron
 
-- name: "5.1.6 | PATCH | Ensure permissions on /etc/cron.monthly are configured"
+- name: "AUTOMATED | 5.1.6 | PATCH | Ensure permissions on /etc/cron.monthly are configured"
   file:
       path: /etc/cron.monthly
       owner: root
@@ -84,11 +89,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.1.6
       - cron
 
-- name: "5.1.7 | PATCH | Ensure permissions on /etc/cron.d are configured"
+- name: "AUTOMATED | 5.1.7 | PATCH | Ensure permissions on /etc/cron.d are configured"
   file:
       path: /etc/cron.d
       owner: root
@@ -99,18 +105,19 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.1.7
       - cron
 
-- name: "5.1.8 | PATCH | Ensure at/cron is restricted to authorized users"
+- name: "AUTOMATED | 5.1.8 | PATCH | Ensure at/cron is restricted to authorized users"
   block:
-      - name: "5.1.8 | PATCH | Ensure at/cron is restricted to authorized users | Remove cron.deny"
+      - name: "AUTOMATED | 5.1.8 | PATCH | Ensure at/cron is restricted to authorized users | Remove cron.deny"
         file:
             path: /etc/cron.deny
             state: absent
 
-      - name: "5.1.8 | PATCH | Ensure at/cron is restricted to authorized users | Create cron.allow"
+      - name: "AUTOMATED | 5.1.8 | PATCH | Ensure at/cron is restricted to authorized users | Create cron.allow"
         file:
             path: /etc/cron.allow
             owner: root
@@ -122,18 +129,19 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.1.8
       - cron
 
-- name: "5.1.9 | PATCH | Ensure at is restricted to authorized users"
+- name: "AUTOMATED | 5.1.9 | PATCH | Ensure at is restricted to authorized users"
   block:
-      - name: "5.1.9 | PATCH | Ensure at is restricted to authorized users | Remove at.deny"
+      - name: "AUTOMATED | 5.1.9 | PATCH | Ensure at is restricted to authorized users | Remove at.deny"
         file:
             path: /etc/at.deny
             state: absent
 
-      - name: "5.1.9 | PATCH | Ensure at is restricted to authorized users | Create at.allow"
+      - name: "AUTOMATED | 5.1.9 | PATCH | Ensure at is restricted to authorized users | Create at.allow"
         file:
             path: /etc/at.allow
             owner: root
@@ -145,11 +153,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.1.9
       - cron
 
-- name: "5.2.1 | PATCH | Ensure sudo is installed"
+- name: "AUTOMATED | 5.2.1 | PATCH | Ensure sudo is installed"
   apt:
       name: "{{ ubtu20cis_sudo_package }}"
       state: present
@@ -158,12 +167,12 @@
   tags:
       - level1-server
       - level1-workstation
-      - scored
+      - automated
       - patch
       - rule_5.2.1
       - sudo
 
-- name: "5.2.2 | PATCH | Ensure sudo commands use pty"
+- name: "AUTOMATED | 5.2.2 | PATCH | Ensure sudo commands use pty"
   lineinfile:
       path: /etc/sudoers
       regexp: '^Defaults        use_'
@@ -174,11 +183,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.2.2
       - sudo
 
-- name: "5.2.3 | PATCH | Ensure sudo log file exists"
+- name: "AUTOMATED | 5.2.3 | PATCH | Ensure sudo log file exists"
   lineinfile:
       path: /etc/sudoers
       regexp: '^Defaults        logfile'
@@ -189,11 +199,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.2.3
       - sudo
 
-- name: "5.3.1 | PATCH | Ensure permissions on /etc/ssh/sshd_config are configured"
+- name: "AUTOMATED | 5.3.1 | PATCH | Ensure permissions on /etc/ssh/sshd_config are configured"
   file:
       path: /etc/ssh/sshd_config
       owner: root
@@ -204,19 +215,20 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.1
       - ssh
 
-- name: "5.3.2 | PATCH | Ensure permissions on SSH private host key files are configured"
+- name: "AUTOMATED | 5.3.2 | PATCH | Ensure permissions on SSH private host key files are configured"
   block:
-      - name: "5.3.2 | AUDIT | Ensure permissions on SSH private host key files are configured | Find ssh_host private keys"
+      - name: "AUTOMATED | 5.3.2 | AUDIT | Ensure permissions on SSH private host key files are configured | Find ssh_host private keys"
         find:
             paths: /etc/ssh
             patterns: 'ssh_host_*_key'
         register: ubtu20cis_5_3_2_ssh_host_priv_keys
 
-      - name: "5.3.2 | PATCH | Ensure permissions on SSH private host key files are configured | Set permissions"
+      - name: "AUTOMATED | 5.3.2 | PATCH | Ensure permissions on SSH private host key files are configured | Set permissions"
         file:
             path: "{{ item.path }}"
             owner: root
@@ -229,19 +241,20 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.2
       - ssh
 
-- name: "5.3.3 | PATCH | Ensure permissions on SSH public host key files are configured"
+- name: "AUTOMATED | 5.3.3 | PATCH | Ensure permissions on SSH public host key files are configured"
   block:
-      - name: "5.3.3 | AUDIT | Ensure permissions on SSH public host key files are configured | Find ssh_host public keys"
+      - name: "AUTOMATED | 5.3.3 | AUDIT | Ensure permissions on SSH public host key files are configured | Find ssh_host public keys"
         find:
             paths: /etc/ssh
             patterns: 'ssh_host_*_key.pub'
         register: ubtu20cis_5_3_3_ssh_host_pub_keys
 
-      - name: "5.3.3 | PATCH | Ensure permissions on SSH public host key files are configured | Set permissions"
+      - name: "AUTOMATED | 5.3.3 | PATCH | Ensure permissions on SSH public host key files are configured | Set permissions"
         file:
             path: "{{ item.path }}"
             owner: root
@@ -254,13 +267,14 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.3
       - ssh
 
-- name: "5.3.4 | PATCH | Ensure SSH access is limited"
+- name: "AUTOMATED | 5.3.4 | PATCH | Ensure SSH access is limited"
   block:
-      - name: "5.3.4 | PATCH | Ensure SSH access is limited | Add allowed users"
+      - name: "AUTOMATED | 5.3.4 | PATCH | Ensure SSH access is limited | Add allowed users"
         lineinfile:
             path: /etc/ssh/sshd_config
             regexp: '^AllowUsers|^#AllowUsers'
@@ -268,7 +282,7 @@
         notify: restart sshd
         when: "ubtu20cis_sshd['allow_users']|default('') != ''"
 
-      - name: "5.3.4 | PATCH | Ensure SSH access is limited | Add allowed groups"
+      - name: "AUTOMATED | 5.3.4 | PATCH | Ensure SSH access is limited | Add allowed groups"
         lineinfile:
             path: /etc/ssh/sshd_config
             regexp: '^AllowGroups|^#AllowGroups'
@@ -276,7 +290,7 @@
         notify: restart sshd
         when: "ubtu20cis_sshd['allow_groups']|default('') != ''"
 
-      - name: "5.3.4 | PATCH | Ensure SSH access is limited | Add deny users"
+      - name: "AUTOMATED | 5.3.4 | PATCH | Ensure SSH access is limited | Add deny users"
         lineinfile:
             path: /etc/ssh/sshd_config
             regexp: '^DenyUsers|^#DenyUsers'
@@ -284,7 +298,7 @@
         notify: restart sshd
         when: "ubtu20cis_sshd['deny_users']|default('') != ''"
 
-      - name: "5.3.4 | PATCH | Ensure SSH access is limited | Add deny groups"
+      - name: "AUTOMATED | 5.3.4 | PATCH | Ensure SSH access is limited | Add deny groups"
         lineinfile:
             path: /etc/ssh/sshd_config
             regexp: '^DenyGroups|^#DenyGroups'
@@ -296,11 +310,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.4
       - ssh
 
-- name: "5.3.5 | PATCH | Ensure SSH LogLevel is appropriate"
+- name: "AUTOMATED | 5.3.5 | PATCH | Ensure SSH LogLevel is appropriate"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^LogLevel|^#LogLevel'
@@ -312,11 +327,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.5
       - ssh
 
-- name: "5.3.6 | PATCH | Ensure SSH X11 forwarding is disabled"
+- name: "AUTOMATED | 5.3.6 | PATCH | Ensure SSH X11 forwarding is disabled"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^X11Forwarding|^#X11Forwarding'
@@ -327,11 +343,12 @@
   tags:
       - level2-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.6
       - ssh
 
-- name: "5.3.7| PATCH | Ensure SSH MaxAuthTries is set to 4 or less"
+- name: "AUTOMATED | 5.3.7 | PATCH | Ensure SSH MaxAuthTries is set to 4 or less"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^MaxAuthTries|^#MaxAuthTries'
@@ -343,11 +360,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.7
       - ssh
 
-- name: "5.3.8 | PATCH | Ensure SSH IgnoreRhosts is enabled"
+- name: "AUTOMATED | 5.3.8 | PATCH | Ensure SSH IgnoreRhosts is enabled"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^IgnoreRhosts|^#IgnoreRhosts'
@@ -358,11 +376,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.8
       - ssh
 
-- name: "5.3.9 | PATCH | Ensure SSH HostbasedAuthentication is disabled"
+- name: "AUTOMATED | 5.3.9 | PATCH | Ensure SSH HostbasedAuthentication is disabled"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^HostbasedAuthentication|^#HostbasedAuthentication'
@@ -373,11 +392,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.9
       - ssh
 
-- name: "5.3.10 | PATCH | Ensure SSH root login is disabled"
+- name: "AUTOMATED | 5.3.10 | PATCH | Ensure SSH root login is disabled"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^PermitRootLogin|^#PermitRootLogin'
@@ -388,11 +408,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.10
       - ssh
 
-- name: "5.3.11 | PATCH | Ensure SSH PermitEmptyPasswords is disabled"
+- name: "AUTOMATED | 5.3.11 | PATCH | Ensure SSH PermitEmptyPasswords is disabled"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^PermitEmptyPasswords|^#PermitEmptyPasswords'
@@ -404,11 +425,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.11
       - ssh
 
-- name: "5.3.12 | PATCH | Ensure SSH PermitUserEnvironment is disabled"
+- name: "AUTOMATED | 5.3.12 | PATCH | Ensure SSH PermitUserEnvironment is disabled"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^PermitUserEnvironment|^#PermitUserEnvironment'
@@ -419,11 +441,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.12
       - ssh
 
-- name: "5.3.13 | PATCH | Ensure only strong Ciphers are used"
+- name: "AUTOMATED | 5.3.13 | PATCH | Ensure only strong Ciphers are used"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^Ciphers|^#Ciphers'
@@ -435,11 +458,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.13
       - ssh
 
-- name: "5.3.14 | PATCH | Ensure only strong MAC algorithms are used"
+- name: "AUTOMATED | 5.3.14 | PATCH | Ensure only strong MAC algorithms are used"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^MACs|^#MACs'
@@ -451,11 +475,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.14
       - ssh
 
-- name: "5.3.15 | PATCH | Ensure only strong Key Exchange algorithms are used"
+- name: "AUTOMATED | 5.3.15 | PATCH | Ensure only strong Key Exchange algorithms are used"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^KexAlgorithms|^#KexAlgorithms'
@@ -467,11 +492,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.15
       - ssh
 
-- name: "5.3.16 | PATCH | Ensure SSH Idle Timeout Interval is configured"
+- name: "AUTOMATED | 5.3.16 | PATCH | Ensure SSH Idle Timeout Interval is configured"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: "{{ item.regexp }}"
@@ -485,11 +511,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.16
       - sshd
 
-- name: "5.3.17 | PATCH | Ensure SSH LoginGraceTime is set to one minute or less"
+- name: "AUTOMATED | 5.3.17 | PATCH | Ensure SSH LoginGraceTime is set to one minute or less"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^LoginGraceTime|^#LoginGraceTime'
@@ -501,11 +528,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.17
       - ssh
 
-- name: "5.2.18 | PATCH | Ensure SSH warning banner is configured"
+- name: "AUTOMATED | 5.3.18 | PATCH | Ensure SSH warning banner is configured"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^Banner|^#Banner'
@@ -517,12 +545,12 @@
   tags:
       - level1-server
       - level1-workstation
-      - scored
+      - automated
       - patch
       - rule_5.3.18
       - ssh
 
-- name: "5.3.19 | PATCH | Ensure SSH PAM is enabled"
+- name: "AUTOMATED | 5.3.19 | PATCH | Ensure SSH PAM is enabled"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^UsePAM|^#UsePAM'
@@ -534,12 +562,13 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.19
       - ssh
       - pam
 
-- name: "5.3.20 | PATCH | Ensure SSH AllowTcpForwarding is disabled"
+- name: "AUTOMATED | 5.3.20 | PATCH | Ensure SSH AllowTcpForwarding is disabled"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^AllowTcpForwarding|^#AllowTcpForwarding'
@@ -550,11 +579,12 @@
   tags:
       - level2-server
       - level2-workstation
+      - automated
       - patch
       - rule_5.3.20
       - ssh
 
-- name: "5.3.21 | PATCH | Ensure SSH MaxStartups is configured"
+- name: "AUTOMATED | 5.3.21 | PATCH | Ensure SSH MaxStartups is configured"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^MaxStartups|^#MaxStartups'
@@ -565,12 +595,12 @@
   tags:
       - level1-server
       - level1-workstation
-      - scored
+      - automated
       - patch
       - rule_5.3.21
       - ssh
 
-- name: "5.3.22 | PATCH | Ensure SSH MaxSessions is set to 4 or less"
+- name: "AUTOMATED | 5.3.22 | PATCH | Ensure SSH MaxSessions is set to 4 or less"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^MaxSessions|^#MaxSessions'
@@ -582,37 +612,38 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.3.22
       - ssh
 
-- name: "5.4.1 | PATCH | Ensure password creation requirements are configured"
+- name: "AUTOMATED | 5.4.1 | PATCH | Ensure password creation requirements are configured"
   block:
-      - name: "SCORED | 5.4.1 | PATCH | Ensure password creation requirements are configured | Install pam_pwquality module"
+      - name: "AUTOMATED | 5.4.1 | PATCH | Ensure password creation requirements are configured | Install pam_pwquality module"
         apt:
             name: libpam-pwquality
             state: present
 
-      - name: "5.4.1 | PATCH | Ensure password creation requirements are configured | Add minlen"
+      - name: "AUTOMATED | 5.4.1 | PATCH | Ensure password creation requirements are configured | Add minlen"
         lineinfile:
             path: /etc/security/pwquality.conf
             regexp: '^minlen|^# minlen'
             line: minlen = 14
 
-      - name: "5.4.1 | PATCH | Ensure password creation requirements are configured | Add minclass"
+      - name: "AUTOMATED | 5.4.1 | PATCH | Ensure password creation requirements are configured | Add minclass"
         lineinfile:
             path: /etc/security/pwquality.conf
             regexp: '^minclass|^# minclass'
             line: 'minclass = 4'
 
-      - name: "5.4.1 | AUDIT | Ensure password creation requirements are configured | Confirm pwquality module in common-password"
+      - name: "AUTOMATED | 5.4.1 | AUDIT | Ensure password creation requirements are configured | Confirm pwquality module in common-password"
         command: grep 'password.*requisite.*pam_pwquality.so' /etc/pam.d/common-password
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_5_4_1_pam_pwquality_state
 
-      - name: "5.4.1 | PATCH | Ensure password creation requirements are configured | Set retry to 3 if pwquality exists"
+      - name: "AUTOMATED | 5.4.1 | PATCH | Ensure password creation requirements are configured | Set retry to 3 if pwquality exists"
         pamd:
             name: common-password
             type: password
@@ -622,7 +653,7 @@
             state: args_present
         when: ubtu20cis_5_4_1_pam_pwquality_state.stdout != ""
 
-      - name: "5.4.1 | PATCH | Ensure password creation requirements are configured | Set retry to 3 if pwquality does not exist"
+      - name: "AUTOMATED | 5.4.1 | PATCH | Ensure password creation requirements are configured | Set retry to 3 if pwquality does not exist"
         pamd:
             name: common-password
             type: password
@@ -639,6 +670,7 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.4.1
       - pam
@@ -656,13 +688,13 @@
 # figure out why pam_deny kills vagrant user. Below is everything working but the pam_deny.so in the last task with_items
 # -------------
 # -------------
-- name: "5.4.2 | PATCH | Ensure lockout for failed password attempts is configured"
+- name: "AUTOMATED | 5.4.2 | PATCH | Ensure lockout for failed password attempts is configured"
   command: /bin/true
   changed_when: false
   failed_when: false
   check_mode: false
   # block:
-  #     - name: "5.4.2 | AUDIT | Ensure lockout for failed password attempts is configured | Confirm pam_tally2.so module in common-auth"
+  #     - name: "AUTOMATED | 5.4.2 | AUDIT | Ensure lockout for failed password attempts is configured | Confirm pam_tally2.so module in common-auth"
   #       # command: grep 'auth.*required.*pam_tally2.so' /etc/pam.d/common-auth
   #       command: grep 'auth.*required.*pam_tally2.so' /etc/pam.d/common-account
   #       changed_when: false
@@ -670,7 +702,7 @@
   #       check_mode: false
   #       register: ubtu20cis_5_4_2_pam_tally2_state
 
-  #     - name: "SCORED | 5.4.2 | PATCH | Ensure lockout for failed password attempts is configured | Set pam_tally2.so settings if exists"
+  #     - name: "AUTOMATED | 5.4.2 | PATCH | Ensure lockout for failed password attempts is configured | Set pam_tally2.so settings if exists"
   #       pamd:
   #           # name: common-auth
   #           name: common-account
@@ -685,7 +717,7 @@
   #               unlock_time=900'
   #       when: ubtu20cis_5_4_2_pam_tally2_state.stdout != ""
 
-  #     - name: "5.4.2 | PATCH | Ensure lockout for failed password attempts is configured | Set pam_tally2.so settings if does not exist"
+  #     - name: "AUTOMATED | 5.4.2 | PATCH | Ensure lockout for failed password attempts is configured | Set pam_tally2.so settings if does not exist"
   #       lineinfile:
   #           # path: /etc/pam.d/common-auth
   #           path: /etc/pam.d/common-account
@@ -694,7 +726,7 @@
   #           insertafter: '^# end of pam-auth-update config'
   #       when: ubtu20cis_5_4_2_pam_tally2_state == ""
 
-  #     - name: "5.4.2 | PATCH | Ensure lockout for failed password attempts is configured | Set pam_deny.so and pam_tally.so"
+  #     - name: "AUTOMATED | 5.4.2 | PATCH | Ensure lockout for failed password attempts is configured | Set pam_deny.so and pam_tally.so"
   #       lineinfile:
   #           path: /etc/pam.d/common-account
   #           regexp: "{{ item.regexp }}"
@@ -708,21 +740,22 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.4.2
       - pamd
       - notimplemented
 
-- name: "5.4.3 | PATCH | Ensure password reuse is limited"
+- name: "AUTOMATED | 5.4.3 | PATCH | Ensure password reuse is limited"
   block:
-      - name: "5.4.3 | AUDIT | Ensure password reuse is limited | Confirm pam_pwhistory.so in common-password"
+      - name: "AUTOMATED | 5.4.3 | AUDIT | Ensure password reuse is limited | Confirm pam_pwhistory.so in common-password"
         command: grep 'password.*required.*pam_pwhistory.so' /etc/pam.d/common-password
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_5_4_3_pam_pwhistory_state
 
-      - name: "5.4.3 | PATCH | Ensure password reuse is limited | Set remember value if pam_pwhistory exists"
+      - name: "AUTOMATED | 5.4.3 | PATCH | Ensure password reuse is limited | Set remember value if pam_pwhistory exists"
         pamd:
             name: common-password
             type: password
@@ -732,7 +765,7 @@
             state: args_present
         when: ubtu20cis_5_4_3_pam_pwhistory_state.stdout != ""
 
-      - name: "5.4.3 | PATCH | Ensure password reuse is limited | Set remember value if pam_pwhistory does no exist"
+      - name: "AUTOMATED | 5.4.3 | PATCH | Ensure password reuse is limited | Set remember value if pam_pwhistory does no exist"
         lineinfile:
             path: /etc/pam.d/common-password
             line: 'password        required                        pam_pwhistory.so remember={{ ubtu20cis_pamd_pwhistory_remember }}'
@@ -743,20 +776,21 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.4.3
       - pamd
 
-- name: "5.4.4 | PATCH | Ensure password hashing algorithm is SHA-512"
+- name: "AUTOMATED | 5.4.4 | PATCH | Ensure password hashing algorithm is SHA-512"
   block:
-      - name: "5.4.4 | AUDIT | Ensure password hashing algorithm is SHA-512 | Confirm pam_unix.so"
+      - name: "AUTOMATED | 5.4.4 | AUDIT | Ensure password hashing algorithm is SHA-512 | Confirm pam_unix.so"
         shell: grep -E '^\s*password\s+(\S+\s+)+pam_unix\.so\s+(\S+\s+)*sha512\s*(\S+\s*)*(\s+#.*)?$' /etc/pam.d/common-password
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_5_4_4_pam_unix_state
 
-      - name: "5.4.4 | PATCH | Ensure password hashing algorithm is SHA-512 | Set hashing if pam_unix.so exists"
+      - name: "AUTOMATED | 5.4.4 | PATCH | Ensure password hashing algorithm is SHA-512 | Set hashing if pam_unix.so exists"
         pamd:
             name: common-password
             type: password
@@ -766,7 +800,7 @@
             state: args_present
         when: ubtu20cis_5_4_4_pam_unix_state.stdout != ""
 
-      - name: "5.4.4 | PATCH | Ensure password hashing algorithm is SHA-512 | Set hashing if pam_unix.so does not exist"
+      - name: "AUTOMATED | 5.4.4 | PATCH | Ensure password hashing algorithm is SHA-512 | Set hashing if pam_unix.so does not exist"
         lineinfile:
             path: /etc/pam.d/common-password
             line: 'password        [success=1 default=ignore]      pam_unix.so sha512'
@@ -777,19 +811,20 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.4.4
       - pamd
 
-- name: "5.5.1.1 | PATCH | Ensure minimum days between password changes is configured"
+- name: "AUTOMATED | 5.5.1.1 | PATCH | Ensure minimum days between password changes is configured"
   block:
-      - name: "5.5.1.1 | PATCH | Ensure minimum days between password changes is configured | Set /etc/login.defs PASS_MIN_DAYS"
+      - name: "AUTOMATED | 5.5.1.1 | PATCH | Ensure minimum days between password changes is configured | Set /etc/login.defs PASS_MIN_DAYS"
         lineinfile:
             path: /etc/login.defs
             regexp: '^PASS_MIN_DAYS|^#PASS_MIN_DAYS'
             line: 'PASS_MIN_DAYS {{ ubtu20cis_pass.min_days }}'
 
-      - name: "5.5.1.1 | PATCH | Ensure minimum days between password changes is configured | Set existing users PASS_MIN_DAYS"
+      - name: "AUTOMATED | 5.5.1.1 | PATCH | Ensure minimum days between password changes is configured | Set existing users PASS_MIN_DAYS"
         command: chage --mindays {{ ubtu20cis_pass.min_days }} {{ item }}
         failed_when: false
         with_items:
@@ -800,21 +835,22 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.5.1.1
       - user
       - login
 
-- name: "5.5.1.2 | PATCH | Ensure password expiration is 365 days or less"
+- name: "AUTOMATED | 5.5.1.2 | PATCH | Ensure password expiration is 365 days or less"
   block:
-      - name: "5.5.1.2 | PATCH | Ensure password expiration is 365 days or less | Set /etc/login.defs PASS_MAX_DAYS"
+      - name: "AUTOMATED | 5.5.1.2 | PATCH | Ensure password expiration is 365 days or less | Set /etc/login.defs PASS_MAX_DAYS"
         lineinfile:
             path: /etc/login.defs
             regexp: '^PASS_MAX_DAYS|^#PASS_MAX_DAYS'
             line: 'PASS_MAX_DAYS {{ ubtu20cis_pass.max_days }}'
             insertafter: '# Password aging controls'
 
-      - name: "5.5.1.2 | PATCH | Ensure password expiration is 365 days or less | Set existing users PASS_MAX_DAYS"
+      - name: "AUTOMATED | 5.5.1.2 | PATCH | Ensure password expiration is 365 days or less | Set existing users PASS_MAX_DAYS"
         command: chage --maxdays {{ ubtu20cis_pass.max_days }} {{ item }}
         failed_when: false
         with_items:
@@ -825,20 +861,21 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.5.1.2
       - user
       - login
 
-- name: "5.5.1.3 | PATCH | Ensure password expiration warning days is 7 or more"
+- name: "AUTOMATED | 5.5.1.3 | PATCH | Ensure password expiration warning days is 7 or more"
   block:
-      - name: "5.5.1.3 | PATCH | Ensure password expiration warning days is 7 or more | Set /etc/login.defs PASS_WARN_AGE"
+      - name: "AUTOMATED | 5.5.1.3 | PATCH | Ensure password expiration warning days is 7 or more | Set /etc/login.defs PASS_WARN_AGE"
         lineinfile:
             path: /etc/login.defs
             regexp: '^PASS_WARN_AGE|^#PASS_WARN_AGE'
             line: 'PASS_WARN_AGE {{ ubtu20cis_pass.warn_age }}'
 
-      - name: "5.5.1.3 | PATCH | Ensure password expiration warning days is 7 or more | Set existing users PASS_WARN_AGE"
+      - name: "AUTOMATED | 5.5.1.3 | PATCH | Ensure password expiration warning days is 7 or more | Set existing users PASS_WARN_AGE"
         command: chage --warndays {{ ubtu20cis_pass.warn_age }} {{ item }}
         failed_when: false
         with_items:
@@ -849,18 +886,19 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.5.1.3
       - user
       - login
 
-- name: "5.5.1.4 | PATCH | Ensure inactive password lock is 30 days or less"
+- name: "AUTOMATED | 5.5.1.4 | PATCH | Ensure inactive password lock is 30 days or less"
   block:
-      - name: "5.5.1.4 | PATCH | Ensure inactive password lock is 30 days or less | Set inactive period for new users"
+      - name: "AUTOMATED | 5.5.1.4 | PATCH | Ensure inactive password lock is 30 days or less | Set inactive period for new users"
         command: useradd -D -f {{ ubtu20cis_pass.inactive }}
         failed_when: false
 
-      - name: "5.5.1.4 | PATCH | Ensure inactive password lock is 30 days or less | Set inactive period for existing users"
+      - name: "AUTOMATED | 5.5.1.4 | PATCH | Ensure inactive password lock is 30 days or less | Set inactive period for existing users"
         command: chage --inactive {{ ubtu20cis_pass.inactive }} {{ item }}
         failed_when: false
         with_items:
@@ -871,35 +909,36 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.5.1.4
       - user
       - login
 
-- name: "5.5.1.5 | PATCH | Ensure all users last password change date is in the past"
+- name: "AUTOMATED | 5.5.1.5 | PATCH | Ensure all users last password change date is in the past"
   block:
-      - name: "5.5.1.5 | AUDIT | Ensure all users last password change date is in the past | Get current date in Unix Time"
+      - name: "AUTOMATED | 5.5.1.5 | AUDIT | Ensure all users last password change date is in the past | Get current date in Unix Time"
         shell: echo $(($(date --utc --date "$1" +%s)/86400))
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_5_5_1_5_current_time
 
-      - name: "5.5.1.5 | AUDIT | Ensure all users last password change date is in the past | Get list of users with last changed PW date in future"
+      - name: "AUTOMATED | 5.5.1.5 | AUDIT | Ensure all users last password change date is in the past | Get list of users with last changed PW date in future"
         shell: "cat /etc/shadow | awk -F: '{if($3>{{ ubtu20cis_5_4_1_5_current_time.stdout }})print$1}'"
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_5_5_1_5_user_list
 
-      - name: "5.5.1.5 | PATCH | Ensure all users last password change date is in the past | Warn about users"
+      - name: "AUTOMATED | 5.5.1.5 | PATCH | Ensure all users last password change date is in the past | Warn about users"
         debug:
             msg:
                 - "WARNING!!!!The following accounts have the last PW change date in the future"
                 - "{{ ubtu20cis_5_5_1_5_user_list.stdout_lines }}"
         when: ubtu20cis_5_5_1_5_user_list.stdout != ""
 
-      - name: "5.5.1.5 | PATCH | Ensure all users last password change date is in the past | Lock accounts with furtre PW changed dates"
+      - name: "AUTOMATED | 5.5.1.5 | PATCH | Ensure all users last password change date is in the past | Lock accounts with furtre PW changed dates"
         command: passwd --expire {{ item }}
         failed_when: false
         with_items:
@@ -912,14 +951,15 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.5.1.5
       - user
       - login
 
-- name: "5.5.2 | PATCH | Ensure system accounts are secured"
+- name: "AUTOMATED | 5.5.2 | PATCH | Ensure system accounts are secured"
   block:
-      - name: "5.5.2 | PATCH | Ensure system accounts are secured | Set system accounts to login"
+      - name: "AUTOMATED | 5.5.2 | PATCH | Ensure system accounts are secured | Set system accounts to login"
         user:
             name: "{{ item }}"
             shell: /sbin/nologin
@@ -931,7 +971,7 @@
             - item != "shutdown"
             - item != "halt"
 
-      - name: "5.5.2 | PATCH | Ensure system accounts are secured | Lock non-root system accounts"
+      - name: "AUTOMATED | 5.5.2 | PATCH | Ensure system accounts are secured | Lock non-root system accounts"
         user:
             name: "{{ item }}"
             password_lock: true
@@ -945,19 +985,20 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.5.2
       - user
       - system
 
-- name: "5.5.3 | PATCH | Ensure default group for the root account is GID 0"
+- name: "AUTOMATED | 5.5.3 | PATCH | Ensure default group for the root account is GID 0"
   block:
-      - name: "5.5.3 | PATCH | Ensure default group for the root account is GID 0 | Set root group to GUID 0"
+      - name: "AUTOMATED | 5.5.3 | PATCH | Ensure default group for the root account is GID 0 | Set root group to GUID 0"
         group:
             name: root
             gid: 0
 
-      - name: "5.5.3 | PATCH | Ensure default group for the root account is GID 0 | Set root user to root group"
+      - name: "AUTOMATED | 5.5.3 | PATCH | Ensure default group for the root account is GID 0 | Set root user to root group"
         user:
             name: root
             group: root
@@ -966,28 +1007,29 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.5.3
       - user
       - system
 
-- name: "5.5.4 | PATCH | Ensure default user umask is 027 or more restrictive"
+- name: "AUTOMATED | 5.5.4 | PATCH | Ensure default user umask is 027 or more restrictive"
   block:
-      - name: "5.5.4 | AUDIT | Ensure default user umask is 027 or more restrictive"
+      - name: "AUTOMATED | 5.5.4 | AUDIT | Ensure default user umask is 027 or more restrictive"
         shell: grep -E '^session.*optional.*pam_umask.so' /etc/pam.d/common-session
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_5_5_4_umask_pam_status
 
-      - name: "5.5.4 | PATCH | Ensure default user umask is 027 or more restrictive"
+      - name: "AUTOMATED | 5.5.4 | PATCH | Ensure default user umask is 027 or more restrictive"
         lineinfile:
             path: /etc/pam.d/common-session
             line: 'session optional                        pam_umask.so'
             insertbefore: '^# end of pam-auth-update config'
         when: ubtu20cis_5_5_4_umask_pam_status.stdout != ""
 
-      - name: "5.5.4 | PATCH | Ensure default user umask is 027 or more restrictive"
+      - name: "AUTOMATED | 5.5.4 | PATCH | Ensure default user umask is 027 or more restrictive"
         replace:
             path: "{{ item }}"
             regexp: '(^\s+umask) 002'
@@ -1001,11 +1043,12 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.5.4
       - user
 
-- name: "5.5.5 | PATCH | Ensure default user shell timeout is 900 seconds or less"
+- name: "AUTOMATED | 5.5.5 | PATCH | Ensure default user shell timeout is 900 seconds or less"
   blockinfile:
       create: yes
       mode: 0644
@@ -1026,20 +1069,21 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.5.5
       - user
 
-- name: "5.6 | AUDIT | Ensure root login is restricted to system console"
+- name: "MANUAL | 5.6 | AUDIT | Ensure root login is restricted to system console"
   block:
-      - name: "5.6 | AUDIT | Ensure root login is restricted to system console | Get list of all terminals"
+      - name: "MANUAL | 5.6 | AUDIT | Ensure root login is restricted to system console | Get list of all terminals"
         command: cat /etc/securetty
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_5_6_terminal_list
 
-      - name: "5.6 | AUDIT | Ensure root login is restricted to system console | Message out list"
+      - name: "MANUAL | 5.6 | AUDIT | Ensure root login is restricted to system console | Message out list"
         debug:
             msg:
                 - "WARNING!!!!Below is the list of conoles with root login access"
@@ -1055,20 +1099,20 @@
       - rule_5.6
       - user
 
-- name: "5.7 | PATCH | Ensure access to the su command is restricted"
+- name: "AUTOMATED | 5.7 | PATCH | Ensure access to the su command is restricted"
   block:
-      - name: "5.7 | PATCH | Ensure access to the su command is restricted | Check for pam_wheel.so module"
+      - name: "AUTOMATED | 5.7 | PATCH | Ensure access to the su command is restricted | Check for pam_wheel.so module"
         command: grep 'auth.*required.*pam_wheel' /etc/pam.d/su
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_5_7_pam_wheel_status
 
-      - name: "5.7 | PATCH | Ensure access to the su command is restricted | Create empty sugroup"
+      - name: "AUTOMATED | 5.7 | PATCH | Ensure access to the su command is restricted | Create empty sugroup"
         group:
             name: "{{ ubtu20cis_su_group }}"
 
-      - name: "5.7 | PATCH | Ensure access to the su command is restricted | Set pam_wheel if exists"
+      - name: "AUTOMATED | 5.7 | PATCH | Ensure access to the su command is restricted | Set pam_wheel if exists"
         pamd:
             name: su
             type: auth
@@ -1077,7 +1121,7 @@
             module_arguments: 'use_uid group={{ ubtu20cis_su_group }}'
         when: ubtu20cis_5_7_pam_wheel_status.stdout != ""
 
-      - name: "5.7 | PATCH | Ensure access to the su command is restricted | Set pam_wheel if does not exist"
+      - name: "AUTOMATED | 5.7 | PATCH | Ensure access to the su command is restricted | Set pam_wheel if does not exist"
         lineinfile:
             path: /etc/pam.d/su
             line: 'auth       required   pam_wheel.so use_uid group={{ ubtu20cis_su_group }}'
@@ -1088,6 +1132,7 @@
   tags:
       - level1-server
       - level1-workstation
+      - automated
       - patch
       - rule_5.7
       - user
