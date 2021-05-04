@@ -368,7 +368,7 @@
                 - "ALERT! You have users that are not using a shadowed password. Please convert the below accounts to use a shadowed password"
                 - "{{ ubtu20cis_6_2_1_nonshadowed_users.stdout_lines }}"
         when:
-            - ubtu18cis_6_2_1_nonshadowed_users.stdout | length > 0
+            - ubtu20cis_6_2_1_nonshadowed_users.stdout | length > 0
   when:
       - ubtu20cis_rule_6_2_1
   tags:
