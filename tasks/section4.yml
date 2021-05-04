@@ -357,7 +357,7 @@
       - rule_4.1.14
       - auditd
 
-- name: "4.1.15 | PATCH | Ensure system administrator actions (sudolog) are collected"
+- name: "4.1.15 | PATCH | Ensure system administrator command executions (sudo) are collected"
   template:
       src: audit/ubtu20cis_4_1_15_actions.rules.j2
       dest: /etc/audit/rules.d/actions.rules
