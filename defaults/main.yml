@@ -444,9 +444,9 @@ ubtu20cis_ntp_server_options: "iburst"
 ubtu20_cis_mail_transfer_agent: "other"
 
 # Section 3 Control Variables
-# Control 3.1.2
-# ubtu20cis_install_network_manager determines if this role can install network manager
-ubtu20cis_install_network_manager: true
+# # Control 3.1.2
+# # ubtu20cis_install_network_manager determines if this role can install network manager
+# ubtu20cis_install_network_manager: true
 
 # ubtu20cis_firewall_package is the toggle for which firewall system is in use
 # The valid options to use are ufw, nftables, or iptables
