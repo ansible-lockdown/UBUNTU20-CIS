@@ -651,7 +651,7 @@
             module_path: pam_pwquality.so
             module_arguments: 'retry=3'
             state: args_present
-        when: ubtu20cis_5_4_1_pam_pwquality_state.stdout != ""
+        when: ubtu20cis_5_4_1_pam_pwquality_state.stdout | length > 0
 
       - name: "AUTOMATED | 5.4.1 | PATCH | Ensure password creation requirements are configured | Set retry to 3 if pwquality does not exist"
         pamd:
@@ -664,7 +664,7 @@
             new_module_path: pam_pwquality.so
             module_arguments: 'retry=3'
             state: after
-        when: ubtu20cis_5_4_1_pam_pwquality_state.stdout == ""
+        when: ubtu20cis_5_4_1_pam_pwquality_state.stdout | length == 0
   when:
       - ubtu20cis_rule_5_4_1
   tags:
@@ -763,14 +763,14 @@
             module_path: pam_pwhistory.so
             module_arguments: 'remember={{ ubtu20cis_pamd_pwhistory_remember }}'
             state: args_present
-        when: ubtu20cis_5_4_3_pam_pwhistory_state.stdout != ""
+        when: ubtu20cis_5_4_3_pam_pwhistory_state.stdout | length > 0
 
       - name: "AUTOMATED | 5.4.3 | PATCH | Ensure password reuse is limited | Set remember value if pam_pwhistory does no exist"
         lineinfile:
             path: /etc/pam.d/common-password
             line: 'password        required                        pam_pwhistory.so remember={{ ubtu20cis_pamd_pwhistory_remember }}'
             insertafter: '^# end of pam-auth-update config'
-        when: ubtu20cis_5_4_3_pam_pwhistory_state.stdout == ""
+        when: ubtu20cis_5_4_3_pam_pwhistory_state.stdout | length == 0
   when:
       - ubtu20cis_rule_5_4_3
   tags:
@@ -798,14 +798,14 @@
             module_path: pam_unix.so
             module_arguments: sha512
             state: args_present
-        when: ubtu20cis_5_4_4_pam_unix_state.stdout != ""
+        when: ubtu20cis_5_4_4_pam_unix_state.stdout | length > 0
 
       - name: "AUTOMATED | 5.4.4 | PATCH | Ensure password hashing algorithm is SHA-512 | Set hashing if pam_unix.so does not exist"
         lineinfile:
             path: /etc/pam.d/common-password
             line: 'password        [success=1 default=ignore]      pam_unix.so sha512'
             insertafter: '^# end of pam-auth-update config'
-        when: ubtu20cis_5_4_4_pam_unix_state.stdout == ""
+        when: ubtu20cis_5_4_4_pam_unix_state.stdout | length == 0
   when:
       - ubtu20cis_rule_5_4_4
   tags:
@@ -936,7 +936,7 @@
             msg:
                 - "WARNING!!!!The following accounts have the last PW change date in the future"
                 - "{{ ubtu20cis_5_5_1_5_user_list.stdout_lines }}"
-        when: ubtu20cis_5_5_1_5_user_list.stdout != ""
+        when: ubtu20cis_5_5_1_5_user_list.stdout | length > 0
 
       - name: "AUTOMATED | 5.5.1.5 | PATCH | Ensure all users last password change date is in the past | Lock accounts with furtre PW changed dates"
         command: passwd --expire {{ item }}
@@ -945,7 +945,7 @@
             - "{{ ubtu20cis_5_5_1_5_user_list.stdout_lines }}"
         when:
             - ubtu20cis_disruption_high
-            - ubtu20cis_5_5_1_5_user_list.stdout != ""
+            - ubtu20cis_5_5_1_5_user_list.stdout | length > 0
   when:
       - ubtu20cis_rule_5_5_1_5
   tags:
@@ -1027,7 +1027,7 @@
             path: /etc/pam.d/common-session
             line: 'session optional                        pam_umask.so'
             insertbefore: '^# end of pam-auth-update config'
-        when: ubtu20cis_5_5_4_umask_pam_status.stdout != ""
+        when: ubtu20cis_5_5_4_umask_pam_status.stdout | length > 0
 
       - name: "AUTOMATED | 5.5.4 | PATCH | Ensure default user umask is 027 or more restrictive"
         replace:
@@ -1119,14 +1119,14 @@
             control: required
             module_path: pam_wheel.so
             module_arguments: 'use_uid group={{ ubtu20cis_su_group }}'
-        when: ubtu20cis_5_7_pam_wheel_status.stdout != ""
+        when: ubtu20cis_5_7_pam_wheel_status.stdout | length > 0
 
       - name: "AUTOMATED | 5.7 | PATCH | Ensure access to the su command is restricted | Set pam_wheel if does not exist"
         lineinfile:
             path: /etc/pam.d/su
             line: 'auth       required   pam_wheel.so use_uid group={{ ubtu20cis_su_group }}'
             create: yes
-        when: ubtu20cis_5_7_pam_wheel_status.stdout == ""
+        when: ubtu20cis_5_7_pam_wheel_status.stdout | length == 0
   when:
       - ubtu20cis_rule_5_7
   tags:
