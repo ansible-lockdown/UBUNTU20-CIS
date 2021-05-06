@@ -1,4 +1,4 @@
----
+2.1.7---
 - name: "AUTOMATED | 2.1.1.1 | PATCH | Ensure time synchronization is in use"
   apt:
       name: "{{ ubtu20cis_time_sync_tool }}"
@@ -250,7 +250,7 @@
 
 - name: "AUTOMATED | 2.1.7 | PATCH | Ensure NFS is not installed"
   apt:
-      name: purge nfs-kernel-server
+      name: nfs-kernel-server
       state: absent
   when:
       - ubtu20cis_rule_2_1_7
