@@ -1,4 +1,4 @@
-2.1.7---
+---
 - name: "AUTOMATED | 2.1.1.1 | PATCH | Ensure time synchronization is in use"
   apt:
       name: "{{ ubtu20cis_time_sync_tool }}"
