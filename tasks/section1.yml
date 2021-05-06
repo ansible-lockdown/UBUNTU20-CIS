@@ -965,6 +965,7 @@
       state: absent
   when:
       - ubtu20cis_rule_1_8_1
+      - not ubtu20cis_desktop_required
       - ubtu20cis_disruption_high
   tags:
       - level2-server
@@ -1024,7 +1025,7 @@
 - name: "AUTOMATED | 1.8.4 | PATCH | Ensure XDCMP is not enabled"
   lineinfile:
       path: /etc/gdm3/custom.conf
-      regexp: '^Enable=true'
+      regexp: '^Enable.*=.*true'
       state: absent
   when:
       - ubtu20cis_rule_1_8_4

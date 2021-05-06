@@ -367,7 +367,7 @@
       mode: 0600
   notify: restart auditd
   when:
-      - ubtu20cis_rule_4_1_13
+      - ubtu20cis_rule_4_1_14
   tags:
       - level2-server
       - level2-workstation
@@ -688,5 +688,5 @@
       - level1-workstation
       - automated
       - patch
-      - rule_4.3
+      - rule_4.4
       - logrotate

@@ -1,7 +1,7 @@
 ---
 - name: "MANUAL | 3.1.1 | PATCH | Disable IPv6"
   block:
-      - name: "MANUAL | 3.1.1 | AUDIT | Disable IPv6 | Get currnet GRUB_CMDLINE_LINUX settings"
+      - name: "MANUAL | 3.1.1 | AUDIT | Disable IPv6 | Get current GRUB_CMDLINE_LINUX settings"
         shell: grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
         changed_when: false
         failed_when: false
@@ -244,7 +244,7 @@
       - net.ipv4.conf.default.log_martians
   notify: sysctl flush ipv4 route table
   when:
-      - ubtu20cis_rule_3_3_3
+      - ubtu20cis_rule_3_3_4
   tags:
       - level1-server
       - level1-workstation
@@ -376,7 +376,7 @@
       - automated
       - patch
       - rule_3.4.1
-      - DCCP
+      - dccp
 
 - name: "AUTOMATED | 3.4.2 | PATCH | Ensure SCTP is disabled"
   lineinfile:
@@ -1185,7 +1185,7 @@
       - level1-workstation
       - automated
       - audit
-      - rule_3.5.4.2.3
+      - rule_3.5.3.3.4
       - ip6tables
 
 # ---------------

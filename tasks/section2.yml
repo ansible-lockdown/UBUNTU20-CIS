@@ -190,6 +190,7 @@
   when:
       - ubtu20cis_rule_2_1_3
       - not ubtu20cis_avahi_server
+      - ubtu20cis_disruption_high
   tags:
       - level1-server
       - level1-workstation
@@ -249,7 +250,7 @@
 
 - name: "AUTOMATED | 2.1.7 | PATCH | Ensure NFS is not installed"
   apt:
-      name: rpcbind
+      name: purge nfs-kernel-server
       state: absent
   when:
       - ubtu20cis_rule_2_1_7

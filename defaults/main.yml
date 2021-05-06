@@ -47,7 +47,7 @@ ubtu20cis_system_is_container: false
 system_is_ec2: false
 
 # Section 1 Fixes
-# Section 1 is Iniitial setup (FileSystem Configuration, Configure Software Updates, Filesystem Integrity Checking, Secure Boot Settings,
+# Section 1 is Initial setup (FileSystem Configuration, Configure Software Updates, Filesystem Integrity Checking, Secure Boot Settings,
 # Additional Process Hardening, Mandatory Access Control, Command Line Warning Banners, and GNOME Display Manager)
 ubtu20cis_rule_1_1_1_1: true
 ubtu20cis_rule_1_1_1_2: true
@@ -136,7 +136,6 @@ ubtu20cis_rule_2_2_4: true
 ubtu20cis_rule_2_2_5: true
 ubtu20cis_rule_2_2_6: true
 ubtu20cis_rule_2_3: true
-ubtu20cis_rule_2_4: true
 
 # Section 3 Fixes
 # Section 3 is Network Configuration (Disable Unused Networks, Network Parameters (Host Only), Network Parameters (Host and Router), Uncommon Network Protocols, and Firewall Configuration)
@@ -224,7 +223,7 @@ ubtu20cis_rule_4_3: true
 ubtu20cis_rule_4_4: true
 
 # Section 5 Fixes
-# Section 5 is Access, Authentication, and Authorization (Configure time-based job schedulers, Configure sudo, Configure SSH Server, configure PAM
+# Section 5 is Access, Authentication, and Authorization (Configure time-based job schedulers, Configure sudo, Configure SSH Server, Configure PAM
 # and User Accounts and Environment)
 ubtu20cis_rule_5_1_1: true
 ubtu20cis_rule_5_1_2: true
@@ -389,7 +388,7 @@ ubtu20cis_aide_cron:
     aide_weekday: '*'
 
 # Control 1.4.4
-# THIS VARAIBLE SHOULD BE CHANGED AND INCORPROATED INTO VAULT
+# THIS VARAIBLE SHOULD BE CHANGED AND INCORPORATED INTO VAULT
 # THIS VALUE IS WHAT THE ROOT PW WILL BECOME!!!!!!!!
 # HAVING THAT PW EXPOSED IN RAW TEXT IS NOT SECURE!!!!
 ubtu20cis_root_pw: "Password1"

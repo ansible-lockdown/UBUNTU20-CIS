@@ -1065,7 +1065,7 @@
       - { dest: /etc/profile, state: "{{ (ubtu20cis_shell_session_timeout.file == '/etc/profile') | ternary('present', 'absent') }}" }
       - { dest: /etc/bash.bashrc, state: present }
   when:
-      - ubtu20cis_rule_5_5_4
+      - ubtu20cis_rule_5_5_5
   tags:
       - level1-server
       - level1-workstation
@@ -1086,7 +1086,7 @@
       - name: "MANUAL | 5.6 | AUDIT | Ensure root login is restricted to system console | Message out list"
         debug:
             msg:
-                - "WARNING!!!!Below is the list of conoles with root login access"
+                - "WARNING!!!! Below is the list of consoles with root login access"
                 - "Please review for any conoles that are not in a physically secure location"
                 - "{{ ubtu20cis_5_6_terminal_list.stdout_lines }}"
   when:
