@@ -5,9 +5,12 @@ Rules
 -----
 1) All commits must be GPG signed (details in Signing section)
 2) All commits must have Signed-off-by (Signed-off-by: Joan Doe <joan.doe@email.com>) in the commit message (details in Signing section)
-3) All work is done in your own branch
+3) All work is done in your own branch or own fork
+4) Pull requests
+    a) From within the repo: All pull requests go into the devel branch. There are automated checks for signed commits, signoff in commit message, and functional testing
+    b) From a forked repo: All pull requests will go into a staging branch within the repo. There are automated checks for signed commits, signoff in commit message, and functional testing when going from staging to devel
 4) All pull requests go into the devel branch. There are automated checks for signed commits, signoff in commit message, and functional testing)
-5) Be open and nice to eachother
+5) Be open and nice to each other
 
 Workflow
 --------

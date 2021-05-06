@@ -53,3 +53,6 @@
   service:
       name: sshd
       state: restarted
+
+- name: reload gdm
+  command: dpkg-reconfigure gdm3
