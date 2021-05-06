@@ -555,7 +555,7 @@
         debug:
             msg:
                 - "Warning!! Below are the running services. Please review and remove as well as mask un-needed services"
-                - "{{ ubtu20cis_2_4_services.stdout_lines }}"
+                - "{{ ubtu20cis_2_3_services.stdout_lines }}"
   when:
       - ubtu20cis_rule_2_3
   tags:
@@ -564,4 +564,4 @@
       - manual
       - audit
       - rule_2.3
-      - services"
+      - services
