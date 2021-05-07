@@ -44,7 +44,7 @@
       - section1
 
 - name: Include section 2 patches
-  import_tasks: section2.yml
+  import_tasks: section_2/main.yml
   when: ubtu20cis_section2_patch
   tags:
       - section2
