@@ -8,7 +8,7 @@
 - name: "SECTION | 3.3 | Network Parameters Host and Router"
   include: cis_3.3.x.yml
 
-- name: "SECTION | 3.4 | Uncommong Network Protocols"
+- name: "SECTION | 3.4 | Uncommon Network Protocols"
   include: cis_3.4.x.yml
 
 - name: "SECTION | 3.5 | Firewall Configuration"
