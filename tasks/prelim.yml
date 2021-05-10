@@ -3,7 +3,7 @@
   apt:
       update_cache: yes
   when:
-      - ubtu20cis_rule_1_4_1
+      - ubtu20cis_rule_1_3_1
 
 - name: "PRELIM | Check for autofs service"
   shell: "systemctl show autofs | grep LoadState | cut -d = -f 2"
@@ -21,7 +21,7 @@
   changed_when: false
   check_mode: false
   when:
-      - ubtu20cis_rule_2_2_3
+      - ubtu20cis_rule_2_1_3
   tags:
       - skip_ansible_lint
 
@@ -38,15 +38,15 @@
       name: acl
       state: present
   when:
-      - ubtu20cis_rule_6_2_5
+      - ubtu20cis_rule_6_2_6
       - ubtu20cis_install_network_manager
 
 - name: "PRELIM | List users accounts"
   command: "awk -F: '{print $1}' /etc/passwd"
   changed_when: false
+  check_mode: false
   register: ubtu20cis_users
   when:
       - ubtu20cis_rule_6_2_8 or
         ubtu20cis_rule_6_2_9 or
-        ubtu20cis_rule_6_2_10 or
-        ubtu20cis_rule_6_2_11
+        ubtu20cis_rule_6_2_10
