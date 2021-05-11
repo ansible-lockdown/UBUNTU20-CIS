@@ -499,7 +499,7 @@ ubtu20cis_logrotate: "daily"
 
 # Control 4.3
 # ubtu20cis_logrotate_create_settings are the settings for the create parameter in /etc/logrotate.conf
-# The permissions need to be 640 or more restrictive. 
+# The permissions need to be 640 or more restrictive.
 ubtu20cis_logrotate_create_settings: "0640 root utmp"
 
 # Section 5 Control Variables
