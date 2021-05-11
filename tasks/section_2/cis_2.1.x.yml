@@ -299,8 +299,8 @@
 
 - name: "AUTOMATED | 2.1.10 | PATCH | Ensure HTTP server is not installed"
   apt:
-       name: apache2
-       state: absent
+      name: apache2
+      state: absent
   when:
       - ubtu20cis_rule_2_1_10
       - not ubtu20cis_httpd_server
