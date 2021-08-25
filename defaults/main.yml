@@ -322,7 +322,7 @@ ubtu20cis_vsftpd_server: false
 ubtu20cis_httpd_server: false
 ubtu20cis_dovecot_server: false
 ubtu20cis_smb_server: false
-ubtu20cis_squid_server: fase
+ubtu20cis_squid_server: false
 ubtu20cis_snmp_server: false
 ubtu20cis_rsync_server: false
 ubtu20cis_nis_server: false
