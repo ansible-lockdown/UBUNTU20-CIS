@@ -397,7 +397,7 @@
             - { regexp: '^dc_mailname_in_oh', line: "dc_mailname_in_oh='true'" }
             - { regexp: '^dc_localdelivery', line: "dc_localdelivery='mail_spool'" }
         notify: restart exim4
-        when: ubtu20_cis_mail_transfer_agent == "exim4"
+        when: "'exim4' in ansible_facts.packages"
 
       - name: "AUTOMATED | 2.1.15 | PATCH | Ensure mail transfer agent is configured for local-only mode | Make changes if postfix is installed"
         lineinfile:
@@ -405,14 +405,16 @@
             regexp: '^(#)?inet_interfaces'
             line: 'inet_interfaces = loopback-only'
         notify: restart postfix
-        when: ubtu20_cis_mail_transfer_agent == "postfix"
+        when: "'postfix' in ansible_facts.packages"
 
       - name: "AUTOMATED | 2.1.15 | PATCH | Ensure mail transfer agent is configured for local-only mode | Message out other main agents"
         debug:
             msg:
                 - "Warning!! You are not using either exim4 or postfix"
                 - "Please review your vendors documentation to configure local-only mode"
-        when: ubtu20_cis_mail_transfer_agent == "other"
+        when:
+            - "'exim4' not in ansible_facts.packages"
+            - "'postfix' not in ansible_facts.packages"
   when:
       - ubtu20cis_rule_2_1_15
   tags:
