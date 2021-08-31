@@ -37,6 +37,12 @@
       - ubtu20cis_section5_patch or
         ubtu20cis_section6_patch
 
+- name: Gather the package facts
+  package_facts:
+      manager: auto
+  tags:
+      - always
+
 - name: Include section 1 patches
   import_tasks: section_1/main.yml
   when: ubtu20cis_section1_patch

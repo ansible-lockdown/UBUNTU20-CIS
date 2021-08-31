@@ -428,7 +428,7 @@ ubtu20cis_ntp_server_options: "iburst"
 # Control 2.1.15
 # ubtu20_cis_mail_transfer_agent is the mail transfer agent in use
 # The options are exim4, postfix or other
-ubtu20_cis_mail_transfer_agent: "other"
+# ubtu20_cis_mail_transfer_agent: "other"
 
 # Section 3 Control Variables
 # Control 3.1.2
