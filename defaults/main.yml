@@ -322,7 +322,7 @@ ubtu20cis_vsftpd_server: false
 ubtu20cis_httpd_server: false
 ubtu20cis_dovecot_server: false
 ubtu20cis_smb_server: false
-ubtu20cis_squid_server: fase
+ubtu20cis_squid_server: false
 ubtu20cis_snmp_server: false
 ubtu20cis_rsync_server: false
 ubtu20cis_nis_server: false
@@ -428,7 +428,7 @@ ubtu20cis_ntp_server_options: "iburst"
 # Control 2.1.15
 # ubtu20_cis_mail_transfer_agent is the mail transfer agent in use
 # The options are exim4, postfix or other
-ubtu20_cis_mail_transfer_agent: "other"
+# ubtu20_cis_mail_transfer_agent: "other"
 
 # Section 3 Control Variables
 # Control 3.1.2
