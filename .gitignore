@@ -11,6 +11,7 @@ delete*
 ignore*
 # VSCode
 .vscode
+vagrant
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
