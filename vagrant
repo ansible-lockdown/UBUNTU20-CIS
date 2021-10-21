@@ -1,0 +1,13 @@
+vagrant:
+  hosts:
+    ubuntu20:
+      ansible_ssh_port: 2277 
+  vars:
+    ansible_host: 127.0.0.1
+    ansible_user: vagrant 
+    ansible_password: vagrant 
+    ansible_become_pass: vagrant 
+    setup_audit: true 
+    run_audit: true 
+    audit_content: local
+    audit_git_version: devel
