@@ -1,0 +1,496 @@
+audit_run: ansible # This is forced to wrapper by running the run_audit wrapper script (placeholder only if run via ansible)
+## metadata for Audit benchmark
+ubuntu20cis_benchmark:
+- "type: CIS"
+- "version: '1.1.0'"
+- "os: Ubuntu 20.04"
+- "epoch: {{ ansible_date_time.epoch }}"
+- "hostname: {{ ansible_hostname }}"
+- "automation_group: {% if group_names|length == 0 %}[ungrouped]"{% else %}{% for group in group_names %}[{{ group }}{% if not loop.last %},{% else %}]"{% endif %}{% endfor %}{% endif +%}
+- "fullname: red_hat_enterprise_linux_7"
+- "machine_uuid: {{ ansible_product_uuid }}"
+- "os_locale: {{ ansible_date_time.tz }}"
+- "host_os_version: {{ ansible_distribution_version }}"
+ubuntu20cis_os_distribution: {{ ansible_distribution | lower }}
+
+# Some audit tests may need to scan every filesystem or have an impact on a system 
+# these may need be scheduled to minimise impact also ability to set a timeout if taking too long
+run_heavy_tests: {{ audit_run_heavy_tests }}
+timeout_ms: {{ audit_cmd_timeout }}
+
+
+ubuntu20cis_section1: true
+ubuntu20cis_section2: true
+ubuntu20cis_section3: true
+ubuntu20cis_section4: true
+ubuntu20cis_section5: true
+ubuntu20cis_section6: true
+
+ubuntu20cis_level_1: true
+ubuntu20cis_level_2: true
+
+ubuntu20cis_apparmor_disable: true
+
+#  to enable rules that may have IO impact on a system e.g. full filesystem scans or CPU heavy
+run_heavy_tests: true
+
+#  True is BIOS based system else set to false
+ubuntu20_legacy_boot: true
+
+ubuntu20_set_boot_pass: true
+
+# These variables correspond with the CIS rule IDs or paragraph numbers defined in
+# the CIS benchmark documents.
+# PLEASE NOTE: These work in coordination with the section # group variables and tags.
+# You must enable an entire section in order for the variables below to take effect.
+# Section 1 rules
+ubuntu20cis_rule_1_1_1_1: {{ ubtu20cis_rule_1_1_1_1 }}
+ubuntu20cis_rule_1_1_1_2: {{ ubtu20cis_rule_1_1_1_2 }}
+ubuntu20cis_rule_1_1_1_3: {{ ubtu20cis_rule_1_1_1_3 }}
+ubuntu20cis_rule_1_1_1_4: {{ ubtu20cis_rule_1_1_1_4 }}
+ubuntu20cis_rule_1_1_1_5: {{ ubtu20cis_rule_1_1_1_5 }}
+ubuntu20cis_rule_1_1_1_6: {{ ubtu20cis_rule_1_1_1_6 }}
+ubuntu20cis_rule_1_1_1_7: {{ ubtu20cis_rule_1_1_1_7 }}
+ubuntu20cis_rule_1_1_2: {{ ubtu20cis_rule_1_1_2 }}
+ubuntu20cis_rule_1_1_3: {{ ubtu20cis_rule_1_1_3 }}
+ubuntu20cis_rule_1_1_4: {{ ubtu20cis_rule_1_1_4 }}
+ubuntu20cis_rule_1_1_5: {{ ubtu20cis_rule_1_1_5 }}
+ubuntu20cis_rule_1_1_6: {{ ubtu20cis_rule_1_1_6 }}
+ubuntu20cis_rule_1_1_7: {{ ubtu20cis_rule_1_1_7 }}
+ubuntu20cis_rule_1_1_8: {{ ubtu20cis_rule_1_1_8 }}
+ubuntu20cis_rule_1_1_9: {{ ubtu20cis_rule_1_1_9 }}
+ubuntu20cis_rule_1_1_10: {{ ubtu20cis_rule_1_1_10 }}
+ubuntu20cis_rule_1_1_11: {{ ubtu20cis_rule_1_1_11 }}
+ubuntu20cis_rule_1_1_12: {{ ubtu20cis_rule_1_1_12 }}
+ubuntu20cis_rule_1_1_13: {{ ubtu20cis_rule_1_1_13 }}
+ubuntu20cis_rule_1_1_14: {{ ubtu20cis_rule_1_1_14 }}
+ubuntu20cis_rule_1_1_15: {{ ubtu20cis_rule_1_1_15 }}
+ubuntu20cis_rule_1_1_16: {{ ubtu20cis_rule_1_1_16 }}
+ubuntu20cis_rule_1_1_17: {{ ubtu20cis_rule_1_1_17 }}
+ubuntu20cis_rule_1_1_18: {{ ubtu20cis_rule_1_1_18 }}
+ubuntu20cis_rule_1_1_19: {{ ubtu20cis_rule_1_1_19 }}
+ubuntu20cis_rule_1_1_20: {{ ubtu20cis_rule_1_1_20 }}
+ubuntu20cis_rule_1_1_21: {{ ubtu20cis_rule_1_1_21 }}
+ubuntu20cis_rule_1_1_22: {{ ubtu20cis_rule_1_1_22 }}
+ubuntu20cis_rule_1_1_23: {{ ubtu20cis_rule_1_1_23 }}
+ubuntu20cis_rule_1_1_24: {{ ubtu20cis_rule_1_1_24 }}
+ubuntu20cis_rule_1_2_1: {{ ubtu20cis_rule_1_2_1 }}
+ubuntu20cis_rule_1_2_2: {{ ubtu20cis_rule_1_2_2 }}
+ubuntu20cis_rule_1_3_1: {{ ubtu20cis_rule_1_3_1 }}
+ubuntu20cis_rule_1_3_2: {{ ubtu20cis_rule_1_3_2 }}=
+ubuntu20cis_rule_1_4_1: {{ ubtu20cis_rule_1_4_1 }}
+ubuntu20cis_rule_1_4_2: {{ ubtu20cis_rule_1_4_2 }}
+ubuntu20cis_rule_1_4_3: {{ ubtu20cis_rule_1_4_3 }}
+ubuntu20cis_rule_1_4_4: {{ ubtu20cis_rule_1_4_4 }}
+ubuntu20cis_rule_1_5_1: {{ ubtu20cis_rule_1_5_1 }}
+ubuntu20cis_rule_1_5_2: {{ ubtu20cis_rule_1_5_2 }}
+ubuntu20cis_rule_1_5_3: {{ ubtu20cis_rule_1_5_3 }}
+ubuntu20cis_rule_1_5_4: {{ ubtu20cis_rule_1_5_4 }}
+ubuntu20cis_rule_1_6_1_1: {{ ubtu20cis_rule_1_6_1_1 }}
+ubuntu20cis_rule_1_6_1_2: {{ ubtu20cis_rule_1_6_1_2 }}
+ubuntu20cis_rule_1_6_1_3: {{ ubtu20cis_rule_1_6_1_3 }}
+ubuntu20cis_rule_1_6_1_4: {{ ubtu20cis_rule_1_6_1_4 }}
+ubuntu20cis_rule_1_7_1: {{ ubtu20cis_rule_1_7_1 }}
+ubuntu20cis_rule_1_7_2: {{ ubtu20cis_rule_1_7_2 }}
+ubuntu20cis_rule_1_7_3: {{ ubtu20cis_rule_1_7_3 }}
+ubuntu20cis_rule_1_7_4: {{ ubtu20cis_rule_1_7_4 }}
+ubuntu20cis_rule_1_7_5: {{ ubtu20cis_rule_1_7_5 }}
+ubuntu20cis_rule_1_7_6: {{ ubtu20cis_rule_1_7_6 }}
+ubuntu20cis_rule_1_8_1: {{ ubtu20cis_rule_1_8_1 }}
+ubuntu20cis_rule_1_8_2: {{ ubtu20cis_rule_1_8_2 }}
+ubuntu20cis_rule_1_8_3: {{ ubtu20cis_rule_1_8_3 }}
+ubuntu20cis_rule_1_8_4: {{ ubtu20cis_rule_1_8_4 }}
+ubuntu20cis_rule_1_9: {{ ubtu20cis_rule_1_9 }}
+
+# section 2 rules
+
+ubuntu20cis_rule_2_1_1_1: {{ ubtu20cis_rule_2_1_1_1 }}
+ubuntu20cis_rule_2_1_1_2: {{ ubtu20cis_rule_2_1_1_2 }}
+ubuntu20cis_rule_2_1_1_3: {{ ubtu20cis_rule_2_1_1_3 }}
+ubuntu20cis_rule_2_1_1_4: {{ ubtu20cis_rule_2_1_1_4 }}
+ubuntu20cis_rule_2_1_2: {{ ubtu20cis_rule_2_1_2 }}
+ubuntu20cis_rule_2_1_3: {{ ubtu20cis_rule_2_1_3 }}
+ubuntu20cis_rule_2_1_4: {{ ubtu20cis_rule_2_1_4 }}
+ubuntu20cis_rule_2_1_5: {{ ubtu20cis_rule_2_1_5 }}
+ubuntu20cis_rule_2_1_6: {{ ubtu20cis_rule_2_1_6 }}
+ubuntu20cis_rule_2_1_7: {{ ubtu20cis_rule_2_1_7 }}
+ubuntu20cis_rule_2_1_8: {{ ubtu20cis_rule_2_1_8 }}
+ubuntu20cis_rule_2_1_9: {{ ubtu20cis_rule_2_1_9 }}
+ubuntu20cis_rule_2_1_10: {{ ubtu20cis_rule_2_1_10 }}
+ubuntu20cis_rule_2_1_11: {{ ubtu20cis_rule_2_1_11 }}
+ubuntu20cis_rule_2_1_12: {{ ubtu20cis_rule_2_1_12 }}
+ubuntu20cis_rule_2_1_13: {{ ubtu20cis_rule_2_1_13 }}
+ubuntu20cis_rule_2_1_14: {{ ubtu20cis_rule_2_1_14 }}
+ubuntu20cis_rule_2_1_15: {{ ubtu20cis_rule_2_1_15 }}
+ubuntu20cis_rule_2_1_16: {{ ubtu20cis_rule_2_1_16 }}
+ubuntu20cis_rule_2_1_17: {{ ubtu20cis_rule_2_1_17 }}
+ubuntu20cis_rule_2_2_1: {{ ubtu20cis_rule_2_2_1 }}
+ubuntu20cis_rule_2_2_2: {{ ubtu20cis_rule_2_2_2 }}
+ubuntu20cis_rule_2_2_3: {{ ubtu20cis_rule_2_2_3 }}
+ubuntu20cis_rule_2_2_4: {{ ubtu20cis_rule_2_2_4 }}
+ubuntu20cis_rule_2_2_5: {{ ubtu20cis_rule_2_2_5 }}
+ubuntu20cis_rule_2_2_6: {{ ubtu20cis_rule_2_2_6 }}
+ubuntu20cis_rule_2_3: {{ ubtu20cis_rule_2_3 }}
+
+# Section 3 rules
+ubuntu20cis_rule_3_1_1: {{ ubtu20cis_rule_3_1_1 }}
+ubuntu20cis_rule_3_1_2: {{ ubtu20cis_rule_3_1_2 }}
+ubuntu20cis_rule_3_2_1: {{ ubtu20cis_rule_3_2_1 }}
+ubuntu20cis_rule_3_2_2: {{ ubtu20cis_rule_3_2_2 }}
+ubuntu20cis_rule_3_3_1: {{ ubtu20cis_rule_3_3_1 }}
+ubuntu20cis_rule_3_3_2: {{ ubtu20cis_rule_3_3_2 }}
+ubuntu20cis_rule_3_3_3: {{ ubtu20cis_rule_3_3_3 }}
+ubuntu20cis_rule_3_3_4: {{ ubtu20cis_rule_3_3_4 }}
+ubuntu20cis_rule_3_3_5: {{ ubtu20cis_rule_3_3_5 }}
+ubuntu20cis_rule_3_3_6: {{ ubtu20cis_rule_3_3_6 }}
+ubuntu20cis_rule_3_3_7: {{ ubtu20cis_rule_3_3_7 }}
+ubuntu20cis_rule_3_3_8: {{ ubtu20cis_rule_3_3_8 }}
+ubuntu20cis_rule_3_3_9: {{ ubtu20cis_rule_3_3_9 }}
+ubuntu20cis_rule_3_4_1: {{ ubtu20cis_rule_3_4_1 }}
+ubuntu20cis_rule_3_4_2: {{ ubtu20cis_rule_3_4_2 }}
+ubuntu20cis_rule_3_4_3: {{ ubtu20cis_rule_3_4_3 }}
+ubuntu20cis_rule_3_4_4: {{ ubtu20cis_rule_3_4_4 }}
+# UFW
+ubuntu20cis_rule_3_5_1_1: {{ ubtu20cis_rule_3_5_1_1 }}
+ubuntu20cis_rule_3_5_1_2: {{ ubtu20cis_rule_3_5_1_2 }}
+ubuntu20cis_rule_3_5_1_3: {{ ubtu20cis_rule_3_5_1_3 }}
+ubuntu20cis_rule_3_5_1_4: {{ ubtu20cis_rule_3_5_1_4 }}
+ubuntu20cis_rule_3_5_1_5: {{ ubtu20cis_rule_3_5_1_5 }}
+ubuntu20cis_rule_3_5_1_6: {{ ubtu20cis_rule_3_5_1_6 }}
+ubuntu20cis_rule_3_5_1_7: {{ ubtu20cis_rule_3_5_1_7 }}
+# NFTables
+ubuntu20cis_rule_3_5_2_1: {{ ubtu20cis_rule_3_5_2_1 }}
+ubuntu20cis_rule_3_5_2_2: {{ ubtu20cis_rule_3_5_2_2 }}
+ubuntu20cis_rule_3_5_2_3: {{ ubtu20cis_rule_3_5_2_3 }}
+ubuntu20cis_rule_3_5_2_4: {{ ubtu20cis_rule_3_5_2_4 }}
+ubuntu20cis_rule_3_5_2_5: {{ ubtu20cis_rule_3_5_2_5 }}
+ubuntu20cis_rule_3_5_2_6: {{ ubtu20cis_rule_3_5_2_6 }}
+ubuntu20cis_rule_3_5_2_7: {{ ubtu20cis_rule_3_5_2_7 }}
+ubuntu20cis_rule_3_5_2_8: {{ ubtu20cis_rule_3_5_2_8 }}
+ubuntu20cis_rule_3_5_2_9: {{ ubtu20cis_rule_3_5_2_9 }}
+ubuntu20cis_rule_3_5_2_10: {{ ubtu20cis_rule_3_5_2_10 }}
+# IPTables
+ubuntu20cis_rule_3_5_3_1_1: {{ ubtu20cis_rule_3_5_3_1_1 }}
+ubuntu20cis_rule_3_5_3_1_2: {{ ubtu20cis_rule_3_5_3_1_2 }}
+ubuntu20cis_rule_3_5_3_1_3: {{ ubtu20cis_rule_3_5_3_1_3 }}
+ubuntu20cis_rule_3_5_3_2_1: {{ ubtu20cis_rule_3_5_3_2_1 }}
+ubuntu20cis_rule_3_5_3_2_2: {{ ubtu20cis_rule_3_5_3_2_2 }}
+ubuntu20cis_rule_3_5_3_2_3: {{ ubtu20cis_rule_3_5_3_2_3 }}
+ubuntu20cis_rule_3_5_3_2_4: {{ ubtu20cis_rule_3_5_3_2_4 }}
+ubuntu20cis_rule_3_5_3_3_1: {{ ubtu20cis_rule_3_5_3_3_1 }}
+ubuntu20cis_rule_3_5_3_3_2: {{ ubtu20cis_rule_3_5_3_3_2 }}
+ubuntu20cis_rule_3_5_3_3_3: {{ ubtu20cis_rule_3_5_3_3_3 }}
+ubuntu20cis_rule_3_5_3_3_4: {{ ubtu20cis_rule_3_5_3_3_4 }}
+
+# Section 4 rules
+ubuntu20cis_rule_4_1_1_1: {{ ubtu20cis_rule_4_1_1_1 }}
+ubuntu20cis_rule_4_1_1_2: {{ ubtu20cis_rule_4_1_1_2 }}
+ubuntu20cis_rule_4_1_1_3: {{ ubtu20cis_rule_4_1_1_3 }}
+ubuntu20cis_rule_4_1_1_4: {{ ubtu20cis_rule_4_1_1_4 }}
+ubuntu20cis_rule_4_1_2_1: {{ ubtu20cis_rule_4_1_2_1 }}
+ubuntu20cis_rule_4_1_2_2: {{ ubtu20cis_rule_4_1_2_2 }}
+ubuntu20cis_rule_4_1_2_3: {{ ubtu20cis_rule_4_1_2_3 }}
+ubuntu20cis_rule_4_1_3: {{ ubtu20cis_rule_4_1_3 }}
+ubuntu20cis_rule_4_1_4: {{ ubtu20cis_rule_4_1_4 }}
+ubuntu20cis_rule_4_1_5: {{ ubtu20cis_rule_4_1_5 }}
+ubuntu20cis_rule_4_1_6: {{ ubtu20cis_rule_4_1_6 }}
+ubuntu20cis_rule_4_1_7: {{ ubtu20cis_rule_4_1_7 }}
+ubuntu20cis_rule_4_1_8: {{ ubtu20cis_rule_4_1_8 }}
+ubuntu20cis_rule_4_1_9: {{ ubtu20cis_rule_4_1_9 }}
+ubuntu20cis_rule_4_1_10: {{ ubtu20cis_rule_4_1_10 }}
+ubuntu20cis_rule_4_1_11: {{ ubtu20cis_rule_4_1_11 }}
+ubuntu20cis_rule_4_1_12: {{ ubtu20cis_rule_4_1_12 }}
+ubuntu20cis_rule_4_1_13: {{ ubtu20cis_rule_4_1_13}}
+ubuntu20cis_rule_4_1_14: {{ ubtu20cis_rule_4_1_14 }}
+ubuntu20cis_rule_4_1_15: {{ ubtu20cis_rule_4_1_15 }}
+ubuntu20cis_rule_4_1_16: {{ ubtu20cis_rule_4_1_16 }}
+ubuntu20cis_rule_4_1_17: {{ ubtu20cis_rule_4_1_17 }}
+ubuntu20cis_rule_4_2_1_1: {{ ubtu20cis_rule_4_2_1_1 }}
+ubuntu20cis_rule_4_2_1_2: {{ ubtu20cis_rule_4_2_1_2 }}
+ubuntu20cis_rule_4_2_1_3: {{ ubtu20cis_rule_4_2_1_3 }}
+ubuntu20cis_rule_4_2_1_4: {{ ubtu20cis_rule_4_2_1_4 }}
+ubuntu20cis_rule_4_2_1_5: {{ ubtu20cis_rule_4_2_1_5 }}
+ubuntu20cis_rule_4_2_1_6: {{ ubtu20cis_rule_4_2_1_6 }}
+ubuntu20cis_rule_4_2_2_1: {{ ubtu20cis_rule_4_2_2_1 }}
+ubuntu20cis_rule_4_2_2_2: {{ ubtu20cis_rule_4_2_2_2 }}
+ubuntu20cis_rule_4_2_2_3: {{ ubtu20cis_rule_4_2_2_3 }}
+ubuntu20cis_rule_4_2_3: {{ ubtu20cis_rule_4_2_3 }}
+ubuntu20cis_rule_4_3: {{ ubtu20cis_rule_4_3 }}
+ubuntu20cis_rule_4_4: {{ ubtu20cis_rule_4_4 }}
+
+# Section 5
+ubuntu20cis_rule_5_1_1: {{ ubtu20cis_rule_5_1_1 }}
+ubuntu20cis_rule_5_1_2: {{ ubtu20cis_rule_5_1_2 }}
+ubuntu20cis_rule_5_1_3: {{ ubtu20cis_rule_5_1_3 }}
+ubuntu20cis_rule_5_1_4: {{ ubtu20cis_rule_5_1_4 }}
+ubuntu20cis_rule_5_1_5: {{ ubtu20cis_rule_5_1_5 }}
+ubuntu20cis_rule_5_1_6: {{ ubtu20cis_rule_5_1_6 }}
+ubuntu20cis_rule_5_1_7: {{ ubtu20cis_rule_5_1_7 }}
+ubuntu20cis_rule_5_1_8: {{ ubtu20cis_rule_5_1_8 }}
+ubuntu20cis_rule_5_1_9: {{ ubtu20cis_rule_5_1_9 }}
+ubuntu20cis_rule_5_2_1: {{ ubtu20cis_rule_5_2_1 }}
+ubuntu20cis_rule_5_2_2: {{ ubtu20cis_rule_5_2_2 }}
+ubuntu20cis_rule_5_2_3: {{ ubtu20cis_rule_5_2_3 }}
+ubuntu20cis_rule_5_3_1: {{ ubtu20cis_rule_5_3_1 }}
+ubuntu20cis_rule_5_3_2: {{ ubtu20cis_rule_5_3_2 }}
+ubuntu20cis_rule_5_3_3: {{ ubtu20cis_rule_5_3_3 }}
+ubuntu20cis_rule_5_3_4: {{ ubtu20cis_rule_5_3_4 }}
+ubuntu20cis_rule_5_3_5: {{ ubtu20cis_rule_5_3_5 }}
+ubuntu20cis_rule_5_3_6: {{ ubtu20cis_rule_5_3_6 }}
+ubuntu20cis_rule_5_3_7: {{ ubtu20cis_rule_5_3_7 }}
+ubuntu20cis_rule_5_3_8: {{ ubtu20cis_rule_5_3_8 }}
+ubuntu20cis_rule_5_3_9: {{ ubtu20cis_rule_5_3_9 }}
+ubuntu20cis_rule_5_3_10: {{ ubtu20cis_rule_5_3_10 }}
+ubuntu20cis_rule_5_3_11: {{ ubtu20cis_rule_5_3_11 }}
+ubuntu20cis_rule_5_3_12: {{ ubtu20cis_rule_5_3_12 }}
+ubuntu20cis_rule_5_3_13: {{ ubtu20cis_rule_5_3_13 }}
+ubuntu20cis_rule_5_3_14: {{ ubtu20cis_rule_5_3_14 }}
+ubuntu20cis_rule_5_3_15: {{ ubtu20cis_rule_5_3_15 }}
+ubuntu20cis_rule_5_3_16: {{ ubtu20cis_rule_5_3_16 }}
+ubuntu20cis_rule_5_3_17: {{ ubtu20cis_rule_5_3_17 }}
+ubuntu20cis_rule_5_3_18: {{ ubtu20cis_rule_5_3_18 }}
+ubuntu20cis_rule_5_3_19: {{ ubtu20cis_rule_5_3_19 }}
+ubuntu20cis_rule_5_3_20: {{ ubtu20cis_rule_5_3_20 }}
+ubuntu20cis_rule_5_3_21: {{ ubtu20cis_rule_5_3_21 }}
+ubuntu20cis_rule_5_3_22: {{ ubtu20cis_rule_5_3_22 }}
+ubuntu20cis_rule_5_4_1: {{ ubtu20cis_rule_5_4_1 }}
+ubuntu20cis_rule_5_4_2: {{ ubtu20cis_rule_5_4_2 }}
+ubuntu20cis_rule_5_4_3: {{ ubtu20cis_rule_5_4_3 }}
+ubuntu20cis_rule_5_4_4: {{ ubtu20cis_rule_5_4_4 }}
+ubuntu20cis_rule_5_5_1_1: {{ ubtu20cis_rule_5_5_1_1 }}
+ubuntu20cis_rule_5_5_1_2: {{ ubtu20cis_rule_5_5_1_2 }}
+ubuntu20cis_rule_5_5_1_3: {{ ubtu20cis_rule_5_5_1_3 }}
+ubuntu20cis_rule_5_5_1_4: {{ ubtu20cis_rule_5_5_1_4 }}
+ubuntu20cis_rule_5_5_1_5: {{ ubtu20cis_rule_5_5_1_5 }}
+ubuntu20cis_rule_5_5_2: {{ ubtu20cis_rule_5_5_2 }}
+ubuntu20cis_rule_5_5_3: {{ ubtu20cis_rule_5_5_3 }}
+ubuntu20cis_rule_5_5_4: {{ ubtu20cis_rule_5_5_4 }}
+ubuntu20cis_rule_5_5_5: {{ ubtu20cis_rule_5_5_5 }}
+ubuntu20cis_rule_5_6: {{ ubtu20cis_rule_5_6 }}
+ubuntu20cis_rule_5_7: {{ ubtu20cis_rule_5_7 }}
+
+# Section 6
+ubuntu20cis_rule_6_1_1: {{ ubtu20cis_rule_6_1_1 }}
+ubuntu20cis_rule_6_1_2: {{ ubtu20cis_rule_6_1_2 }}
+ubuntu20cis_rule_6_1_3: {{ ubtu20cis_rule_6_1_3 }}
+ubuntu20cis_rule_6_1_4: {{ ubtu20cis_rule_6_1_4 }}
+ubuntu20cis_rule_6_1_5: {{ ubtu20cis_rule_6_1_5 }}
+ubuntu20cis_rule_6_1_6: {{ ubtu20cis_rule_6_1_6 }}
+ubuntu20cis_rule_6_1_7: {{ ubtu20cis_rule_6_1_7 }}
+ubuntu20cis_rule_6_1_8: {{ ubtu20cis_rule_6_1_8 }}
+ubuntu20cis_rule_6_1_9: {{ ubtu20cis_rule_6_1_9 }}
+ubuntu20cis_rule_6_1_10: {{ ubtu20cis_rule_6_1_10 }}
+ubuntu20cis_rule_6_1_11: {{ ubtu20cis_rule_6_1_11 }}
+ubuntu20cis_rule_6_1_12: {{ ubtu20cis_rule_6_1_12 }}
+ubuntu20cis_rule_6_1_13: {{ ubtu20cis_rule_6_1_13 }}
+ubuntu20cis_rule_6_1_14: {{ ubtu20cis_rule_6_1_14 }}
+
+ubuntu20cis_rule_6_2_1: {{ ubtu20cis_rule_6_2_1 }}
+ubuntu20cis_rule_6_2_2: {{ ubtu20cis_rule_6_2_2 }}
+ubuntu20cis_rule_6_2_3: {{ ubtu20cis_rule_6_2_3 }}
+ubuntu20cis_rule_6_2_4: {{ ubtu20cis_rule_6_2_4 }}
+ubuntu20cis_rule_6_2_5: {{ ubtu20cis_rule_6_2_5 }}
+ubuntu20cis_rule_6_2_6: {{ ubtu20cis_rule_6_2_6 }}
+ubuntu20cis_rule_6_2_7: {{ ubtu20cis_rule_6_2_7 }}
+ubuntu20cis_rule_6_2_8: {{ ubtu20cis_rule_6_2_8 }}
+ubuntu20cis_rule_6_2_9: {{ ubtu20cis_rule_6_2_9 }}
+ubuntu20cis_rule_6_2_10: {{ ubtu20cis_rule_6_2_10 }}
+ubuntu20cis_rule_6_2_11: {{ ubtu20cis_rule_6_2_11 }}
+ubuntu20cis_rule_6_2_12: {{ ubtu20cis_rule_6_2_12 }}
+ubuntu20cis_rule_6_2_13: {{ ubtu20cis_rule_6_2_13 }}
+ubuntu20cis_rule_6_2_14: {{ ubtu20cis_rule_6_2_14 }}
+ubuntu20cis_rule_6_2_15: {{ ubtu20cis_rule_6_2_15 }}
+ubuntu20cis_rule_6_2_16: {{ ubtu20cis_rule_6_2_16 }}
+ubuntu20cis_rule_6_2_17: {{ ubtu20cis_rule_6_2_17 }}
+
+# AIDE
+ubuntu20cis_config_aide: true
+
+# aide setup via - cron, timer
+ubuntu20cis_aide_scan: cron
+
+# AIDE cron settings
+ubuntu20_aide_cron:
+  cron_user: {{ ubtu20cis_aide_cron.cron_user }}
+  cron_file: {{ ubtu20cis_aide_cron.cron_file }}
+  aide_job: {{ ubtu20cis_aide_cron.aide_job }}
+  aide_minute: {{ ubtu20cis_aide_cron.aide_minute }}
+  aide_hour: {{ ubtu20cis_aide_cron.aide_hour }}
+  aide_day: '{{ ubtu20cis_aide_cron.aide_day }}'
+  aide_month: '{{ ubtu20cis_aide_cron.aide_month }}'
+  aide_weekday: '{{ ubtu20cis_aide_cron.aide_weekday }}'
+
+# 1.1
+ubuntu20cis_allow_autofs: {{ ubtu20cis_allow_autofs }}
+
+# 1.4
+ubuntu20cis_grub_conf_file: /boot/grub/grub.cfg
+ubuntu20cis_grub_username: root
+ubuntu20cis_grub_hash: blah
+# 1.5.1 Bootloader password
+ubuntu20cis_bootloader_password: {{ ubtu20cis_root_pw }}
+
+# 1.6 - Only have apparmor enforcing
+ubuntu20cis_apparmor_enforce_only: false
+
+# Warning Banner Content (issue, issue.net, motd)
+ubuntu20_warning_banner: {{ ubtu20cis_warning_banner }}
+# End Banner
+
+# Section 2
+# Time sync - can be timesync or chriny or ntp
+ubuntu20cis_time_service: {{ ubtu20cis_time_sync_tool }}
+ubuntu20cis_ntp_servers: {{ ubtu20cis_ntp_server_list }}
+ubuntu20cis_ntp_fallback: {{ ubtu20cis_ntp_fallback_server_list }}
+ubuntu20cis_ntp_root_distance:
+
+# Whether or not to run tasks related to auditing/patching the desktop environment
+ubuntu20cis_gui: {{ ubtu20cis_desktop_required }}
+
+# Service configuration booleans set true to keep service
+ubuntu20cis_avahi_server: {{ ubtu20cis_avahi_server }}
+ubuntu20cis_cups_server: {{ ubtu20cis_cups_server }}
+ubuntu20cis_nfs_server: {{ ubtu20cis_nfs_server }}
+ubuntu20cis_dhcp_server: {{ ubtu20cis_dhcp_server }}
+ubuntu20cis_ldap_server: {{ ubtu20cis_ldap_server }}
+ubuntu20cis_dns_server: {{ ubtu20cis_dns_server }}
+ubuntu20cis_vsftpd_server: {{ ubtu20cis_vsftpd_server }}
+ubuntu20cis_httpd_server: {{ ubtu20cis_httpd_server }}
+ubuntu20cis_is_mail_server: false
+ubuntu20cis_dovecot_server: {{ ubtu20cis_dovecot_server }}
+ubuntu20cis_samba_server: {{ ubtu20cis_smb_server }}
+ubuntu20cis_squid_server: {{ ubtu20cis_squid_server }}
+ubuntu20cis_snmp_server: {{ ubtu20cis_snmp_server }}
+
+#  exim config
+
+ubuntu20cis_mailserver: exim4
+ubuntu20_exim_conf:
+  - dc_eximconfig_configtype='local'
+  - dc_local_interfaces='127.0.0.1 ; ::1'
+  - dc_readhost=''
+  - dc_relay_domains=''
+  - dc_minimaldns='false'
+  - dc_relay_nets=''
+  - dc_smarthost=''
+  - dc_use_split_config='false'
+  - dc_hide_mailname=''
+  - dc_mailname_in_oh='true'
+  - dc_localdelivery='mail_spool'
+
+ubuntu20cis_rsyncd_server: {{ ubtu20cis_rsync_server }}
+ubuntu20cis_nis_server: {{ ubtu20cis_nis_server }}
+
+ubuntu20cis_xwindows_required: false
+
+# 2.2 client services
+ubuntu20cis_rsh_required: {{ ubtu20cis_rsh_required }}
+ubuntu20cis_talk_required: {{ ubtu20cis_talk_required }}
+ubuntu20cis_telnet_required: {{ ubtu20cis_telnet_required }}
+ubuntu20cis_ldap_clients_required: {{ ubtu20cis_ldap_clients_required }}
+ubuntu20cis_rpc_required: {{ ubtu20cis_rpc_required }}
+
+
+# Section 3
+# IPv6 required
+ubuntu20cis_ipv6_required: {{ ubtu20cis_ipv6_required }}
+
+# System network parameters (host only OR host and router)
+ubuntu20cis_is_router: false
+
+
+ubuntu20cis_firewall: {{ ubtu20cis_firewall_package }}
+
+ubuntu20_default_firewall_zone: public
+ubuntu20_firewall_interface:
+  - ['ens224']
+  - ['ens192']
+ubuntu20_firewall_services:
+  - ssh
+  - dhcpv6-client
+
+### Section 4
+## auditd settings
+ubuntu20cis_auditd:
+  space_left_action: email
+  action_mail_acct: root
+  admin_space_left_action: {{ ubtu20cis_auditd.admin_space_left_action }}
+  max_log_file_action: {{ ubtu20cis_auditd.max_log_file_action }}
+  auditd_backlog_limit: {{ ubtu20cis_audit_back_log_limit }}
+
+## syslog
+ubuntu20cis_is_syslog_server: {{ ubtu20cis_system_is_log_server }}
+### Section 5
+ubuntu20cis_sshd_limited: false
+# Note the following to understand precedence and layout
+ubuntu20cis_sshd_access:
+  - AllowUser
+  - AllowGroup
+  - DenyUser
+  - DenyGroup
+
+ubuntu20cis_ssh_strong_ciphers: Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+ubuntu20cis_ssh_weak_ciphers:
+  - 3des-cbc
+  - aes128-cbc
+  - aes192-cbc
+  - aes256-cbc
+  - arcfour
+  - arcfour128
+  - arcfour256
+  - blowfish-cbc
+  - cast128-cbc
+  - rijndael-cbc@lysator.liu.se
+
+ubuntu20cis_ssh_strong_macs: MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256
+ubuntu20cis_ssh_weak_macs:
+  - hmac-md5
+  - hmac-md5-96
+  - hmac-ripemd160
+  - hmac-sha1
+  - hmac-sha1-96
+  - umac-64@openssh.com
+  - umac-128@openssh.com
+  - hmac-md5-etm@openssh.com
+  - hmac-md5-96-etm@openssh.com
+  - hmac-ripemd160-etm@openssh.com
+  - hmac-sha1-etm@openssh.com
+  - hmac-sha1-96-etm@openssh.com
+  - umac-64-etm@openssh.com
+  - umac-128-etm@openssh.com
+
+ubuntu20cis_ssh_strong_kex: KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256
+ubuntu20cis_ssh_weak_kex:
+  - diffie-hellman-group1-sha1
+  - diffie-hellman-group14-sha1
+  - diffie-hellman-group-exchange-sha1
+
+
+ubuntu20cis_ssh_aliveinterval: 300
+ubuntu20cis_ssh_countmax: 3
+## PAM
+ubuntu20cis_pam_password:
+  minlen: "14"
+  minclass: "4"
+
+ubuntu20cis_pam_passwd_retry: "3"
+
+# choose one of below
+ubuntu20cis_pwhistory_so: "14"
+ubuntu20cis_unix_so: false
+ubuntu20cis_passwd_remember: {{ ubtu20cis_pamd_pwhistory_remember }}
+
+# logins.def password settings
+ubuntu20cis_pass:
+  max_days: {{ ubtu20cis_pass.max_days }}
+  min_days: {{ ubtu20cis_pass.min_days }}
+  warn_age: {{ ubtu20cis_pass.warn_age }}
+
+# set sugroup if differs from wheel
+ubuntu20cis_sugroup: {{ ubtu20cis_su_group }}
+
+# sugroup users list
+ubuntu20_sugroup_users: "root"
+
+# var log location variable
+ubuntu20_varlog_location: {{ ubtu20cis_sudo_logfile }}

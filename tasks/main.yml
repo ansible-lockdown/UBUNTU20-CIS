@@ -32,6 +32,16 @@
   tags:
       - prelim_tasks
 
+- import_tasks: prelim.yml
+  become: yes
+  tags:
+      - prelim_tasks
+      - run_audit
+
+- import_tasks: pre_remediation_audit.yml
+  when:
+      - run_audit
+
 - include: parse_etc_password.yml
   when:
       - ubtu20cis_section5_patch or
@@ -78,3 +88,13 @@
   when: ubtu20cis_section6_patch
   tags:
       - section6
+
+- import_tasks: post_remediation_audit.yml
+  when:
+      - run_audit
+
+- name: Show Audit Summary
+  debug:
+      msg: "{{ audit_results.split('\n') }}"
+  when:
+      - run_audit
