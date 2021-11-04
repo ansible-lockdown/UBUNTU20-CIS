@@ -362,9 +362,12 @@ ubuntu20cis_samba_server: {{ ubtu20cis_smb_server }}
 ubuntu20cis_squid_server: {{ ubtu20cis_squid_server }}
 ubuntu20cis_snmp_server: {{ ubtu20cis_snmp_server }}
 
-#  exim config
-
-ubuntu20cis_mailserver: exim4
+#  Mail Server config
+{% if ubtu20_cis_mail_transfer_agent is defined %}
+ubuntu20cis_mailserver: {{ ubtu20_cis_mail_transfer_agent }}
+{% else %}
+ubuntu20cis_mailserver: Not_defined
+{% endif %}
 ubuntu20_exim_conf:
   - dc_eximconfig_configtype='local'
   - dc_local_interfaces='127.0.0.1 ; ::1'
@@ -377,6 +380,7 @@ ubuntu20_exim_conf:
   - dc_hide_mailname=''
   - dc_mailname_in_oh='true'
   - dc_localdelivery='mail_spool'
+
 
 ubuntu20cis_rsyncd_server: {{ ubtu20cis_rsync_server }}
 ubuntu20cis_nis_server: {{ ubtu20cis_nis_server }}
