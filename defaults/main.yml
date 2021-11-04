@@ -390,7 +390,7 @@ ubtu20cis_tmp_fstab_options: "defaults,rw,nosuid,nodev,noexec,relatime"
 # To conform to CIS control 1.1.7 nodev needs to be present
 # To conform to CIS control 1.1.8 nosuid needs to be present
 # To conform to CIS control 1.1.9 noexec needs to be present
-ubtu20cis_dev_shm_fstab_options: "defaults,noexec,nodev,nosuid,size=2G"
+ubtu20cis_dev_shm_fstab_options: "defaults,noexec,nodev,nosuid"
 
 # Control 1.1.12/1.1.13/1.1.14
 # These are the settings for the /var/tmp mount
