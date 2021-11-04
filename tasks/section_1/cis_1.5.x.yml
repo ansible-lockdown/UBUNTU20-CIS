@@ -67,14 +67,50 @@
       - rule_1.5.3
       - prelink
 
+
 - name: "AUTOMATED | 1.5.4 | PATCH | Ensure core dumps are restricted"
-  sysctl:
-      name: fs.suid_dumpable
-      value: '0'
-      state: present
-      reload: yes
-      sysctl_set: yes
-      ignoreerrors: yes
+  block:
+  - name: "AUTOMATED | 1.5.4 | PATCH | Ensure core dumps are restricted | kernel sysctl"
+    sysctl:
+        name: fs.suid_dumpable
+        value: '0'
+        state: present
+        reload: yes
+        sysctl_set: yes
+        ignoreerrors: yes
+
+  - name: "AUTOMATED | 1.5.4 | PATCH | Ensure core dumps are restricted | security limits"
+    lineinfile:
+      path: /etc/security/limits.d/99_0-core.conf
+      regexp: '^* hard core'
+      line: '* hard core 0'
+      create: true
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: "AUTOMATED | 1.5.4 | PATCH | Ensure core dumps are restricted | sysctl.conf"
+    lineinfile:
+      path: /etc/sysctl.conf
+      regexp: '^fs.suid_dumpable'
+      line: 'fs.suid_dumpable=0'
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: "AUTOMATED | 1.5.4 | PATCH | Ensure core dumps are restricted | coredump.conf"
+    lineinfile:
+      path: /etc/systemd/coredump.conf
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      create: true
+      owner: root
+      group: root
+      mode: 0644
+    with_items:
+      - { regexp:'^Storage', line:'Storage=none' }
+      - { regexp:'^ProcessSizeMax', line:'ProcessSizeMax=0' }
+    when: "'systemd-coredump' in ansible_facts.packages"
   when:
       - ubtu20cis_rule_1_5_4
   tags:
