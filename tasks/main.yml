@@ -36,6 +36,7 @@
 - import_tasks: pre_remediation_audit.yml
   when:
       - run_audit
+  tags: run_audit
 
 - include: parse_etc_password.yml
   when:
