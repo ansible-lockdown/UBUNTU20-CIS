@@ -215,7 +215,7 @@
       - name: "AUTOMATED | 5.5.4 | PATCH | Ensure default user umask is 027 or more restrictive"
         replace:
             path: "{{ item }}"
-            regexp: '^(?!#)(?i)umask 0[0,2,5][0,2,5]'
+            regexp: '(?i)^((?!#)umask)\s+0[0,2,5][0,2,5]'
             replace: '\1 027'
         with_items:
             - /etc/bash.bashrc
