@@ -2,7 +2,7 @@
 - name: "AUTOMATED | 5.7 | PATCH | Ensure access to the su command is restricted"
   block:
       - name: "AUTOMATED | 5.7 | PATCH | Ensure access to the su command is restricted | Check for pam_wheel.so module"
-        command: grep 'auth.*required.*pam_wheel' /etc/pam.d/su
+        command: grep '^auth.*required.*pam_wheel' /etc/pam.d/su
         changed_when: false
         failed_when: false
         check_mode: false

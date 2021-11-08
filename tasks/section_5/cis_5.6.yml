@@ -12,7 +12,7 @@
         debug:
             msg:
                 - "WARNING!!!! Below is the list of consoles with root login access"
-                - "Please review for any conoles that are not in a physically secure location"
+                - "Please review for any consoles that are not in a physically secure location"
                 - "{{ ubtu20cis_5_6_terminal_list.stdout_lines }}"
   when:
       - ubtu20cis_rule_5_6
