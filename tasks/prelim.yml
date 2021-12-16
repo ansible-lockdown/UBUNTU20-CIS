@@ -39,7 +39,7 @@
       state: present
   when:
       - ubtu20cis_rule_6_2_6
-      - ubtu20cis_install_network_manager
+      - not ubtu20cis_system_is_container
 
 - name: "PRELIM | List users accounts"
   command: "awk -F: '{print $1}' /etc/passwd"
