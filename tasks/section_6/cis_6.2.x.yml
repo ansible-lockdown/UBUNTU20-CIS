@@ -83,7 +83,7 @@
       - name: capture audit task for missing homedirs
         block: &u20s_homedir_audit
             - name: "AUTOMATED | 6.2.4 | PATCH | Ensure all users' home directories exist | Find users missing home directories"
-              shell: pwck -r | grep -P {{ ld_regex | quote }}
+              shell: pwck -r | grep -vF -e "'/nonexistent'" | grep -P {{ ld_regex | quote }}
               check_mode: false
               register: ubtu20cis_users_missing_home
               changed_when: ubtu20cis_6_2_4_audit | length > 0
@@ -139,6 +139,7 @@
   when:
       - ubtu20cis_rule_6_2_5
       - item.uid >= 1000
+      - item.dir != '/nonexistent'
   tags:
       - level1-server
       - level1-workstation
