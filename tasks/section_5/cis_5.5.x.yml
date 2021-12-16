@@ -246,7 +246,8 @@
       marker: "# {mark} ANSIBLE MANAGED"
       block: |
         # Set session timeout - CIS ID 5.5.5
-        TMOUT={{ ubtu20cis_shell_session_timeout.timeout }}
+        # only set TMOUT if it isn't set yet to avoid a shell error
+        : ${TMOUT={{ ubtu20cis_shell_session_timeout.timeout }}}
         readonly TMOUT
         export TMOUT
   with_items:
