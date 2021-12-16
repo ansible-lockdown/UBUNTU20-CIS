@@ -28,7 +28,7 @@
   with_items:
       - { regexp: '\[org\/gnome\/login-screen\]', line: '[org/gnome/login-screen]', insertafter: EOF }
       - { regexp: 'banner-message-enable', line: 'banner-message-enable=true', insertafter: '\[org\/gnome\/login-screen\]'}
-      - { regexp: 'banner-message-text', line: 'banner-message-text={{ ubtu20cis_warning_banner }}', insertafter: 'banner-message-enable' }
+      - { regexp: 'banner-message-text', line: "banner-message-text='{{ ubtu20cis_warning_banner | regex_replace('\n', ' ') | trim }}'", insertafter: 'banner-message-enable' } # NB: must strip newlines
   when:
       - ubtu20cis_rule_1_8_2
       - ubtu20cis_desktop_required
