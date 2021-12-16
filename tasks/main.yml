@@ -2,11 +2,11 @@
 # - debug: var=ansible_facts
 - name: Gather distribution info
   # we need:
-  # - hardware for ansible_mounts
+  # - mounts for ansible_mounts
   # - platform for ansible_architecture (ansible internal)
   # - virtual for ansible_virtualization_type
   setup:
-      gather_subset: distribution,hardware,platform,virtual,!all,!min
+      gather_subset: distribution,mounts,platform,virtual,!all,!min
   when:
       - ansible_distribution is not defined
   tags:
