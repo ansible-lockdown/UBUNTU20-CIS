@@ -192,13 +192,13 @@
 - name: "AUTOMATED | 6.1.11 | PATCH | Ensure no unowned files or directories exist"
   block:
       - name: "AUTOMATED | 6.1.11 | AUDIT | Ensure no unowned files or directories exist | Get unowned files or directories"
-        shell: find {{ item.mount }} -xdev -nouser
+        shell: find {{ item.mount }} -xdev -nouser -not -fstype nfs
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_6_1_11_no_user_items
         with_items:
-            - "{{ ansible_mounts | selectattr('fstype', '!=', 'nfs') }}"
+            - "{{ ansible_mounts }}"
 
       - name: "AUTOMATED | 6.1.11 | AUDIT | Ensure no unowned files or directories exist | Flatten no_user_items results for easier use"
         set_fact:
