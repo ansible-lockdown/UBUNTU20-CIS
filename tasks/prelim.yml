@@ -32,7 +32,7 @@
       state: present
   when:
       - ubtu20cis_rule_3_1_2
-      - ubtu20cis_install_network_manager
+      - not ubtu20cis_system_is_container
 
 - name: "PRELIM | Install ACL"
   apt:
