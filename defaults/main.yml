@@ -354,6 +354,7 @@ ubtu20cis_squid_server: false
 ubtu20cis_snmp_server: false
 ubtu20cis_rsync_server: false
 ubtu20cis_nis_server: false
+ubtu20cis_nfs_client: false
 # rpcbind is required by nfs-common which is required on client and server
 ubtu20cis_rpc_required: "{{ ubtu20cis_nfs_server or ubtu20cis_nfs_client }}"
 
