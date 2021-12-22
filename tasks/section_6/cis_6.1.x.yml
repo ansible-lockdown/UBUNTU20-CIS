@@ -164,13 +164,13 @@
 - name: "AUTOMATED | 6.1.10 | PATCH | Ensure no world writable files exist"
   block:
       - name: "AUTOMATED | 6.1.10 | AUDIT | Ensure no world writable files exist | Get list of world-writable files"
-        shell: find {{ item.mount }} -xdev -type f -perm -0002
+        shell: find {{ item.mount }} -xdev -type f -perm -0002 -not -fstype nfs
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_6_1_10_wwf
         with_items:
-            - "{{ ansible_mounts | selectattr('fstype', '!=', 'nfs') }}"
+            - "{{ ansible_mounts }}"
 
       - name: "AUTOMATED | 6.1.10 | PATCH | Ensure no world writable files exist | Adjust world-writable files if they exist"
         file:
