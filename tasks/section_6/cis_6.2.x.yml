@@ -390,7 +390,7 @@
   #     - name: "AUTOMATED | 6.2.12 | PATCH | Ensure root PATH Integrity | Alert on empty value, colon end, and no working dir"
   #       debug:
   #           msg:
-  #               - "The following paths have no working directory: {{ ubtu20cis_6_2_12_path_stat.results | selectattr('stat.exists','equalto','false') | map(attribute='item') | list }}"
+  #               - "The following paths have no working directory: {{ ubtu20cis_6_2_12_path_stat.results | selectattr('stat.exists','==','false') | map(attribute='item') | list }}"
 
   #     # - name: "AUTOMATED | 6.2.12 | PATCH | Ensure root PATH Integrity | Set permissions"
   #     #   file:
