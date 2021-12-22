@@ -3,7 +3,8 @@
   apt:
       update_cache: yes
   when:
-      - ubtu20cis_rule_1_3_1
+      - ubtu20cis_rule_1_3_1 or
+        ubtu20cis_rule_1_9
 
 - name: "PRELIM | Check for autofs service"
   shell: "systemctl show autofs | grep LoadState | cut -d = -f 2"
@@ -31,7 +32,7 @@
       state: present
   when:
       - ubtu20cis_rule_3_1_2
-      - ubtu20cis_install_network_manager
+      - not ubtu20cis_system_is_container
 
 - name: "PRELIM | Install ACL"
   apt:

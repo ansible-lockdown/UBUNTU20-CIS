@@ -354,7 +354,9 @@ ubtu20cis_squid_server: false
 ubtu20cis_snmp_server: false
 ubtu20cis_rsync_server: false
 ubtu20cis_nis_server: false
-ubtu20cis_rpc_required: false
+ubtu20cis_nfs_client: false
+# rpcbind is required by nfs-common which is required on client and server
+ubtu20cis_rpc_required: "{{ ubtu20cis_nfs_server or ubtu20cis_nfs_client }}"
 
 # Clients in use variables
 ubtu20cis_nis_required: false
@@ -528,7 +530,9 @@ ubtu20cis_logrotate: "daily"
 # Control 4.3
 # ubtu20cis_logrotate_create_settings are the settings for the create parameter in /etc/logrotate.conf
 # The permissions need to be 640 or more restrictive.
-ubtu20cis_logrotate_create_settings: "0640 root utmp"
+# If you would like to include user/group settings to this parameter format the var as below
+# ubtu20cis_logrotate_create_settings: "0640 root utmp"
+ubtu20cis_logrotate_create_settings: "0640"
 
 # Section 5 Control Variables
 # Control 5.2.1
