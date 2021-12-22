@@ -236,13 +236,13 @@
 - name: "AUTOMATED | 6.1.12 | PATCH | Ensure no ungrouped files or directories exist"
   block:
       - name: "AUTOMATED | 6.1.12 | AUDIT | Ensure no ungrouped files or directories exist | Get ungrouped fiels or directories"
-        shell: find {{ item.mount }} -xdev -nogroup
+        shell: find {{ item.mount }} -xdev -nogroup -not -fstype nfs
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_6_1_12_ungrouped_items
         with_items:
-            - "{{ ansible_mounts | selectattr('fstype', '!=', 'nfs') }}"
+            - "{{ ansible_mounts }}"
 
       - name: "AUTOMATED | 6.1.12 | AUDIT | Ensure no ungrouped files or directories exist | Flatten ungrouped_items results for easier use"
         set_fact:
@@ -281,13 +281,13 @@
   block:
       - name: "MANUAL | 6.1.13 | AUDIT | Audit SUID executables | Find SUID executables"
         # shell: df --local -P | awk '{if (NR!=1) print $6}' | xargs -I '{}' find '{}' -xdev -type f -perm -4000
-        shell: find {{ item.mount }} -xdev -type f -perm -4000
+        shell: find {{ item.mount }} -xdev -type f -perm -4000 -not -fstype nfs
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_6_1_13_suid_executables
         with_items:
-            - "{{ ansible_mounts | selectattr('fstype', '!=', 'nfs') }}"
+            - "{{ ansible_mounts }}"
 
       - name: "MANUAL | 6.1.13 | AUDIT | Audit SUID executables | Flatten suid_executables results for easier use"
         set_fact:
@@ -325,13 +325,13 @@
 - name: "MANUAL | 6.1.14 | AUDIT | Audit SGID executables"
   block:
       - name: "MANUAL |6.1.14 | AUDIT | Audit SGID executables | Find SGID executables"
-        shell: find {{ item }} -xdev -type f -perm -2000
+        shell: find {{ item }} -xdev -type f -perm -2000 -not -fstype nfs
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_6_1_14_sgid_executables
         with_items:
-            - "{{ ansible_mounts | selectattr('fstype', '!=', 'nfs') }}"
+            - "{{ ansible_mounts }}"
 
       - name: "MANUAL | 6.1.14 | AUDIT | Audit SGID executables | Flatten sgid_executables results for easier use"
         set_fact:
