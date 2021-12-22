@@ -104,7 +104,6 @@
         ufw:
             rule: allow
             direction: out
-            to_port: all
         notify: reload ufw
         when: "'all' in ubtu20cis_ufw_allow_out_ports"
   when:
