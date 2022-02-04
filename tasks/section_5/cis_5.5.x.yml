@@ -210,7 +210,7 @@
             path: /etc/pam.d/common-session
             line: 'session optional                        pam_umask.so'
             insertbefore: '^# end of pam-auth-update config'
-        when: ubtu20cis_5_5_4_umask_pam_status.stdout | length > 0
+        when: ubtu20cis_5_5_4_umask_pam_status.stdout | length == 0
 
       - name: "AUTOMATED | 5.5.4 | PATCH | Ensure default user umask is 027 or more restrictive"
         replace:
