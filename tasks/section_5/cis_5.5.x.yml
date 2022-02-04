@@ -199,7 +199,7 @@
 - name: "AUTOMATED | 5.5.4 | PATCH | Ensure default user umask is 027 or more restrictive"
   block:
       - name: "AUTOMATED | 5.5.4 | AUDIT | Ensure default user umask is 027 or more restrictive"
-        shell: grep -E '^session.*optional\s+pam_umask.so' /etc/pam.d/common-session
+        shell: grep -E '^session\s+optional\s+pam_umask.so' /etc/pam.d/common-session
         changed_when: false
         failed_when: false
         check_mode: false
