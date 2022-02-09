@@ -405,11 +405,14 @@ ubtu20cis_vartmp:
     opts: "defaults,nodev,nosuid,noexec,bind"
     enabled: false
 
+# Control 1.3.1 - allow aide to be configured
+ubtu20cis_config_aide : true
+
 # Control 1.3.2
 # These are the crontab settings for file system integrity enforcement
 ubtu20cis_aide_cron:
     cron_user: root
-    cron_file: /etc/crontab
+    cron_file: /etc/cron.d/aide_cron
     aide_job: '/usr/bin/aide.wrapper --config /etc/aide/aide.conf --check'
     aide_minute: 0
     aide_hour: 5
