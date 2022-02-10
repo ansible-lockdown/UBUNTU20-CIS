@@ -1,17 +1,8 @@
 audit_run: ansible # This is forced to wrapper by running the run_audit wrapper script (placeholder only if run via ansible)
 ## metadata for Audit benchmark
-ubuntu20cis_benchmark:
-- "type: CIS"
-- "version: '1.1.0'"
-- "os: Ubuntu 20.04"
-- "epoch: {{ ansible_date_time.epoch }}"
-- "hostname: {{ ansible_hostname }}"
-- "automation_group: {% if group_names|length == 0 %}[ungrouped]"{% else %}{% for group in group_names %}[{{ group }}{% if not loop.last %},{% else %}]"{% endif %}{% endfor %}{% endif +%}
-- "fullname: Ubuntu 20.04.3 LTS"
-- "machine_uuid: {{ ansible_product_uuid }}"
-- "os_locale: {{ ansible_date_time.tz }}"
-- "host_os_version: {{ ansible_distribution_version }}"
-ubuntu20cis_os_distribution: {{ ansible_distribution | lower }}
+
+benchmark_version: '1.1.0'
+
 
 # Some audit tests may need to scan every filesystem or have an impact on a system 
 # these may need be scheduled to minimise impact also ability to set a timeout if taking too long
