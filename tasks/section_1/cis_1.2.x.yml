@@ -36,7 +36,7 @@
       - name: "MANUAL | 1.2.2 | AUDIT | Ensure GPG keys are configured | Message out apt gpg keys"
         debug:
             msg:
-                - "Alert!!!! Below are the apt gpg kyes configured"
+                - "Alert!!!! Below are the apt gpg keys configured"
                 - "Please review to make sure they are configured"
                 - "in accordance with site policy"
                 - "{{ ubtu20cis_1_2_2_apt_gpgkeys.stdout_lines }}"
