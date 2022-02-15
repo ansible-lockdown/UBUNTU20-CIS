@@ -6,7 +6,7 @@ name: CommunityToDevel
 # events but only for the devel branch
 on:
   pull_request_target:
-    types: [ assigned, opened, synchronize, reopened ]
+    types: [assigned, opened, synchronize, reopened, edited]
     branches:
         - devel
 
