@@ -6,7 +6,10 @@ name: CommunityToDevel
 # events but only for the devel branch
 on:
   pull_request_target:
-    branches: [ devel ]
+    types:
+        - opened
+    branches:
+        - devel
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
