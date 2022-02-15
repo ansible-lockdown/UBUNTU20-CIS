@@ -5,8 +5,9 @@ name: CommunityToDevel
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the devel branch
 on:
-  pull_request:
-    branches: [ devel ]
+  pull_request_target:
+    types: [assigned, opened, synchronize, reopened, edited]
+    branches: [devel]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
