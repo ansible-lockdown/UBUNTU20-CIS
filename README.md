@@ -6,6 +6,10 @@
 
 Configure Ubuntu 20 machine to be [CIS](https://www.cisecurity.org/cis-benchmarks/) v2.1.0 compliant. There are some intrusive tasks that have a toggle in defaults main.yml to disable to automated fix
 
+## Join us
+
+On our [Discord Server](https://discord.gg/JFxpSgPFEJ) to ask questions, discuss features, or just chat with other Ansible-Lockdown users
+
 ## Caution(s)
 
 This role **will make changes to the system** that could break things. This is not an auditing tool but rather a remediation tool to be used after an audit has been conducted.
