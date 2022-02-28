@@ -11,9 +11,12 @@ galaxy_info:
     galaxy_tags:
         - system
         - security
-        - ubuntu2004
         - cis
         - hardening
+        - benchmark
+        - compliance
+        - complianceascode
+        - ubuntu20
 collections:
   - community.general
   - community.crypto
