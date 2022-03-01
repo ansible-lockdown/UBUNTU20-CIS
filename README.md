@@ -1,5 +1,4 @@
-Ubuntu 20 CIS
-=========
+# Ubuntu 20 CIS
 
 ![Build Status](https://img.shields.io/github/workflow/status/ansible-lockdown/UBUNTU20-CIS/CommunityToDevel?label=Devel%20Build%20Status&style=plastic)
 ![Build Status](https://img.shields.io/github/workflow/status/ansible-lockdown/UBUNTU20-CIS/DevelToMaster?label=Main%20Build%20Status&style=plastic)
@@ -7,8 +6,11 @@ Ubuntu 20 CIS
 
 Configure Ubuntu 20 machine to be [CIS](https://www.cisecurity.org/cis-benchmarks/) v2.1.0 compliant. There are some intrusive tasks that have a toggle in defaults main.yml to disable to automated fix
 
-Caution(s)
----------
+## Join us
+
+On our [Discord Server](https://discord.gg/JFxpSgPFEJ) to ask questions, discuss features, or just chat with other Ansible-Lockdown users
+
+## Caution(s)
 
 This role **will make changes to the system** that could break things. This is not an auditing tool but rather a remediation tool to be used after an audit has been conducted.
 
@@ -18,8 +20,7 @@ To use release version please point to main branch
 Based on
 [CIS_Ubuntu_Linux_20.04_LTS_Benchmark](https://community.cisecurity.org/collab/public/index.php).
 
-Documentation
--------------
+## Documentation
 
 - [Getting Started](https://www.lockdownenterprise.com/docs/getting-started-with-lockdown)
 - [Customizing Roles](https://www.lockdownenterprise.com/docs/customizing-lockdown-enterprise)
@@ -28,8 +29,7 @@ Documentation
 - [Wiki](https://github.com/ansible-lockdown/UBUNTU20-CIS/wiki)
 - [Repo GitHub Page](https://ansible-lockdown.github.io/UBUNTU20-CIS/)
 
-Requirements
-------------
+## Requirements
 
 **General:**
 
@@ -46,8 +46,7 @@ Requirements
 - Running Ansible/Tower setup (this role is tested against Ansible version 2.9.1 and newer)
 - Python3 Ansible run environment
 
-Auditing (new)
---------------
+## Auditing (new)
 
 This can be turned on or off within the defaults/main.yml file with the variable run_audit. The value is false by default, please refer to the wiki for more details.
 
@@ -60,13 +59,11 @@ Refer to [UBUNTU20-CIS-Audit](https://github.com/ansible-lockdown/UBUNTU20-CIS-A
 
 Further audit documentation can be found at [Audit-Docs](https://github.com/ansible-lockdown/UBUNTU20-CIS-Audit/docs/Security_remediation_and_auditing.md).
 
-Role Variables
---------------
+## Role Variables
 
 This role is designed that the end user should not have to edit the tasks themselves. All customizing should be done via the defaults/main.yml file or with extra vars within the project, job, workflow, etc. These variables can be found [here](https://github.com/ansible-lockdown/UBUNTU20-CIS/wiki/Main-Variables) in the Main Variables Wiki page. All variables are listed there along with descriptions.
 
-Branches
---------
+## Branches
 
 - **devel** - This is the default branch and the working development branch. Community pull requests will pull into this branch
 - **main** - This is the release branch
@@ -74,8 +71,7 @@ Branches
 - **gh-pages** - This is the github pages branch
 - **all other branches** - Individual community member branches
 
-Community Contribution
-----------------------
+## Community Contribution
 
 We encourage you (the community) to contribute to this role. Please read the rules below.
 
@@ -83,3 +79,21 @@ We encourage you (the community) to contribute to this role. Please read the rul
 - All community Pull Requests are pulled into the devel branch
 - Pull Requests into devel will confirm your commits have a GPG signature, Signed-off, and a functional test before being approved
 - Once your changes are merged and a more detailed review is complete, an authorized member will merge your changes into the main branch for a new release
+
+## Pipeline Testing
+
+uses:
+
+- ansible-core 2.12
+- ansible collections - pulls in the latest version based on requirements file
+- runs the audit using the devel branch
+- This is an automated test that occurs on pull requests into devel
+
+## Support
+
+This is a community project at its core and will be managed as such.
+
+If you would are interested in dedicated support to assist or provide bespoke setups
+
+- [Ansible Counselor](https://www.mindpointgroup.com/products/ansible-counselor-on-demand-ansible-services-and-consulting/)
+- [Try us out](https://engage.mindpointgroup.com/try-ansible-counselor)
