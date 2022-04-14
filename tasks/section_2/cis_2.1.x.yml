@@ -137,11 +137,11 @@
             - { regexp: '^OPTIONS', line: 'OPTIONS="-u ntp:ntp"'}
             - { regexp: '^NTPD_OPTIONS', line: 'NTPD_OPTIONS="-u ntp:ntp"' }
 
-      - name: "AUTOMATED | 2.1.1.4 | PATCH | Ensure ntp is configured | Modify /etc/init.d/npt"
+      - name: "AUTOMATED | 2.1.1.4 | PATCH | Ensure ntp is configured | Modify /etc/init.d/ntp"
         lineinfile:
             path: /etc/init.d/ntp
             regexp: '^RUNAUSER'
-            line: 'RUNAUSER=npt'
+            line: 'RUNAUSER=ntp'
   when:
       - ubtu20cis_rule_2_1_1_4
       - ubtu20cis_time_sync_tool == "ntp"
