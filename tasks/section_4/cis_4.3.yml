@@ -16,7 +16,7 @@
             - "{{ ubtu20cis_4_3_logrotate_files.files }}"
             - { path: "/etc/logrotate.conf" }
         loop_control:
-            lable: "{{ item.path }}"
+            label: "{{ item.path }}"
   when:
       - ubtu20cis_rule_4_3
   tags:
