@@ -60,7 +60,7 @@
         with_items:
             - "{{ ubtu20cis_5_3_3_ssh_host_pub_keys.files }}"
         loop_control:
-            lable: "{{ item.path }}"
+            label: "{{ item.path }}"
   when:
       - ubtu20cis_rule_5_3_3
   tags:
