@@ -74,6 +74,8 @@
             - { regexp: '^local2,local3.\*|^#local2,local3.\*', line: 'local2,local3.*                 -/var/log/localmessages', insertafter: '^# First some standard log files' }
             - { regexp: '^local4,local5.\*|^#local4,local5.\*', line: 'local4,local5.*                 -/var/log/localmessages', insertafter: '^# First some standard log files' }
             - { regexp: '^local6,local7.\*|^#local6,local7.\*', line: 'local6,local7.*                 -/var/log/localmessages', insertafter: '^# First some standard log files' }
+        loop_control:
+            label: "{{ item.line }}"
         notify: restart rsyslog
         when: ubtu20cis_rsyslog_ansible_managed
   when:
