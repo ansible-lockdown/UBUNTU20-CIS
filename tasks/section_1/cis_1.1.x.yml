@@ -132,6 +132,7 @@
         modprobe:
             name: squashfs
             state: absent
+        ignore_errors: yes
         when: ansible_connection != 'docker'
   when:
       - ubtu20cis_rule_1_1_1_6
