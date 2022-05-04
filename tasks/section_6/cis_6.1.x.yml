@@ -171,6 +171,8 @@
         register: ubtu20cis_6_1_10_wwf
         with_items:
             - "{{ ansible_mounts }}"
+        loop_control:
+            label: "{{ item.mount }}"
 
       - name: "AUTOMATED | 6.1.10 | PATCH | Ensure no world writable files exist | Adjust world-writable files if they exist"
         file:
@@ -199,6 +201,8 @@
         register: ubtu20cis_6_1_11_no_user_items
         with_items:
             - "{{ ansible_mounts }}"
+        loop_control:
+            label: "{{ item.mount }}"
 
       - name: "AUTOMATED | 6.1.11 | AUDIT | Ensure no unowned files or directories exist | Flatten no_user_items results for easier use"
         set_fact:
@@ -243,6 +247,8 @@
         register: ubtu20cis_6_1_12_ungrouped_items
         with_items:
             - "{{ ansible_mounts }}"
+        loop_control:
+            label: "{{ item.mount }}"
 
       - name: "AUTOMATED | 6.1.12 | AUDIT | Ensure no ungrouped files or directories exist | Flatten ungrouped_items results for easier use"
         set_fact:
@@ -288,6 +294,8 @@
         register: ubtu20cis_6_1_13_suid_executables
         with_items:
             - "{{ ansible_mounts }}"
+        loop_control:
+            label: "{{ item.mount }}"
 
       - name: "MANUAL | 6.1.13 | AUDIT | Audit SUID executables | Flatten suid_executables results for easier use"
         set_fact:
@@ -332,6 +340,8 @@
         register: ubtu20cis_6_1_14_sgid_executables
         with_items:
             - "{{ ansible_mounts }}"
+        loop_control:
+            label: "{{ item.mount }}"
 
       - name: "MANUAL | 6.1.14 | AUDIT | Audit SGID executables | Flatten sgid_executables results for easier use"
         set_fact:

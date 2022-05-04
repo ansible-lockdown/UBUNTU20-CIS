@@ -31,6 +31,8 @@
             mode: 0600
         with_items:
             - "{{ ubtu20cis_5_3_2_ssh_host_priv_keys.files }}"
+        loop_control:
+            label: "{{ item.path }}"
   when:
       - ubtu20cis_rule_5_3_2
   tags:
@@ -57,6 +59,8 @@
             mode: 0644
         with_items:
             - "{{ ubtu20cis_5_3_3_ssh_host_pub_keys.files }}"
+        loop_control:
+            label: "{{ item.path }}"
   when:
       - ubtu20cis_rule_5_3_3
   tags:

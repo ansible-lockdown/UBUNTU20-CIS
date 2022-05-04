@@ -132,6 +132,7 @@
         modprobe:
             name: squashfs
             state: absent
+        ignore_errors: yes
         when: ansible_connection != 'docker'
   when:
       - ubtu20cis_rule_1_1_1_6
@@ -416,6 +417,8 @@
       fstype: "{{ item.fstype }}"
       opts: "nodev"
   with_items: "{{ ansible_mounts }}"
+  loop_control:
+      label: "{{ item.device }}"
   when:
       - ubtu20cis_rule_1_1_18
       - item.mount == "/home"
