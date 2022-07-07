@@ -18,6 +18,7 @@
   when:
       - ansible_distribution == 'Ubuntu'
       - ansible_distribution_major_version is version_compare('20', '!=')
+      - ansible_distribution_major_version is version_compare('22', '!=')
   tags:
       - always
 
