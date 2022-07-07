@@ -36,6 +36,7 @@
         sysctl:
             name: kernel.randomize_va_space
             value: '2'
+            sysctl_file: "/etc/sysctl.d/10-kernel-hardening.conf"
   when:
       - ubtu20cis_rule_1_5_2
   tags:
@@ -77,6 +78,7 @@
             state: present
             reload: yes
             sysctl_set: yes
+            sysctl_file: "/etc/sysctl.d/10-kernel-hardening.conf"
             ignoreerrors: yes
 
       - name: "AUTOMATED | 1.5.4 | PATCH | Ensure core dumps are restricted | security limits"

@@ -6,6 +6,7 @@
             name: "{{ item }}"
             value: '0'
             sysctl_set: yes
+            sysctl_file: "/etc/sysctl.d/10-network-security.conf"
             state: present
             reload: yes
             ignoreerrors: yes
@@ -19,6 +20,7 @@
             name: "{{ item }}"
             value: '0'
             sysctl_set: yes
+            sysctl_file: "/etc/sysctl.d/10-network-security.conf"
             state: present
             reload: yes
             ignoreerrors: yes
@@ -46,6 +48,7 @@
             name: "{{ item }}"
             value: '0'
             sysctl_set: yes
+            sysctl_file: "/etc/sysctl.d/10-network-security.conf"
             state: present
             reload: yes
             ignoreerrors: yes
@@ -59,6 +62,7 @@
             name: "{{ item }}"
             value: '0'
             sysctl_set: yes
+            sysctl_file: "/etc/sysctl.d/10-network-security.conf"
             state: present
             reload: yes
             ignoreerrors: yes
@@ -83,6 +87,7 @@
       name: "{{ item }}"
       value: '0'
       sysctl_set: yes
+      sysctl_file: "/etc/sysctl.d/10-network-security.conf"
       state: present
       reload: yes
       ignoreerrors: yes
@@ -106,6 +111,7 @@
       name: "{{ item }}"
       value: '1'
       sysctl_set: yes
+      sysctl_file: "/etc/sysctl.d/10-network-security.conf"
       state: present
       reload: yes
       ignoreerrors: yes
@@ -129,6 +135,7 @@
       name: net.ipv4.icmp_echo_ignore_broadcasts
       value: '1'
       sysctl_set: yes
+      sysctl_file: "/etc/sysctl.d/10-network-security.conf"
       state: present
       reload: yes
       ignoreerrors: yes
@@ -149,6 +156,7 @@
       name: net.ipv4.icmp_ignore_bogus_error_responses
       value: '1'
       sysctl_set: yes
+      sysctl_file: "/etc/sysctl.d/10-network-security.conf"
       state: present
       reload: yes
       ignoreerrors: yes
@@ -169,6 +177,7 @@
       name: "{{ item }}"
       value: '1'
       sysctl_set: yes
+      sysctl_file: "/etc/sysctl.d/10-network-security.conf"
       state: present
       reload: yes
       ignoreerrors: yes
@@ -192,6 +201,7 @@
       name: net.ipv4.tcp_syncookies
       value: '1'
       sysctl_set: yes
+      sysctl_file: "/etc/sysctl.d/10-network-security.conf"
       state: present
       reload: yes
       ignoreerrors: yes
@@ -212,6 +222,7 @@
       name: "{{ item }}"
       value: '0'
       sysctl_set: yes
+      sysctl_file: "/etc/sysctl.d/10-network-security.conf"
       state: present
       reload: yes
       ignoreerrors: yes
