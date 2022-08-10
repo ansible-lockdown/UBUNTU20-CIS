@@ -3,8 +3,8 @@
 // Declared in variables.tf
 // 
 
-namespace         = "github_actions"
-environment       = "github_test_pipeline"
+namespace         = "Ansible_Lockdown_GH_PR_Actions"
+environment       = "Ansible_Lockdown_GH_PR_Pipeline"
 
 // Matching pair name found in AWS for keypairs PEM key
 ami_key_pair_name = "github_actions"

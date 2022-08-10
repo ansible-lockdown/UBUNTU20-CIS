@@ -5,5 +5,5 @@ ami_username  = "ubuntu"
 ami_user_home = "/home/ubuntu"
 instance_tags = {
   Name        = "UBUNTU20-CIS"
-  Environment = "github_test_pipeline"
+  Environment = "Ansible_Lockdown_GH_PR_Pipeline"
 }
