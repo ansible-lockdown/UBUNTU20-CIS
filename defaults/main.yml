@@ -13,7 +13,7 @@ ubtu20cis_section5_patch: true
 ubtu20cis_section6_patch: true
 
 # System will reboot if false, can give better audit results
-ubtu20_skip_reboot: True
+ubtu20_skip_reboot: true
 
 ## Benchmark name used by auditing control role
 # The audit variable found at the base
@@ -406,7 +406,7 @@ ubtu20cis_vartmp:
     enabled: false
 
 # Control 1.3.1 - allow aide to be configured
-ubtu20cis_config_aide : true
+ubtu20cis_config_aide: true
 
 # Control 1.3.2
 # These are the crontab settings for file system integrity enforcement
@@ -613,7 +613,7 @@ ubtu20cis_pass:
     inactive: 30
 
 # Control 5.5.4
-# ubtu120cis_bash_umask is the umask to set in the /etc/bash.bashrc and /etc/profile. 
+# ubtu120cis_bash_umask is the umask to set in the /etc/bash.bashrc and /etc/profile.
 # The value needs to be 027 or more restrictive to comply with CIS standards
 ubtu20cis_bash_umask: '027'
 

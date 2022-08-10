@@ -1,4 +1,5 @@
 ---
+
 - name: "AUTOMATED | 2.1.1.1 | PATCH | Ensure time synchronization is in use"
   apt:
       name: "{{ ubtu20cis_time_sync_tool }}"
@@ -30,7 +31,7 @@
             - { regexp: '^\[Time\]', line: '[Time]', insertafter: EOF }
             - { regexp: '^#NTP|^NTP', line: 'NTP={{ ubtu20cis_ntp_server_list }}', insertafter: '\[Time\]' }
             - { regexp: '^#FallbackNTP|^FallbackNTP', line: 'FallbackNTP={{ ubtu20cis_ntp_fallback_server_list }}', insertafter: '\[Time\]' }
-            - { regexp: '^#RootDistanceMaxSec|^RootDistanceMaxSec', line: 'RootDistanceMaxSec=1', insertafter: '\[Time\]'}
+            - { regexp: '^#RootDistanceMaxSec|^RootDistanceMaxSec', line: 'RootDistanceMaxSec=1', insertafter: '\[Time\]' }
 
       - name: "AUTOMATED | 2.1.1.2 | PATCH | Ensure systemd-timesyncd is configured | Start and enable the systemd-timesyncd service"
         systemd:
@@ -39,8 +40,16 @@
             enabled: yes
             masked: no
 
+      - name: "AUTOMATED | 2.1.1.2 | AUDIT | Ensure systemd-timesyncd is configured | Capture NTP state"
+        shell: "timedatectl status | grep NTP | cut -d':' -f2 | sed 's/^[ \\t]*//;s/[ \\t]*$//'"
+        changed_when: false
+        failed_when: false
+        register: ubtu20cis_2_1_1_2_ntp_status
+
       - name: "AUTOMATED | 2.1.1.2 | PATCH | Ensure systemd-timesyncd is configured | Set timedatectl to ntp"
         command: timedatectl set-ntp true
+        changed_when: true
+        when: "'inactive' in ubtu20cis_2_1_1_2_ntp_status.stdout"
   when:
       - ubtu20cis_rule_2_1_1_2
       - ubtu20cis_time_sync_tool == "systemd-timesyncd"

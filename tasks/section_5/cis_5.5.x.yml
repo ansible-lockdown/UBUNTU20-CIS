@@ -1,4 +1,5 @@
 ---
+
 - name: "AUTOMATED | 5.5.1.1 | PATCH | Ensure minimum days between password changes is configured"
   block:
       - name: "AUTOMATED | 5.5.1.1 | PATCH | Ensure minimum days between password changes is configured | Set /etc/login.defs PASS_MIN_DAYS"
@@ -11,7 +12,7 @@
         command: chage --mindays {{ ubtu20cis_pass.min_days }} {{ item }}
         failed_when: false
         with_items:
-            - "{{ ubtu20cis_passwd| selectattr('uid', '>=', 1000) | map(attribute='id') | list }}"
+            - "{{ ubtu20cis_passwd | selectattr('uid', '>=', 1000) | map(attribute='id') | list }}"
         when: ubtu20cis_disruption_high
   when:
       - ubtu20cis_rule_5_5_1_1
@@ -37,7 +38,7 @@
         command: chage --maxdays {{ ubtu20cis_pass.max_days }} {{ item }}
         failed_when: false
         with_items:
-            - "{{ ubtu20cis_passwd| selectattr('uid', '>=', 1000) | map(attribute='id') | list }}"
+            - "{{ ubtu20cis_passwd | selectattr('uid', '>=', 1000) | map(attribute='id') | list }}"
         when: ubtu20cis_disruption_high
   when:
       - ubtu20cis_rule_5_5_1_2
@@ -62,7 +63,7 @@
         command: chage --warndays {{ ubtu20cis_pass.warn_age }} {{ item }}
         failed_when: false
         with_items:
-            - "{{ ubtu20cis_passwd| selectattr('uid', '>=', 1000) | map(attribute='id') | list }}"
+            - "{{ ubtu20cis_passwd | selectattr('uid', '>=', 1000) | map(attribute='id') | list }}"
         when: ubtu20cis_disruption_high
   when:
       - ubtu20cis_rule_5_5_1_3
@@ -77,16 +78,32 @@
 
 - name: "AUTOMATED | 5.5.1.4 | PATCH | Ensure inactive password lock is 30 days or less"
   block:
+      - name: "AUTOMATED | 5.5.1.4 | AUDIT | Ensure inactive password lock is 30 days or less | Get current inactive period"
+        shell: useradd -D | grep INACTIVE | cut -d= -f2
+        changed_when: false
+        failed_when: false
+        register: ubtu20cis_5_5_1_5_inactive_period
+
+      - name: "AUTOMATED | 5.5.1.4 | AUDIT | Ensure inactive password lock is 30 days or less | Get current users out of compliance"
+        shell: awk -F":" '(/^[^:]+:[^!*]/ && ($7<0 || $7>30)){print $1}' //etc/shadow
+        changed_when: false
+        failed_when: false
+        register: ubtu20cis_5_5_1_4_current_users
+
       - name: "AUTOMATED | 5.5.1.4 | PATCH | Ensure inactive password lock is 30 days or less | Set inactive period for new users"
         command: useradd -D -f {{ ubtu20cis_pass.inactive }}
+        changed_when: true
         failed_when: false
+        when: ubtu20cis_5_5_1_5_inactive_period.stdout != ubtu20cis_pass.inactive | string
 
       - name: "AUTOMATED | 5.5.1.4 | PATCH | Ensure inactive password lock is 30 days or less | Set inactive period for existing users"
         command: chage --inactive {{ ubtu20cis_pass.inactive }} {{ item }}
         failed_when: false
         with_items:
-            - "{{ ubtu20cis_passwd| selectattr('uid', '>=', 1000) | map(attribute='id') | list }}"
-        when: ubtu20cis_disruption_high
+            - "{{ ubtu20cis_passwd | selectattr('uid', '>=', 1000) | map(attribute='id') | list | intersect(ubtu20cis_5_5_1_4_current_users.stdout_lines) | list }}"
+        when:
+            - ubtu20cis_disruption_high
+            - ubtu20cis_5_5_1_4_current_users.stdout | length > 0
   when:
       - ubtu20cis_rule_5_5_1_4
   tags:
@@ -159,7 +176,7 @@
             name: "{{ item }}"
             password_lock: true
         with_items:
-            - "{{ ubtu20cis_passwd| selectattr('uid', '<', 1000) | map(attribute='id') | list }}"
+            - "{{ ubtu20cis_passwd | selectattr('uid', '<', 1000) | map(attribute='id') | list }}"
         when:
             - item != "root"
   when:
