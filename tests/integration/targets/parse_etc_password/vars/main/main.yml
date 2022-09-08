@@ -1,0 +1,3 @@
+---
+ubtu20cis_passwd_tasks: test
+cis_etc_passwd_file: "{{ role_path }}/files/passwd"

@@ -1,0 +1,360 @@
+---
+result_ubtu20cis_passwd:
+  - dir: /root
+    gecos: root
+    gid: 0
+    id: root
+    password: x
+    shell: /bin/bash
+    uid: 0
+  - dir: /usr/sbin
+    gecos: daemon
+    gid: 1
+    id: daemon
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 1
+  - dir: /bin
+    gecos: bin
+    gid: 2
+    id: bin
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 2
+  - dir: /dev
+    gecos: sys
+    gid: 3
+    id: sys
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 3
+  - dir: /bin
+    gecos: sync
+    gid: 65534
+    id: sync
+    password: x
+    shell: /bin/sync
+    uid: 4
+  - dir: /usr/games
+    gecos: games
+    gid: 60
+    id: games
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 5
+  - dir: /var/cache/man
+    gecos: man
+    gid: 12
+    id: man
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 6
+  - dir: /var/spool/lpd
+    gecos: lp
+    gid: 7
+    id: lp
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 7
+  - dir: /var/mail
+    gecos: mail
+    gid: 8
+    id: mail
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 8
+  - dir: /var/spool/news
+    gecos: news
+    gid: 9
+    id: news
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 9
+  - dir: /var/spool/uucp
+    gecos: uucp
+    gid: 10
+    id: uucp
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 10
+  - dir: /bin
+    gecos: proxy
+    gid: 13
+    id: proxy
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 13
+  - dir: /var/www
+    gecos: www-data
+    gid: 33
+    id: www-data
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 33
+  - dir: /var/backups
+    gecos: backup
+    gid: 34
+    id: backup
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 34
+  - dir: /var/list
+    gecos: Mailing List Manager
+    gid: 38
+    id: list
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 38
+  - dir: /var/run/ircd
+    gecos: ircd
+    gid: 39
+    id: irc
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 39
+  - dir: /var/lib/gnats
+    gecos: Gnats Bug-Reporting System (admin)
+    gid: 41
+    id: gnats
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 41
+  - dir: /nonexistent
+    gecos: nobody
+    gid: 65534
+    id: nobody
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 65534
+  - dir: /run/systemd
+    gecos: systemd Network Management,,,
+    gid: 102
+    id: systemd-network
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 100
+  - dir: /run/systemd
+    gecos: systemd Resolver,,,
+    gid: 103
+    id: systemd-resolve
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 101
+  - dir: /run/systemd
+    gecos: systemd Time Synchronization,,,
+    gid: 104
+    id: systemd-timesync
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 102
+  - dir: /nonexistent
+    gecos: ''
+    gid: 106
+    id: messagebus
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 103
+  - dir: /home/syslog
+    gecos: ''
+    gid: 110
+    id: syslog
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 104
+  - dir: /nonexistent
+    gecos: ''
+    gid: 65534
+    id: _apt
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 105
+  - dir: /var/lib/tpm
+    gecos: TPM software stack,,,
+    gid: 111
+    id: tss
+    password: x
+    shell: /bin/false
+    uid: 106
+  - dir: /run/uuidd
+    gecos: ''
+    gid: 114
+    id: uuidd
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 107
+  - dir: /nonexistent
+    gecos: ''
+    gid: 116
+    id: tcpdump
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 108
+  - dir: /var/lib/avahi-autoipd
+    gecos: Avahi autoip daemon,,,
+    gid: 117
+    id: avahi-autoipd
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 109
+  - dir: /var/lib/usbmux
+    gecos: usbmux daemon,,,
+    gid: 46
+    id: usbmux
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 110
+  - dir: /proc
+    gecos: RealtimeKit,,,
+    gid: 118
+    id: rtkit
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 111
+  - dir: /var/lib/misc
+    gecos: dnsmasq,,,
+    gid: 65534
+    id: dnsmasq
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 112
+  - dir: /home/cups-pk-helper
+    gecos: user for cups-pk-helper service,,,
+    gid: 121
+    id: cups-pk-helper
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 113
+  - dir: /var/lib/lightdm
+    gecos: Light Display Manager
+    gid: 122
+    id: lightdm
+    password: x
+    shell: /bin/false
+    uid: 114
+  - dir: /run/speech-dispatcher
+    gecos: Speech Dispatcher,,,
+    gid: 29
+    id: speech-dispatcher
+    password: x
+    shell: /bin/false
+    uid: 115
+  - dir: /var/run/avahi-daemon
+    gecos: Avahi mDNS daemon,,,
+    gid: 124
+    id: avahi
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 116
+  - dir: /
+    gecos: Kernel Oops Tracking Daemon,,,
+    gid: 65534
+    id: kernoops
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 117
+  - dir: /var/lib/saned
+    gecos: ''
+    gid: 126
+    id: saned
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 118
+  - dir: /run/hplip
+    gecos: HPLIP system user,,,
+    gid: 7
+    id: hplip
+    password: x
+    shell: /bin/false
+    uid: 119
+  - dir: /nonexistent
+    gecos: ''
+    gid: 127
+    id: whoopsie
+    password: x
+    shell: /bin/false
+    uid: 120
+  - dir: /var/lib/colord
+    gecos: colord colour management daemon,,,
+    gid: 128
+    id: colord
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 121
+  - dir: /var/run/pulse
+    gecos: PulseAudio daemon,,,
+    gid: 129
+    id: pulse
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 122
+  - dir: /
+    gecos: systemd Core Dumper
+    gid: 999
+    id: systemd-coredump
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 999
+  - dir: /run/rpcbind
+    gecos: ''
+    gid: 65534
+    id: _rpc
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 123
+  - dir: /var/lib/nfs
+    gecos: ''
+    gid: 65534
+    id: statd
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 124
+  - dir: /var/lib/clamav
+    gecos: ''
+    gid: 133
+    id: clamav
+    password: x
+    shell: /bin/false
+    uid: 125
+  - dir: /var/lib/spamassassin
+    gecos: ''
+    gid: 134
+    id: debian-spamd
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 126
+  - dir: /run/sshd
+    gecos: ''
+    gid: 65534
+    id: sshd
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 127
+  - dir: /var/spool/postfix
+    gecos: ''
+    gid: 137
+    id: postfix
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 128
+  - dir: /var/lib/libvirt
+    gecos: Libvirt Qemu,,,
+    gid: 108
+    id: libvirt-qemu
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 64055
+  - dir: /var/lib/libvirt/dnsmasq
+    gecos: Libvirt Dnsmasq,,,
+    gid: 140
+    id: libvirt-dnsmasq
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 129
+  - dir: /var/lib/chrony
+    gecos: Chrony daemon,,,
+    gid: 141
+    id: _chrony
+    password: x
+    shell: /usr/sbin/nologin
+    uid: 130
+...

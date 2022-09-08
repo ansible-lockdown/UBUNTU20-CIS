@@ -1,0 +1,13 @@
+---
+- name: Import task parse_etc_password.yml
+  import_tasks: "{{ role_path }}/../../../../tasks/parse_etc_password.yml"
+
+- name: Ensure the db was parsed correctly
+  assert:
+    that:
+      - ubtu20cis_passwd == result_ubtu20cis_passwd
+      - _diff|length == 0
+    fail_msg: "[ERR] parse_etc_password: Failed to parse passwd. diff: {{ _diff|to_json }}"
+    success_msg: "[OK]  parse_etc_password: Parsed."
+  vars:
+    _diff: "{{ ubtu20cis_passwd|symmetric_difference(result_ubtu20cis_passwd) }}"

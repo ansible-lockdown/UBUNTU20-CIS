@@ -1,2 +1,4 @@
 ---
 # vars file for UBUNTU20-CIS
+
+cis_etc_passwd_file: /etc/passwd
