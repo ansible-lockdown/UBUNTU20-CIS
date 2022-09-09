@@ -713,8 +713,8 @@ setup_python_pkg:
   - jc
 
 # Ubuntu packages on the control node
-setup_ubuntu_pkg:
-  - python3-passlib
-  - python3-lxml
-  - python3-xmltodict
-  - python3-jmespath
+setup_ubuntu_pkg: []
+#  - python3-passlib
+#  - python3-lxml
+#  - python3-xmltodict
+#  - python3-jmespath

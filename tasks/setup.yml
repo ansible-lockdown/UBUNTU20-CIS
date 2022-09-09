@@ -3,6 +3,7 @@
   apt:
       update_cache: yes
       name: "{{ setup_ubuntu_pkg }}"
+  when: setup_ubuntu_pkg|length > 0
   run_once: true
   delegate_to: localhost
   become: true
