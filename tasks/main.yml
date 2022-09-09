@@ -28,6 +28,11 @@
   tags:
       - always
 
+- import_tasks: setup.yml
+  when: ubtu20cis_setup_enable|default(true)|bool
+  tags:
+      - setup
+
 - import_tasks: prelim.yml
   tags:
       - prelim_tasks

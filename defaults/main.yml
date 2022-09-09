@@ -704,3 +704,17 @@ audit_results: |
       The pre remediation results are: {{ pre_audit_summary }}.
       The post remediation results are: {{ post_audit_summary }}.
       Full breakdown can be found in {{ audit_out_dir }}
+
+
+#### Setup. Configuration of the control node ####
+
+# Python packages on the control node
+setup_python_pkg:
+  - jc
+
+# Ubuntu packages on the control node
+setup_ubuntu_pkg:
+  - python3-passlib
+  - python3-lxml
+  - python3-xmltodict
+  - python3-jmespath

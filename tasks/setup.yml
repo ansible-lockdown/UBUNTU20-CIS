@@ -1,0 +1,14 @@
+---
+- name: "SETUP | Install Ubuntu packages on control node"
+  apt:
+      update_cache: yes
+      name: "{{ setup_ubuntu_pkg }}"
+  run_once: true
+  delegate_to: localhost
+
+- name: "SETUP | Install Python packages on control node"
+  pip:
+      name: "{{ setup_python_pkg }}"
+  run_once: true
+  delegate_to: localhost
+  become: false
