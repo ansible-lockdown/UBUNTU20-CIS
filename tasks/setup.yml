@@ -24,6 +24,7 @@
 - name: "SETUP | Install Python packages on control node"
   pip:
       name: "{{ setup_python_pkg }}"
+      extra_args: --user
   delegate_to: localhost
   run_once: true
-  become: true
+  become: false
