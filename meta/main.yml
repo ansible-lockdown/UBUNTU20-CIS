@@ -24,5 +24,6 @@ collections:
     - community.general
     - community.crypto
     - ansible.posix
+    - ansible.utils
 
 dependencies: []
