@@ -5,6 +5,7 @@
       name: "{{ setup_ubuntu_pkg }}"
   run_once: true
   delegate_to: localhost
+  become: true
 
 - name: "SETUP | Install Python packages on control node"
   pip:
