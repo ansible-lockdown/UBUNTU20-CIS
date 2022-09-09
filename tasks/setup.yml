@@ -1,16 +1,29 @@
 ---
+- name: "SETUP | List installed packages on control node"
+  block:
+      - name: "SETUP | Collect installed packages on control node"
+        package_facts:
+            strategy: all
+      - name: "SETUP | Display installed packages on control node"
+        debug:
+            var: ansible_facts.packages
+  when: ubtu20cis_setup_list|d(false)|bool
+  delegate_to: localhost
+  run_once: true
+  become: true
+
 - name: "SETUP | Install Ubuntu packages on control node"
   apt:
       update_cache: yes
       name: "{{ setup_ubuntu_pkg }}"
   when: setup_ubuntu_pkg|length > 0
-  run_once: true
   delegate_to: localhost
+  run_once: true
   become: true
 
 - name: "SETUP | Install Python packages on control node"
   pip:
       name: "{{ setup_python_pkg }}"
-  run_once: true
   delegate_to: localhost
-  become: false
+  run_once: true
+  become: true

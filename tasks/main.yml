@@ -29,7 +29,7 @@
       - always
 
 - import_tasks: setup.yml
-  when: ubtu20cis_setup_enable|default(true)|bool
+  when: ubtu20cis_setup_enable|d(true)|bool
   tags:
       - setup
 
