@@ -1,2 +1,4 @@
 ---
 # vars file for UBUNTU20-CIS
+
+min_ansible_version: 2.10.1

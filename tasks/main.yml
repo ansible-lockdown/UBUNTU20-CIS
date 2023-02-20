@@ -1,87 +1,84 @@
 ---
-# - debug: var=ansible_facts
-- name: Gather distribution info
-  # we need:
-  # - hardware for ansible_mounts
-  # - platform for ansible_architecture (ansible internal)
-  # - virtual for ansible_virtualization_type
-  setup:
-      gather_subset: distribution,hardware,platform,virtual,!all,!min
-  when:
-      - ansible_distribution is not defined
-  tags:
-      - always
 
 - name: Check OS version and family
-  fail:
+  ansible.builtin.assert:
+      that: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version is version_compare('20', '==')
       msg: "This role can only be run against Ubuntu 20. {{ ansible_distribution }} {{ ansible_distribution_major_version }} is not supported."
-  when:
-      - ansible_distribution == 'Ubuntu'
-      - ansible_distribution_major_version is version_compare('20', '!=')
   tags:
       - always
 
 - name: Check ansible version
-  fail:
-      msg: You must use ansible 2.1 or greater
-  when: not ansible_version.full is version_compare('2.1', '>=')
+  ansible.builtin.assert:
+      that: ansible_version.full is version_compare(min_ansible_version, '>=')
+      fail_msg: "You must use Ansible {{ min_ansible_version }} or greater"
+      success_msg: "This role is running a supported version of ansible {{ ansible_version.full }} >= {{ min_ansible_version }}"
   tags:
       - always
 
-- import_tasks: prelim.yml
+- name: Ensure grub password has been changed
+  ansible.builtin.assert:
+      that:
+          - '"ChangeMe" not in ubtu20cis_grub_pw'
+          - '"grub.pbkbdf2.sha512.1000" in ubtu20cis_grub_pw'
+      fail_msg: "The default grub password has not been changed"
+  when: ubtu20cis_rule_1_4_2
+
+- name: Im,port preliminary tasks
+  ansible.builtin.import_tasks: prelim.yml
   tags:
       - prelim_tasks
       - run_audit
 
-- import_tasks: pre_remediation_audit.yml
+- name: Run pre remediation audit tasks
+  ansible.builtin.import_tasks: pre_remediation_audit.yml
   when:
       - run_audit
   tags:
       - run_audit
 
-- include: parse_etc_password.yml
+- ansible.builtin.include_tasks: parse_etc_password.yml
   when:
       - ubtu20cis_section5_patch or
         ubtu20cis_section6_patch
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
       manager: auto
   tags:
       - always
 
 - name: Include section 1 patches
-  import_tasks: section_1/main.yml
+  ansible.builtin.import_tasks: section_1/main.yml
   when: ubtu20cis_section1_patch
   tags:
       - section1
 
 - name: Include section 2 patches
-  import_tasks: section_2/main.yml
+  ansible.builtin.import_tasks: section_2/main.yml
   when: ubtu20cis_section2_patch
   tags:
       - section2
 
 - name: Include section 3 patches
-  import_tasks: section_3/main.yml
+  ansible.builtin.import_tasks: section_3/main.yml
   when: ubtu20cis_section3_patch
   tags:
       - section3
 
 - name: Include section 4 patches
-  import_tasks: section_4/main.yml
+  ansible.builtin.import_tasks: section_4/main.yml
   when: ubtu20cis_section4_patch
   tags:
       - section4
 
 - name: Include section 5 patches
-  import_tasks: section_5/main.yml
+  ansible.builtin.import_tasks: section_5/main.yml
   when: ubtu20cis_section5_patch
   tags:
       - section5
 
 - name: Include section 6 patches
-  import_tasks: section_6/main.yml
+  ansible.builtin.import_tasks: section_6/main.yml
   when: ubtu20cis_section6_patch
   tags:
       - section6
