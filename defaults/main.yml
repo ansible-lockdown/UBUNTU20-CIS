@@ -594,6 +594,9 @@ ubtu20cis_sshd:
     # deny_users:
     # deny_groups:
 
+# 5.4.2 pam_tally2 login options allows for audit to be removed if required
+ubtu20cis_pamtally2_login_opts: 'onerr=fail audit silent deny=5 unlock_time=900'
+
 # Control 5.4.3
 # ubtu20cis_pamd_pwhistory_remember is number of password chnage cycles a user can re-use a password
 # This needs to be 5 or more to conform to CIS standards

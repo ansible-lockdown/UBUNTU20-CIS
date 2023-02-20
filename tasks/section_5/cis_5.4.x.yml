@@ -70,53 +70,25 @@
 # figure out why pam_deny kills vagrant user. Below is everything working but the pam_deny.so in the last task with_items
 # -------------
 # -------------
-- name: "AUTOMATED | 5.4.2 | PATCH | Ensure lockout for failed password attempts is configured"
-  command: /bin/true
-  changed_when: false
-  failed_when: false
-  check_mode: false
-  # block:
-  #     - name: "AUTOMATED | 5.4.2 | AUDIT | Ensure lockout for failed password attempts is configured | Confirm pam_tally2.so module in common-auth"
-  #       # command: grep 'auth.*required.*pam_tally2.so' /etc/pam.d/common-auth
-  #       command: grep 'auth.*required.*pam_tally2.so' /etc/pam.d/common-account
-  #       changed_when: false
-  #       failed_when: false
-  #       check_mode: false
-  #       register: ubtu20cis_5_4_2_pam_tally2_state
+- name: "5.4.2 | PATCH | Ensure lockout for failed password attempts is configured"
+  block:
 
-  #     - name: "AUTOMATED | 5.4.2 | PATCH | Ensure lockout for failed password attempts is configured | Set pam_tally2.so settings if exists"
-  #       pamd:
-  #           # name: common-auth
-  #           name: common-account
-  #           # type: auth
-  #           type: account
-  #           control: required
-  #           module_path: pam_tally2.so
-  #           module_arguments: 'onerr=fail
-  #               audit
-  #               silent
-  #               deny=5
-  #               unlock_time=900'
-  #       when: ubtu20cis_5_4_2_pam_tally2_state.stdout != ""
+      - name: "5.4.2 | PATCH | Ensure lockout for failed password attempts is configured | common-account load pam_tally"
+        ansible.builtin.lineinfile:
+            path: /etc/pam.d/common-account
+            regexp: "{{ item.regexp }}"
+            line: "{{ item.line }}"
+            insertafter: '{{ item.after }}'
+        with_items:
+            - { regexp: '^account\s+requisite\s+pam_deny.so', line: 'account    requisite pam_deny.so', after: '^# here.s the fallback if no module succeeds' }
+            - { regexp: '^account\s+required\s+pam_tally2.so', line: 'account    required pam_tally2.so', after: '^account    requisite pam_deny.so' }
 
-  #     - name: "AUTOMATED | 5.4.2 | PATCH | Ensure lockout for failed password attempts is configured | Set pam_tally2.so settings if does not exist"
-  #       lineinfile:
-  #           # path: /etc/pam.d/common-auth
-  #           path: /etc/pam.d/common-account
-  #           # line: 'auth       required pam_tally2.so onerr=fail audit silent deny=5 unlock_time=900'
-  #           line: 'account       required pam_tally2.so onerr=fail audit silent deny=5 unlock_time=900'
-  #           insertafter: '^# end of pam-auth-update config'
-  #       when: ubtu20cis_5_4_2_pam_tally2_state == ""
-
-  #     - name: "AUTOMATED | 5.4.2 | PATCH | Ensure lockout for failed password attempts is configured | Set pam_deny.so and pam_tally.so"
-  #       lineinfile:
-  #           path: /etc/pam.d/common-account
-  #           regexp: "{{ item.regexp }}"
-  #           line: "{{ item.line }}"
-  #           insertafter: '^# end of pam-auth-update config'
-  #       with_items:
-  #           # - { regexp: '^accout.*requisite.*pam_deny.so', line: 'account    requisite pam_george.so' }
-  #           - { regexp: '^account.*required.*pam_tally.so', line: 'account    required pam_tally.so' }
+      - name: "5.4.2 | PATCH | Ensure lockout for failed password attempts is configured | common-auth pam_tally2 opts"
+        ansible.builtin.lineinfile:
+            path: /etc/pam.d/common-auth
+            regexp: '^auth\s+required pam_tally2 .*onerr=fail.*'
+            line: 'auth       required pam_tally2.so {{ ubtu20cis_pamtally2_login_opts }}'
+            insertafter: '^# here are the per-package modules (the "Primary" block)'
   when:
       - ubtu20cis_rule_5_4_2
   tags:
