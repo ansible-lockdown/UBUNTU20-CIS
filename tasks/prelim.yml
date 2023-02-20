@@ -1,13 +1,13 @@
 ---
 - name: "PRELIM | Run apt update"
-  apt:
+  ansible.builtin.package:
       update_cache: yes
   when:
       - ubtu20cis_rule_1_3_1 or
         ubtu20cis_rule_1_9
 
 - name: "PRELIM | Check for autofs service"
-  shell: "systemctl show autofs | grep LoadState | cut -d = -f 2"
+  ansible.builtin.shell: "systemctl show autofs | grep LoadState | cut -d = -f 2"
   register: ubtu20cis_autofs_service_status
   changed_when: false
   check_mode: false
@@ -17,7 +17,7 @@
       - skip_ansible_lint
 
 - name: "PRELIM | Check for avahi-daemon service"
-  shell: "systemctl show avahi-daemon | grep LoadState | cut -d = -f 2"
+  ansible.builtin.shell: "systemctl show avahi-daemon | grep LoadState | cut -d = -f 2"
   register: avahi_service_status
   changed_when: false
   check_mode: false
@@ -27,7 +27,7 @@
       - skip_ansible_lint
 
 - name: "PRELIM | Install Network-Manager"
-  apt:
+  ansible.builtin.package:
       name: network-manager
       state: present
   when:
@@ -35,7 +35,7 @@
       - not ubtu20cis_system_is_container
 
 - name: "PRELIM | Install ACL"
-  apt:
+  ansible.builtin.package:
       name: acl
       state: present
   when:
@@ -43,7 +43,7 @@
       - ubtu20cis_install_network_manager
 
 - name: "PRELIM | List users accounts"
-  command: "awk -F: '{print $1}' /etc/passwd"
+  ansible.builtin.shell: "awk -F: '{print $1}' /etc/passwd"
   changed_when: false
   check_mode: false
   register: ubtu20cis_users
