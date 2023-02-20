@@ -420,11 +420,13 @@ ubtu20cis_aide_cron:
     aide_month: '*'
     aide_weekday: '*'
 
-# Control 1.4.4
-# THIS VARAIBLE SHOULD BE CHANGED AND INCORPORATED INTO VAULT
-# THIS VALUE IS WHAT THE ROOT PW WILL BECOME!!!!!!!!
-# HAVING THAT PW EXPOSED IN RAW TEXT IS NOT SECURE!!!!
-ubtu20cis_root_pw: "Password1"
+# Control 1.4.2
+# THIS VARIABLE SHOULD BE CHANGED
+# This will fail assertion if not changed and rule 1.4.2 is enabled
+# insert password as per output of running grub-mkpasswd-pbkdf2
+# refers to https://help.ubuntu.com/community/Grub2/Passwords
+ubtu20cis_grub_users: root
+ubtu20cis_grub_pw: "grub.pbkdf2.sha512.10000.ChangeMe"
 
 # Control 1.8.2
 # This will be the motd banner must not contain the below items in order to be compliant with Ubuntu 20 CIS
