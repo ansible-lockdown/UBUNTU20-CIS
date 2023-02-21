@@ -1,6 +1,6 @@
 ---
-- name: "AUTOMATED | 3.2.1 | PATCH | Ensure packet redirect sending is disabled"
-  sysctl:
+- name: "3.2.1 | PATCH | Ensure packet redirect sending is disabled"
+  ansible.builtin.sysctl:
       name: "{{ item }}"
       value: '0'
       sysctl_set: yes
@@ -23,10 +23,10 @@
       - packet_redirect
       - sysctl
 
-- name: "AUTOMATED | 3.2.2 | PATCH | Ensure IP forwarding is disabled"
+- name: "3.2.2 | PATCH | Ensure IP forwarding is disabled"
   block:
-      - name: "AUTOMATED | 3.2.2 | PATCH | Ensure IP forwarding is disabled | IPv4 settings"
-        sysctl:
+      - name: "3.2.2 | PATCH | Ensure IP forwarding is disabled | IPv4 settings"
+        ansible.builtin.sysctl:
             name: net.ipv4.ip_forward
             value: '0'
             sysctl_set: yes
@@ -36,8 +36,8 @@
         notify:
             - sysctl flush ipv4 route table
 
-      - name: "AUTOMATED | 3.2.2 | PATCH | Ensure IP forwarding is disabled | IPv6 settings"
-        sysctl:
+      - name: "3.2.2 | PATCH | Ensure IP forwarding is disabled | IPv6 settings"
+        ansible.builtin.sysctl:
             name: net.ipv6.conf.all.forwarding
             value: '0'
             sysctl_set: yes

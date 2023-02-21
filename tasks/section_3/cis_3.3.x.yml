@@ -1,8 +1,8 @@
 ---
-- name: "AUTOMATED | 3.3.1 | PATCH | Ensure source routed packets are not accepted"
+- name: "3.3.1 | PATCH | Ensure source routed packets are not accepted"
   block:
-      - name: "AUTOMATED | 3.3.1 | PATCH | Ensure source routed packets are not accepted | IPv4 settings"
-        sysctl:
+      - name: "3.3.1 | PATCH | Ensure source routed packets are not accepted | IPv4 settings"
+        ansible.builtin.sysctl:
             name: "{{ item }}"
             value: '0'
             sysctl_set: yes
@@ -14,8 +14,8 @@
             - net.ipv4.conf.default.accept_source_route
         notify: sysctl flush ipv4 route table
 
-      - name: "AUTOMATED | 3.3.1 | PATCH | Ensure source routed packets are not accepted | IPv6 settings"
-        sysctl:
+      - name: "3.3.1 | PATCH | Ensure source routed packets are not accepted | IPv6 settings"
+        ansible.builtin.sysctl:
             name: "{{ item }}"
             value: '0'
             sysctl_set: yes
@@ -39,10 +39,10 @@
       - routed_packets
       - sysctl
 
-- name: "AUTOMATED | 3.3.2 | PATCH | Ensure ICMP redirects are not accepted"
+- name: "3.3.2 | PATCH | Ensure ICMP redirects are not accepted"
   block:
-      - name: "AUTOMATED | 3.3.2 | PATCH | Ensure ICMP redirects are not accepted | IPv4 settings"
-        sysctl:
+      - name: "3.3.2 | PATCH | Ensure ICMP redirects are not accepted | IPv4 settings"
+        ansible.builtin.sysctl:
             name: "{{ item }}"
             value: '0'
             sysctl_set: yes
@@ -54,8 +54,8 @@
             - net.ipv4.conf.default.accept_redirects
         notify: sysctl flush ipv4 route table
 
-      - name: "AUTOMATED | 3.3.2 | PATCH | Ensure ICMP redirects are not accepted | IPv6 settings"
-        sysctl:
+      - name: "3.3.2 | PATCH | Ensure ICMP redirects are not accepted | IPv6 settings"
+        ansible.builtin.sysctl:
             name: "{{ item }}"
             value: '0'
             sysctl_set: yes
@@ -78,8 +78,8 @@
       - icmp
       - sysctl
 
-- name: "AUTOMATED | 3.3.3 | PATCH | Ensure secure ICMP redirects are not accepted"
-  sysctl:
+- name: "3.3.3 | PATCH | Ensure secure ICMP redirects are not accepted"
+  ansible.builtin.sysctl:
       name: "{{ item }}"
       value: '0'
       sysctl_set: yes
@@ -101,8 +101,8 @@
       - icmp
       - sysctl
 
-- name: "AUTOMATED | 3.3.4 | PATCH | Ensure suspicious packets are logged"
-  sysctl:
+- name: "3.3.4 | PATCH | Ensure suspicious packets are logged"
+  ansible.builtin.sysctl:
       name: "{{ item }}"
       value: '1'
       sysctl_set: yes
@@ -124,8 +124,8 @@
       - suspicious_packets
       - sysctl
 
-- name: "AUTOMATED | 3.3.5 | PATCH | Ensure broadcast ICMP requests are ignored"
-  sysctl:
+- name: "3.3.5 | PATCH | Ensure broadcast ICMP requests are ignored"
+  ansible.builtin.sysctl:
       name: net.ipv4.icmp_echo_ignore_broadcasts
       value: '1'
       sysctl_set: yes
@@ -144,8 +144,8 @@
       - icmp
       - sysctl
 
-- name: "AUTOMATED | 3.3.6 | PATCH | Ensure bogus ICMP responses are ignored"
-  sysctl:
+- name: "3.3.6 | PATCH | Ensure bogus ICMP responses are ignored"
+  ansible.builtin.sysctl:
       name: net.ipv4.icmp_ignore_bogus_error_responses
       value: '1'
       sysctl_set: yes
@@ -164,8 +164,8 @@
       - icmp
       - sysctl
 
-- name: "AUTOMATED | 3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled"
-  sysctl:
+- name: "3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled"
+  ansible.builtin.sysctl:
       name: "{{ item }}"
       value: '1'
       sysctl_set: yes
@@ -187,8 +187,8 @@
       - reverse_path_filtering
       - sysctl
 
-- name: "AUTOMATED | 3.3.8 | PATCH | Ensure TCP SYN Cookies is enabled"
-  sysctl:
+- name: "3.3.8 | PATCH | Ensure TCP SYN Cookies is enabled"
+  ansible.builtin.sysctl:
       name: net.ipv4.tcp_syncookies
       value: '1'
       sysctl_set: yes
@@ -207,8 +207,8 @@
       - tcp_syn_cookies
       - sysctl
 
-- name: "AUTOMATED | 3.3.9 | PATCH | Ensure IPv6 router advertisements are not accepted"
-  sysctl:
+- name: "3.3.9 | PATCH | Ensure IPv6 router advertisements are not accepted"
+  ansible.builtin.sysctl:
       name: "{{ item }}"
       value: '0'
       sysctl_set: yes
