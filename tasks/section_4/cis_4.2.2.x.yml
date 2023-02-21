@@ -1,6 +1,6 @@
 ---
-- name: "AUTOMATED | 4.2.2.1 | PATCH | Ensure journald is configured to send logs to rsyslog"
-  lineinfile:
+- name: "4.2.2.1 | PATCH | Ensure journald is configured to send logs to rsyslog"
+  ansible.builtin.lineinfile:
       path: /etc/systemd/journald.conf
       regexp: '^ForwardToSyslog|^#ForwardToSyslog'
       line: 'ForwardToSyslog=yes'
@@ -17,7 +17,7 @@
       - journald
 
 - name: "4.2.2.2 | PATCH | Ensure journald is configured to compress large log files"
-  lineinfile:
+  ansible.builtin.lineinfile:
       path: /etc/systemd/journald.conf
       regexp: '^Compress|^#Compress'
       line: 'Compress=yes'
@@ -32,8 +32,8 @@
       - rsyslog
       - journald
 
-- name: "AUTOMATED | 4.2.2.3 | PATCH | Ensure journald is configured to write logfiles to persistent disk"
-  lineinfile:
+- name: "4.2.2.3 | PATCH | Ensure journald is configured to write logfiles to persistent disk"
+  ansible.builtin.lineinfile:
       path: /etc/systemd/journald.conf
       regexp: '^Storage|^#Storage'
       line: 'Storage=persistent'
