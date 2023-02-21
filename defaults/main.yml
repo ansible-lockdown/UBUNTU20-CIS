@@ -425,8 +425,14 @@ ubtu20cis_aide_cron:
 # This will fail assertion if not changed and rule 1.4.2 is enabled
 # insert password as per output of running grub-mkpasswd-pbkdf2
 # refers to https://help.ubuntu.com/community/Grub2/Passwords
+ubtu20cis_grub_user_file: /etc/grub.d/40_custom
 ubtu20cis_grub_users: root
 ubtu20cis_grub_pw: "grub.pbkdf2.sha512.10000.ChangeMe"
+
+# 1.4.4
+# note this needs to be in the encrypted format
+
+ubtu20cis_root_pw: $6$this_is_needs_to_be_changed
 
 # Control 1.8.2
 # This will be the motd banner must not contain the below items in order to be compliant with Ubuntu 20 CIS

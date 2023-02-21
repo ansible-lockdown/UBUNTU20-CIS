@@ -316,9 +316,11 @@ ubuntu20cis_allow_autofs: {{ ubtu20cis_allow_autofs }}
 
 # 1.4
 ubuntu20cis_grub_conf_file: /boot/grub/grub.cfg
+ubuntu20cis_grub_user_file: {{ ubtu20cis_grub_user_file }}
 ubuntu20cis_grub_username: {{ ubtu20cis_grub_users }}
 ubuntu20cis_grub_hash: {{ ubtu20cis_grub_pw }}
 
+ubuntu20cis_root_pw: {{ ubtu20cis_root_pw }}
 
 # 1.6 - Only have apparmor enforcing
 ubuntu20cis_apparmor_enforce_only: false
