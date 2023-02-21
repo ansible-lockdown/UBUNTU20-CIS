@@ -1,6 +1,7 @@
 ---
+
 - name: "5.2.1 | PATCH | Ensure sudo is installed"
- ansible.builtin.package:
+  ansible.builtin.package:
       name: "{{ ubtu20cis_sudo_package }}"
       state: present
   when:
