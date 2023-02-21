@@ -1,6 +1,6 @@
 ---
 - name: "3.4.1 | PATCH | Ensure DCCP is disabled"
-  lansible.builtin.ineinfile:
+  ansible.builtin.lineinfile:
       path: /etc/modprobe.d/dccp.conf
       regexp: '^(#)?install dccp(\\s|$)'
       line: 'install dccp /bin/true'
