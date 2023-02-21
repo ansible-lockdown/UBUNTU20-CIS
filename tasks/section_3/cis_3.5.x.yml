@@ -153,6 +153,23 @@
       - rule_3.5.1.6
       - ufw
 
+- name: "OPTIONAL | UFW incoming ports"
+  community.general.ufw:
+      rule: allow
+      direction: in
+      from_ip: '{{ item.from }}'
+      to_port: '{{ item.ports }}'
+      proto: '{{ item.proto }}'
+  loop:
+    - "{{ ubtu20cis_ufw_allow_in }}"
+  loop_control:
+      label: "{{ item.port }}"
+  notify: reload ufw
+  when: ufw_add_incoming
+  tags:
+      - ufw
+      - ufw_in_ports
+
 - name: "3.5.1.7 | PATCH | Ensure ufw default deny firewall policy"
   community.general.ufw:
       default: deny

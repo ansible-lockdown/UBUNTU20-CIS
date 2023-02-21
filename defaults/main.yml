@@ -490,6 +490,17 @@ ubtu20cis_ufw_allow_out_ports:
     - 80
     - 443
 
+# This is optional only and is not part of the benchmark but the request does make sense to ensure this is correct.
+
+ufw_add_incoming: false
+ubtu20cis_ufw_allow_in:
+    ports:
+    - 22
+    from:
+    - any
+    proto:
+    - tcp
+
 # Control 3.5.2.4
 # nftables is not supported in this role. Some tasks have the task commented out, this is one of them
 # ubtu20cis_nftables_table_name is the name of the table in nftables you want to create
