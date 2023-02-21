@@ -162,7 +162,7 @@
       - name: "5.5.2 | PATCH | Ensure system accounts are secured | Set system accounts to login"
         ansible.builtin.user:
             name: "{{ item }}"
-            ansible.builtin.shell: /sbin/nologin
+            shell: /sbin/nologin
         with_items:
             - "{{ ubtu20cis_passwd | selectattr('uid', '<', 1000) | map(attribute='id') | list }}"
         when:
