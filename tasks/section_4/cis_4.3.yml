@@ -1,13 +1,13 @@
 ---
 - name: "4.3 | PATCH | Ensure logrotate is configured"
   block:
-      - name: "MANUAL | 4.3 | PATCH | Ensure logrotate is configured | Get logrotate files"
+      - name: "4.3 | PATCH | Ensure logrotate is configured | Get logrotate files"
         ansible.builtin.find:
             paths: /etc/logrotate.d/
         check_mode: false
         register: ubtu20cis_4_3_logrotate_files
 
-      - name: "MANUAL | 4.3 | PATCH | Ensure logrotate is configured | Set rotation configurations"
+      - name: "4.3 | PATCH | Ensure logrotate is configured | Set rotation configurations"
         ansible.builtin.replace:
             path: "{{ item.path }}"
             regexp: '^(\s*)(daily|weekly|monthly|yearly)$'
