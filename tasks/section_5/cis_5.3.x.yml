@@ -1,6 +1,6 @@
 ---
-- name: "AUTOMATED | 5.3.1 | PATCH | Ensure permissions on /etc/ssh/sshd_config are configured"
-  file:
+- name: "5.3.1 | PATCH | Ensure permissions on /etc/ssh/sshd_config are configured"
+  ansible.builtin.file:
       path: /etc/ssh/sshd_config
       owner: root
       group: root
@@ -15,16 +15,16 @@
       - rule_5.3.1
       - ssh
 
-- name: "AUTOMATED | 5.3.2 | PATCH | Ensure permissions on SSH private host key files are configured"
+- name: "5.3.2 | PATCH | Ensure permissions on SSH private host key files are configured"
   block:
-      - name: "AUTOMATED | 5.3.2 | AUDIT | Ensure permissions on SSH private host key files are configured | Find ssh_host private keys"
-        find:
+      - name: "5.3.2 | AUDIT | Ensure permissions on SSH private host key files are configured | Find ssh_host private keys"
+        ansible.builtin.find:
             paths: /etc/ssh
             patterns: 'ssh_host_*_key'
         register: ubtu20cis_5_3_2_ssh_host_priv_keys
 
-      - name: "AUTOMATED | 5.3.2 | PATCH | Ensure permissions on SSH private host key files are configured | Set permissions"
-        file:
+      - name: "5.3.2 | PATCH | Ensure permissions on SSH private host key files are configured | Set permissions"
+        ansible.builtin.file:
             path: "{{ item.path }}"
             owner: root
             group: root
@@ -43,16 +43,16 @@
       - rule_5.3.2
       - ssh
 
-- name: "AUTOMATED | 5.3.3 | PATCH | Ensure permissions on SSH public host key files are configured"
+- name: "5.3.3 | PATCH | Ensure permissions on SSH public host key files are configured"
   block:
-      - name: "AUTOMATED | 5.3.3 | AUDIT | Ensure permissions on SSH public host key files are configured | Find ssh_host public keys"
-        find:
+      - name: "5.3.3 | AUDIT | Ensure permissions on SSH public host key files are configured | Find ssh_host public keys"
+        ansible.builtin.find:
             paths: /etc/ssh
             patterns: 'ssh_host_*_key.pub'
         register: ubtu20cis_5_3_3_ssh_host_pub_keys
 
-      - name: "AUTOMATED | 5.3.3 | PATCH | Ensure permissions on SSH public host key files are configured | Set permissions"
-        file:
+      - name: "5.3.3 | PATCH | Ensure permissions on SSH public host key files are configured | Set permissions"
+        ansible.builtin.file:
             path: "{{ item.path }}"
             owner: root
             group: root
@@ -71,34 +71,34 @@
       - rule_5.3.3
       - ssh
 
-- name: "AUTOMATED | 5.3.4 | PATCH | Ensure SSH access is limited"
+- name: "5.3.4 | PATCH | Ensure SSH access is limited"
   block:
-      - name: "AUTOMATED | 5.3.4 | PATCH | Ensure SSH access is limited | Add allowed users"
-        lineinfile:
+      - name: "5.3.4 | PATCH | Ensure SSH access is limited | Add allowed users"
+        ansible.builtin.lineinfile:
             path: /etc/ssh/sshd_config
             regexp: '^AllowUsers|^#AllowUsers'
             line: 'AllowUsers {{ ubtu20cis_sshd.allow_users }}'
         notify: restart sshd
         when: "ubtu20cis_sshd['allow_users']|default('') != ''"
 
-      - name: "AUTOMATED | 5.3.4 | PATCH | Ensure SSH access is limited | Add allowed groups"
-        lineinfile:
+      - name: "5.3.4 | PATCH | Ensure SSH access is limited | Add allowed groups"
+        ansible.builtin.lineinfile:
             path: /etc/ssh/sshd_config
             regexp: '^AllowGroups|^#AllowGroups'
             line: 'AllowGroups {{ ubtu20cis_sshd.allow_groups }}'
         notify: restart sshd
         when: "ubtu20cis_sshd['allow_groups']|default('') != ''"
 
-      - name: "AUTOMATED | 5.3.4 | PATCH | Ensure SSH access is limited | Add deny users"
-        lineinfile:
+      - name: "5.3.4 | PATCH | Ensure SSH access is limited | Add deny users"
+        ansible.builtin.lineinfile:
             path: /etc/ssh/sshd_config
             regexp: '^DenyUsers|^#DenyUsers'
             line: 'DenyUsers {{ ubtu20cis_sshd.deny_users }}'
         notify: restart sshd
         when: "ubtu20cis_sshd['deny_users']|default('') != ''"
 
-      - name: "AUTOMATED | 5.3.4 | PATCH | Ensure SSH access is limited | Add deny groups"
-        lineinfile:
+      - name: "5.3.4 | PATCH | Ensure SSH access is limited | Add deny groups"
+        ansible.builtin.lineinfile:
             path: /etc/ssh/sshd_config
             regexp: '^DenyGroups|^#DenyGroups'
             line: 'DenyGroups {{ ubtu20cis_sshd.deny_groups }}'
@@ -114,8 +114,8 @@
       - rule_5.3.4
       - ssh
 
-- name: "AUTOMATED | 5.3.5 | PATCH | Ensure SSH LogLevel is appropriate"
-  lineinfile:
+- name: "5.3.5 | PATCH | Ensure SSH LogLevel is appropriate"
+  ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^LogLevel|^#LogLevel'
       line: 'LogLevel {{ ubtu20cis_sshd.log_level }}'
@@ -131,8 +131,8 @@
       - rule_5.3.5
       - ssh
 
-- name: "AUTOMATED | 5.3.6 | PATCH | Ensure SSH X11 forwarding is disabled"
-  lineinfile:
+- name: "5.3.6 | PATCH | Ensure SSH X11 forwarding is disabled"
+  ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^X11Forwarding|^#X11Forwarding'
       line: 'X11Forwarding no'
@@ -147,8 +147,8 @@
       - rule_5.3.6
       - ssh
 
-- name: "AUTOMATED | 5.3.7 | PATCH | Ensure SSH MaxAuthTries is set to 4 or less"
-  lineinfile:
+- name: "5.3.7 | PATCH | Ensure SSH MaxAuthTries is set to 4 or less"
+  ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^MaxAuthTries|^#MaxAuthTries'
       line: 'MaxAuthTries {{ ubtu20cis_sshd.max_auth_tries }}'
@@ -164,8 +164,8 @@
       - rule_5.3.7
       - ssh
 
-- name: "AUTOMATED | 5.3.8 | PATCH | Ensure SSH IgnoreRhosts is enabled"
-  lineinfile:
+- name: "5.3.8 | PATCH | Ensure SSH IgnoreRhosts is enabled"
+  ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^IgnoreRhosts|^#IgnoreRhosts'
       line: 'IgnoreRhosts yes'
@@ -180,8 +180,8 @@
       - rule_5.3.8
       - ssh
 
-- name: "AUTOMATED | 5.3.9 | PATCH | Ensure SSH HostbasedAuthentication is disabled"
-  lineinfile:
+- name: "5.3.9 | PATCH | Ensure SSH HostbasedAuthentication is disabled"
+  ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^HostbasedAuthentication|^#HostbasedAuthentication'
       line: 'HostbasedAuthentication no'
@@ -196,8 +196,8 @@
       - rule_5.3.9
       - ssh
 
-- name: "AUTOMATED | 5.3.10 | PATCH | Ensure SSH root login is disabled"
-  lineinfile:
+- name: "5.3.10 | PATCH | Ensure SSH root login is disabled"
+  ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^PermitRootLogin|^#PermitRootLogin'
       line: 'PermitRootLogin no'
@@ -212,8 +212,8 @@
       - rule_5.3.10
       - ssh
 
-- name: "AUTOMATED | 5.3.11 | PATCH | Ensure SSH PermitEmptyPasswords is disabled"
-  lineinfile:
+- name: "5.3.11 | PATCH | Ensure SSH PermitEmptyPasswords is disabled"
+  ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^PermitEmptyPasswords|^#PermitEmptyPasswords'
       line: 'PermitEmptyPasswords no'
@@ -229,8 +229,8 @@
       - rule_5.3.11
       - ssh
 
-- name: "AUTOMATED | 5.3.12 | PATCH | Ensure SSH PermitUserEnvironment is disabled"
-  lineinfile:
+- name: "5.3.12 | PATCH | Ensure SSH PermitUserEnvironment is disabled"
+  ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^PermitUserEnvironment|^#PermitUserEnvironment'
       line: 'PermitUserEnvironment no'
@@ -245,8 +245,8 @@
       - rule_5.3.12
       - ssh
 
-- name: "AUTOMATED | 5.3.13 | PATCH | Ensure only strong Ciphers are used"
-  lineinfile:
+- name: "5.3.13 | PATCH | Ensure only strong Ciphers are used"
+  ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^Ciphers|^#Ciphers'
       line: 'Ciphers {{ ubtu20cis_sshd.ciphers }}'
@@ -262,8 +262,8 @@
       - rule_5.3.13
       - ssh
 
-- name: "AUTOMATED | 5.3.14 | PATCH | Ensure only strong MAC algorithms are used"
-  lineinfile:
+- name: "5.3.14 | PATCH | Ensure only strong MAC algorithms are used"
+  ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^MACs|^#MACs'
       line: 'MACs {{ ubtu20cis_sshd.macs }}'
@@ -279,8 +279,8 @@
       - rule_5.3.14
       - ssh
 
-- name: "AUTOMATED | 5.3.15 | PATCH | Ensure only strong Key Exchange algorithms are used"
-  lineinfile:
+- name: "5.3.15 | PATCH | Ensure only strong Key Exchange algorithms are used"
+  ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^KexAlgorithms|^#KexAlgorithms'
       line: 'KexAlgorithms {{ ubtu20cis_sshd.kex_algorithms }}'
@@ -296,8 +296,8 @@
       - rule_5.3.15
       - ssh
 
-- name: "AUTOMATED | 5.3.16 | PATCH | Ensure SSH Idle Timeout Interval is configured"
-  lineinfile:
+- name: "5.3.16 | PATCH | Ensure SSH Idle Timeout Interval is configured"
+  ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
@@ -315,8 +315,8 @@
       - rule_5.3.16
       - sshd
 
-- name: "AUTOMATED | 5.3.17 | PATCH | Ensure SSH LoginGraceTime is set to one minute or less"
-  lineinfile:
+- name: "5.3.17 | PATCH | Ensure SSH LoginGraceTime is set to one minute or less"
+  ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^LoginGraceTime|^#LoginGraceTime'
       line: 'LoginGraceTime {{ ubtu20cis_sshd.login_grace_time }}'
@@ -332,8 +332,8 @@
       - rule_5.3.17
       - ssh
 
-- name: "AUTOMATED | 5.3.18 | PATCH | Ensure SSH warning banner is configured"
-  lineinfile:
+- name: "5.3.18 | PATCH | Ensure SSH warning banner is configured"
+  ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^Banner|^#Banner'
       line: Banner /etc/issue.net
@@ -349,8 +349,8 @@
       - rule_5.3.18
       - ssh
 
-- name: "AUTOMATED | 5.3.19 | PATCH | Ensure SSH PAM is enabled"
-  lineinfile:
+- name: "5.3.19 | PATCH | Ensure SSH PAM is enabled"
+  ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^UsePAM|^#UsePAM'
       line: 'UsePAM yes'
@@ -367,8 +367,8 @@
       - ssh
       - pam
 
-- name: "AUTOMATED | 5.3.20 | PATCH | Ensure SSH AllowTcpForwarding is disabled"
-  lineinfile:
+- name: "5.3.20 | PATCH | Ensure SSH AllowTcpForwarding is disabled"
+  ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^AllowTcpForwarding|^#AllowTcpForwarding'
       line: 'AllowTcpForwarding no'
@@ -383,8 +383,8 @@
       - rule_5.3.20
       - ssh
 
-- name: "AUTOMATED | 5.3.21 | PATCH | Ensure SSH MaxStartups is configured"
-  lineinfile:
+- name: "5.3.21 | PATCH | Ensure SSH MaxStartups is configured"
+  ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^MaxStartups|^#MaxStartups'
       line: 'MaxStartups 10:30:60'
@@ -399,8 +399,8 @@
       - rule_5.3.21
       - ssh
 
-- name: "AUTOMATED | 5.3.22 | PATCH | Ensure SSH MaxSessions is set to 4 or less"
-  lineinfile:
+- name: "5.3.22 | PATCH | Ensure SSH MaxSessions is set to 4 or less"
+  ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^MaxSessions|^#MaxSessions'
       line: 'MaxSessions {{ ubtu20cis_sshd.max_sessions }}'

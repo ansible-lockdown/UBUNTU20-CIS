@@ -1,6 +1,6 @@
 ---
-- name: "AUTOMATED | 5.2.1 | PATCH | Ensure sudo is installed"
-  apt:
+- name: "5.2.1 | PATCH | Ensure sudo is installed"
+ ansible.builtin.package:
       name: "{{ ubtu20cis_sudo_package }}"
       state: present
   when:
@@ -13,8 +13,8 @@
       - rule_5.2.1
       - sudo
 
-- name: "AUTOMATED | 5.2.2 | PATCH | Ensure sudo commands use pty"
-  lineinfile:
+- name: "5.2.2 | PATCH | Ensure sudo commands use pty"
+  ansible.builtin.lineinfile:
       path: /etc/sudoers
       regexp: '^Defaults        use_'
       line: 'Defaults        use_pty'
@@ -29,8 +29,8 @@
       - rule_5.2.2
       - sudo
 
-- name: "AUTOMATED | 5.2.3 | PATCH | Ensure sudo log file exists"
-  lineinfile:
+- name: "5.2.3 | PATCH | Ensure sudo log file exists"
+  ansible.builtin.lineinfile:
       path: /etc/sudoers
       regexp: '^Defaults        logfile'
       line: 'Defaults        logfile="{{ ubtu20cis_sudo_logfile }}"'
