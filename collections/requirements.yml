@@ -5,4 +5,4 @@ collections:
 
 - name: community.crypto
   
-- name:  ansible.posix
+- name: ansible.posix

@@ -1,6 +1,6 @@
 ---
-- name: "AUTOMATED | 1.6.1.1 | PATCH | Ensure AppArmor is installed"
-  apt:
+- name: "1.6.1.1 | PATCH | Ensure AppArmor is installed"
+  ansible.builtin.package:
       name: ['apparmor', 'apparmor-utils']
       state: present
   when:
@@ -13,17 +13,17 @@
       - rule_1.6.1.1
       - apparmor
 
-- name: "AUTOMATED | 1.6.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration"
+- name: "1.6.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration"
   block:
-      - name: "AUTOMATED | 1.6.1.2 | AUDIT | Ensure AppArmor is enabled in the bootloader configuration | Get current settings"
-        shell: grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
+      - name: "1.6.1.2 | AUDIT | Ensure AppArmor is enabled in the bootloader configuration | Get current settings"
+        ansible.builtin.shell: grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_1_6_1_2_cmdline_settings
 
-      - name: "AUTOMATED | 1.6.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Set apparmor settings if none exist"
-        lineinfile:
+      - name: "1.6.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Set apparmor settings if none exist"
+        ansible.builtin.lineinfile:
             path: /etc/default/grub
             regexp: '^GRUB_CMDLINE_LINUX'
             line: 'GRUB_CMDLINE_LINUX="apparmor=1 security=apparmor {{ ubtu20cis_1_6_1_2_cmdline_settings.stdout }}"'
@@ -33,8 +33,8 @@
             - "'security' not in ubtu20cis_1_6_1_2_cmdline_settings.stdout"
         notify: grub update
 
-      - name: "AUTOMATED | 1.6.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Set apparmor settings if none exist | Replace apparmor settings when exists"
-        replace:
+      - name: "1.6.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Set apparmor settings if none exist | Replace apparmor settings when exists"
+        ansible.builtin.replace:
             path: /etc/default/grub
             regexp: "{{ item.regexp }}"
             replace: "{{ item.replace }}"
@@ -55,8 +55,8 @@
       - rule_1.6.1.2
       - apparmor
 
-- name: "AUTOMATED | 1.6.1.3 | PATCH | Ensure all AppArmor Profiles are in enforce or complain mode"
-  command: aa-enforce /etc/apparmor.d/*
+- name: "1.6.1.3 | PATCH | Ensure all AppArmor Profiles are in enforce or complain mode"
+  ansible.builtin.shell: aa-enforce /etc/apparmor.d/*
   failed_when: false
   when:
       - ubtu20cis_rule_1_6_1_3
@@ -68,8 +68,8 @@
       - rule_1.6.1.3
       - apparmor
 
-- name: "AUTOMATED | 1.6.1.4 | PATCH | Ensure all AppArmor Profiles are enforcing"
-  command: aa-enforce /etc/apparmor.d/*
+- name: "1.6.1.4 | PATCH | Ensure all AppArmor Profiles are enforcing"
+  ansible.builtin.shell: aa-enforce /etc/apparmor.d/*
   failed_when: false
   when:
       - ubtu20cis_rule_1_6_1_4

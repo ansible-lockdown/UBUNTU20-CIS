@@ -1,15 +1,15 @@
 ---
-- name: "MANUAL | 1.5.1 | AUDIT | Ensure XD/NX support is enabled"
+- name: "1.5.1 | AUDIT | Ensure XD/NX support is enabled"
   block:
-      - name: "MANUAL | 1.5.1 | AUDIT | Ensure XD/NX support is enabled | Find status of XD/NX"
-        shell: "journalctl | grep 'protection: active'"
+      - name: "1.5.1 | AUDIT | Ensure XD/NX support is enabled | Find status of XD/NX"
+        ansible.builtin.shell: "journalctl | grep 'protection: active'"
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_1_5_1_xdnx_status
 
-      - name: "MANUAL | 1.5.1 | AUDIT | Ensure XD/NX support is enabled | Alert if XD/NX is not enabled"
-        debug:
+      - name: "1.5.1 | AUDIT | Ensure XD/NX support is enabled | Alert if XD/NX is not enabled"
+        ansible.builtin.debug:
             msg:
                 - "ALERT!!!!You do not have XD/NX (Execute Disable/No Execute) enabled"
                 - "To conform to CIS standards this needs to be enabled"
@@ -24,16 +24,16 @@
       - rule_1.5.1
       - xd/nx
 
-- name: "AUTOMATED | 1.5.2 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
+- name: "1.5.2 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
   block:
-      - name: "AUTOMATED | 1.5.2 | PATCH | Ensure address space layout randomization (ASLR) is enabled | Set ASLR settings"
-        lineinfile:
+      - name: "1.5.2 | PATCH | Ensure address space layout randomization (ASLR) is enabled | Set ASLR settings"
+        ansible.builtin.lineinfile:
             path: /etc/sysctl.conf
             regexp: '^kernel.randomize_va_space'
             line: 'kernel.randomize_va_space = 2'
 
-      - name: "AUTOMATED | 1.5.2 | PATCH | Ensure address space layout randomization (ASLR) is enabled | Set active kernel parameter"
-        sysctl:
+      - name: "1.5.2 | PATCH | Ensure address space layout randomization (ASLR) is enabled | Set active kernel parameter"
+        ansible.builtin.sysctl:
             name: kernel.randomize_va_space
             value: '2'
   when:
@@ -46,15 +46,15 @@
       - rule_1.5.2
       - aslr
 
-- name: "AUTOMATED | 1.5.3 | PATCH | Ensure prelink is not installed"
+- name: "1.5.3 | PATCH | Ensure prelink is not installed"
   block:
-      - name: "AUTOMATED | 1.5.3 | PATCH | Ensure prelink is not installed | Restore binaries to normal"
-        command: prelink -ua
+      - name: "1.5.3 | PATCH | Ensure prelink is not installed | Restore binaries to normal"
+        ansible.builtin.shell: prelink -ua
         changed_when: false
         failed_when: false
 
-      - name: "AUTOMATED | 1.5.3 | PATCH | Ensure prelink is not installed| Remove prelink package"
-        apt:
+      - name: "1.5.3 | PATCH | Ensure prelink is not installed| Remove prelink package"
+        ansible.builtin.package:
             name: prelink
             state: absent
   when:
@@ -68,10 +68,10 @@
       - prelink
 
 
-- name: "AUTOMATED | 1.5.4 | PATCH | Ensure core dumps are restricted"
+- name: "1.5.4 | PATCH | Ensure core dumps are restricted"
   block:
-      - name: "AUTOMATED | 1.5.4 | PATCH | Ensure core dumps are restricted | kernel sysctl"
-        sysctl:
+      - name: "1.5.4 | PATCH | Ensure core dumps are restricted | kernel sysctl"
+        ansible.builtin.sysctl:
             name: fs.suid_dumpable
             value: '0'
             state: present
@@ -79,8 +79,8 @@
             sysctl_set: yes
             ignoreerrors: yes
 
-      - name: "AUTOMATED | 1.5.4 | PATCH | Ensure core dumps are restricted | security limits"
-        lineinfile:
+      - name: "1.5.4 | PATCH | Ensure core dumps are restricted | security limits"
+        ansible.builtin.lineinfile:
             path: /etc/security/limits.d/99_zero_core.conf
             regexp: '^\* hard core'
             line: '* hard core 0'
@@ -89,8 +89,8 @@
             group: root
             mode: '0644'
 
-      - name: "AUTOMATED | 1.5.4 | PATCH | Ensure core dumps are restricted | sysctl.conf"
-        lineinfile:
+      - name: "1.5.4 | PATCH | Ensure core dumps are restricted | sysctl.conf"
+        ansible.builtin.lineinfile:
             path: /etc/sysctl.conf
             regexp: '^fs.suid_dumpable'
             line: fs.suid_dumpable=0
@@ -98,8 +98,8 @@
             group: root
             mode: '0644'
 
-      - name: "AUTOMATED | 1.5.4 | PATCH | Ensure core dumps are restricted | coredump.conf"
-        lineinfile:
+      - name: "1.5.4 | PATCH | Ensure core dumps are restricted | coredump.conf"
+        ansible.builtin.lineinfile:
             path: /etc/systemd/coredump.conf
             regexp: "{{ item.regexp }}"
             line: "{{ item.line }}"
