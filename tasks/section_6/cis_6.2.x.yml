@@ -351,57 +351,43 @@
       - root
 
 - name: "6.2.12 | PATCH | Ensure root PATH Integrity"
-  ansible.builtin.shell: /bin/true
-  changed_when: false
-  failed_when: false
-  check_mode: false
-  # block:
-  #     - name: "6.2.12 | PATCH | Ensure root PATH Integrity | Determine empty value"
-  #       ansible.builtin.shell: 'echo $PATH | grep ::'
-  #       changed_when: False
-  #       failed_when: ubtu20cis_6_2_12_path_colon.rc == 0
-  #       check_mode: false
-  #       register: ubtu20cis_6_2_12_path_colon
+  block:
+      - name: "6.2.12 | AUDIT | Ensure root PATH Integrity | Determine empty value"
+        shell: 'echo $PATH | grep ::'
+        changed_when: false
+        failed_when: ubtu20cis_rule_6_2_12_path_colon.rc == 0
+        check_mode: false
+        register: ubtu20cis_rule_6_2_12_path_colon
 
-  #     - name: "6.2.12 | PATCH | Ensure root PATH Integrity | Determine colon end"
-  #       ansible.builtin.shell: 'echo $PATH | grep :$'
-  #       changed_when: False
-  #       failed_when: ubtu20cis_6_2_12_path_colon_end.rc == 0
-  #       check_mode: false
-  #       register: ubtu20cis_6_2_12_path_colon_end
+      - name: "6.2.12 | AUDIT | Ensure root PATH Integrity | Determin colon end"
+        shell: 'echo $PATH | grep :$'
+        changed_when: false
+        failed_when: ubtu20cis_rule_6_2_12_path_colon_end.rc == 0
+        check_mode: false
+        register: ubtu20cis_rule_6_2_12_path_colon_end
 
-  #     - name: "6.2.12 | PATCH | Ensure root PATH Integrity | Determine working dir"
-  #       ansible.builtin.shell: echo "$PATH"
-  #       changed_when: False
-  #       failed_when: '"." in ubtu20cis_6_2_12_working_dir.stdout_lines'
-  #       check_mode: false
-  #       register: ubtu20cis_6_2_12_working_dir
-  #     - debug: var=ubtu20cis_6_2_12_working_dir
+      - name: "6.2.12 | AUDIT | Ensure root PATH Integrity | Determine dot in path"
+        shell: "/bin/bash --login -c 'env | grep ^PATH=' | sed -e 's/PATH=//' -e 's/::/:/' -e 's/:$//' -e 's/:/\\n/g'"
+        changed_when: false
+        failed_when: '"." in ubtu20cis_rule_6_2_12_dot_in_path.stdout_lines'
+        check_mode: false
+        register: ubtu20cis_rule_6_2_12_dot_in_path
 
-  #     - name: "6.2.12 | PATCH | Ensure root PATH Integrity | Check paths"
-  #       stat:
-  #           path: "{{ item }}"
-  #       check_mode: false
-  #       register: ubtu20cis_6_2_12_path_stat
-  #       with_items:
-  #           - "{{ ubtu20cis_6_2_12_working_dir.stdout.split(':') }}"
+      - name: "6.2.12 | AUDIT | Ensure root PATH Integrity | Alert on empty value, colon end, and dot in path"
+        debug:
+            msg:
+                - "The following paths have an empty value: {{ ubtu20cis_rule_6_2_12_path_colon.stdout_lines }}"
+                - "The following paths have colon end: {{ ubtu20cis_rule_6_2_12_path_colon_end.stdout_lines }}"
+                - "The following paths have a dot in the path: {{ ubtu20cis_rule_6_2_12_dot_in_path.stdout_lines }}"
 
-  #     - debug: var=ubtu20cis_6_2_12_path_stat
-
-  #     - name: "6.2.12 | PATCH | Ensure root PATH Integrity | Alert on empty value, colon end, and no working dir"
-  #       debug:
-  #           msg:
-  #               - "The following paths have no working directory: {{ ubtu20cis_6_2_12_path_stat.results | selectattr('stat.exists','==','false') | map(attribute='item') | list }}"
-
-  #     # - name: "6.2.12 | PATCH | Ensure root PATH Integrity | Set permissions"
-  #     #   file:
-  #     #       path: "{{ item }}"
-  #     #       owner: root
-  #     #       mode: 'o-w,g-w'
-  #     #       follow: yes
-  #     #       state: directory
-  #     #   with_items:
-  #     #       - "{{ ubtu18cis_6_2_12_path_stat | selectattr('exists','==','true') | map(attribute='path') }}"
+      - name: "6.2.12 | PATCH | Ensure root PATH Integrity | Determine rights and owner"
+        file: >
+          path='{{ item }}'
+          follow=yes
+          state=directory
+          owner=root
+          mode='o-w,g-w'
+        with_items: "{{ ubtu20cis_rule_6_2_12_dot_in_path.stdout_lines }}"
   when:
       - ubtu20cis_rule_6_2_12
   tags:
