@@ -11,7 +11,7 @@
       - name: "MANUAL 1.2.1 | AUDIT | Ensure package manager repositories are configured | Message out repository configs"
         ansible.builtin.debug:
             msg:
-                - "Alert!!!! Below are the apt package repositories"
+                - "WARNING!!!!  Below are the apt package repositories"
                 - "Please review to make sure they conform to your sites policies"
                 - "{{ ubtu20cis_1_2_1_apt_policy.stdout_lines }}"
   when:
@@ -36,7 +36,7 @@
       - name: "1.2.2 | AUDIT | Ensure GPG keys are configured | Message out apt gpg keys"
         ansible.builtin.debug:
             msg:
-                - "Alert!!!! Below are the apt gpg keys configured"
+                - "WARNING!!!!  Below are the apt gpg keys configured"
                 - "Please review to make sure they are configured"
                 - "in accordance with site policy"
                 - "{{ ubtu20cis_1_2_2_apt_gpgkeys.stdout_lines }}"

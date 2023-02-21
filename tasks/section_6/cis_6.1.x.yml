@@ -20,7 +20,7 @@
       - name: "6.1.1 | AUDIT | Audit system file permissions | Message out packages results for review"
         ansible.builtin.debug:
             msg:
-                - "ALERT!!!! Below are the packages that need to be reviewed."
+                - "WARNING!!!! Below are the packages that need to be reviewed."
                 - "You can run dpkg --verify <package name> and if nothing is returned the package is installed correctly"
                 - "{{ ubtu20cis_6_1_1_packages.stdout_lines }}"
   when:
@@ -211,7 +211,7 @@
       - name: "6.1.11 | AUDIT | Ensure no unowned files or directories exist | Alert on unowned files and directories"
         ansible.builtin.debug:
             msg:
-                - "ALERT!!!You have unowned files and are configured to not auto-remediate for this task"
+                - "WARNING!!!! You have unowned files and are configured to not auto-remediate for this task"
                 - "Please review the files/directories below and assign an owner"
                 - "{{ ubtu20cis_6_1_11_no_user_items_flatten }}"
         when:
@@ -257,7 +257,7 @@
       - name: "6.1.12 | AUDIT | Ensure no ungrouped files or directories exist | Alert on ungrouped files and directories"
         ansible.builtin.debug:
             msg:
-                - "ALERT!!!!You have ungrouped files/directories and are configured to not auto-remediate for this task"
+                - "WARNING!!!! You have ungrouped files/directories and are configured to not auto-remediate for this task"
                 - "Please review the files/directories below and assign a group"
                 - "{{ ubtu20cis_6_1_12_ungrouped_items_flatten }}"
         when:
@@ -303,7 +303,7 @@
       - name: "6.1.13 | AUDIT | Audit SUID executables | Alert SUID executables exist"
         ansible.builtin.debug:
             msg:
-                - "ALERT!!!!You have SUID executables"
+                - "WARNING!!!! You have SUID executables"
                 - "The files are listed below, please confirm the integrity of these binaries"
                 - "{{ ubtu20cis_6_1_13_suid_executables_flatten }}"
         when:
@@ -349,7 +349,7 @@
       - name: "6.1.14 | AUDIT | Audit SGID executables | Alert SGID executables exist"
         ansible.builtin.debug:
             msg:
-                - "ALERT!!!!You have SGID executables"
+                - "WARNING!!!! You have SGID executables"
                 - "The files are listed below, please review the integrity of these binaries"
                 - "{{ ubtu20cis_6_1_14_sgid_executables_flatten }}"
         when: ubtu20cis_6_1_14_sgid_executables_flatten | length > 0

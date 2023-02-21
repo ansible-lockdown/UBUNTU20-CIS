@@ -11,7 +11,7 @@
       - name: "1.5.1 | AUDIT | Ensure XD/NX support is enabled | Alert if XD/NX is not enabled"
         ansible.builtin.debug:
             msg:
-                - "ALERT!!!!You do not have XD/NX (Execute Disable/No Execute) enabled"
+                - "WARNING!!!! You do not have XD/NX (Execute Disable/No Execute) enabled"
                 - "To conform to CIS standards this needs to be enabled"
         when: "'active'not in ubtu20cis_1_5_1_xdnx_status.stdout"
   when:

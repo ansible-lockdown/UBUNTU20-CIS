@@ -10,7 +10,7 @@
       - name: "6.2.1 | AUDIT | Ensure accounts in /etc/passwd use shadowed passwords | Alert on findings"
         ansible.builtin.debug:
             msg:
-                - "ALERT! You have users that are not using a shadowed password. Please convert the below accounts to use a shadowed password"
+                - "WARNING!!!! You have users that are not using a shadowed password. Please convert the below accounts to use a shadowed password"
                 - "{{ ubtu20cis_6_2_1_nonshadowed_users.stdout_lines }}"
         when:
             - ubtu20cis_6_2_1_nonshadowed_users.stdout | length > 0
@@ -323,7 +323,7 @@
       - name: "6.2.11 | AUDIT | Ensure root is the only UID 0 account | Alert about accounts disruption high"
         ansible.builtin.debug:
             msg:
-                - "ALERT!!!! You have non-root users with a UID of 0 and ubtu18cis_disruption_high enabled"
+                - "WARNING!!!! You have non-root users with a UID of 0 and ubtu18cis_disruption_high enabled"
                 - "This means the following accounts were password locked and will need to have the UID's manually adjusted"
                 - "{{ ubtu20cis_6_2_11_uid_0_notroot.stdout_lines }}"
         when:
@@ -333,7 +333,7 @@
       - name: "6.2.11 | AUDIT | Ensure root is the only UID 0 account | Alert about accounts disruption low"
         ansible.builtin.debug:
             msg:
-                - "ALERT!!!! You have non-root users with a UID of 0 and ubtu18cis_disruption_high disabled"
+                - "WARNING!!!! You have non-root users with a UID of 0 and ubtu18cis_disruption_high disabled"
                 - "This means no action was taken, you will need to have the UID's of the users below manually adjusted"
                 - "{{ ubtu20cis_6_2_11_uid_0_notroot.stdout_lines }}"
         when:
