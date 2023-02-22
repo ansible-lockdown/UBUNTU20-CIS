@@ -8,35 +8,16 @@
             use_regex: true
         register: ubtu20cis_rule_4_4_logrotate_create
 
-      - name: "4.4 | PATCH | Ensure logrotate assigns appropriate permissions | update files if required"
+      - name: "4.4 | PATCH | Ensure logrotate assigns appropriate permissions | update logrotate.d files if exists"
         ansible.builtin.lineinfile:
             path: "{{ item.path }}"
-            regexp: '^(\s*create\s*)(\d*(.*))$'
-            line: '\g<1>{{ ubtu20cis_logrotate_create_settings }}\g<3>'
+            regexp: '^(\s*\b)create($|\s)(\d*)(\b.*)$'
+            line: '\g<1>create {{ ubtu20cis_logrotate_create_settings }}\g<4>'
             backrefs: true
             insertbefore: '^}'
         with_items:
-            - { path: '/etc/logrotate.conf' }
+            - { path: '/etc/logrotate.conf'}
             - "{{ ubtu20cis_rule_4_4_logrotate_create.files }}"
-        loop_control:
-            label: "{{ item.path }}"
-
-      - name: "4.4 | AUDIT | Ensure logrotate assigns appropriate permissions | find logrotate no create files"
-        ansible.builtin.find:
-            paths: /etc/logrotate.d/
-            contains: '^((?!\s*create).*$)'
-            use_regex: true
-        register: ubtu20cis_rule_4_4_logrotate_nocreate
-
-      - name: "4.4 | PATCH | Ensure logrotate assigns appropriate permissions | Add if missing"
-        ansible.builtin.lineinfile:
-            path: "{{ item.path }}"
-            regex: '^\s*create'
-            line: '    create {{ ubtu20cis_logrotate_create_settings }}'
-            insertbefore: '^}'
-        with_items:
-            - { path: '/etc/logrotate.conf' }
-            - "{{ ubtu20cis_rule_4_4_logrotate_nocreate.files }}"
         loop_control:
             label: "{{ item.path }}"
   when:
