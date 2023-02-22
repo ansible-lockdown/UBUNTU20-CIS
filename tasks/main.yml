@@ -19,7 +19,7 @@
   ansible.builtin.assert:
       that:
           - '"ChangeMe" not in ubtu20cis_grub_pw'
-          - '"grub.pbkbdf2.sha512.1000" in ubtu20cis_grub_pw'
+          - '"grub.pbkdf2.sha512.1000" in ubtu20cis_grub_pw'
       fail_msg: "The default grub password has not been changed"
   when: ubtu20cis_rule_1_4_2
 
