@@ -163,7 +163,7 @@
   loop:
       - "{{ ubtu20cis_ufw_allow_in }}"
   loop_control:
-      label: "{{ item.port }}"
+      label: "{{ item.ports }}"
   notify: reload ufw
   when: ufw_add_incoming
   tags:
