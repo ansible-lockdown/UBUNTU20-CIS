@@ -683,8 +683,8 @@ ubtu20cis_passwd_label: "{{ (this_item | default(item)).id }}: {{ (this_item | d
 
 ### Audit binary settings ###
 audit_bin_version:
-    release: v0.3.16
-    checksum: 'sha256:827e354b48f93bce933f5efcd1f00dc82569c42a179cf2d384b040d8a80bfbfb'
+    release: v0.3.21
+    checksum: 'sha256:9a9200779603acf0353d2c0e85ae46e083596c10838eaf4ee050c924678e4fe3'
 audit_bin_path: /usr/local/bin/
 audit_bin: "{{ audit_bin_path }}goss"
 audit_format: json
