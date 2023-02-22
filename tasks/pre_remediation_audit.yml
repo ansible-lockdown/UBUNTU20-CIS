@@ -21,7 +21,7 @@
             state: present
 
       - name: Pre Audit Setup | retrieve audit content files from git
-        git:
+        ansible.builtin.git:
             repo: "{{ audit_file_git }}"
             dest: "{{ audit_conf_dir }}"
             version: "{{ audit_git_version }}"

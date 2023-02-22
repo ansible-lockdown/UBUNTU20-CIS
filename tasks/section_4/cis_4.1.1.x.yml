@@ -17,7 +17,7 @@
   ansible.builtin.service:
       name: auditd
       state: started
-      enabled: yes
+      enabled: true
   when:
       - ubtu20cis_rule_4_1_1_2
   tags:

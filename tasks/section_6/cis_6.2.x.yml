@@ -28,14 +28,14 @@
   block:
       - name: "6.2.2 | AUDIT | Ensure password fields are not empty | Find users with no password"
         ansible.builtin.shell: awk -F":" '($2 == "" ) { print $1 }' /etc/shadow
-        changed_when: no
+        changed_when: false
         check_mode: false
         register: ubtu20cis_6_2_2_empty_password_acct
 
       - name: "6.2.2 | PATCH | Ensure password fields are not empty | Lock users with empty password"
         ansible.builtin.user:
             name: "{{ item }}"
-            password_lock: yes
+            password_lock: true
         with_items:
             - "{{ ubtu20cis_6_2_2_empty_password_acct.stdout_lines }}"
         when: ubtu20cis_6_2_2_empty_password_acct.stdout | length > 0
@@ -87,7 +87,7 @@
               check_mode: false
               register: ubtu20cis_users_missing_home
               changed_when: ubtu20cis_6_2_4_audit | length > 0
-              # failed_when: 0: success, 1: no grep match, 2: pwck found something
+              # failed_when: 0: success, 1: false grep match, 2: pwck found something
               failed_when: ubtu20cis_users_missing_home.rc not in [0,1,2]
 
       ### NOTE: due to https://github.com/ansible/ansible/issues/24862 This is a shell command, and is quite frankly less than ideal.
@@ -99,7 +99,7 @@
             - ubtu20cis_users_missing_home is changed
             - ubtu20cis_disruption_high
 
-      ### NOTE: Now we need to address that SELINUX will not let mkhomedir_helper create home directories for UUID < 500, so the ftp user will still show up in a pwck. Not sure this is needed, I need to confirm if that user is removed in an earlier task.
+      ### NOTE: falsew we need to address that SELINUX will not let mkhomedir_helper create home directories for UUID < 500, so the ftp user will still show up in a pwck. Not sure this is needed, I need to confirm if that user is removed in an earlier task.
       ### ^ Likely doesn't matter as 6.2.7 defines "local interactive users" as those w/ uid 1000-4999
       - name: replay audit task
         block: *u20s_homedir_audit
@@ -173,7 +173,7 @@
       - name: "6.2.6 | PATCH | Ensure users' home directories permissions are 750 or more restrictive | Set home perms"
         ansible.builtin.file:
             path: "{{ item.0 }}"
-            recurse: yes
+            recurse: true
             mode: a-st,g-w,o-rwx
         register: ubtu20cis_6_2_6_patch
         when:
@@ -189,12 +189,12 @@
       - name: "6.2.6 | PATCH | Ensure users' home directories permissions are 750 or more restrictive | Set ACL's"
         ansible.posix.acl:
             path: "{{ item.0 }}"
-            default: yes
+            default: true
             state: present
-            recursive: yes
+            recursive: true
             etype: "{{ item.1.etype }}"
             permissions: "{{ item.1.mode }}"
-        when: not ubtu20cis_system_is_container
+        when: falset ubtu20cis_system_is_container
         with_nested:
             - "{{ (ansible_check_mode | ternary(ubtu20cis_6_2_6_patch_audit, ubtu20cis_6_2_6_patch)).results |
               rejectattr('skipped', 'defined') | map(attribute='item') | map('first') | list }}"
@@ -218,8 +218,8 @@
   block:
       - name: "6.2.7 | AUDIT | Ensure users' dot files are not group or world-writable | Check for files"
         ansible.builtin.shell: find /home/ -name "\.*" -perm /g+w,o+w
-        changed_when: no
-        failed_when: no
+        changed_when: false
+        failed_when: false
         check_mode: false
         register: ubtu20cis_6_2_7_audit
 
@@ -313,7 +313,7 @@
       - name: "6.2.11 | PATCH | Ensure root is the only UID 0 account | Lock UID 0 users"
         ansible.builtin.user:
             name: "{{ item }}"
-            password_lock: yes
+            password_lock: true
         with_items:
             - "{{ ubtu20cis_6_2_11_uid_0_notroot.stdout_lines }}"
         when:
@@ -353,35 +353,35 @@
 - name: "6.2.12 | PATCH | Ensure root PATH Integrity"
   block:
       - name: "6.2.12 | AUDIT | Ensure root PATH Integrity | Determine empty value"
-        shell: 'echo $PATH | grep ::'
+        ansible.builtin.shell: 'echo $PATH | grep ::'
         changed_when: false
         failed_when: ubtu20cis_rule_6_2_12_path_colon.rc == 0
         check_mode: false
         register: ubtu20cis_rule_6_2_12_path_colon
 
       - name: "6.2.12 | AUDIT | Ensure root PATH Integrity | Determin colon end"
-        shell: 'echo $PATH | grep :$'
+        ansible.builtin.shell: 'echo $PATH | grep :$'
         changed_when: false
         failed_when: ubtu20cis_rule_6_2_12_path_colon_end.rc == 0
         check_mode: false
         register: ubtu20cis_rule_6_2_12_path_colon_end
 
       - name: "6.2.12 | AUDIT | Ensure root PATH Integrity | Determine dot in path"
-        shell: "/bin/bash --login -c 'env | grep ^PATH=' | sed -e 's/PATH=//' -e 's/::/:/' -e 's/:$//' -e 's/:/\\n/g'"
+        ansible.builtin.shell: "/bin/bash --login -c 'env | grep ^PATH=' | sed -e 's/PATH=//' -e 's/::/:/' -e 's/:$//' -e 's/:/\\n/g'"
         changed_when: false
         failed_when: '"." in ubtu20cis_rule_6_2_12_dot_in_path.stdout_lines'
         check_mode: false
         register: ubtu20cis_rule_6_2_12_dot_in_path
 
       - name: "6.2.12 | AUDIT | Ensure root PATH Integrity | Alert on empty value, colon end, and dot in path"
-        debug:
+        ansible.builtin.debug:
             msg:
                 - "The following paths have an empty value: {{ ubtu20cis_rule_6_2_12_path_colon.stdout_lines }}"
                 - "The following paths have colon end: {{ ubtu20cis_rule_6_2_12_path_colon_end.stdout_lines }}"
                 - "The following paths have a dot in the path: {{ ubtu20cis_rule_6_2_12_dot_in_path.stdout_lines }}"
 
       - name: "6.2.12 | PATCH | Ensure root PATH Integrity | Determine rights and owner"
-        file: >
+        ansible.builtin.file: >
           path='{{ item }}'
           follow=yes
           state=directory
@@ -432,8 +432,8 @@
   block:
       - name: "6.2.14 | AUDIT | Ensure no duplicate GIDs exist | Check for duplicate GIDs"
         ansible.builtin.shell: "pwck -r | awk -F: '{if ($3 in users) print $1 ; else users[$3]}' /etc/group"
-        changed_when: no
-        failed_when: no
+        changed_when: false
+        failed_when: false
         check_mode: false
         register: ubtu20cis_6_2_14_user_user_check
 
@@ -460,8 +460,8 @@
   block:
       - name: "6.2.15 | AUDIT | Ensure no duplicate user names exist | Check for duplicate User Names"
         ansible.builtin.shell: "pwck -r | awk -F: '{if ($1 in users) print $1 ; else users[$1]}' /etc/passwd"
-        changed_when: no
-        failed_when: no
+        changed_when: false
+        failed_when: false
         check_mode: false
         register: ubtu20cis_6_2_15_user_username_check
 

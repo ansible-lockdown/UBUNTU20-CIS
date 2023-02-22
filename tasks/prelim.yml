@@ -1,7 +1,8 @@
 ---
+
 - name: "PRELIM | Run apt update"
   ansible.builtin.package:
-      update_cache: yes
+      update_cache: true
   when:
       - ubtu20cis_rule_1_3_1 or
         ubtu20cis_rule_1_9

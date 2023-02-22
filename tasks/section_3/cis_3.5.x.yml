@@ -161,7 +161,7 @@
       to_port: '{{ item.ports }}'
       proto: '{{ item.proto }}'
   loop:
-    - "{{ ubtu20cis_ufw_allow_in }}"
+      - "{{ ubtu20cis_ufw_allow_in }}"
   loop_control:
       label: "{{ item.port }}"
   notify: reload ufw
@@ -620,7 +620,7 @@
             state: present
 
       - name: "Make IPTables persistent | Save to persistent files"
-        shell: bash -c "iptables-save > /etc/iptables/rules.v4"
+        ansible.builtin.shell: bash -c "iptables-save > /etc/iptables/rules.v4"
         changed_when: ubtu20cis_iptables_save.rc == 0
         failed_when: ubtu20cis_iptables_save.rc > 0
         register: ubtu20cis_iptables_save
