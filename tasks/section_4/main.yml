@@ -1,24 +1,24 @@
 ---
 - name: "SECTION | 4.1.1 | Ensure auditing is enabled"
-  ansible.builtin.include_tasks: cis_4.1.1.x.yml
+  ansible.builtin.import_tasks: cis_4.1.1.x.yml
 
 - name: "SECTION | 4.1.2 | Configure Data Retention"
-  ansible.builtin.include_tasks: cis_4.1.2.x.yml
+  ansible.builtin.import_tasks: cis_4.1.2.x.yml
 
 - name: "SECTION | 4.1.x | Login Settings"
-  ansible.builtin.include_tasks: cis_4.1.x.yml
+  ansible.builtin.import_tasks: cis_4.1.x.yml
 
 - name: "SECTION | 4.2.1 | Configure rsyslog"
-  ansible.builtin.include_tasks: cis_4.2.1.x.yml
+  ansible.builtin.import_tasks: cis_4.2.1.x.yml
 
 - name: "SECTION | 4.2.2 | Configure journald"
-  ansible.builtin.include_tasks: cis_4.2.2.x.yml
+  ansible.builtin.import_tasks: cis_4.2.2.x.yml
 
 - name: "SECTION | 4.2.3 | Ensure permissions on all logfiles are configured"
-  ansible.builtin.include_tasks: cis_4.2.3.yml
+  ansible.builtin.import_tasks: cis_4.2.3.yml
 
 - name: "SECTION | 4.3 | Ensure logrotate is configured"
-  ansible.builtin.include_tasks: cis_4.3.yml
+  ansible.builtin.import_tasks: cis_4.3.yml
 
 - name: "SECTION | 4.4 | Ensure logrotate assigns appropriate permissions"
-  ansible.builtin.include_tasks: cis_4.4.yml
+  ansible.builtin.import_tasks: cis_4.4.yml

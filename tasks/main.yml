@@ -44,7 +44,7 @@
   tags:
       - run_audit
 
-- ansible.builtin.include_tasks: parse_etc_password.yml
+- ansible.builtin.import_tasks: parse_etc_password.yml
   when:
       - ubtu20cis_section5_patch or
         ubtu20cis_section6_patch

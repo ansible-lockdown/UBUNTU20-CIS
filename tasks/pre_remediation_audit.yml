@@ -1,7 +1,7 @@
 ---
 
 - name: Audit Binary Setup | Setup the LE audit
-  ansible.builtin.include_tasks: LE_audit_setup.yml
+  ansible.builtin.import_tasks: LE_audit_setup.yml
   when:
       - setup_audit
   tags:

@@ -1,9 +1,9 @@
 ---
 - name: "SECTION | 2.1 | Special Purpose Services"
-  ansible.builtin.include_tasks: cis_2.1.x.yml
+  ansible.builtin.import_tasks: cis_2.1.x.yml
 
 - name: "SECTION | 2.2 | Service Clients"
-  ansible.builtin.include_tasks: cis_2.2.x.yml
+  ansible.builtin.import_tasks: cis_2.2.x.yml
 
 - name: "SECTION | 2.3 | Ensure nonessential services are removed or masked"
-  ansible.builtin.include_tasks: cis_2.3.yml
+  ansible.builtin.import_tasks: cis_2.3.yml
