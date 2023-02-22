@@ -265,7 +265,7 @@
       - name: "1.1.10 | AUDIT | Ensure separate partition exists for /var | Alert if /var partition does not exist"
         ansible.builtin.debug:
             msg:
-                - "WARNING!!!!  There is no separate partition for /var"
+                - "Warning!!!!  There is no separate partition for /var"
                 - "Please create a separate partition for /var"
         when: ubtu20cis_1_1_10_var_mounted.stdout | length == 0
   when:
@@ -292,7 +292,7 @@
       - name: "1.1.11 | AUDIT | Ensure separate partition exists for /var/tmp | Alert if /var/tmp partition does not exist"
         ansible.builtin.debug:
             msg:
-                - "WARNING!!!!  There is no separate partition for /var/tmp"
+                - "Warning!!!!  There is no separate partition for /var/tmp"
                 - "Please create a separate partition for /var/tmp"
         when: ubtu20cis_1_1_11_var_tmp_mounted.stdout | length == 0
   when:
@@ -344,7 +344,7 @@
       - name: "1.1.15 | AUDIT | Ensure separate partition exists for /var/log | Alert if /var/log partition does not exist"
         ansible.builtin.debug:
             msg:
-                - "WARNING!!!!  There is no separate partition for /var/log"
+                - "Warning!!!!  There is no separate partition for /var/log"
                 - "Please create a separate partition for /var/log"
         when: ubtu20cis_1_1_15_var_log_mounted.stdout | length == 0
   when:
@@ -371,7 +371,7 @@
       - name: "1.1.16 | AUDIT | Ensure separate partition exists for /var/log/audit | Alert if /var/log/audit partition does not exist"
         ansible.builtin.debug:
             msg:
-                - "WARNING!!!!  There is no separate partition for /var/log/audit"
+                - "Warning!!!!  There is no separate partition for /var/log/audit"
                 - "Please create a separate partition for /var/log/audit"
         when: ubtu20cis_1_1_16_var_log_audit_mounted.stdout | length == 0
   when:
@@ -397,7 +397,7 @@
       - name: "1.1.17 | AUDIT | Ensure separate partition exists for /home | Alert if /home partition does not exist"
         ansible.builtin.debug:
             msg:
-                - "WARNING!!!!  There is no separate partition for /home"
+                - "Warning!!!!  There is no separate partition for /home"
                 - "Please create a separate partition for /home"
         when: ubtu20cis_1_1_17_home_mounted.stdout | length == 0
   when:

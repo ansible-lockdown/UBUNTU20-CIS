@@ -10,7 +10,7 @@
       - name: "6.2.1 | AUDIT | Ensure accounts in /etc/passwd use shadowed passwords | Alert on findings"
         ansible.builtin.debug:
             msg:
-                - "WARNING!!!! You have users that are not using a shadowed password. Please convert the below accounts to use a shadowed password"
+                - "Warning!!!! You have users that are not using a shadowed password. Please convert the below accounts to use a shadowed password"
                 - "{{ ubtu20cis_6_2_1_nonshadowed_users.stdout_lines }}"
         when:
             - ubtu20cis_6_2_1_nonshadowed_users.stdout | length > 0
@@ -66,7 +66,7 @@
 
       - name: "6.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | Print warning about users with invalid GIDs missing GID entries in /etc/group"
         ansible.builtin.debug:
-            msg: "WARNING!!!! The following users have non-existent GIDs (Groups): {{ ubtu20cis_6_2_3_passwd_gid_check.stdout_lines | join (', ') }}"
+            msg: "Warning!!!! The following users have non-existent GIDs (Groups): {{ ubtu20cis_6_2_3_passwd_gid_check.stdout_lines | join (', ') }}"
         when: ubtu20cis_6_2_3_passwd_gid_check.stdout | length > 0
   when:
       - ubtu20cis_rule_6_2_3
@@ -323,7 +323,7 @@
       - name: "6.2.11 | AUDIT | Ensure root is the only UID 0 account | Alert about accounts disruption high"
         ansible.builtin.debug:
             msg:
-                - "WARNING!!!! You have non-root users with a UID of 0 and ubtu18cis_disruption_high enabled"
+                - "Warning!!!! You have non-root users with a UID of 0 and ubtu18cis_disruption_high enabled"
                 - "This means the following accounts were password locked and will need to have the UID's manually adjusted"
                 - "{{ ubtu20cis_6_2_11_uid_0_notroot.stdout_lines }}"
         when:
@@ -333,7 +333,7 @@
       - name: "6.2.11 | AUDIT | Ensure root is the only UID 0 account | Alert about accounts disruption low"
         ansible.builtin.debug:
             msg:
-                - "WARNING!!!! You have non-root users with a UID of 0 and ubtu18cis_disruption_high disabled"
+                - "Warning!!!! You have non-root users with a UID of 0 and ubtu18cis_disruption_high disabled"
                 - "This means no action was taken, you will need to have the UID's of the users below manually adjusted"
                 - "{{ ubtu20cis_6_2_11_uid_0_notroot.stdout_lines }}"
         when:
@@ -536,7 +536,7 @@
       - name: "6.2.17 | AUDIT | Ensure shadow group is empty | Message on users with Shadow GID"
         ansible.builtin.debug:
             msg:
-                - "WARNING!!!! There are users that are in the Shadow group"
+                - "Warning!!!! There are users that are in the Shadow group"
                 - "To conform to CIS standards no users should be in this group"
                 - "Please move the users below into another group"
                 - "{{ ubtu20cis_6_2_17_users_shadow_gid.stdout_lines }}"

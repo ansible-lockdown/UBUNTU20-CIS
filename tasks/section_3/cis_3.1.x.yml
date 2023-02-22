@@ -57,7 +57,7 @@
 
       - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Warn about wireless if network-manager not installed"
         ansible.builtin.debug:
-            msg: "WARNING!!!!  You need to disable wireless interfaces manually since network-manager is not installed"
+            msg: "Warning!!!!  You need to disable wireless interfaces manually since network-manager is not installed"
         when: ubtu20cis_3_1_2_network_manager_status.stdout | length == 0
   when:
       - ubtu20cis_rule_3_1_2
