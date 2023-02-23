@@ -353,6 +353,16 @@
                 - "The files are listed below, please review the integrity of these binaries"
                 - "{{ ubtu20cis_6_1_14_sgid_executables_flatten }}"
         when: ubtu20cis_6_1_14_sgid_executables_flatten | length > 0
+
+      - name: "6.1.14 | PATCH | Audit SGID executables | Remove SGID bit"
+        ansible.builtin.file:
+            path: "{{ item }}"
+            mode: 'g-s'
+        with_items:
+            - "{{ ubtu20cis_6_1_14_sgid_executables_flatten }}"
+        when:
+            - ubtu20cis_sgid_adjust
+            - ubtu20cis_6_1_14_sgid_executables_flatten | length > 0
   when:
       - ubtu20cis_rule_6_1_14
   tags:
