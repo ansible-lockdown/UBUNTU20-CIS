@@ -55,10 +55,10 @@
         register: ubtu20cis_3_1_2_nmcli_radio_off
         when: ubtu20cis_3_1_2_network_manager_status.stdout | length > 0
 
-      - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Warn about wireless if network-manager not installed"
-        ansible.builtin.debug:
-            msg: "Warning!!!!  You need to disable wireless interfaces manually since network-manager is not installed"
-        when: ubtu20cis_3_1_2_network_manager_status.stdout | length == 0
+      - name: "3.1.2 | AUDIT | Ensure wireless interfaces are disabled | Warn Count"
+        ansible.builtin.import_tasks: warning_facts.yml
+  vars:
+      warn_control_id: '3.1.2'
   when:
       - ubtu20cis_rule_3_1_2
   tags:
