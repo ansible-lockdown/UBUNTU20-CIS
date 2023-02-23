@@ -1,5 +1,11 @@
 ---
 
+- name: "PRELIM | register if snap being used"
+  ansible.builtin.shell: df -h | grep -wc "/snap"
+  changed_when: false
+  failed_when: snap_pkg_mgr.rc not in [ 0, 1 ]
+  register: snap_pkg_mgr
+
 - name: "PRELIM | Run apt update"
   ansible.builtin.package:
       update_cache: true
