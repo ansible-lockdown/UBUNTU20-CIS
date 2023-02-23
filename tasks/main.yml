@@ -109,6 +109,11 @@
         when:
             - ubtu20_skip_reboot
 
+- name: run post remediation tasks
+  import_tasks: post.yml
+  tags:
+      - post_tasks
+      - always
 
 - name: Run post audit
   ansible.builtin.import_tasks: post_remediation_audit.yml
