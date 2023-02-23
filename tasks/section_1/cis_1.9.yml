@@ -3,8 +3,22 @@
   ansible.builtin.package:
       name: "*"
       state: latest
+  register: server_patched
   when:
       - ubtu20cis_rule_1_9
+  tags:
+      - level1-server
+      - level1-workstation
+      - manual
+      - patch
+      - rule_1.9
+      - patch
+
+- name: Update the package facts  # noqa no-handler
+  ansible.builtin.package_facts:
+      manager: auto
+  when:
+      - server_patched.changed
   tags:
       - level1-server
       - level1-workstation
