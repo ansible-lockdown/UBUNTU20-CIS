@@ -4,6 +4,7 @@
       name: "*"
       state: latest
   register: server_patched
+  notify: change_requires_reboot
   when:
       - ubtu20cis_rule_1_9
   tags:

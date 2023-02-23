@@ -33,6 +33,7 @@
   loop:
       - { regexp: '^set superusers=', line: 'set superusers= {{ ubtu20cis_grub_users }}' }
       - { regexp: '^set superusers=', line: 'password_pbkdf2 {{ ubtu20cis_grub_users }} {{ ubtu20cis_grub_pw }}', after: '^set superusers=' }
+  notify: grub update
   when:
       - ubtu20cis_rule_1_4_2
   tags:

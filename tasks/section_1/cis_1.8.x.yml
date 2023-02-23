@@ -3,6 +3,7 @@
   ansible.builtin.package:
       name: gdm3
       state: absent
+  notify: change_requires_reboot
   when:
       - ubtu20cis_rule_1_8_1
       - not ubtu20cis_desktop_required

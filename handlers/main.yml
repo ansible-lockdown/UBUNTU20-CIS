@@ -1,6 +1,7 @@
 ---
 - name: grub update
   ansible.builtin.shell: update-grub
+  notify: change_requires_reboot
   failed_when: false
 
 - name: reload gdm3
@@ -56,3 +57,7 @@
 
 - name: reload gdm
   ansible.builtin.shell: dpkg-reconfigure gdm3
+
+- name: change_requires_reboot
+  set_fact:
+      change_requires_reboot: true
