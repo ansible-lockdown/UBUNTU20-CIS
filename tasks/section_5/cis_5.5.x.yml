@@ -138,7 +138,11 @@
                 - "{{ ubtu20cis_5_5_1_5_user_list.stdout_lines }}"
         when: ubtu20cis_5_5_1_5_user_list.stdout | length > 0
 
-      - name: "5.5.1.5 | PATCH | Ensure all users last password change date is in the past | Lock accounts with furtre PW changed dates"
+      - name: "5.5.1.5 | PATCH | Ensure all users last password change date is in the past | Warn Count"
+        ansible.builtin.import_tasks: warning_facts.yml
+        when: ubtu20cis_5_5_1_5_user_list.stdout | length > 0
+
+      - name: "5.5.1.5 | PATCH | Ensure all users last password change date is in the past | Lock accounts with future PW changed dates"
         ansible.builtin.shell: passwd --expire {{ item }}
         failed_when: false
         with_items:
@@ -146,6 +150,8 @@
         when:
             - ubtu20cis_disruption_high
             - ubtu20cis_5_5_1_5_user_list.stdout | length > 0
+  vars:
+      warn_control_id: '5.5.1.5'
   when:
       - ubtu20cis_rule_5_5_1_5
   tags:
