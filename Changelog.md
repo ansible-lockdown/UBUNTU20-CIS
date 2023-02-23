@@ -1,12 +1,8 @@
 # Change log for Ubuntu 2004
 
-
-
 ## Feb 23 updates
 
 ### based upon CIS 1.1.0
-
-Big changes across the board
 
 - lint files updated
 - ansible version updated
@@ -15,6 +11,10 @@ Big changes across the board
 - Assertions for root and grub passwords
 - Import tasks to allow tags to be used
 - Warnings made standard
+- warn count feature added
+- workflow updates
+
+reboot variable changed from ubtu20_skip_reboot to skip_reboot (still default true)
 
 ### Remediate portion
 
@@ -32,6 +32,9 @@ Big changes across the board
   - #69 stop rule overwrite UFW
 - thanks to @hackery
   - #70 TMOUT stops being repeated
+
+Many improvements on multiple controls
+Remediate and audit version now match. When using remediate will pull in latest version of audit for that release.
 
 ### Audit
 
