@@ -424,6 +424,14 @@
         when:
             - "'exim4' not in ansible_facts.packages"
             - "'postfix' not in ansible_facts.packages"
+
+      - name: "2.1.15 | AUDIT | Ensure mail transfer agent is configured for local-only mode | Warn Count"
+        ansible.builtin.import_tasks: warning_facts.yml
+        when:
+            - "'exim4' not in ansible_facts.packages"
+            - "'postfix' not in ansible_facts.packages"
+  vars:
+      warn_control_id: '2.1.15'
   when:
       - ubtu20cis_rule_2_1_15
   tags:

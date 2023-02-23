@@ -13,6 +13,11 @@
             msg:
                 - "Warning!! Below are the running services. Please review and remove as well as mask un-needed services"
                 - "{{ ubtu20cis_2_3_services.stdout_lines }}"
+
+      - name: "2.3 | AUDIT | Ensure nonessential services are removed or masked | Warn Count"
+        ansible.builtin.import_tasks: warning_facts.yml
+  vars:
+      warn_control_id: '2.3'
   when:
       - ubtu20cis_rule_2_3
   tags:
