@@ -142,6 +142,12 @@
                 - "{{ ubtu20cis_3_5_1_6_open_listen_ports.stdout_lines }}"
                 - "*****---Firewall Rules---*****"
                 - "{{ ubtu20cis_3_5_1_6_firewall_rules.stdout_lines }}"
+
+      - name: "3.5.1.6 | AUDIT | Ensure ufw firewall rules exist for all open ports | Warn Count"
+        ansible.builtin.import_tasks: warning_facts.yml
+  vars:
+      warn_control_id: '3.5.1.6'
+
   when:
       - ubtu20cis_rule_3_5_1_6
       - ubtu20cis_firewall_package == "ufw"
@@ -194,11 +200,15 @@
 # ---------------
 # ---------------
 - name: "3.5.2.1 | AUDIT | Ensure nftables is installed"
-  ansible.builtin.debug:
-      msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
-  # ansible.builtin.package:
-  #     name: nftables
-  #     state: present
+  block:
+      - name: "3.5.2.1 | AUDIT | Ensure nftables is installed"
+        ansible.builtin.debug:
+            msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
+
+      - name: "3.5.2.1 | AUDIT | Ensure nftables is installed | Warn Count"
+        ansible.builtin.import_tasks: warning_facts.yml
+  vars:
+      warn_control_id: '3.5.2.x NFTables not supported'
   when:
       - ubtu20cis_rule_3_5_2_1
       - ubtu20cis_firewall_package == "nftables"
