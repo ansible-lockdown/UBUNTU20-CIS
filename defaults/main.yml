@@ -434,6 +434,10 @@ ubtu20cis_grub_pw: "grub.pbkdf2.sha512.10000.ChangeMe"
 
 ubtu20cis_root_pw: $6$this_is_needs_to_be_changed
 
+# 1.7.1
+# disable dynamic motd to stop extra sshd message from appearing
+ubtu20cis_disable_dynamic_motd: false
+
 # Control 1.8.2
 # This will be the motd banner must not contain the below items in order to be compliant with Ubuntu 20 CIS
 # \m, \r, \s, \v or references to the OS platform
@@ -494,12 +498,9 @@ ubtu20cis_ufw_allow_out_ports:
 
 ufw_add_incoming: false
 ubtu20cis_ufw_allow_in:
-    ports:
-        - 22
-    from:
-        - any
-    proto:
-        - tcp
+    - ports: 22
+      from: any
+      proto: tcp
 
 # Control 3.5.2.4
 # nftables is not supported in this role. Some tasks have the task commented out, this is one of them
@@ -602,7 +603,7 @@ ubtu20cis_sshd:
     macs: "hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256"
     kex_algorithms: "curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256"
     client_alive_interval: 300
-    client_alive_count_max: 0
+    client_alive_count_max: 3
     login_grace_time: 60
     max_sessions: 4
     # WARNING: make sure you understand the precedence when working with these values!!
@@ -669,10 +670,15 @@ ubtu20cis_ungrouped_group: root
 # true will give the group from ubtu20cis_un_owned_group to all ungrouped files/directories and false will skip
 ubtu20cis_no_group_adjust: true
 
-# Cotnrol 6.1.13
+# Control 6.1.13
 # ubtu20cis_suid_adjust is the toggle to remove the SUID bit from all files on all mounts
 # Set to true this role will remove that bit, set to false we will just warn about the files
 ubtu20cis_suid_adjust: false
+
+# Control 6.1.14
+# ubtu20cis_sgid_adjust is the toggle to remove the GUID bit from all files on all mounts
+# Set to true this role will remove that bit, set to false we will just warn about the files
+ubtu20cis_sgid_adjust: false
 
 # Control 6.2.5 Allow ansible to adjust world-writable files. False will just display world-writable files, True will remove world-writable
 # ubtu20cis_passwd_label: "{{ (this_item | default(item)).id }}: {{ (this_item | default(item)).dir }}"
@@ -711,13 +717,13 @@ audit_files_url: "some url maybe s3?"
 
 ## Goss configuration information
 # Where the goss configs and outputs are stored
-audit_out_dir: '/var/tmp'
+audit_out_dir: '/opt'
 # Where the goss audit configuration will be stored
 audit_conf_dir: "{{ audit_out_dir }}/{{ benchmark }}-Audit/"
 
 # If changed these can affect other products
-pre_audit_outfile: "{{ audit_out_dir }}/{{ ansible_hostname }}_pre_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
-post_audit_outfile: "{{ audit_out_dir }}/{{ ansible_hostname }}_post_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
+pre_audit_outfile: "{{ audit_out_dir }}/{{ ansible_hostname }}-{{ benchmark }}_pre_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
+post_audit_outfile: "{{ audit_out_dir }}/{{ ansible_hostname }}-{{ benchmark }}_post_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
 
 ## The following should not need changing
 audit_control_file: "{{ audit_conf_dir }}goss.yml"
