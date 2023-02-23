@@ -10,6 +10,7 @@
 
       - name: "1.5.1 | AUDIT | Ensure XD/NX support is enabled | Warn Count"
         ansible.builtin.import_tasks: warning_facts.yml
+        when: ubtu20cis_1_5_1_xdnx_status | length > 0
   vars:
       warn_control_id: '1.5.1'
   when:
