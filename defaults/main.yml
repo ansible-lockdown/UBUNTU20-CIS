@@ -13,7 +13,7 @@ ubtu20cis_section5_patch: true
 ubtu20cis_section6_patch: true
 
 # System will reboot if false, can give better audit results
-ubtu20_skip_reboot: true
+skip_reboot: true
 
 ## Benchmark name used by auditing control role
 # The audit variable found at the base
