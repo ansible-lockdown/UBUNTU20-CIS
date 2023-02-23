@@ -5,6 +5,8 @@
   changed_when: false
   failed_when: snap_pkg_mgr.rc not in [ 0, 1 ]
   register: snap_pkg_mgr
+  tags:
+      - rule_1.1.1.6
 
 - name: "PRELIM | Run apt update"
   ansible.builtin.package:
@@ -12,6 +14,9 @@
   when:
       - ubtu20cis_rule_1_3_1 or
         ubtu20cis_rule_1_9
+  tags:
+      - rule_1.3.1
+      - rule_1.9
 
 - name: "PRELIM | Check for autofs service"
   ansible.builtin.shell: "systemctl show autofs | grep LoadState | cut -d = -f 2"
@@ -21,7 +26,7 @@
   when:
       - ubtu20cis_rule_1_1_23
   tags:
-      - skip_ansible_lint
+      - rule_1.1.23
 
 - name: "PRELIM | Check for avahi-daemon service"
   ansible.builtin.shell: "systemctl show avahi-daemon | grep LoadState | cut -d = -f 2"
@@ -31,7 +36,7 @@
   when:
       - ubtu20cis_rule_2_1_3
   tags:
-      - skip_ansible_lint
+      - rule_2.1.3
 
 - name: "PRELIM | Install Network-Manager"
   ansible.builtin.package:
@@ -40,6 +45,8 @@
   when:
       - ubtu20cis_rule_3_1_2
       - not ubtu20cis_system_is_container
+  tags:
+      - rule_3.1.2
 
 - name: "PRELIM | Install ACL"
   ansible.builtin.package:
@@ -48,6 +55,14 @@
   when:
       - ubtu20cis_rule_6_2_6
       - ubtu20cis_install_network_manager
+  tags:
+      - rule_6.2.6
+
+- name: "PRELIM | Section 1.1 | Create list of mount points"
+  set_fact:
+      mount_names: "{{ ansible_mounts | map(attribute='mount') | list }}"
+  tags:
+      - always
 
 - name: "PRELIM | List users accounts"
   ansible.builtin.shell: "awk -F: '{print $1}' /etc/passwd"
@@ -58,3 +73,5 @@
       - ubtu20cis_rule_6_2_8 or
         ubtu20cis_rule_6_2_9 or
         ubtu20cis_rule_6_2_10
+  tags:
+      - always
