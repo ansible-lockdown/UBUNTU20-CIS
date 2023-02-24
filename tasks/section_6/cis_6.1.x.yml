@@ -372,7 +372,7 @@
                 - "Warning!!!! You have SGID executables"
                 - "The files are listed below, please review the integrity of these binaries"
                 - "{{ ubtu20cis_6_1_14_sgid_executables_flatten }}"
-        when: 
+        when:
             - ubtu20cis_6_1_14_sgid_executables_flatten | length > 0
             - not ubtu20cis_sgid_adjust
 

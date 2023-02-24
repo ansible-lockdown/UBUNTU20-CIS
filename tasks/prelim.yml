@@ -59,7 +59,7 @@
       - rule_6.2.6
 
 - name: "PRELIM | Section 1.1 | Create list of mount points"
-  set_fact:
+  ansible.builtin.set_fact:
       mount_names: "{{ ansible_mounts | map(attribute='mount') | list }}"
   tags:
       - always
