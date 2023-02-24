@@ -1,4 +1,23 @@
 ---
+
+- name: remount tmp
+  ansible.posix.mount:
+      name: /tmp
+      src: /tmp
+      state: remounted
+
+- name: remount dev_shm
+  ansible.posix.mount:
+      name: /dev/shm
+      src: /dev/shm
+      state: remounted
+
+- name: remount var_tmp
+  ansible.posix.mount:
+      name: /var/tmp
+      src: "{{ ubtu20cis_vartmp['source'] }}"
+      state: remounted
+
 - name: grub update
   ansible.builtin.shell: update-grub
   notify: change_requires_reboot
