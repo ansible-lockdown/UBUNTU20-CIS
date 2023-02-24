@@ -118,12 +118,13 @@
             state: absent
 
       - name: "5.1.8 | PATCH | Ensure at/cron is restricted to authorized users | Create cron.allow"
-        ansible.builtin.file:
-            path: /etc/cron.allow
+        ansible.builtin.copy:
+            content: ""
+            dest: /etc/cron.allow
+            force: false
             owner: root
             group: root
             mode: 0640
-            state: touch
   when:
       - ubtu20cis_rule_5_1_8
   tags:
@@ -142,12 +143,13 @@
             state: absent
 
       - name: "5.1.9 | PATCH | Ensure at is restricted to authorized users | Create at.allow"
-        ansible.builtin.file:
-            path: /etc/at.allow
+        ansible.builtin.copy:
+            content: ""
+            dest: /etc/at.allow
+            force: false
             owner: root
             group: root
             mode: 0640
-            state: touch
   when:
       - ubtu20cis_rule_5_1_9
   tags:
