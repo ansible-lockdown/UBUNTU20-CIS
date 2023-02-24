@@ -430,6 +430,8 @@ ubtu20cis_aide_cron:
 ubtu20cis_grub_user_file: /etc/grub.d/40_custom
 ubtu20cis_grub_users: root
 ubtu20cis_grub_pw: "grub.pbkdf2.sha512.10000.ChangeMe"
+# Change the following value to true if you wish to be prompted to get past grub bootloader
+ubtu20cis_ask_passwd_to_boot: false
 
 # 1.4.4
 # note this needs to be in the encrypted format
