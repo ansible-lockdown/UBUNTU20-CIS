@@ -24,9 +24,10 @@
   ansible.posix.mount:
       name: /tmp
       src: /tmp
-      state: remounted
+      state: present
       fstype: tmpfs
       opts: "{{ ubtu20cis_tmp_fstab_options }}"
+  notify: remount tmp
   when:
       - ubtu20cis_rule_1_1_3 or
         ubtu20cis_rule_1_1_4 or
@@ -66,9 +67,10 @@
   ansible.posix.mount:
       name: /dev/shm
       src: /dev/shm
-      state: remounted
+      state: present
       fstype: tmpfs
       opts: "{{ ubtu20cis_dev_shm_fstab_options }}"
+  notify: remount dev_shm
   when:
       - ubtu20cis_rule_1_1_7 or
         ubtu20cis_rule_1_1_8 or
@@ -141,6 +143,7 @@
       state: present
       fstype: "{{ ubtu20cis_vartmp['fstype'] }}"
       opts: "{{ ubtu20cis_vartmp['opts'] }}"
+  notify: remount var_tmp
   when:
       - ubtu20cis_rule_1_1_12 or
         ubtu20cis_rule_1_1_13 or
@@ -290,10 +293,18 @@
       - removable_media
 
 - name: "1.1.22 | PATCH | Ensure sticky bit is set on all world-writable directories"
-  ansible.builtin.shell: df --local -P | awk '{if (NR!=1) print $6}' | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null | xargs -I '{}' chmod a+t '{}'
-  failed_when: ubtu20cis_1_1_22_status.rc>0
-  check_mode: false
-  register: ubtu20cis_1_1_22_status
+  block:
+      - name: "1.1.22 | PATCH | Ensure sticky bit is set on all world-writable directories"
+        ansible.builtin.shell: df --local -P | awk '{if (NR!=1) print $6}' | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null
+        changed_when: false
+        register: ubtu20cis_1_1_22_sticky
+
+      - name: "1.1.22 | PATCH | Ensure sticky bit is set on all world-writable directories"
+        ansible.builtin.shell: df --local -P | awk '{if (NR!=1) print $6}' | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null | xargs -I '{}' chmod a+t '{}'
+        failed_when: ubtu20cis_1_1_22_status.rc > 0
+        check_mode: false
+        register: ubtu20cis_1_1_22_status
+        when: ubtu20cis_1_1_22_sticky.stdout | length > 0
   when:
       - ubtu20cis_rule_1_1_22
   tags:
