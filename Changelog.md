@@ -13,6 +13,8 @@
 - Warnings made standard
 - warn count feature added
 - workflow updates
+- wireless interface discovery
+- idempotency checks and updates
 
 reboot variable changed from ubtu20_skip_reboot to skip_reboot (still default true)
 
@@ -20,7 +22,7 @@ reboot variable changed from ubtu20_skip_reboot to skip_reboot (still default tr
 
 ### Issues and PRs address
 
-- #1 set bootloader pwd
+- #1 set bootloader pwd - Allowed unrestricted by default but set new variables
 - #2 Ensure locks for failed attempts
 - #3 root path integrity
 - thanks to @vbotka
