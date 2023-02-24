@@ -1,5 +1,8 @@
 ---
-- name: "SECTION | 1.1 | Disable Unused Filesystems"
+- name: "SECTION | 1.1.1 | Disable Unused Filesystems"
+  ansible.builtin.import_tasks: cis_1.1.1.x.yml
+
+- name: "SECTION | 1.1 | Configure mounts and Filesystems"
   ansible.builtin.import_tasks: cis_1.1.x.yml
 
 - name: "SECTION | 1.2 | Cofnigure Software Updates"
