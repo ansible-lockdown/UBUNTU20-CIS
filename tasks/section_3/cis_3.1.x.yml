@@ -42,25 +42,35 @@
 
 - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled"
   block:
-      - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Check for network-manager tool"
-        ansible.builtin.shell: dpkg -l | grep network-manager
+      - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Check for wifi status "
+        ansible.builtin.shell: nmcli radio wifi
         changed_when: false
         failed_when: false
         check_mode: false
-        register: ubtu20cis_3_1_2_network_manager_status
+        register: ubtu20cis_3_1_2_wifi_status
+        when:
+            - ubtu20cis_install_network_manager
 
-      - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Disable wireless if network-manager installed"
+      - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Disable wireless if enabled nmcli"
         ansible.builtin.shell: nmcli radio all off
         changed_when: ubtu20cis_3_1_2_nmcli_radio_off.rc == 0
         register: ubtu20cis_3_1_2_nmcli_radio_off
-        when: ubtu20cis_3_1_2_network_manager_status.stdout | length > 0
+        when:
+            - ubtu20cis_install_network_manager
+            - ubtu20cis_3_1_2_wifi_status.stdout == 'enabled'
 
-      - name: "3.1.2 | AUDIT | Ensure wireless interfaces are disabled | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
-  vars:
-      warn_control_id: '3.1.2'
+      - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | disable driver"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/disable_wireless.conf
+            regexp: 'install\s*{{ item }}\s*/bin/true'
+            line: "install {{ item.line }} /bin/true"
+            create: true
+        loop:
+            - "{{ wireless_interfaces.stdout_lines }}"
+
   when:
       - ubtu20cis_rule_3_1_2
+      - wireless_interfaces.stdout | length > 0
   tags:
       - level1-server
       - level2-workstation
