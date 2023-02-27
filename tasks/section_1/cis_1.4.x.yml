@@ -32,6 +32,7 @@
             regexp: "{{ item.regexp }}"
             line: "{{ item.line }}"
             insertafter: "{{ item.after | default(omit) }}"
+        no_log: true
         loop:
             - { regexp: '^set superusers=', line: 'set superusers="{{ ubtu20cis_grub_users }}"' }
             - { regexp: '^password_pbkdf2', line: 'password_pbkdf2 {{ ubtu20cis_grub_users }} {{ ubtu20cis_grub_pw }}', after: '^set superusers=' }
@@ -39,7 +40,7 @@
       - name: "1.4.2 | PATCH | Ensure bootloader password is set | allow unrestricted boot"
         ansible.builtin.lineinfile:
             path: "/etc/grub.d/10_linux"
-            regexp: '(^CLASS=".*) --unrestricted"$'
+            regexp: '(^CLASS="--class gnu-linux --class gnu --class os).*"$'
             line: '\g<1> --unrestricted"'
             backrefs: true
         when: not ubtu20cis_ask_passwd_to_boot
