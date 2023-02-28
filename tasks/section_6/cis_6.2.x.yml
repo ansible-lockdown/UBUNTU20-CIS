@@ -386,10 +386,6 @@
                 - "The following paths have colon end: {{ ubtu20cis_rule_6_2_12_path_colon_end.stdout_lines }}"
                 - "The following paths have a dot in the path: {{ ubtu20cis_rule_6_2_12_dot_in_path.stdout_lines }}"
 
-      - name: "6.2.12 | AUDIT | Ensure root PATH Integrity | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
-        when: ubtu20cis_rule_6_2_12_dot_in_path.stdout | length > 0
-
       - name: "6.2.12 | PATCH | Ensure root PATH Integrity | Determine rights and owner"
         ansible.builtin.file: >
           path='{{ item }}'
@@ -398,8 +394,12 @@
           owner=root
           mode='o-w,g-w'
         with_items: "{{ ubtu20cis_rule_6_2_12_dot_in_path.stdout_lines }}"
-  vars:
-      warn_control_id: '6.2.12'
+
+      - name: "6.2.12 | AUDIT | Ensure root PATH Integrity | Warn Count"
+        ansible.builtin.import_tasks: warning_facts.yml
+        when: ubtu20cis_rule_6_2_12_dot_in_path.stdout | length > 0
+        vars:
+            warn_control_id: '6.2.12'
   when:
       - ubtu20cis_rule_6_2_12
   tags:
@@ -421,16 +421,16 @@
         check_mode: false
         register: ubtu20cis_6_2_13_user_uid_check
 
+      - name: "6.2.13 | AUDIT | Ensure no duplicate UIDs exist | Warn Count"
+        ansible.builtin.import_tasks: warning_facts.yml
+        when: ubtu20cis_6_2_13_user_uid_check.stdout | length > 0
+
       - name: "6.2.13 | AUDIT | Ensure no duplicate UIDs exist | Print warning about users with duplicate UIDs"
         ansible.builtin.debug:
             msg: "Warning!! The following users have UIDs that are duplicates: {{ ubtu20cis_6_2_13_user_uid_check.stdout_lines }}"
         when: ubtu20cis_6_2_13_user_uid_check.stdout | length > 0
-
-      - name: "6.2.13 | AUDIT | Ensure no duplicate UIDs exist | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
-        when: ubtu20cis_6_2_13_user_uid_check.stdout | length > 0
-  vars:
-      warn_control_id: '6.2.13'
+        vars:
+            warn_control_id: '6.2.13'
   when:
       - ubtu20cis_rule_6_2_13
   tags:
@@ -458,8 +458,8 @@
       - name: "6.2.14 | AUDIT | Ensure no duplicate GIDs exist | Warn Count"
         ansible.builtin.import_tasks: warning_facts.yml
         when: ubtu20cis_6_2_14_user_user_check.stdout | length > 0
-  vars:
-      warn_control_id: '6.2.14'
+        vars:
+            warn_control_id: '6.2.14'
   when:
       - ubtu20cis_rule_6_2_14
   tags:
@@ -487,8 +487,8 @@
       - name: "6.2.15 | AUDIT | Ensure no duplicate user names exist | Warn Count"
         ansible.builtin.import_tasks: warning_facts.yml
         when: ubtu20cis_6_2_15_user_username_check.stdout | length > 0
-  vars:
-      warn_control_id: '6.2.15'
+        vars:
+            warn_control_id: '6.2.15'
   when:
       - ubtu20cis_rule_6_2_15
   tags:
@@ -516,8 +516,8 @@
       - name: "6.2.16 | AUDIT | Ensure no duplicate group names exist | Warn Count"
         ansible.builtin.import_tasks: warning_facts.yml
         when: ubtu20cis_6_2_16_group_group_check.stdout | length > 0
-  vars:
-      warn_control_id: '6.2.16'
+        vars:
+            warn_control_id: '6.2.16'
   when:
       - ubtu20cis_rule_6_2_16
   tags:
@@ -556,8 +556,8 @@
       - name: "6.2.17 | AUDIT | Ensure shadow group is empty | Warn Count"
         ansible.builtin.import_tasks: warning_facts.yml
         when: ubtu20cis_6_2_17_users_shadow_gid.stdout | length > 0
-  vars:
-      warn_control_id: '6.2.17'
+        vars:
+            warn_control_id: '6.2.17'
   when:
       - ubtu20cis_rule_6_2_17
   tags:
