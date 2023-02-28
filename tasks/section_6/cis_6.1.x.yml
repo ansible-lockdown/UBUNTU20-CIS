@@ -214,12 +214,6 @@
             - not ubtu20cis_no_owner_adjust
             - ubtu20cis_6_1_11_no_user_items_flatten | length > 0
 
-      - name: "6.1.11 | AUDIT | Ensure no unowned files or directories exist | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
-        when:
-            - not ubtu20cis_no_owner_adjust
-            - ubtu20cis_6_1_11_no_user_items_flatten | length > 0
-
       - name: "6.1.11 | PATCH | Ensure no unowned files or directories exist | Set unowned files/directories to configured owner"
         ansible.builtin.file:
             path: "{{ item }}"
@@ -229,8 +223,14 @@
         when:
             - ubtu20cis_no_owner_adjust
             - ubtu20cis_6_1_11_no_user_items_flatten | length > 0
-  vars:
-      warn_control_id: '6.1.11'
+      
+      - name: "6.1.11 | AUDIT | Ensure no unowned files or directories exist | Warn Count"
+        ansible.builtin.import_tasks: warning_facts.yml
+        when:
+            - not ubtu20cis_no_owner_adjust
+            - ubtu20cis_6_1_11_no_user_items_flatten | length > 0
+        vars:
+            warn_control_id: '6.1.11'
   when:
       - ubtu20cis_rule_6_1_11
   tags:
@@ -268,12 +268,6 @@
             - not ubtu20cis_no_group_adjust
             - ubtu20cis_6_1_12_ungrouped_items_flatten | length > 0
 
-      - name: "6.1.12 | AUDIT | Ensure no ungrouped files or directories exist | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
-        when:
-            - not ubtu20cis_no_group_adjust
-            - ubtu20cis_6_1_12_ungrouped_items_flatten | length > 0
-
       - name: "6.1.12 | PATCH | Ensure no ungrouped files or directories exist | Set ungrouped files/directories to configured group"
         ansible.builtin.file:
             path: "{{ item }}"
@@ -283,8 +277,15 @@
         when:
             - ubtu20cis_no_group_adjust
             - ubtu20cis_6_1_12_ungrouped_items_flatten | length > 0
-  vars:
-      warn_control_id: '6.1.12'
+
+      
+      - name: "6.1.12 | AUDIT | Ensure no ungrouped files or directories exist | Warn Count"
+        ansible.builtin.import_tasks: warning_facts.yml
+        when:
+            - not ubtu20cis_no_group_adjust
+            - ubtu20cis_6_1_12_ungrouped_items_flatten | length > 0
+        vars:
+            warn_control_id: '6.1.12'
   when:
       - ubtu20cis_rule_6_1_12
   tags:
@@ -322,12 +323,6 @@
             - ubtu20cis_6_1_13_suid_executables_flatten | length > 0
             - not ubtu20cis_suid_adjust
 
-      - name: "6.1.13 | AUDIT | Audit SUID executables | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
-        when:
-            - ubtu20cis_6_1_13_suid_executables_flatten | length > 0
-            - not ubtu20cis_suid_adjust
-
       - name: "6.1.13 | PATCH | Audit SUID executables | Remove SUID bit"
         ansible.builtin.file:
             path: "{{ item }}"
@@ -337,8 +332,14 @@
         when:
             - ubtu20cis_suid_adjust
             - ubtu20cis_6_1_13_suid_executables_flatten | length > 0
-  vars:
-      warn_control_id: '6.1.13'
+
+      - name: "6.1.13 | AUDIT | Audit SUID executables | Warn Count"
+        ansible.builtin.import_tasks: warning_facts.yml
+        when:
+            - ubtu20cis_6_1_13_suid_executables_flatten | length > 0
+            - not ubtu20cis_suid_adjust
+        vars:
+            warn_control_id: '6.1.13'
   when:
       - ubtu20cis_rule_6_1_13
   tags:
