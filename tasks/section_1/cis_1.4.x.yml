@@ -47,6 +47,7 @@
   notify: grub update
   when:
       - ubtu20cis_rule_1_4_2
+      - ubtu20cis_set_grub_password
   tags:
       - level1-server
       - level1-workstation
@@ -88,6 +89,7 @@
       password: "{{ ubtu20cis_root_pw }}"
   when:
       - ubtu20cis_rule_1_4_4
+      - ubtu20cis_set_root_password
   tags:
       - level1-server
       - level1-workstation

@@ -23,6 +23,8 @@ reboot variable changed from ubtu20_skip_reboot to skip_reboot (still default tr
 ### Issues and PRs address
 
 - #1 set bootloader pwd - Allowed unrestricted by default but set new variables
+  - Added extra variable options ubtu20cis_set_grub_password and ubtu20cis_set_root_password (defaults true)
+
 - #2 Ensure locks for failed attempts
 - #3 root path integrity
 - thanks to @vbotka

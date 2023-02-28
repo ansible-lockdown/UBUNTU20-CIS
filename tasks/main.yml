@@ -21,7 +21,9 @@
           - '"ChangeMe" not in ubtu20cis_grub_pw'
           - '"grub.pbkdf2.sha512.1000" in ubtu20cis_grub_pw'
       fail_msg: "The default grub password has not been changed"
-  when: ubtu20cis_rule_1_4_2
+  when:
+  - ubtu20cis_set_grub_password
+  - ubtu20cis_rule_1_4_2
 
 - name: Ensure root password has been changed
   ansible.builtin.assert:
@@ -29,7 +31,9 @@
           - '"$6$this_is_needs_to_be_changed" not in ubtu20cis_root_pw'
           - '"$6$" in ubtu20cis_root_pw'
       fail_msg: "The root password set does not pass checks"
-  when: ubtu20cis_rule_1_4_4
+  when:
+      - ubtu20cis_set_root_password
+      - ubtu20cis_rule_1_4_4
 
 - name: Import preliminary tasks
   ansible.builtin.import_tasks: prelim.yml
