@@ -452,7 +452,7 @@
 
       - name: "6.2.14 | AUDIT | Ensure no duplicate GIDs exist | Print warning about users with duplicate GIDs"
         ansible.builtin.debug:
-            msg: "Warning: The following groups have duplicate GIDs: {{ ubtu20cis_6_2_14_user_user_check.stdout_lines }}"
+            msg: "Warning!! The following groups have duplicate GIDs: {{ ubtu20cis_6_2_14_user_user_check.stdout_lines }}"
         when: ubtu20cis_6_2_14_user_user_check.stdout | length > 0
 
       - name: "6.2.14 | AUDIT | Ensure no duplicate GIDs exist | Warn Count"
@@ -481,7 +481,7 @@
 
       - name: "6.2.15 | AUDIT | Ensure no duplicate user names exist | Print warning about users with duplicate User Names"
         ansible.builtin.debug:
-            msg: "Warning: The following user names are duplicates: {{ ubtu20cis_6_2_15_user_username_check.stdout_lines }}"
+            msg: "Warning!! The following user names are duplicates: {{ ubtu20cis_6_2_15_user_username_check.stdout_lines }}"
         when: ubtu20cis_6_2_15_user_username_check.stdout | length > 0
 
       - name: "6.2.15 | AUDIT | Ensure no duplicate user names exist | Warn Count"
@@ -510,7 +510,7 @@
 
       - name: "6.2.16 | AUDIT | Ensure no duplicate group names exist | Print warning about users with duplicate group names"
         ansible.builtin.debug:
-            msg: "Warning: The following group names are duplicates: {{ ubtu20cis_6_2_16_group_group_check.stdout_lines }}"
+            msg: "Warning!! The following group names are duplicates: {{ ubtu20cis_6_2_16_group_group_check.stdout_lines }}"
         when: ubtu20cis_6_2_16_group_group_check.stdout | length > 0
 
       - name: "6.2.16 | AUDIT | Ensure no duplicate group names exist | Warn Count"
