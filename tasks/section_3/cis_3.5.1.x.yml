@@ -136,7 +136,7 @@
       - name: "3.5.1.6 | AUDIT | Ensure ufw firewall rules exist for all open ports | Message out settings"
         ansible.builtin.debug:
             msg:
-                - "Warning!!!! Below are the listening ports and firewall rules"
+                - "Warning!! Below are the listening ports and firewall rules"
                 - "Please create firewall rule for any open ports if not already done"
                 - "*****---Open Listen Ports---*****"
                 - "{{ ubtu20cis_3_5_1_6_open_listen_ports.stdout_lines }}"

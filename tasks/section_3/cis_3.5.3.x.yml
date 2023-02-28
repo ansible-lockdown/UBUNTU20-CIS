@@ -174,7 +174,7 @@
       - name: "3.5.3.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Alert about settings"
         ansible.builtin.debug:
             msg:
-                - "Warning!!!! Below is the list the open ports and current rules"
+                - "Warning!! Below is the list the open ports and current rules"
                 - "Please create a rule for any open port that does not have a current rule"
                 - "Open Ports:"
                 - "{{ ubtu20cis_3_5_3_2_4_open_ports.stdout_lines }}"
@@ -319,7 +319,7 @@
       - name: "3.5.3.3.4 | AUDIT | Ensure ip6tables firewall rules exist for all open ports | Alert about settings"
         ansible.builtin.debug:
             msg:
-                - "Warning!!!! Below is the list the open ports and current rules"
+                - "Warning!! Below is the list the open ports and current rules"
                 - "Please create a rule for any open port that does not have a current rule"
                 - "Open Ports:"
                 - "{{ ubtu20cis_3_5_3_3_4_open_ports.stdout_lines }}"
