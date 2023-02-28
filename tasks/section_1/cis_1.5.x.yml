@@ -2,15 +2,20 @@
 - name: "1.5.1 | AUDIT | Ensure XD/NX support is enabled"
   block:
       - name: "1.5.1 | AUDIT | Ensure XD/NX support is enabled | Find status of XD/NX"
-        ansible.builtin.shell: 'grep -iRw "NX (Execute Disable) protection: active"  /var/log/syslog'
+        ansible.builtin.shell: 'dmesg | grep -w "NX (Execute Disable) protection: active"'
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_1_5_1_xdnx_status
 
+      - name: "1.5.1 | AUDIT | Ensure XD/NX support is enabled | Alert if XD/NX is not enabled"
+        debug:
+            msg: "Warning!! You do not have XD/NX (Execute Disable/No Execute) enabled"
+        when: ubtu20cis_1_5_1_xdnx_status | length == 0
+
       - name: "1.5.1 | AUDIT | Ensure XD/NX support is enabled | Warn Count"
         ansible.builtin.import_tasks: warning_facts.yml
-        when: ubtu20cis_1_5_1_xdnx_status | length > 0
+        when: ubtu20cis_1_5_1_xdnx_status | length == 0
   vars:
       warn_control_id: '1.5.1'
   when:
