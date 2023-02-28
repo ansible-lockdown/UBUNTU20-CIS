@@ -10,7 +10,7 @@
 
       - name: "1.9 | PATCH | Ensure updates, patches, and additional security software are installed | update package facts"  # noqa no-handler
         ansible.builtin.package_facts:
-        manager: auto
+            manager: auto
         when:
             - server_patched.changed
   when:
