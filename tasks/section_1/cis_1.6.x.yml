@@ -28,6 +28,7 @@
             regexp: '^GRUB_CMDLINE_LINUX'
             line: 'GRUB_CMDLINE_LINUX="apparmor=1 security=apparmor {{ ubtu20cis_1_6_1_2_cmdline_settings.stdout }}"'
             insertafter: '^GRUB_'
+        notify: grub update
         when:
             - "'apparmor' not in ubtu20cis_1_6_1_2_cmdline_settings.stdout"
             - "'security' not in ubtu20cis_1_6_1_2_cmdline_settings.stdout"
@@ -43,7 +44,7 @@
         when:
             - "'apparmor' in ubtu20cis_1_6_1_2_cmdline_settings.stdout"
             - "'security' in ubtu20cis_1_6_1_2_cmdline_settings.stdout"
-  notify: grub update
+        notify: grub update
   when:
       - ubtu20cis_rule_1_6_1_2
   tags:
@@ -63,9 +64,14 @@
         failed_when: false
         register: ubtu20cis_rule_1_6_1_3_apparmor_unconfined
 
+      - name: "1.6.1.3 | PATCH | Ensure all AppArmor Profiles are in enforce or complain mode | Warning"
+        ansible.builtin.debug:
+            msg: "Warning!! AppArmor mode needs to be confirmed | Any unconfined processes may need to have a profile created"
+        when: ubtu20cis_rule_1_6_1_3_apparmor_unconfined.stdout != '0'
+
       - name: "1.6.1.3 | PATCH | Ensure all AppArmor Profiles are in enforce or complain mode | Warn Count"
         ansible.builtin.import_tasks: warning_facts.yml
-        when: (ubtu20cis_rule_1_6_1_3_apparmor_unconfined.stdout | int) > 0
+        when: ubtu20cis_rule_1_6_1_3_apparmor_unconfined.stdout != '0'
   vars:
       warn_control_id: '1.6.1.3'
   when:
