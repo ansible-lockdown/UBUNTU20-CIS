@@ -9,7 +9,7 @@
         register: ubtu20cis_1_5_1_xdnx_status
 
       - name: "1.5.1 | AUDIT | Ensure XD/NX support is enabled | Alert if XD/NX is not enabled"
-        debug:
+        ansible.builtin.debug:
             msg: "Warning!! You do not have XD/NX (Execute Disable/No Execute) enabled"
         when: ubtu20cis_1_5_1_xdnx_status | length == 0
 

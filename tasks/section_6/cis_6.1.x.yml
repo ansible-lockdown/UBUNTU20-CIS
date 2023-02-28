@@ -223,7 +223,7 @@
         when:
             - ubtu20cis_no_owner_adjust
             - ubtu20cis_6_1_11_no_user_items_flatten | length > 0
-      
+
       - name: "6.1.11 | AUDIT | Ensure no unowned files or directories exist | Warn Count"
         ansible.builtin.import_tasks: warning_facts.yml
         when:
@@ -278,7 +278,6 @@
             - ubtu20cis_no_group_adjust
             - ubtu20cis_6_1_12_ungrouped_items_flatten | length > 0
 
-      
       - name: "6.1.12 | AUDIT | Ensure no ungrouped files or directories exist | Warn Count"
         ansible.builtin.import_tasks: warning_facts.yml
         when:

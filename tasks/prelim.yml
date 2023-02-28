@@ -72,7 +72,6 @@
       state: present
   when:
       - ubtu20cis_rule_6_2_6
-      
   tags:
       - rule_6.2.6
       - section6
