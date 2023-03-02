@@ -61,43 +61,48 @@
 
 - name: Include section 1 patches
   ansible.builtin.import_tasks: section_1/main.yml
-  when: ubtu20cis_section1_patch
+  when:
+      - ubtu20cis_section1_patch
   tags:
       - section1
 
 - name: Include section 2 patches
   ansible.builtin.import_tasks: section_2/main.yml
-  when: ubtu20cis_section2_patch
+  when:
+      - ubtu20cis_section2_patch
   tags:
       - section2
 
 - name: Include section 3 patches
   ansible.builtin.import_tasks: section_3/main.yml
-  when: ubtu20cis_section3_patch
+  when:
+      - ubtu20cis_section3_patch
   tags:
       - section3
 
 - name: Include section 4 patches
   ansible.builtin.import_tasks: section_4/main.yml
-  when: ubtu20cis_section4_patch
+  when:
+      - ubtu20cis_section4_patch
   tags:
       - section4
 
 - name: Include section 5 patches
   ansible.builtin.import_tasks: section_5/main.yml
-  when: ubtu20cis_section5_patch
+  when:
+      - ubtu20cis_section5_patch
   tags:
       - section5
 
 - name: Include section 6 patches
   ansible.builtin.import_tasks: section_6/main.yml
-  when: ubtu20cis_section6_patch
+  when:
+      - ubtu20cis_section6_patch
   tags:
       - section6
 
 - name: flush handlers
   ansible.builtin.meta: flush_handlers
-
 
 - name: reboot system
   block:
