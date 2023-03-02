@@ -53,6 +53,7 @@
             chain: INPUT
             in_interface: lo
             jump: ACCEPT
+        notify: persistent ip4tables
 
       - name: "3.5.3.2.1 | PATCH | Ensure iptables loopback traffic is configured | OUTPUT loopback ACCEPT"
         ansible.builtin.iptables:
@@ -60,6 +61,7 @@
             chain: OUTPUT
             out_interface: lo
             jump: ACCEPT
+        notify: persistent ip4tables
 
       - name: "3.5.3.2.1 | PATCH | Ensure iptables loopback traffic is configured | OUTPUT loopback ACCEPT"
         ansible.builtin.iptables:
@@ -67,7 +69,7 @@
             chain: INPUT
             source: 127.0.0.0/8
             jump: DROP
-  notify: persistent ip4tables
+        notify: persistent ip4tables
   when:
       - ubtu20cis_rule_3_5_3_2_1
       - ubtu20cis_firewall_package == "iptables"
@@ -117,6 +119,7 @@
             destination_port: 22
             jump: ACCEPT
             ctstate: 'NEW,ESTABLISHED'
+        notify: persistent ip4tables
 
       - name: "3.5.3.2.3 | PATCH | Ensure iptables default deny firewall policy | Configure SSH to be allowed out"
         ansible.builtin.iptables:
@@ -125,12 +128,14 @@
             source_port: 22
             jump: ACCEPT
             ctstate: 'NEW,ESTABLISHED'
+        notify: persistent ip4tables
 
       - name: "3.5.3.2.3 | PATCH | Ensure iptables default deny firewall policy | Enable apt traffic"
         ansible.builtin.iptables:
             chain: INPUT
             ctstate: 'ESTABLISHED'
             jump: ACCEPT
+        notify: persistent ip4tables
 
       - name: "3.5.3.2.3 | PATCH | Ensure iptables default deny firewall policy | Set drop items"
         ansible.builtin.iptables:
@@ -140,7 +145,7 @@
             - INPUT
             - FORWARD
             - OUTPUT
-  notify: persistent ip4tables
+        notify: persistent ip4tables
   when:
       - ubtu20cis_rule_3_5_3_2_3
       - ubtu20cis_firewall_package == "iptables"
@@ -163,6 +168,7 @@
         failed_when: false
         check_mode: false
         register: ubtu20cis_3_5_3_2_4_open_ports
+        notify: persistent ip4tables
 
       - name: "3.5.3.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Get list of rules"
         ansible.builtin.shell: iptables -L INPUT -v -n
@@ -170,6 +176,7 @@
         failed_when: false
         check_mode: false
         register: ubtu20cis_3_5_3_2_4_current_rules
+        notify: persistent ip4tables
 
       - name: "3.5.3.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Alert about settings"
         ansible.builtin.debug:
@@ -180,7 +187,7 @@
                 - "{{ ubtu20cis_3_5_3_2_4_open_ports.stdout_lines }}"
                 - "Current Rules:"
                 - "{{ ubtu20cis_3_5_3_2_4_current_rules.stdout_lines }}"
-  notify: persistent ip4tables
+        notify: persistent ip4tables
   when:
       - ubtu20cis_rule_3_5_3_2_4
       - ubtu20cis_firewall_package == "iptables"
