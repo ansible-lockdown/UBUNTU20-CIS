@@ -1,14 +1,14 @@
 ---
-- name: "AUTOMATED | 1.4.1 | PATCH | Ensure permissions on bootloader config are not overridden"
+- name: "1.4.1 | PATCH | Ensure permissions on bootloader config are not overridden"
   block:
-      - name: "AUTOMATED | 1.4.1 | PATCH | Ensure permissions on bootloader config are not overridden | Change chmod setting"
-        replace:
+      - name: "1.4.1 | PATCH | Ensure permissions on bootloader config are not overridden | Change chmod setting"
+        ansible.builtin.replace:
             path: /usr/sbin/grub-mkconfig
             regexp: 'chmod\s\d\d\d\s\${grub_cfg}.new'
             replace: 'chmod 400 ${grub_cfg}.new'
 
-      - name: "AUTOMATED | 1.4.1 | PATCH | Ensure permissions on bootloader config are not overridden | Remove check on password"
-        lineinfile:
+      - name: "1.4.1 | PATCH | Ensure permissions on bootloader config are not overridden | Remove check on password"
+        ansible.builtin.lineinfile:
             path: /usr/sbin/grub-mkconfig
             regexp: 'if \[ \"x\$\{grub_cfg\}\" != "x" \] && ! grep "\^password" \${grub_cfg}.new'
             line: if [ "x${grub_cfg}" != "x" ]; then
@@ -22,20 +22,33 @@
       - rule_1.4.1
       - grub
 
-# ---------------
-# ---------------
-# The RHEL7 based control uses a custom module, grub_crypt
-# I need to research best way to set grub pw for Ubuntu using the
-# grub-mkpasswd-pbkdf2 command and passing the data at the same time.
-# ---------------
-# ---------------
-- name: "AUTOMATED | 1.4.2 | PATCH | Ensure bootloader password is set"
-  command: /bin/true
-  changed_when: false
-  failed_when: false
-  check_mode: false
+# Variables listed in 1.4.2 will need to be set for your environment
+
+- name: "1.4.2 | PATCH | Ensure bootloader password is set"
+  block:
+      - name: "1.4.2 | PATCH | Ensure bootloader password is set | set boot password"
+        ansible.builtin.lineinfile:
+            path: "{{ ubtu20cis_grub_user_file}}"
+            regexp: "{{ item.regexp }}"
+            line: "{{ item.line }}"
+            insertafter: "{{ item.insertafter | default(omit) }}"
+        no_log: true
+        loop:
+            - { regexp: '^set superusers=', line: 'set superusers="{{ ubtu20cis_grub_users }}"' }
+            - { regexp: '^password_pbkdf2', line: 'password_pbkdf2 {{ ubtu20cis_grub_users }} {{ ubtu20cis_grub_pw }}', insertafter: '^set superusers=' }
+        notify: grub update
+
+      - name: "1.4.2 | PATCH | Ensure bootloader password is set | allow unrestricted boot"
+        ansible.builtin.lineinfile:
+            path: "/etc/grub.d/10_linux"
+            regexp: '(^CLASS="--class gnu-linux --class gnu --class os).*"$'
+            line: '\g<1> --unrestricted"'
+            backrefs: true
+        when: not ubtu20cis_ask_passwd_to_boot
+        notify: grub update
   when:
       - ubtu20cis_rule_1_4_2
+      - ubtu20cis_set_grub_password
   tags:
       - level1-server
       - level1-workstation
@@ -43,18 +56,17 @@
       - patch
       - rule_1.4.2
       - grub
-      - notimplemented
 
-- name: "AUTOMATED | 1.4.3 | PATCH | Ensure permissions on bootloader config are configured"
+- name: "1.4.3 | PATCH | Ensure permissions on bootloader config are configured"
   block:
-      - name: "AUTOMATED | 1.4.3 | AUDIT | Ensure permissions on bootloader config are configured | Check for Grub file"
-        stat:
+      - name: "1.4.3 | AUDIT | Ensure permissions on bootloader config are configured | Check for Grub file"
+        ansible.builtin.stat:
             path: /boot/grub/grub.cfg
         check_mode: false
         register: ubtu20cis_1_4_3_grub_cfg_status
 
-      - name: "AUTOMATED | 1.4.3 | PATCH | Ensure permissions on bootloader config are configured | Set permissions"
-        file:
+      - name: "1.4.3 | PATCH | Ensure permissions on bootloader config are configured | Set permissions"
+        ansible.builtin.file:
             path: /boot/grub/grub.cfg
             owner: root
             group: root
@@ -71,12 +83,14 @@
       - rule_1.4.3
       - grub
 
-- name: "AUTOMATED | 1.4.4 | PATCH | Ensure authentication required for single user mode"
-  user:
+# The following needs to be set ensure this is in the encrypted form.
+- name: "1.4.4 | PATCH | Ensure authentication required for single user mode"
+  ansible.builtin.user:
       name: root
       password: "{{ ubtu20cis_root_pw }}"
   when:
       - ubtu20cis_rule_1_4_4
+      - ubtu20cis_set_root_password
   tags:
       - level1-server
       - level1-workstation

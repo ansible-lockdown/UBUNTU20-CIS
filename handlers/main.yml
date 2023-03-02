@@ -1,42 +1,85 @@
 ---
+
+- name: remount tmp
+  ansible.posix.mount:
+      name: /tmp
+      src: /tmp
+      state: remounted
+
+- name: remount dev_shm
+  ansible.posix.mount:
+      name: /dev/shm
+      src: /dev/shm
+      state: remounted
+
+- name: remount var_tmp
+  ansible.posix.mount:
+      name: /var/tmp
+      src: "{{ ubtu20cis_vartmp['source'] }}"
+      state: remounted
+
 - name: grub update
-  command: update-grub
+  ansible.builtin.shell: update-grub
+  notify: change_requires_reboot
   failed_when: false
 
 - name: reload gdm3
-  command: dpkg-reconfigure gdm3
+  ansible.builtin.shell: dpkg-reconfigure gdm3
   failed_when: false
 
 - name: restart postfix
-  service:
+  ansible.builtin.service:
       name: postfix
       state: restarted
 
 - name: restart exim4
-  service:
+  ansible.builtin.service:
       name: exim4
       state: restarted
+# ---------------
+# ---------------
+# This is not a control however using the iptables module only writes to memory
+# if a reboot occurs that means changes can revert. This task will make the
+# above iptables settings permanent
+#
+# This is also idempotent as a handler
+# ---------------
+# ---------------
+
+- name: persistent ip4tables
+  ansible.builtin.shell: bash -c "iptables-save > /etc/iptables/rules.v4"
+  changed_when: ubtu20cis_iptables_save.rc == 0
+  failed_when: ubtu20cis_iptables_save.rc > 0
+  register: ubtu20cis_iptables_save
+
+- name: persistent ip6tables
+  ansible.builtin.shell: bash -c "ip6tables-save > /etc/iptables/rules.v6"
+  changed_when: ubtu20cis_ip6tables_save.rc == 0
+  failed_when: ubtu20cis_ip6tables_save.rc > 0
+  register: ubtu20cis_ip6tables_save
+
+########
 
 - name: sysctl flush ipv4 route table
-  sysctl:
+  ansible.posix.sysctl:
       name: net.ipv4.route.flush
       value: '1'
-      sysctl_set: yes
+      sysctl_set: true
   when: ansible_virtualization_type != "docker"
 
 - name: reload ufw
-  ufw:
+  community.general.ufw:
       state: reloaded
 
 - name: sysctl flush ipv6 route table
-  sysctl:
+  ansible.posix.sysctl:
       name: net.ipv6.route.flush
       value: '1'
-      sysctl_set: yes
+      sysctl_set: true
   when: ansible_virtualization_type != "docker"
 
 - name: restart auditd
-  service:
+  ansible.builtin.service:
       name: auditd
       state: restarted
   when:
@@ -45,14 +88,18 @@
       - skip_ansible_lint
 
 - name: restart rsyslog
-  service:
+  ansible.builtin.service:
       name: rsyslog
       state: restarted
 
 - name: restart sshd
-  service:
+  ansible.builtin.service:
       name: sshd
       state: restarted
 
 - name: reload gdm
-  command: dpkg-reconfigure gdm3
+  ansible.builtin.shell: dpkg-reconfigure gdm3
+
+- name: change_requires_reboot
+  ansible.builtin.set_fact:
+      change_requires_reboot: true

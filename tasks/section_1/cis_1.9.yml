@@ -1,8 +1,18 @@
 ---
-- name: "MANUAL | 1.9 | PATCH | Ensure updates, patches, and additional security software are installed"
-  apt:
-      name: "*"
-      state: latest
+- name: "1.9 | PATCH | Ensure updates, patches, and additional security software are installed"
+  block:
+      - name: "1.9 | PATCH | Ensure updates, patches, and additional security software are installed"
+        ansible.builtin.package:
+            name: "*"
+            state: latest
+        register: server_patched
+        notify: change_requires_reboot
+
+      - name: "1.9 | PATCH | Ensure updates, patches, and additional security software are installed | update package facts"  # noqa no-handler
+        ansible.builtin.package_facts:
+            manager: auto
+        when:
+            - server_patched.changed
   when:
       - ubtu20cis_rule_1_9
   tags:
@@ -11,4 +21,3 @@
       - manual
       - patch
       - rule_1.9
-      - patch

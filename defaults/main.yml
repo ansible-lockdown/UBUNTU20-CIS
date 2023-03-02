@@ -2,7 +2,7 @@
 # If you would like a report at the end accordin to OpenSCAP as to the report results
 # then you should set ubtu20cis_oscap_scan to true/yes.
 # NOTE: This requires the python_xmltojson package on the control host.
-ubtu20cis_oscap_scan: no
+ubtu20cis_oscap_scan: false
 ubtu20cis_report_dir: /tmp
 
 ubtu20cis_section1_patch: true
@@ -13,11 +13,13 @@ ubtu20cis_section5_patch: true
 ubtu20cis_section6_patch: true
 
 # System will reboot if false, can give better audit results
-ubtu20_skip_reboot: true
+skip_reboot: true
 
 ## Benchmark name used by auditing control role
 # The audit variable found at the base
 benchmark: UBUNTU20-CIS
+## metadata for Audit benchmark
+benchmark_version: 'v1.1.0'
 
 ### Audit Binary is required on the remote host
 setup_audit: false
@@ -58,7 +60,7 @@ ubtu20cis_disruption_high: true
 
 # Show "changed" for disruptive items not remediated per disruption-high
 # setting to make them stand out.
-ubtu20cis_audit_disruptive: yes
+ubtu20cis_audit_disruptive: true
 
 ubtu20cis_skip_for_travis: false
 
@@ -420,11 +422,27 @@ ubtu20cis_aide_cron:
     aide_month: '*'
     aide_weekday: '*'
 
-# Control 1.4.4
-# THIS VARAIBLE SHOULD BE CHANGED AND INCORPORATED INTO VAULT
-# THIS VALUE IS WHAT THE ROOT PW WILL BECOME!!!!!!!!
-# HAVING THAT PW EXPOSED IN RAW TEXT IS NOT SECURE!!!!
-ubtu20cis_root_pw: "Password1"
+# Control 1.4.2
+# THIS VARIABLE SHOULD BE CHANGED
+# This will fail assertion if not changed and rule 1.4.2 is enabled
+# insert password as per output of running grub-mkpasswd-pbkdf2
+# refers to https://help.ubuntu.com/community/Grub2/Passwords
+
+ubtu20cis_set_grub_password: true
+ubtu20cis_grub_user_file: /etc/grub.d/40_custom
+ubtu20cis_grub_users: root
+ubtu20cis_grub_pw: "grub.pbkdf2.sha512.10000.ChangeMe"
+# Change the following value to true if you wish to be prompted to get past grub bootloader
+ubtu20cis_ask_passwd_to_boot: false
+
+# 1.4.4
+# note this needs to be in the encrypted format
+ubtu20cis_set_root_password: true
+ubtu20cis_root_pw: $6$this_is_needs_to_be_changed
+
+# 1.7.1
+# disable dynamic motd to stop extra sshd message from appearing
+ubtu20cis_disable_dynamic_motd: false
 
 # Control 1.8.2
 # This will be the motd banner must not contain the below items in order to be compliant with Ubuntu 20 CIS
@@ -481,6 +499,14 @@ ubtu20cis_ufw_allow_out_ports:
     - 53
     - 80
     - 443
+
+# This is optional only and is not part of the benchmark but the request does make sense to ensure this is correct.
+
+ufw_add_incoming: false
+ubtu20cis_ufw_allow_in:
+    - ports: 22
+      from: any
+      proto: tcp
 
 # Control 3.5.2.4
 # nftables is not supported in this role. Some tasks have the task commented out, this is one of them
@@ -583,7 +609,7 @@ ubtu20cis_sshd:
     macs: "hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256"
     kex_algorithms: "curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256"
     client_alive_interval: 300
-    client_alive_count_max: 0
+    client_alive_count_max: 3
     login_grace_time: 60
     max_sessions: 4
     # WARNING: make sure you understand the precedence when working with these values!!
@@ -591,6 +617,9 @@ ubtu20cis_sshd:
     allow_groups: "vagrant ubuntu"
     # deny_users:
     # deny_groups:
+
+# 5.4.2 pam_tally2 login options allows for audit to be removed if required
+ubtu20cis_pamtally2_login_opts: 'onerr=fail audit silent deny=5 unlock_time=900'
 
 # Control 5.4.3
 # ubtu20cis_pamd_pwhistory_remember is number of password chnage cycles a user can re-use a password
@@ -647,10 +676,15 @@ ubtu20cis_ungrouped_group: root
 # true will give the group from ubtu20cis_un_owned_group to all ungrouped files/directories and false will skip
 ubtu20cis_no_group_adjust: true
 
-# Cotnrol 6.1.13
+# Control 6.1.13
 # ubtu20cis_suid_adjust is the toggle to remove the SUID bit from all files on all mounts
 # Set to true this role will remove that bit, set to false we will just warn about the files
 ubtu20cis_suid_adjust: false
+
+# Control 6.1.14
+# ubtu20cis_sgid_adjust is the toggle to remove the GUID bit from all files on all mounts
+# Set to true this role will remove that bit, set to false we will just warn about the files
+ubtu20cis_sgid_adjust: false
 
 # Control 6.2.5 Allow ansible to adjust world-writable files. False will just display world-writable files, True will remove world-writable
 # ubtu20cis_passwd_label: "{{ (this_item | default(item)).id }}: {{ (this_item | default(item)).dir }}"
@@ -661,8 +695,8 @@ ubtu20cis_passwd_label: "{{ (this_item | default(item)).id }}: {{ (this_item | d
 
 ### Audit binary settings ###
 audit_bin_version:
-    release: v0.3.16
-    checksum: 'sha256:827e354b48f93bce933f5efcd1f00dc82569c42a179cf2d384b040d8a80bfbfb'
+    release: v0.3.21
+    checksum: 'sha256:9a9200779603acf0353d2c0e85ae46e083596c10838eaf4ee050c924678e4fe3'
 audit_bin_path: /usr/local/bin/
 audit_bin: "{{ audit_bin_path }}goss"
 audit_format: json
@@ -679,7 +713,7 @@ audit_bin_copy_location: /some/accessible/path
 ## managed by the control audit_content
 # git
 audit_file_git: "https://github.com/ansible-lockdown/{{ benchmark }}-Audit.git"
-audit_git_version: main
+audit_git_version: "benchmark_{{ benchmark_version }}"
 
 # archive or copy:
 audit_conf_copy: "some path to copy from"
@@ -689,13 +723,13 @@ audit_files_url: "some url maybe s3?"
 
 ## Goss configuration information
 # Where the goss configs and outputs are stored
-audit_out_dir: '/var/tmp'
+audit_out_dir: '/opt'
 # Where the goss audit configuration will be stored
 audit_conf_dir: "{{ audit_out_dir }}/{{ benchmark }}-Audit/"
 
 # If changed these can affect other products
-pre_audit_outfile: "{{ audit_out_dir }}/{{ ansible_hostname }}_pre_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
-post_audit_outfile: "{{ audit_out_dir }}/{{ ansible_hostname }}_post_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
+pre_audit_outfile: "{{ audit_out_dir }}/{{ ansible_hostname }}-{{ benchmark }}_pre_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
+post_audit_outfile: "{{ audit_out_dir }}/{{ ansible_hostname }}-{{ benchmark }}_post_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
 
 ## The following should not need changing
 audit_control_file: "{{ audit_conf_dir }}goss.yml"
