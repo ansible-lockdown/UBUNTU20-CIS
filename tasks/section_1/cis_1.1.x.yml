@@ -163,7 +163,6 @@
 
       - name: "1.1.15 | AUDIT | Ensure separate partition exists for /var/log | Present"
         ansible.builtin.import_tasks: warning_facts.yml
-
   vars:
       warn_control_id: '1.1.15'
       required_mount: '/var/log'
@@ -186,7 +185,6 @@
 
       - name: "1.1.16 | AUDIT | Ensure separate partition exists for /var/log/audit | Present"
         ansible.builtin.import_tasks: warning_facts.yml
-
   vars:
       warn_control_id: '1.1.6.1'
       required_mount: '/var/log/audit'
@@ -208,7 +206,6 @@
 
       - name: "1.1.17 | AUDIT | Ensure separate partition exists for /home | Present"
         ansible.builtin.import_tasks: warning_facts.yml
-
   vars:
       warn_control_id: '1.1.17'
       required_mount: '/home'
