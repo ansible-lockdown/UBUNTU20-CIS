@@ -16,7 +16,8 @@ This role **will make changes to the system** that could break things. This is n
 
 This role was developed against a clean install of the Operating System. If you are implimenting to an existing system please review this role for any site specific changes that are needed.
 
-To use release version please point to main branch
+NFtables is not supported in the role.
+
 Based on
 [CIS_Ubuntu_Linux_20.04_LTS_Benchmark](https://community.cisecurity.org/collab/public/index.php).
 
