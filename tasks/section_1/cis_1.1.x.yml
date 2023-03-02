@@ -90,8 +90,6 @@
       - name: "1.1.10 | AUDIT | Ensure separate partition exists for /var | Warn if partition is absent"
         ansible.builtin.debug:
             msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
-        register: var_mount_absent
-        changed_when: var_mount_absent.skipped is undefined
 
       - name: "1.1.10 | AUDIT | Ensure separate partition exists for /var | Present"
         ansible.builtin.import_tasks: warning_facts.yml
@@ -114,8 +112,6 @@
       - name: "1.1.11 | AUDIT | Ensure separate partition exists for /var/tmp | Warn if partition is absent"
         ansible.builtin.debug:
             msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
-        register: var_tmp_mount_absent
-        changed_when: var_tmp_mount_absent.skipped is undefined
 
       - name: "1.1.11 | AUDIT | Ensure separate partition exists for /var/tmp | Present"
         ansible.builtin.import_tasks: warning_facts.yml
@@ -164,8 +160,6 @@
       - name: "1.1.15 | AUDIT | Ensure separate partition exists for /var/log | Warn if partition is absent"
         ansible.builtin.debug:
             msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
-        register: var_log_mount_absent
-        changed_when: var_log_mount_absent.skipped is undefined
 
       - name: "1.1.15 | AUDIT | Ensure separate partition exists for /var/log | Present"
         ansible.builtin.import_tasks: warning_facts.yml
@@ -189,8 +183,6 @@
       - name: "1.1.16 | AUDIT | Ensure separate partition exists for /var/log/audit | Warn if partition is absent"
         ansible.builtin.debug:
             msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
-        register: var_log_audit_mount_absent
-        changed_when: var_log_audit_mount_absent.skipped is undefined
 
       - name: "1.1.16 | AUDIT | Ensure separate partition exists for /var/log/audit | Present"
         ansible.builtin.import_tasks: warning_facts.yml
@@ -213,8 +205,6 @@
       - name: "1.1.17 | AUDIT | Ensure separate partition exists for /home | Warn if partition is absent"
         ansible.builtin.debug:
             msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
-        register: home_mount_absent
-        changed_when: home_mount_absent.skipped is undefined
 
       - name: "1.1.17 | AUDIT | Ensure separate partition exists for /home | Present"
         ansible.builtin.import_tasks: warning_facts.yml
