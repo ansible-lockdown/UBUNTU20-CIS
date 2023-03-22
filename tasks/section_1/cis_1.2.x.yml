@@ -1,19 +1,24 @@
 ---
-- name: "MANUAL | 1.2.1 | AUDIT | Ensure package manager repositories are configured"
+- name: "1.2.1 | AUDIT | Ensure package manager repositories are configured"
   block:
-      - name: "MANUAL 1.2.1 | AUDIT | Ensure package manager repositories are configured | Get repositories"
-        command: apt-cache policy
+      - name: "1.2.1 | AUDIT | Ensure package manager repositories are configured | Get repositories"
+        ansible.builtin.shell: apt-cache policy
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_1_2_1_apt_policy
 
-      - name: "MANUAL 1.2.1 | AUDIT | Ensure package manager repositories are configured | Message out repository configs"
-        debug:
+      - name: "1.2.1 | AUDIT | Ensure package manager repositories are configured | Message out repository configs"
+        ansible.builtin.debug:
             msg:
-                - "Alert!!!! Below are the apt package repositories"
+                - "Warning!!  Below are the apt package repositories"
                 - "Please review to make sure they conform to your sites policies"
                 - "{{ ubtu20cis_1_2_1_apt_policy.stdout_lines }}"
+
+      - name: "1.2.1 | AUDIT | Ensure package manager repositories are configured | Warn Count"
+        ansible.builtin.import_tasks: warning_facts.yml
+  vars:
+      warn_control_id: '1.2.1'
   when:
       - ubtu20cis_rule_1_2_1
   tags:
@@ -24,22 +29,27 @@
       - rule_1.2.1
       - apt
 
-- name: "MANUAL | 1.2.2 | AUDIT | Ensure GPG keys are configured"
+- name: "1.2.2 | AUDIT | Ensure GPG keys are configured"
   block:
-      - name: "MANUAL | 1.2.2 | AUDIT | Ensure GPG keys are configured | Get apt gpg keys"
-        command: apt-key list
+      - name: "1.2.2 | AUDIT | Ensure GPG keys are configured | Get apt gpg keys"
+        ansible.builtin.shell: apt-key list
         changed_when: false
         failed_when: false
         check_mode: false
         register: ubtu20cis_1_2_2_apt_gpgkeys
 
-      - name: "MANUAL | 1.2.2 | AUDIT | Ensure GPG keys are configured | Message out apt gpg keys"
-        debug:
+      - name: "1.2.2 | AUDIT | Ensure GPG keys are configured | Message out apt gpg keys"
+        ansible.builtin.debug:
             msg:
-                - "Alert!!!! Below are the apt gpg kyes configured"
+                - "Warning!!  Below are the apt gpg keys configured"
                 - "Please review to make sure they are configured"
                 - "in accordance with site policy"
                 - "{{ ubtu20cis_1_2_2_apt_gpgkeys.stdout_lines }}"
+
+      - name: "1.2.2 | AUDIT | Ensure GPG keys are configured | Warn Count"
+        ansible.builtin.import_tasks: warning_facts.yml
+  vars:
+      warn_control_id: '1.2.2'
   when:
       - ubtu20cis_rule_1_2_2
   tags:

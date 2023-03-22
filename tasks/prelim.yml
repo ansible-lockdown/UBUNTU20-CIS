@@ -1,48 +1,89 @@
 ---
+
+- name: "PRELIM | register if snap being used"
+  ansible.builtin.shell: df -h | grep -wc "/snap"
+  changed_when: false
+  failed_when: snap_pkg_mgr.rc not in [ 0, 1 ]
+  register: snap_pkg_mgr
+  tags:
+      - rule_1.1.1.6
+      - section1
+
 - name: "PRELIM | Run apt update"
-  apt:
-      update_cache: yes
+  ansible.builtin.package:
+      update_cache: true
   when:
-      - ubtu20cis_rule_1_3_1
+      - ubtu20cis_rule_1_3_1 or
+        ubtu20cis_rule_1_9
+  tags:
+      - rule_1.3.1
+      - rule_1.9
+      - section1
 
 - name: "PRELIM | Check for autofs service"
-  shell: "systemctl show autofs | grep LoadState | cut -d = -f 2"
+  ansible.builtin.shell: "systemctl show autofs | grep LoadState | cut -d = -f 2"
   register: ubtu20cis_autofs_service_status
   changed_when: false
   check_mode: false
   when:
       - ubtu20cis_rule_1_1_23
   tags:
-      - skip_ansible_lint
+      - rule_1.1.23
+      - section1
 
 - name: "PRELIM | Check for avahi-daemon service"
-  shell: "systemctl show avahi-daemon | grep LoadState | cut -d = -f 2"
+  ansible.builtin.shell: "systemctl show avahi-daemon | grep LoadState | cut -d = -f 2"
   register: avahi_service_status
   changed_when: false
   check_mode: false
   when:
       - ubtu20cis_rule_2_1_3
   tags:
-      - skip_ansible_lint
+      - rule_2.1.3
+      - section2
+
+- name: "PRELIM | Find wireless network devices"
+  ansible.builtin.shell: find /sys/class/net/*/wireless | awk -F'/' awk '{print $5}'
+  failed_when: wireless_interfaces.rc not in [ 0, 2 ]
+  changed_when: false
+  register: wireless_interfaces
+  when:
+      - ubtu20cis_rule_3_1_2
+  tags:
+      - rule_3.1.2
+      - section3
 
 - name: "PRELIM | Install Network-Manager"
-  apt:
+  ansible.builtin.package:
       name: network-manager
       state: present
   when:
-      - ubtu20cis_rule_3_1_2
+      - wireless_interfaces.stdout | length > 0
       - ubtu20cis_install_network_manager
+      - ubtu20cis_rule_3_1_2
+      - not ubtu20cis_system_is_container
+  tags:
+      - rule_3.1.2
+      - section3
 
 - name: "PRELIM | Install ACL"
-  apt:
+  ansible.builtin.package:
       name: acl
       state: present
   when:
       - ubtu20cis_rule_6_2_6
-      - ubtu20cis_install_network_manager
+  tags:
+      - rule_6.2.6
+      - section6
+
+- name: "PRELIM | Section 1.1 | Create list of mount points"
+  ansible.builtin.set_fact:
+      mount_names: "{{ ansible_mounts | map(attribute='mount') | list }}"
+  tags:
+      - always
 
 - name: "PRELIM | List users accounts"
-  command: "awk -F: '{print $1}' /etc/passwd"
+  ansible.builtin.shell: "awk -F: '{print $1}' /etc/passwd"
   changed_when: false
   check_mode: false
   register: ubtu20cis_users
@@ -50,3 +91,5 @@
       - ubtu20cis_rule_6_2_8 or
         ubtu20cis_rule_6_2_9 or
         ubtu20cis_rule_6_2_10
+  tags:
+      - always
