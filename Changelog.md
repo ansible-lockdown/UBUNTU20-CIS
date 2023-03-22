@@ -1,6 +1,12 @@
 # Change log for Ubuntu 2004
 
-## Feb 23 updates
+## v1.0.0
+
+- update galaxy lint requirements
+- license file
+- ansible version
+
+## Feb 23 updates - Initial
 
 ### based upon CIS 1.1.0
 
