@@ -86,7 +86,7 @@
       - name: "5.4.2 | PATCH | Ensure lockout for failed password attempts is configured | common-auth pam_tally2 opts"
         ansible.builtin.lineinfile:
             path: /etc/pam.d/common-auth
-            regexp: '^auth\s+required pam_tally2 .*onerr=fail.*'
+            regexp: '^auth\s+required pam_tally2.so .*onerr=fail.*'
             line: 'auth       required pam_tally2.so {{ ubtu20cis_pamtally2_login_opts }}'
             insertafter: '^# here are the per-package modules (the "Primary" block)'
   when:
