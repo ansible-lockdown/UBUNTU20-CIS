@@ -431,14 +431,14 @@ ubtu20cis_aide_cron:
 ubtu20cis_set_grub_password: true
 ubtu20cis_grub_user_file: /etc/grub.d/40_custom
 ubtu20cis_grub_users: root
-ubtu20cis_grub_pw: "grub.pbkdf2.sha512.10000.ChangeMe"
+ubtu20cis_grub_pw: "grub.pbkdf2.sha512.10000"
 # Change the following value to true if you wish to be prompted to get past grub bootloader
 ubtu20cis_ask_passwd_to_boot: false
 
 # 1.4.4
 # note this needs to be in the encrypted format
 ubtu20cis_set_root_password: true
-ubtu20cis_root_pw: $6$this_is_needs_to_be_changed
+ubtu20cis_root_pw: $6$
 
 # 1.7.1
 # disable dynamic motd to stop extra sshd message from appearing
@@ -454,7 +454,7 @@ ubtu20cis_warning_banner: |
 # Control 2.1.1.1
 # ubtu20cis_time_sync_tool is the tool in which to synchronize time
 # The two options are chrony, ntp, or systemd-timesyncd
-ubtu20cis_time_sync_tool: "ntp"
+ubtu20cis_time_sync_tool: "chrony"
 
 # Control 2.1.1.2
 # ubtu20cis_ntp_server_list is the list ntp servers

@@ -48,7 +48,8 @@
   tags:
       - run_audit
 
-- ansible.builtin.import_tasks: parse_etc_password.yml
+- name: Run parse /etc/passwd
+  ansible.builtin.import_tasks: parse_etc_password.yml
   when:
       - ubtu20cis_section5_patch or
         ubtu20cis_section6_patch
@@ -119,7 +120,7 @@
             - skip_reboot
 
 - name: run post remediation tasks
-  import_tasks: post.yml
+  ansible.builtin.import_tasks: post.yml
   tags:
       - post_tasks
       - always
