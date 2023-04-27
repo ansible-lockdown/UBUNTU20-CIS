@@ -6,6 +6,15 @@
 - license file
 - ansible version
 
+## April 2023 Updates
+- Addressed Bugs 
+  - [#73](https://github.com/ansible-lockdown/UBUNTU20-CIS/issues/73) - Thanks @fnschroeder (Fix Taken From @uk-bolly issue_73 branch)
+  - [#80](https://github.com/ansible-lockdown/UBUNTU20-CIS/issues/80) - Thanks @kdebisschop
+- Added Fixes For Outstanding PR's
+  - [#81](https://github.com/ansible-lockdown/UBUNTU20-CIS/pull/81) - Thanks @kdebisschop
+  - Fixed Linting Errors For Yamllint & Ansbile-Lint
+  - Adjusted Builtin to Posix For sysctl module. 
+
 ## Feb 23 updates - Initial
 
 ### based upon CIS 1.1.0
