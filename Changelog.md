@@ -1,5 +1,10 @@
 # Change log for Ubuntu 2004
 
+## V1.0.1 - based upon CIS 1.1.0
+
+thanks to ikthomas
+[#84](https://github.com/ansible-lockdown/UBUNTU20-CIS/issues/84) 
+
 ## v1.0.0
 
 - update galaxy lint requirements
@@ -7,8 +12,6 @@
 - ansible version
 
 ## Feb 23 updates - Initial
-
-### based upon CIS 1.1.0
 
 - lint files updated
 - ansible version updated
