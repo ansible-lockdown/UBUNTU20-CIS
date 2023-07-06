@@ -1,5 +1,31 @@
 ---
 
+- name: PRELIM | Capture tmp mount type | discover mount tmp type
+  block:
+      - name: PRELIM | Capture tmp mount type | discover mount tmp type
+        ansible.builtin.shell: systemctl is-enabled tmp.mount
+        register: discover_tmp_mnt_type
+        changed_when: false
+        failed_when: discover_tmp_mnt_type.rc not in [ 0, 1 ]
+
+      - name: PRELIM | Capture tmp mount type | Set to expected_tmp_mnt variable
+        ansible.builtin.set_fact:
+            tmp_mnt_type: "{{ expected_tmp_mnt }}"
+        when: "'generated' in discover_tmp_mnt_type.stdout"
+
+      - name: PRELIM | Capture tmp mount type | Set systemd service
+        ansible.builtin.set_fact:
+            tmp_mnt_type: tmp_systemd
+        when: "'generated' not in discover_tmp_mnt_type.stdout"
+  when:
+      - "'/tmp' in mount_names"
+      - ubtu20cis_rule_1_1_2_1 or
+        ubtu20cis_rule_1_1_2_2 or
+        ubtu20cis_rule_1_1_2_3 or
+        ubtu20cis_rule_1_1_2_4
+  tags:
+      - always
+
 - name: "PRELIM | register if snap being used"
   ansible.builtin.shell: df -h | grep -wc "/snap"
   changed_when: false
