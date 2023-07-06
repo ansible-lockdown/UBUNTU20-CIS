@@ -162,8 +162,8 @@
   when:
       - ubtu20cis_rule_1_1_1_7
   tags:
-      - level1-server
-      - level1-workstation
+      - level2-server
+      - level2-workstation
       - automated
       - patch
       - rule_1.1.1.7
