@@ -84,7 +84,7 @@
         ansible.builtin.shell: grep -is 'timestamp_timeout' /etc/sudoers /etc/sudoers.d/* | cut -d":" -f1 | uniq | sort
         changed_when: false
         failed_when: false
-        register: ubtu20cis_5_3_6_timeout_files
+        register: ubtu20cis_4_3_6_timeout_files
 
       - name: "4.3.6 | PATCH | Ensure sudo authentication timeout is configured correctly | Set value if no results"
         ansible.builtin.lineinfile:
@@ -92,7 +92,7 @@
             regexp: 'Defaults timestamp_timeout='
             line: "Defaults timestamp_timeout={{ ubtu20cis_sudo_timestamp_timeout }}"
             validate: '/usr/sbin/visudo -cf %s'
-        when: ubtu20cis_5_3_6_timeout_files.stdout | length == 0
+        when: ubtu20cis_4_3_6_timeout_files.stdout | length == 0
 
       - name: "4.3.6 | PATCH | Ensure sudo authentication timeout is configured correctly | Set value if has results"
         ansible.builtin.replace:
@@ -100,8 +100,8 @@
             regexp: 'timestamp_timeout=(\d+)'
             replace: "timestamp_timeout={{ ubtu20cis_sudo_timestamp_timeout }}"
             validate: '/usr/sbin/visudo -cf %s'
-        loop: "{{ ubtu20cis_5_3_6_timeout_files.stdout_lines }}"
-        when: ubtu20cis_5_3_6_timeout_files.stdout | length > 0
+        loop: "{{ ubtu20cis_4_3_6_timeout_files.stdout_lines }}"
+        when: ubtu20cis_4_3_6_timeout_files.stdout | length > 0
   when:
       - ubtu20cis_rule_4_3_6
   tags:
@@ -118,7 +118,7 @@
         ansible.builtin.group:
             name: "{{ ubtu20cis_sugroup }}"
             state: present
-        register: ubtu20cis_5_3_7_sugroup
+        register: ubtu20cis_4_3_7_sugroup
 
       - name: "4.3.7 | PATCH | Ensure access to the su command is restricted | remove users from group"
         ansible.builtin.lineinfile:

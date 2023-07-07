@@ -22,7 +22,7 @@
         ansible.builtin.find:
             paths: /etc/ssh
             patterns: 'ssh_host_*_key'
-        register: ubtu20cis_5_3_2_ssh_host_priv_keys
+        register: ubtu20cis_4_2_2_ssh_host_priv_keys
 
       - name: "4.2.2 | PATCH | Ensure permissions on SSH private host key files are configured | Set permissions"
         ansible.builtin.file:
@@ -31,7 +31,7 @@
             group: root
             mode: 0600
         with_items:
-            - "{{ ubtu20cis_5_3_2_ssh_host_priv_keys.files }}"
+            - "{{ ubtu20cis_4_2_2_ssh_host_priv_keys.files }}"
         loop_control:
             label: "{{ item.path }}"
   when:
@@ -50,7 +50,7 @@
         ansible.builtin.find:
             paths: /etc/ssh
             patterns: 'ssh_host_*_key.pub'
-        register: ubtu20cis_5_3_3_ssh_host_pub_keys
+        register: ubtu20cis_4_2_3_ssh_host_pub_keys
 
       - name: "4.2.3 | PATCH | Ensure permissions on SSH public host key files are configured | Set permissions"
         ansible.builtin.file:
@@ -59,7 +59,7 @@
             group: root
             mode: 0644
         with_items:
-            - "{{ ubtu20cis_5_3_3_ssh_host_pub_keys.files }}"
+            - "{{ ubtu20cis_4_2_3_ssh_host_pub_keys.files }}"
         loop_control:
             label: "{{ item.path }}"
   when:
