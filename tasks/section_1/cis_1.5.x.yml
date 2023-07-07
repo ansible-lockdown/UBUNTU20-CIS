@@ -1,32 +1,25 @@
 ---
-- name: "1.5.1 | AUDIT | Ensure XD/NX support is enabled"
+
+- name: "1.5.1 | PATCH | Ensure prelink is not installed"
   block:
-      - name: "1.5.1 | AUDIT | Ensure XD/NX support is enabled | Find status of XD/NX"
-        ansible.builtin.shell: 'dmesg | grep -w "NX (Execute Disable) protection: active"'
+      - name: "1.5.1 | PATCH | Ensure prelink is not installed | Restore binaries to normal"
+        ansible.builtin.shell: prelink -ua
         changed_when: false
         failed_when: false
-        check_mode: false
-        register: ubtu20cis_1_5_1_xdnx_status
 
-      - name: "1.5.1 | AUDIT | Ensure XD/NX support is enabled | Alert if XD/NX is not enabled"
-        ansible.builtin.debug:
-            msg: "Warning!! You do not have XD/NX (Execute Disable/No Execute) enabled"
-        when: ubtu20cis_1_5_1_xdnx_status | length == 0
-
-      - name: "1.5.1 | AUDIT | Ensure XD/NX support is enabled | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
-        when: ubtu20cis_1_5_1_xdnx_status | length == 0
-  vars:
-      warn_control_id: '1.5.1'
+      - name: "1.5.1 | PATCH | Ensure prelink is not installed| Remove prelink package"
+        ansible.builtin.package:
+            name: prelink
+            state: absent
   when:
       - ubtu20cis_rule_1_5_1
   tags:
       - level1-server
       - level1-workstation
-      - manual
-      - audit
+      - automated
+      - patch
       - rule_1.5.1
-      - xd/nx
+      - prelink
 
 - name: "1.5.2 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
   block:
@@ -50,31 +43,54 @@
       - rule_1.5.2
       - aslr
 
-- name: "1.5.3 | PATCH | Ensure prelink is not installed"
-  block:
-      - name: "1.5.3 | PATCH | Ensure prelink is not installed | Restore binaries to normal"
-        ansible.builtin.shell: prelink -ua
-        changed_when: false
-        failed_when: false
-
-      - name: "1.5.3 | PATCH | Ensure prelink is not installed| Remove prelink package"
-        ansible.builtin.package:
-            name: prelink
-            state: absent
+- name: "1.5.3 | PATCH | Ensure ptrace_scope is restricted | sysctl.conf"
+  ansible.builtin.lineinfile:
+      path: /etc/sysctl.d/60-kernel_sysctl.conf
+      regexp: '^kernel.yama.ptrace_scope '
+      line: kernel.yama.ptrace_scope=1
+      owner: root
+      group: root
+      mode: '0644'
   when:
-      - ubtu20cis_rule_1_5_3
+      - ubtu22cis_rule_1_5_3
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_1.5.3
+
+- name: "1.5.4 | PATCH | Ensure Automatic Error Reporting is not enabled"
+  block:
+      - name: "1.5.4 | PATCH | Ensure Automatic Error Reporting is not enabled | disable"
+        ansible.builtin.lineinfile:
+            path: /etc/default/apport
+            regexp: ^enabled
+            line: enabled=0
+            create: true
+            owner: root
+            group: root
+            mode: 0644
+
+      - name: "1.5.4 | PATCH | Ensure Automatic Error Reporting is not enabled | remove package"
+        ansible.builtin.package:
+            name: apport
+            state: absent
+        when:
+            - "'apport' in ansible_facts.packages"
+  when:
+      - ubtu22cis_rule_1_5_4
   tags:
       - level1-server
       - level1-workstation
       - automated
       - patch
-      - rule_1.5.3
-      - prelink
+      - rule_1.5.4
+      - apport
 
-
-- name: "1.5.4 | PATCH | Ensure core dumps are restricted"
+- name: "1.5.5 | PATCH | Ensure core dumps are restricted"
   block:
-      - name: "1.5.4 | PATCH | Ensure core dumps are restricted | kernel sysctl"
+      - name: "1.5.5 | PATCH | Ensure core dumps are restricted | kernel sysctl"
         ansible.posix.sysctl:
             name: fs.suid_dumpable
             value: '0'
@@ -83,7 +99,7 @@
             sysctl_set: true
             ignoreerrors: true
 
-      - name: "1.5.4 | PATCH | Ensure core dumps are restricted | security limits"
+      - name: "1.5.5 | PATCH | Ensure core dumps are restricted | security limits"
         ansible.builtin.lineinfile:
             path: /etc/security/limits.d/99_zero_core.conf
             regexp: '^\* hard core'
@@ -93,7 +109,7 @@
             group: root
             mode: '0644'
 
-      - name: "1.5.4 | PATCH | Ensure core dumps are restricted | sysctl.conf"
+      - name: "1.5.5 | PATCH | Ensure core dumps are restricted | sysctl.conf"
         ansible.builtin.lineinfile:
             path: /etc/sysctl.conf
             regexp: '^fs.suid_dumpable'
@@ -102,7 +118,7 @@
             group: root
             mode: '0644'
 
-      - name: "1.5.4 | PATCH | Ensure core dumps are restricted | coredump.conf"
+      - name: "1.5.5 | PATCH | Ensure core dumps are restricted | coredump.conf"
         ansible.builtin.lineinfile:
             path: /etc/systemd/coredump.conf
             regexp: "{{ item.regexp }}"
@@ -116,11 +132,11 @@
             - { regexp: '^ProcessSizeMax', line: 'ProcessSizeMax=0' }
         when: "'systemd-coredump' in ansible_facts.packages"
   when:
-      - ubtu20cis_rule_1_5_4
+      - ubtu20cis_rule_1_5_5
   tags:
       - level1-server
       - level1-workstation
       - automated
       - patch
-      - rule_1.5.4
+      - rule_1.5.5
       - coredump
