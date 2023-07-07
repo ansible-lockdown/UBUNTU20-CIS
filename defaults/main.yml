@@ -90,7 +90,9 @@ ubtu20cis_rule_1_1_2_1: true
 ubtu20cis_rule_1_1_2_2: true
 ubtu20cis_rule_1_1_2_3: true
 ubtu20cis_rule_1_1_2_4: true
-ubtu20cis_rule_1_1_3: true
+ubtu20cis_rule_1_1_3_1: true
+ubtu20cis_rule_1_1_3_2: true
+ubtu20cis_rule_1_1_3_3: true
 ubtu20cis_rule_1_1_4: true
 ubtu20cis_rule_1_1_5: true
 ubtu20cis_rule_1_1_6: true
