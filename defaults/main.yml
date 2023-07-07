@@ -134,12 +134,18 @@ ubtu20cis_rule_1_7_3: true
 ubtu20cis_rule_1_7_4: true
 ubtu20cis_rule_1_7_5: true
 ubtu20cis_rule_1_7_6: true
-
 ubtu20cis_rule_1_8_1: true
 ubtu20cis_rule_1_8_2: true
 ubtu20cis_rule_1_8_3: true
 ubtu20cis_rule_1_8_4: true
-ubtu20cis_rule_1_9: true
+ubtu20cis_rule_1_8_5: true
+ubtu20cis_rule_1_8_6: true
+ubtu20cis_rule_1_8_7: true
+ubtu20cis_rule_1_8_8: true
+ubtu20cis_rule_1_8_9: true
+ubtu20cis_rule_1_8_10: true
+
+
 
 # Section 2 Fixes
 # Section 2 is Services (Special Purpose Services, and service clients)
