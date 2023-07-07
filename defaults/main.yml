@@ -116,6 +116,9 @@ ubtu20cis_rule_1_2_2: true
 ubtu20cis_rule_1_3_1: true
 ubtu20cis_rule_1_3_2: true
 ubtu20cis_rule_1_3_3: true
+ubtu20cis_rule_1_4_1: true
+ubtu20cis_rule_1_4_2: true
+ubtu20cis_rule_1_4_3: true
 
 ubtu20cis_rule_1_1_7: true
 ubtu20cis_rule_1_1_8: true
@@ -426,7 +429,7 @@ ubtu20cis_aide_cron:
     aide_month: '*'
     aide_weekday: '*'
 
-# Control 1.4.2
+# Control 1.4.1
 # THIS VARIABLE SHOULD BE CHANGED
 # This will fail assertion if not changed and rule 1.4.2 is enabled
 # insert password as per output of running grub-mkpasswd-pbkdf2
@@ -436,6 +439,7 @@ ubtu20cis_set_grub_password: true
 ubtu20cis_grub_user_file: /etc/grub.d/40_custom
 ubtu20cis_grub_users: root
 ubtu20cis_grub_pw: "grub.pbkdf2.sha512.10000"
+
 # Change the following value to true if you wish to be prompted to get past grub bootloader
 ubtu20cis_ask_passwd_to_boot: false
 
