@@ -1,0 +1,157 @@
+---
+
+- name: "4.5.2 | PATCH | Ensure system accounts are secured"
+  block:
+      - name: "4.5.2 | PATCH | Ensure system accounts are secured | Set system accounts to login"
+        ansible.builtin.user:
+            name: "{{ item }}"
+            shell: /sbin/nologin
+        with_items:
+            - "{{ ubtu20cis_passwd | selectattr('uid', '<', 1000) | map(attribute='id') | list }}"
+        when:
+            - item != "root"
+            - item != "sync"
+            - item != "shutdown"
+            - item != "halt"
+
+      - name: "4.5.2 | PATCH | Ensure system accounts are secured | Lock non-root system accounts"
+        ansible.builtin.user:
+            name: "{{ item }}"
+            password_lock: true
+        with_items:
+            - "{{ ubtu20cis_passwd | selectattr('uid', '<', 1000) | map(attribute='id') | list }}"
+        when:
+            - item != "root"
+  when:
+      - ubtu20cis_rule_4_5_2
+      - ubtu20cis_disruption_high
+  tags:
+      - level1-server
+      - level1-workstation
+      - automated
+      - patch
+      - rule_4.5.2
+      - user
+      - system
+
+- name: "4.5.3 | PATCH | Ensure default group for the root account is GID 0"
+  block:
+      - name: "4.5.3 | PATCH | Ensure default group for the root account is GID 0 | Set root group to GUID 0"
+        ansible.builtin.group:
+            name: root
+            gid: 0
+
+      - name: "4.5.3 | PATCH | Ensure default group for the root account is GID 0 | Set root user to root group"
+        ansible.builtin.user:
+            name: root
+            group: root
+  when:
+      - ubtu20cis_rule_4_5_3
+  tags:
+      - level1-server
+      - level1-workstation
+      - automated
+      - patch
+      - rule_4.5.3
+      - user
+      - system
+
+- name: "4.5.4 | PATCH | Ensure default user umask is 027 or more restrictive"
+  block:
+      - name: "4.5.4 | AUDIT | Ensure default user umask is 027 or more restrictive"
+        ansible.builtin.shell: grep -E '^session\s+optional\s+pam_umask.so' /etc/pam.d/common-session
+        changed_when: false
+        failed_when: false
+        check_mode: false
+        register: ubtu20cis_4_5_4_umask_pam_status
+
+      - name: "4.5.4 | PATCH | Ensure default user umask is 027 or more restrictive"
+        ansible.builtin.lineinfile:
+            path: /etc/pam.d/common-session
+            line: 'session optional                        pam_umask.so'
+            insertbefore: '^# end of pam-auth-update config'
+        when: ubtu20cis_4_5_4_umask_pam_status.stdout | length == 0
+
+      - name: "4.5.4 | PATCH | Ensure default user umask is 027 or more restrictive"
+        ansible.builtin.lineinfile:
+            path: "{{ item }}"
+            regexp: '(?i)(umask\s*)'
+            line: '\g<1>{{ ubtu20cis_bash_umask }}'
+            backrefs: true
+        with_items:
+            - /etc/bash.bashrc
+            - /etc/profile
+            - /etc/login.defs
+
+      - name: "4.5.4 | PATCH | Ensure default user umask is 027 or more restrictive"
+        ansible.builtin.lineinfile:
+            path: /etc/login.defs
+            regexp: '^USERGROUPS_ENAB'
+            line: USERGROUPS_ENAB no
+  when:
+      - ubtu20cis_rule_4_5_4
+  tags:
+      - level1-server
+      - level1-workstation
+      - automated
+      - patch
+      - rule_4.5.4
+      - user
+
+- name: "4.5.5 | PATCH | Ensure default user shell timeout is configured"
+  ansible.builtin.blockinfile:
+      create: true
+      mode: 0644
+      dest: "{{ item.dest }}"
+      state: "{{ item.state }}"
+      marker: "# {mark} ANSIBLE MANAGED"
+      block: |
+        # Set session timeout - CIS ID 4.5.5
+        # only set TMOUT if it isn't set yet to avoid a shell error
+        : ${TMOUT={{ ubtu20cis_shell_session_timeout.timeout }}}
+        readonly TMOUT
+        export TMOUT
+  with_items:
+      - { dest: "{{ ubtu20cis_shell_session_timeout.file }}", state: present }
+      - { dest: /etc/profile, state: "{{ (ubtu20cis_shell_session_timeout.file == '/etc/profile') | ternary('present', 'absent') }}" }
+      - { dest: /etc/bash.bashrc, state: present }
+  when:
+      - ubtu20cis_rule_4_5_5
+  tags:
+      - level1-server
+      - level1-workstation
+      - automated
+      - patch
+      - rule_4.5.5
+      - user
+
+- name: "4.5.6 | PATCH | Ensure nologin is not listed in /etc/shells"
+  ansible.builtin.lineinfile:
+    path: /etc/shells
+    regex: nologin\b
+    state: absent
+  when:
+      - ubtu20cis_rule_4_5_6
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_4.5.6
+      - user
+
+- name: "4.5.7 | PATCH | Ensure maximum number of same consecutive characters in a password is configured"
+  ansible.builtin.lineinfile:
+      path: /etc/security/pwquality.conf
+      regexp: '^(#\s+|)maxrepeat'
+      line: 'maxrepeat = {{ ubtu20cis_pass.max_repeat_letters }}'
+  when:
+      - ubtu20cis_rule_4_5_7
+  tags:
+      - level1-server
+      - level1-workstation
+      - automated
+      - patch
+      - rule_4.5.7
+      - user
+      - login

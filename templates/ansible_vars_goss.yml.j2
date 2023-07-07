@@ -237,20 +237,21 @@ ubuntu20cis_rule_4_4_3: {{ ubtu20cis_rule_4_4_3 }}
 ubuntu20cis_rule_4_4_4: {{ ubtu20cis_rule_4_4_4 }}
 ubuntu20cis_rule_4_4_5: {{ ubtu20cis_rule_4_4_5 }}
 
-ubuntu20cis_rule_4_1_1_1: {{ ubtu20cis_rule_4_1_1_1 }}
-ubuntu20cis_rule_4_1_1_2: {{ ubtu20cis_rule_4_1_1_2 }}
-ubuntu20cis_rule_4_1_1_3: {{ ubtu20cis_rule_4_1_1_3 }}
-ubuntu20cis_rule_4_1_1_4: {{ ubtu20cis_rule_4_1_1_4 }}
-ubuntu20cis_rule_4_1_2_1: {{ ubtu20cis_rule_4_1_2_1 }}
-ubuntu20cis_rule_4_1_2_2: {{ ubtu20cis_rule_4_1_2_2 }}
-ubuntu20cis_rule_4_1_2_3: {{ ubtu20cis_rule_4_1_2_3 }}
+ubuntu20cis_rule_4_5_1_1: {{ ubtu20cis_rule_4_5_1_1 }}
+ubuntu20cis_rule_4_5_1_2: {{ ubtu20cis_rule_4_5_1_2 }}
+ubuntu20cis_rule_4_5_1_3: {{ ubtu20cis_rule_4_5_1_3 }}
+ubuntu20cis_rule_4_5_1_4: {{ ubtu20cis_rule_4_5_1_4 }}
+ubuntu20cis_rule_4_5_1_5: {{ ubtu20cis_rule_4_5_2_5 }}
+ubuntu20cis_rule_4_5_1_6: {{ ubtu20cis_rule_4_5_1_6 }}
+ubuntu20cis_rule_4_5_1_7: {{ ubtu20cis_rule_4_5_1_7 }}
 
-ubuntu20cis_rule_4_2_2_1: {{ ubtu20cis_rule_4_2_2_1 }}
-ubuntu20cis_rule_4_2_2_2: {{ ubtu20cis_rule_4_2_2_2 }}
-ubuntu20cis_rule_4_2_2_3: {{ ubtu20cis_rule_4_2_2_3 }}
-ubuntu20cis_rule_4_2_3: {{ ubtu20cis_rule_4_2_3 }}
-ubuntu20cis_rule_4_3: {{ ubtu20cis_rule_4_3 }}
-ubuntu20cis_rule_4_4: {{ ubtu20cis_rule_4_4 }}
+ubuntu20cis_rule_4_5_1: {{ ubtu20cis_rule_4_5_1 }}
+ubuntu20cis_rule_4_5_2: {{ ubtu20cis_rule_4_5_2 }}
+ubuntu20cis_rule_4_5_3: {{ ubtu20cis_rule_4_5_3 }}
+ubuntu20cis_rule_4_5_4: {{ ubtu20cis_rule_4_5_4 }}
+ubuntu20cis_rule_4_5_5: {{ ubtu20cis_rule_4_5_5 }}
+ubuntu20cis_rule_4_5_6: {{ ubtu20cis_rule_4_5_6 }}
+ubuntu20cis_rule_4_5_7: {{ ubtu20cis_rule_4_5_7 }}
 
 # Section 5
 
@@ -420,17 +421,6 @@ ubuntu20_firewall_services:
   - dhcpv6-client
 
 ### Section 4
-## auditd settings
-ubuntu20cis_auditd:
-  space_left_action: email
-  action_mail_acct: root
-  admin_space_left_action: {{ ubtu20cis_auditd.admin_space_left_action }}
-  max_log_file_action: {{ ubtu20cis_auditd.max_log_file_action }}
-  auditd_backlog_limit: {{ ubtu20cis_audit_back_log_limit }}
-
-## syslog
-ubuntu20cis_is_syslog_server: {{ ubtu20cis_system_is_log_server }}
-### Section 5
 ubuntu20cis_sshd_limited: false
 # Note the following to understand precedence and layout
 ubuntu20cis_sshd_access:
@@ -495,6 +485,8 @@ ubuntu20cis_pass:
   max_days: {{ ubtu20cis_pass.max_days }}
   min_days: {{ ubtu20cis_pass.min_days }}
   warn_age: {{ ubtu20cis_pass.warn_age }}
+  character_changed: {{ ubtu20cis_pass.character_changed }}
+  max_repeat: {{ ubtu20_pass.max_repeat }}
 
 # set sugroup if differs from wheel
 ubuntu20cis_sugroup: {{ ubtu20cis_su_group }}
@@ -504,3 +496,15 @@ ubuntu20_sugroup_users: "root"
 
 # var log location variable
 ubuntu20_varlog_location: {{ ubtu20cis_sudo_logfile }}
+
+### Section 5
+## auditd settings
+ubuntu20cis_auditd:
+  space_left_action: email
+  action_mail_acct: root
+  admin_space_left_action: {{ ubtu20cis_auditd.admin_space_left_action }}
+  max_log_file_action: {{ ubtu20cis_auditd.max_log_file_action }}
+  auditd_backlog_limit: {{ ubtu20cis_audit_back_log_limit }}
+
+## syslog
+ubuntu20cis_is_syslog_server: {{ ubtu20cis_system_is_log_server }}
