@@ -273,6 +273,13 @@ ubtu20cis_rule_4_2_19: true
 ubtu20cis_rule_4_2_20: true
 ubtu20cis_rule_4_2_21: true
 ubtu20cis_rule_4_2_22: true
+ubtu20cis_rule_4_3_1: true
+ubtu20cis_rule_4_3_2: true
+ubtu20cis_rule_4_3_3: true
+ubtu20cis_rule_4_3_4: true
+ubtu20cis_rule_4_3_5: true
+ubtu20cis_rule_4_3_6: true
+ubtu20cis_rule_4_3_7: true
 
 ubtu20cis_rule_4_1_1_1: true
 ubtu20cis_rule_4_1_1_2: true
@@ -281,12 +288,7 @@ ubtu20cis_rule_4_1_1_4: true
 ubtu20cis_rule_4_1_2_1: true
 ubtu20cis_rule_4_1_2_2: true
 ubtu20cis_rule_4_1_2_3: true
-ubtu20cis_rule_4_2_1_1: true
-ubtu20cis_rule_4_2_1_2: true
-ubtu20cis_rule_4_2_1_3: true
-ubtu20cis_rule_4_2_1_4: true
-ubtu20cis_rule_4_2_1_5: true
-ubtu20cis_rule_4_2_1_6: true
+
 ubtu20cis_rule_4_2_2_1: true
 ubtu20cis_rule_4_2_2_2: true
 ubtu20cis_rule_4_2_2_3: true
