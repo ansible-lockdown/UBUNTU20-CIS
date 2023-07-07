@@ -280,6 +280,11 @@ ubtu20cis_rule_4_3_4: true
 ubtu20cis_rule_4_3_5: true
 ubtu20cis_rule_4_3_6: true
 ubtu20cis_rule_4_3_7: true
+ubtu20cis_rule_4_4_1: true
+ubtu20cis_rule_4_4_2: true
+ubtu20cis_rule_4_4_3: true
+ubtu20cis_rule_4_4_4: true
+ubtu20cis_rule_4_4_5: true
 
 ubtu20cis_rule_4_1_1_1: true
 ubtu20cis_rule_4_1_1_2: true
@@ -517,6 +522,95 @@ ubtu20cis_ufw_allow_in:
 ubtu20cis_save_iptables_cis_rules: true
 
 # Section 4 Control Variables
+
+# ubtu20cis_sshd will contain all sshd variables. The task association and variable descriptions for each section are listed below
+# Control 4.2.x
+# allow_users, allow_groups, deny_users, and deny_groups. These are lists of users and groups to allow or deny ssh access to
+# These are lists that are just space delimited, for example allow_users: "vagrant ubuntu" for the vagrant and ubuntu users
+
+# log_level is the log level variable. This needs to be set to VERBOSE or INFO to conform to CIS standards
+
+# max_auth_tries is the max number of authentication attampts per connection.
+# This value should be 10 or less to conform to CIS standards
+
+# ciphers is a comma seperated list of site approved ciphers
+# ONLY USE STRONG CIPHERS. Weak ciphers are listed below
+# DO NOT USE: 3des-cbc, aes128-cbc, aes192-cbc, and aes256-cbc
+
+# MACs is the comma seperated list of site approved MAC algorithms that SSH can use during communication
+# ONLY USE STRONG ALGORITHMS. Weak algorithms are listed below
+# DO NOT USE: hmac-md5, hmac-md5-96, hmac-ripemd160, hmac-sha1, hmac-sha1-96, umac-64@openssh.com, umac-128@openssh.com, hmac-md5-etm@openssh.com,
+# hmac-md5-96-etm@openssh.com, hmac-ripemd160-etm@openssh.com, hmac-sha1-etm@openssh.com, hmac-sha1-96-etm@openssh.com, umac-64-etm@openssh.com, umac-128-etm@openssh.com
+
+# kex_algorithms is comma seperated list of the algorithms for key exchange methods
+# ONLY USE STRONG ALGORITHMS. Weak algorithms are listed below
+# DO NOT USE: diffie-hellman-group1-sha1, diffie-hellman-group14-sha1, diffie-hellman-group-exchange-sha1
+
+# client_alive_interval is the amount of time idle before ssh session terminated. Set to 300 or less to conform to CIS standards
+# client_alive_count_max will send client alive messages at the configured interval. Set to 3 or less to conform to CIS standards
+
+# login_grace_time is the time allowed for successful authentication to the SSH server. This needs to be set to 60 seconds or less to conform to CIS standards
+# max_sessions is the max number of open sessions permitted. Set the value to 4 or less to conform to CIS standards
+ubtu20cis_sshd:
+    log_level: "INFO"
+    max_auth_tries: 4
+    ciphers: "chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr"
+    macs: "hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256"
+    kex_algorithms: "curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256"
+    client_alive_interval: 300
+    client_alive_count_max: 3
+    login_grace_time: 60
+    max_sessions: 4
+    # WARNING: make sure you understand the precedence when working with these values!!
+    allow_users: "vagrant ubuntu"
+    allow_groups: "vagrant ubuntu"
+    # deny_users:
+    # deny_groups:
+
+# Control 4.3.x
+# ubtu20cis_sudo_package is the name of the sudo package to install
+# The possible values are "sudo" or "sudo-ldap"
+ubtu20cis_sudo_package: "sudo"
+
+# ubtu20cis_sudo_logfile is the path and file name of the sudo log file
+ubtu20cis_sudo_logfile: "/var/log/sudo.log"
+
+
+# Controls 4.4.x
+ubtu20cis_pw_hash_algo: sha512
+# pam_tally2 login options allows for audit to be removed if required
+ubtu20cis_pamtally2_login_opts: 'onerr=fail audit silent deny=5 unlock_time=900'
+
+# ubtu20cis_pamd_pwhistory_remember is number of password chnage cycles a user can re-use a password
+# This needs to be 5 or more to conform to CIS standards
+ubtu20cis_pamd_pwhistory_remember: 5
+
+# Control 4.5.x
+# ubtu20cis_pass will be password based variables
+# pass_min_days is the min number of days allowed between changing passwords. Set to 1 or more to conform to CIS standards
+# max_days forces passwords to expire in configured number of days. Set to 365 or less to conform to CIS standards
+# warn_age is how many days before pw expiry the user will be warned. Set to 7 or more to conform to CIS standards
+# inactive the number of days of inactivity before the account will lock. Set to 30 day sor less to conform to CIS standards
+ubtu20cis_pass:
+    max_days: 365
+    min_days: 1
+    warn_age: 7
+    inactive: 30
+
+# ubtu120cis_bash_umask is the umask to set in the /etc/bash.bashrc and /etc/profile.
+# The value needs to be 027 or more restrictive to comply with CIS standards
+ubtu20cis_bash_umask: '027'
+
+# Session timeout setting file (TMOUT setting can be set in multiple files)
+# Timeout value is in seconds. Set value to 900 seconds or less
+ubtu20cis_shell_session_timeout:
+    file: /etc/profile.d/tmout.sh
+    timeout: 900
+
+# ubtu20cis_su_group is the su group to use with pam_wheel
+ubtu20cis_su_group: "wheel"
+
+# Section 5 Control Variables
 # Control 4.1.1.4
 # ubtu20cis_audit_back_log_limit is the audit_back_log limit and should be set to a sufficient value
 # The example from CIS uses 8192
@@ -556,100 +650,6 @@ ubtu20cis_logrotate: "daily"
 # If you would like to include user/group settings to this parameter format the var as below
 # ubtu20cis_logrotate_create_settings: "0640 root utmp"
 ubtu20cis_logrotate_create_settings: "0640"
-
-# Section 5 Control Variables
-# Control 5.2.1
-# ubtu20cis_sudo_package is the name of the sudo package to install
-# The possible values are "sudo" or "sudo-ldap"
-ubtu20cis_sudo_package: "sudo"
-
-# Control 5.2.3
-# ubtu20cis_sudo_logfile is the path and file name of the sudo log file
-ubtu20cis_sudo_logfile: "/var/log/sudo.log"
-
-# ubtu20cis_sshd will contain all sshd variables. The task association and variable descriptions for each section are listed below
-# Control 5.3.4
-# allow_users, allow_groups, deny_users, and deny_groups. These are lists of users and groups to allow or deny ssh access to
-# These are lists that are just space delimited, for example allow_users: "vagrant ubuntu" for the vagrant and ubuntu users
-# Control 5.3.5
-# log_level is the log level variable. This needs to be set to VERBOSE or INFO to conform to CIS standards
-# Control 5.3.7
-# max_auth_tries is the max number of authentication attampts per connection.
-# This value should be 4 or less to conform to CIS standards
-# Control 5.3.13
-# ciphers is a comma seperated list of site approved ciphers
-# ONLY USE STRONG CIPHERS. Weak ciphers are listed below
-# DO NOT USE: 3des-cbc, aes128-cbc, aes192-cbc, and aes256-cbc
-# Control 5.3.14
-# MACs is the comma seperated list of site approved MAC algorithms that SSH can use during communication
-# ONLY USE STRONG ALGORITHMS. Weak algorithms are listed below
-# DO NOT USE: hmac-md5, hmac-md5-96, hmac-ripemd160, hmac-sha1, hmac-sha1-96, umac-64@openssh.com, umac-128@openssh.com, hmac-md5-etm@openssh.com,
-# hmac-md5-96-etm@openssh.com, hmac-ripemd160-etm@openssh.com, hmac-sha1-etm@openssh.com, hmac-sha1-96-etm@openssh.com, umac-64-etm@openssh.com, umac-128-etm@openssh.com
-# Control 5.3.15
-# kex_algorithms is comma seperated list of the algorithms for key exchange methods
-# ONLY USE STRONG ALGORITHMS. Weak algorithms are listed below
-# DO NOT USE: diffie-hellman-group1-sha1, diffie-hellman-group14-sha1, diffie-hellman-group-exchange-sha1
-# Control 5.3.16
-# client_alive_interval is the amount of time idle before ssh session terminated. Set to 300 or less to conform to CIS standards
-# client_alive_count_max will send client alive messages at the configured interval. Set to 3 or less to conform to CIS standards
-# Control 5.3.17
-# login_grace_time is the time allowed for successful authentication to the SSH server. This needs to be set to 60 seconds or less to conform to CIS standards
-# Control 5.3.22
-# max_sessions is the max number of open sessions permitted. Set the value to 4 or less to conform to CIS standards
-ubtu20cis_sshd:
-    log_level: "INFO"
-    max_auth_tries: 4
-    ciphers: "chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr"
-    macs: "hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256"
-    kex_algorithms: "curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256"
-    client_alive_interval: 300
-    client_alive_count_max: 3
-    login_grace_time: 60
-    max_sessions: 4
-    # WARNING: make sure you understand the precedence when working with these values!!
-    allow_users: "vagrant ubuntu"
-    allow_groups: "vagrant ubuntu"
-    # deny_users:
-    # deny_groups:
-
-# 5.4.2 pam_tally2 login options allows for audit to be removed if required
-ubtu20cis_pamtally2_login_opts: 'onerr=fail audit silent deny=5 unlock_time=900'
-
-# Control 5.4.3
-# ubtu20cis_pamd_pwhistory_remember is number of password chnage cycles a user can re-use a password
-# This needs to be 5 or more to conform to CIS standards
-ubtu20cis_pamd_pwhistory_remember: 5
-
-# ubtu20cis_pass will be password based variables
-# Control 5.5.1.1
-# pass_min_days is the min number of days allowed between changing passwords. Set to 1 or more to conform to CIS standards
-# Control 5.5.1.2
-# max_days forces passwords to expire in configured number of days. Set to 365 or less to conform to CIS standards
-# Control 5.5.1.3
-# warn_age is how many days before pw expiry the user will be warned. Set to 7 or more to conform to CIS standards
-# Control 5.5.1.4
-# inactive the number of days of inactivity before the account will lock. Set to 30 day sor less to conform to CIS standards
-ubtu20cis_pass:
-    max_days: 365
-    min_days: 1
-    warn_age: 7
-    inactive: 30
-
-# Control 5.5.4
-# ubtu120cis_bash_umask is the umask to set in the /etc/bash.bashrc and /etc/profile.
-# The value needs to be 027 or more restrictive to comply with CIS standards
-ubtu20cis_bash_umask: '027'
-
-# Control 5.5.5
-# Session timeout setting file (TMOUT setting can be set in multiple files)
-# Timeout value is in seconds. Set value to 900 seconds or less
-ubtu20cis_shell_session_timeout:
-    file: /etc/profile.d/tmout.sh
-    timeout: 900
-
-# Control 5.7
-# ubtu20cis_su_group is the su group to use with pam_wheel
-ubtu20cis_su_group: "wheel"
 
 # Section 6 Control Variables
 # Control 6.1.10
