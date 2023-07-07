@@ -184,10 +184,15 @@ ubtu20cis_rule_2_3_4: true
 ubtu20cis_rule_2_3_5: true
 ubtu20cis_rule_2_3_6: true
 ubtu20cis_rule_2_4: true
+
 # Section 3 Fixes
 # Section 3 is Network Configuration (Disable Unused Networks, Network Parameters (Host Only), Network Parameters (Host and Router), Uncommon Network Protocols, and Firewall Configuration)
 ubtu20cis_rule_3_1_1: true
 ubtu20cis_rule_3_1_2: true
+ubtu20cis_rule_3_1_3: true
+ubtu20cis_rule_3_1_4: true
+ubtu20cis_rule_3_1_5: true
+ubtu20cis_rule_3_1_6: true
 ubtu20cis_rule_3_2_1: true
 ubtu20cis_rule_3_2_2: true
 ubtu20cis_rule_3_3_1: true
