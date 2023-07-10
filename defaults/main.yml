@@ -387,7 +387,7 @@ ubtu20cis_rule_6_1_10: true
 ubtu20cis_rule_6_1_11: true
 ubtu20cis_rule_6_1_12: true
 ubtu20cis_rule_6_1_13: true
-ubtu20cis_rule_6_1_14: true
+
 ubtu20cis_rule_6_2_1: true
 ubtu20cis_rule_6_2_2: true
 ubtu20cis_rule_6_2_3: true
@@ -400,11 +400,7 @@ ubtu20cis_rule_6_2_9: true
 ubtu20cis_rule_6_2_10: true
 ubtu20cis_rule_6_2_11: true
 ubtu20cis_rule_6_2_12: true
-ubtu20cis_rule_6_2_13: true
-ubtu20cis_rule_6_2_14: true
-ubtu20cis_rule_6_2_15: true
-ubtu20cis_rule_6_2_16: true
-ubtu20cis_rule_6_2_17: true
+
 
 # Service configuration variables, set to true to keep service
 ubtu20cis_allow_autofs: false
