@@ -613,8 +613,8 @@ ubtu20cis_sudo_package: "sudo"
 
 # ubtu20cis_sudo_logfile is the path and file name of the sudo log file
 ubtu20cis_sudo_logfile: "/var/log/sudo.log"
-ubtu22cis_sudo_timestamp_timeout: 15
-ubtu22cis_sugroup: nosugroup
+ubtu20cis_sudo_timestamp_timeout: 15
+ubtu20cis_sugroup: nosugroup
 
 # Controls 4.4.x
 ubtu20cis_pw_hash_algo: sha512
