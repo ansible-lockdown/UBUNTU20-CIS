@@ -19,7 +19,7 @@ skip_reboot: true
 # The audit variable found at the base
 benchmark: UBUNTU20-CIS
 ## metadata for Audit benchmark
-benchmark_version: 'v1.1.0'
+benchmark_version: 'v2.0.1'
 
 ### Audit Binary is required on the remote host
 setup_audit: false

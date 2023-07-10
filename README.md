@@ -1,12 +1,41 @@
 # Ubuntu 20 CIS
 
-![Build Status](https://img.shields.io/github/workflow/status/ansible-lockdown/UBUNTU20-CIS/CommunityToDevel?label=Devel%20Build%20Status&style=plastic)
-![Build Status](https://img.shields.io/github/workflow/status/ansible-lockdown/UBUNTU20-CIS/DevelToMaster?label=Main%20Build%20Status&style=plastic)
-![Release](https://img.shields.io/github/v/release/ansible-lockdown/UBUNTU20-CIS?style=plastic)
+## Configure a Ubuntu 20 machine to be [CIS](https://www.cisecurity.org/cis-benchmarks/) compliant
 
-Configure Ubuntu 20 machine to be [CIS](https://www.cisecurity.org/cis-benchmarks/) v1.1.0 compliant. There are some intrusive tasks that have a toggle in defaults main.yml to disable to automated fix
+### Based on CIS Ubuntu Linux 20.04 LTS Benchmark v2.0.1 [Release](https://learn.cisecurity.org/l/799323/2023-06-27/4t1gmr)
 
-## Join us
+![Org Stars](https://img.shields.io/github/stars/ansible-lockdown?label=Org%20Stars&style=social)
+![Stars](https://img.shields.io/github/stars/ansible-lockdown/ubuntu20-cis?label=Repo%20Stars&style=social)
+![Forks](https://img.shields.io/github/forks/ansible-lockdown/ubuntu20-cis?style=social)
+![followers](https://img.shields.io/github/followers/ansible-lockdown?style=social)
+[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/AnsibleLockdown.svg?style=social&label=Follow%20%40AnsibleLockdown)](https://twitter.com/AnsibleLockdown)
+
+![Ansible Galaxy Quality](https://img.shields.io/ansible/quality/54777?label=Quality&&logo=ansible)
+![Discord Badge](https://img.shields.io/discord/925818806838919229?logo=discord)
+
+![Devel Build Status](https://img.shields.io/github/actions/workflow/status/ansible-lockdown/ubuntu20-cis/linux_benchmark_testing.yml?label=Devel%20Build%20Status)
+![Devel Commits](https://img.shields.io/github/commit-activity/m/ansible-lockdown/ubuntu20-cis/devel?color=dark%20green&label=Devel%20Branch%20commits)
+
+![Release Branch](https://img.shields.io/badge/Release%20Branch-Main-brightgreen)
+![Main Build Status](https://img.shields.io/github/actions/workflow/status/ansible-lockdown/ubuntu20-cis/linux_benchmark_testing.yml?label=Build%20Status)
+![Main Release Date](https://img.shields.io/github/release-date/ansible-lockdown/ubuntu20-cis?label=Release%20Date)
+![Release Tag](https://img.shields.io/github/v/tag/ansible-lockdown/ubuntu20-cis?label=Release%20Tag&&color=success)
+
+![Issues Open](https://img.shields.io/github/issues-raw/ansible-lockdown/ubuntu20-cis?label=Open%20Issues)
+![Issues Closed](https://img.shields.io/github/issues-closed-raw/ansible-lockdown/ubuntu20-cis?label=Closed%20Issues&&color=success)
+![Pull Requests](https://img.shields.io/github/issues-pr/ansible-lockdown/ubuntu20-cis?label=Pull%20Requests)
+
+![License](https://img.shields.io/github/license/ansible-lockdown/ubuntu20-cis?label=License)
+
+---
+
+## Looking for support?
+
+[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_UB20_cis)
+
+[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_UB20_cis)
+
+### Community
 
 On our [Discord Server](https://discord.io/ansible-lockdown) to ask questions, discuss features, or just chat with other Ansible-Lockdown users
 
@@ -16,18 +45,13 @@ This role **will make changes to the system** that could break things. This is n
 
 This role was developed against a clean install of the Operating System. If you are implimenting to an existing system please review this role for any site specific changes that are needed.
 
-NFtables is not supported in the role.
-
-Based on
-[CIS_Ubuntu_Linux_20.04_LTS_Benchmark](https://community.cisecurity.org/collab/public/index.php).
-
 ## Documentation
 
-- [Readthedocs](https://ansible-lockdown.readthedocs.io/en/latest/)
-- [Getting Started](https://www.lockdownenterprise.com/docs/getting-started-with-lockdown)
-- [Customizing Roles](https://www.lockdownenterprise.com/docs/customizing-lockdown-enterprise)
-- [Per-Host Configuration](https://www.lockdownenterprise.com/docs/per-host-lockdown-enterprise-configuration)
-- [Getting the Most Out of the Role](https://www.lockdownenterprise.com/docs/get-the-most-out-of-lockdown-enterprise)
+- [Read The Docs](https://ansible-lockdown.readthedocs.io/en/latest/)
+- [Getting Started](https://www.lockdownenterprise.com/docs/getting-started-with-lockdown#GH_AL_UB20_cis)
+- [Customizing Roles](https://www.lockdownenterprise.com/docs/customizing-lockdown-enterprise#GH_AL_UB20_cis)
+- [Per-Host Configuration](https://www.lockdownenterprise.com/docs/per-host-lockdown-enterprise-configuration#GH_AL_UB20_cis)
+- [Getting the Most Out of the Role](https://www.lockdownenterprise.com/docs/get-the-most-out-of-lockdown-enterprise#GH_AL_UB20_cis)
 
 ## Requirements
 
@@ -39,10 +63,8 @@ Based on
   - [Tower User Guide](https://docs.ansible.com/ansible-tower/latest/html/userguide/index.html)
   - [Ansible Community Info](https://docs.ansible.com/ansible/latest/community/index.html)
 - Functioning Ansible and/or Tower Installed, configured, and running. This includes all of the base Ansible/Tower configurations, needed packages installed, and infrastructure setup.
-
+- Please read through the tasks in this role to gain an understanding of what each control is doing. Some of the tasks are disruptive and can have unintended consiquences in a live production system. Also familiarize yourself with the variables in the defaults/main.yml file.
 **Technical Dependencies:**
-
-- It is suggested that the server is patched in the normal manner before running this role.
 
 - Running Ansible/Tower setup (this role is tested against Ansible version 2.9.1 and newer)
 - Python3 Ansible run environment
@@ -53,14 +75,16 @@ This can be turned on or off within the defaults/main.yml file with the variable
 
 This is a much quicker, very lightweight, checking (where possible) config compliance and live/running settings.
 
-A new form of auditing has been developed, by using a small (12MB) go binary called [goss](https://github.com/aelsabbahy/goss) along with the relevant configurations to check. Without the need for infrastructure or other tooling.
+A new form of auditing has been develeoped, by using a small (12MB) go binary called [goss](https://github.com/aelsabbahy/goss) along with the relevant configurations to check. Without the need for infrastructure or other tooling.
 This audit will not only check the config has the correct setting but aims to capture if it is running with that configuration also trying to remove [false positives](https://www.mindpointgroup.com/blog/is-compliance-scanning-still-relevant/) in the process.
 
 Refer to [UBUNTU20-CIS-Audit](https://github.com/ansible-lockdown/UBUNTU20-CIS-Audit).
 
+Further audit documentation can be found at [Read The Docs](https://ansible-lockdown.readthedocs.io/en/latest/)
+
 ## Role Variables
 
-This role is designed that the end user should not have to edit the tasks themselves. All customizing should be done via the defaults/main.yml file or with extra vars within the project, job, workflow, etc. These variables can be found [here](https://github.com/ansible-lockdown/UBUNTU20-CIS/wiki/Main-Variables) in the Main Variables Wiki page. All variables are listed there along with descriptions.
+This role is designed that the end user should not have to edit the tasks themselves. All customizing should be done via the defaults/main.yml file or with extra vars within the project, job, workflow, etc.
 
 ## Branches
 
@@ -87,12 +111,3 @@ uses:
 - ansible collections - pulls in the latest version based on requirements file
 - runs the audit using the devel branch
 - This is an automated test that occurs on pull requests into devel
-
-## Support
-
-This is a community project at its core and will be managed as such.
-
-If you would are interested in dedicated support to assist or provide bespoke setups
-
-- [Ansible Counselor](https://www.mindpointgroup.com/products/ansible-counselor-on-demand-ansible-services-and-consulting/)
-- [Try us out](https://engage.mindpointgroup.com/try-ansible-counselor)
