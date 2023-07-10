@@ -33,7 +33,7 @@
       fail_msg: "The root password set does not pass checks"
   when:
       - ubtu20cis_set_root_password
-      - ubtu20cis_rule_1_4_4
+      - ubtu20cis_rule_4_3_4
 
 - name: Import preliminary tasks
   ansible.builtin.import_tasks: prelim.yml
