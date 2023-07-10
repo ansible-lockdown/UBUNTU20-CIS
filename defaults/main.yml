@@ -146,8 +146,6 @@ ubtu20cis_rule_1_8_7: true
 ubtu20cis_rule_1_8_8: true
 ubtu20cis_rule_1_8_9: true
 ubtu20cis_rule_1_8_10: true
-ubtu20cis_rule_1_1_9: true
-
 
 # Section 2 Fixes
 # Section 2 is Services (Special Purpose Services, and service clients)
@@ -411,6 +409,7 @@ ubtu20cis_allow_usb_storage: false
 ubtu20cis_avahi_server: false
 ubtu20cis_cups_server: false
 ubtu20cis_dhcp_server: false
+ubtu20cis_dnsmasq_server: false
 ubtu20cis_ldap_server: false
 ubtu20cis_nfs_server: false
 ubtu20cis_dns_server: false
@@ -472,10 +471,12 @@ ubtu20cis_aide_cron:
 # insert password as per output of running grub-mkpasswd-pbkdf2
 # refers to https://help.ubuntu.com/community/Grub2/Passwords
 
+ubtu20cis_set_boot_pass: false
 ubtu20cis_set_grub_password: true
 ubtu20cis_grub_user_file: /etc/grub.d/40_custom
-ubtu20cis_grub_users: root
-ubtu20cis_grub_pw: "grub.pbkdf2.sha512.10000"
+ubtu20cis_grub_user: root
+ubtu20cis_grub_file: /boot/grub/grub.cfg
+ubtu20cis_bootloader_password_hash: "grub.pbkdf2.sha512.10000"
 
 # Change the following value to true if you wish to be prompted to get past grub bootloader
 ubtu20cis_ask_passwd_to_boot: false
@@ -498,33 +499,28 @@ ubtu20cis_warning_banner: |
 # Section 2 Control Variables
 # Control 2.1.1.1
 # ubtu20cis_time_sync_tool is the tool in which to synchronize time
-# The two options are chrony, ntp, or systemd-timesyncd
+# The two options are chrony, ntp, or timesyncd
 ubtu20cis_time_sync_tool: "chrony"
 
-# Control 2.1.1.2
-# ubtu20cis_ntp_server_list is the list ntp servers
-# ubtu20cis_ntp_fallback_server_list is the list of fallback NTP servers
-ubtu20cis_ntp_server_list: "0.debian.pool.ntp.org 1.debian.pool.ntp.org"
-ubtu20cis_ntp_fallback_server_list: "2.debian.pool.ntp.org 3.debian.pool.ntp.org"
-
-# Control 2.1.1.3/2.1.1.4
-# ubtu20cis_chrony_server_options is the server options for chrony
-ubtu20cis_chrony_server_options: "minpoll 8"
-# ubtu20cis_time_synchronization_servers are the synchronization servers
-ubtu20cis_time_synchronization_servers:
-    - 0.pool.ntp.org
-    - 1.pool.ntp.org
-    - 2.pool.ntp.org
-    - 3.pool.ntp.org
-# ubtu20cis_chrony_user is the user that chrony will use, default is _chrony
-ubtu20cis_chrony_user: "_chrony"
-# ubtu20cis_ntp_server_options is the server options for ntp
-ubtu20cis_ntp_server_options: "iburst"
-
-# Control 2.1.15
+ubtu20cis_is_mail_server: false
 # ubtu20_cis_mail_transfer_agent is the mail transfer agent in use
 # The options are exim4, postfix or other
 # ubtu20_cis_mail_transfer_agent: "other"
+
+# Control 2.1.2.1 2.1.3.1
+# Time settings used for all versions
+ubtu20cis_time_pool:
+    - name: time.nist.gov
+      options: iburst maxsources 4
+
+ubtu20cis_time_servers:
+    - name: time-a-g.nist.gov
+      options: iburst
+    - name: time-b-g.nist.gov
+      options: iburst
+    - name: time-c-g.nist.gov
+      options: iburst
+
 
 # Section 3 Control Variables
 # Control 3.1.2
