@@ -39,7 +39,7 @@
   register: snap_pkg_mgr
   tags:
       - rule_1.1.1.6
-      - section1
+      - always
 
 - name: "PRELIM | Run apt update"
   ansible.builtin.package:
@@ -50,7 +50,7 @@
   tags:
       - rule_1.3.1
       - rule_1.9
-      - section1
+      - always
 
 - name: "PRELIM | Check for autofs service"
   ansible.builtin.shell: "systemctl show autofs | grep LoadState | cut -d = -f 2"
@@ -58,10 +58,11 @@
   changed_when: false
   check_mode: false
   when:
-      - ubtu20cis_rule_1_1_23
+      - ubtu20cis_rule_1_1_9
   tags:
-      - rule_1.1.23
+      - rule_1.1.9
       - section1
+      - always
 
 - name: "PRELIM | Check for avahi-daemon service"
   ansible.builtin.shell: "systemctl show avahi-daemon | grep LoadState | cut -d = -f 2"
@@ -69,10 +70,10 @@
   changed_when: false
   check_mode: false
   when:
-      - ubtu20cis_rule_2_1_3
+      - ubtu20cis_rule_2_2_2
   tags:
-      - rule_2.1.3
-      - section2
+      - rule_2.2.2
+      - always
 
 - name: "PRELIM | Find wireless network devices"
   ansible.builtin.shell: find /sys/class/net/*/wireless | awk -F'/' awk '{print $5}'
@@ -83,7 +84,7 @@
       - ubtu20cis_rule_3_1_2
   tags:
       - rule_3.1.2
-      - section3
+      - always
 
 - name: "PRELIM | Install Network-Manager"
   ansible.builtin.package:
@@ -97,7 +98,7 @@
       - not ubtu20cis_system_is_container
   tags:
       - rule_3.1.2
-      - section3
+      - always
 
 - name: "PRELIM | Install ACL"
   ansible.builtin.package:
@@ -107,7 +108,7 @@
       - ubtu20cis_rule_6_2_6
   tags:
       - rule_6.2.6
-      - section6
+      - always
 
 - name: "PRELIM | List users accounts"
   ansible.builtin.shell: "awk -F: '{print $1}' /etc/passwd"
