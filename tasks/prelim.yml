@@ -100,6 +100,18 @@
       - rule_3.1.2
       - always
 
+- name: "PRELIM | 4.3.4 | Find all sudoers files."
+  ansible.builtin.shell: "find /etc/sudoers /etc/sudoers.d/ -type f ! -name '*~' ! -name '*.*'"
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  register: ubtu20cis_sudoers_files
+  when:
+      - ubtu20cis_rule_4_3_4 or
+        ubtu20cis_rule_4_3_5
+  tags:
+      - always
+
 - name: "PRELIM | Install ACL"
   ansible.builtin.package:
       name: acl
