@@ -360,22 +360,17 @@ ubuntu20cis_rule_5_2_3_19: true
 ubuntu20cis_rule_5_2_3_20: true
 ubuntu20cis_rule_5_2_3_21: true
 
-
-ubtu20cis_rule_5_4_1: true
-ubtu20cis_rule_5_4_2: true
-ubtu20cis_rule_5_4_3: true
-ubtu20cis_rule_5_4_4: true
-ubtu20cis_rule_5_5_1_1: true
-ubtu20cis_rule_5_5_1_2: true
-ubtu20cis_rule_5_5_1_3: true
-ubtu20cis_rule_5_5_1_4: true
-ubtu20cis_rule_5_5_1_5: true
-ubtu20cis_rule_5_5_2: true
-ubtu20cis_rule_5_5_3: true
-ubtu20cis_rule_5_5_4: true
-ubtu20cis_rule_5_5_5: true
-ubtu20cis_rule_5_6: true
-ubtu20cis_rule_5_7: true
+ubuntu20cis_rule_5_2_4_1: true
+ubuntu20cis_rule_5_2_4_2: true
+ubuntu20cis_rule_5_2_4_3: true
+ubuntu20cis_rule_5_2_4_4: true
+ubuntu20cis_rule_5_2_4_5: true
+ubuntu20cis_rule_5_2_4_6: true
+ubuntu20cis_rule_5_2_4_7: true
+ubuntu20cis_rule_5_2_4_8: true
+ubuntu20cis_rule_5_2_4_9: true
+ubuntu20cis_rule_5_2_4_10: true
+ubuntu20cis_rule_5_2_4_11: true
 
 # Section 6 Fixes
 # Section is Systme Maintenance (System File Permissions and User and Group Settings)
