@@ -52,7 +52,7 @@
       group: root
       mode: '0644'
   when:
-      - ubtu22cis_rule_1_5_3
+      - ubtu20cis_rule_1_5_3
   tags:
     - level1-server
     - level1-workstation
@@ -79,7 +79,7 @@
         when:
             - "'apport' in ansible_facts.packages"
   when:
-      - ubtu22cis_rule_1_5_4
+      - ubtu20cis_rule_1_5_4
   tags:
       - level1-server
       - level1-workstation

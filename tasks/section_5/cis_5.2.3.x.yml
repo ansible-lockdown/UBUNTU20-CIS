@@ -45,7 +45,7 @@
       mode: 0600
   notify: restart auditd
   when:
-      - ubtu22cis_rule_5_2_3_3
+      - ubtu20cis_rule_5_2_3_3
   tags:
       - level2-server
       - level2-workstation
@@ -368,9 +368,9 @@
 - name: "5.2.3.21 | PATCH | Ensure the running and on disk configuration is the same"
   ansible.builtin.shell: augenrules --check
   changed_when: false
-  register: ubtu22cis_rule_5_2_3_21_augen_check
+  register: ubtu20cis_rule_5_2_3_21_augen_check
   when:
-      - ubtu22cis_rule_5_3_3_21
+      - ubtu20cis_rule_5_3_3_21
   tags:
       - level2-server
       - level2-workstation
