@@ -8,7 +8,7 @@ ubtu20cis_report_dir: /tmp
 ubtu20cis_section1_patch: false
 ubtu20cis_section2_patch: false
 ubtu20cis_section3_patch: false
-ubtu20cis_section4_patch: true
+ubtu20cis_section4_patch: false
 ubtu20cis_section5_patch: true
 ubtu20cis_section6_patch: true
 
@@ -340,39 +340,39 @@ ubtu20cis_rule_5_2_2_1: true
 ubtu20cis_rule_5_2_2_2: true
 ubtu20cis_rule_5_2_2_3: true
 
-ubuntu20cis_rule_5_2_3_1: true
-ubuntu20cis_rule_5_2_3_2: true
-ubuntu20cis_rule_5_2_3_3: true
-ubuntu20cis_rule_5_2_3_4: true
-ubuntu20cis_rule_5_2_3_5: true
-ubuntu20cis_rule_5_2_3_6: true
-ubuntu20cis_rule_5_2_3_7: true
-ubuntu20cis_rule_5_2_3_8: true
-ubuntu20cis_rule_5_2_3_9: true
-ubuntu20cis_rule_5_2_3_10: true
-ubuntu20cis_rule_5_2_3_11: true
-ubuntu20cis_rule_5_2_3_12: true
-ubuntu20cis_rule_5_2_3_13: true
-ubuntu20cis_rule_5_2_3_14: true
-ubuntu20cis_rule_5_2_3_15: true
-ubuntu20cis_rule_5_2_3_16: true
-ubuntu20cis_rule_5_2_3_17: true
-ubuntu20cis_rule_5_2_3_18: true
-ubuntu20cis_rule_5_2_3_19: true
-ubuntu20cis_rule_5_2_3_20: true
-ubuntu20cis_rule_5_2_3_21: true
+ubtu20cis_rule_5_2_3_1: true
+ubtu20cis_rule_5_2_3_2: true
+ubtu20cis_rule_5_2_3_3: true
+ubtu20cis_rule_5_2_3_4: true
+ubtu20cis_rule_5_2_3_5: true
+ubtu20cis_rule_5_2_3_6: true
+ubtu20cis_rule_5_2_3_7: true
+ubtu20cis_rule_5_2_3_8: true
+ubtu20cis_rule_5_2_3_9: true
+ubtu20cis_rule_5_2_3_10: true
+ubtu20cis_rule_5_2_3_11: true
+ubtu20cis_rule_5_2_3_12: true
+ubtu20cis_rule_5_2_3_13: true
+ubtu20cis_rule_5_2_3_14: true
+ubtu20cis_rule_5_2_3_15: true
+ubtu20cis_rule_5_2_3_16: true
+ubtu20cis_rule_5_2_3_17: true
+ubtu20cis_rule_5_2_3_18: true
+ubtu20cis_rule_5_2_3_19: true
+ubtu20cis_rule_5_2_3_20: true
+ubtu20cis_rule_5_2_3_21: true
 
-ubuntu20cis_rule_5_2_4_1: true
-ubuntu20cis_rule_5_2_4_2: true
-ubuntu20cis_rule_5_2_4_3: true
-ubuntu20cis_rule_5_2_4_4: true
-ubuntu20cis_rule_5_2_4_5: true
-ubuntu20cis_rule_5_2_4_6: true
-ubuntu20cis_rule_5_2_4_7: true
-ubuntu20cis_rule_5_2_4_8: true
-ubuntu20cis_rule_5_2_4_9: true
-ubuntu20cis_rule_5_2_4_10: true
-ubuntu20cis_rule_5_2_4_11: true
+ubtu20cis_rule_5_2_4_1: true
+ubtu20cis_rule_5_2_4_2: true
+ubtu20cis_rule_5_2_4_3: true
+ubtu20cis_rule_5_2_4_4: true
+ubtu20cis_rule_5_2_4_5: true
+ubtu20cis_rule_5_2_4_6: true
+ubtu20cis_rule_5_2_4_7: true
+ubtu20cis_rule_5_2_4_8: true
+ubtu20cis_rule_5_2_4_9: true
+ubtu20cis_rule_5_2_4_10: true
+ubtu20cis_rule_5_2_4_11: true
 
 # Section 6 Fixes
 # Section is Systme Maintenance (System File Permissions and User and Group Settings)
@@ -656,13 +656,14 @@ ubtu20cis_su_group: "wheel"
 
 # Logging
 # Can be rsyslog or journald - anything else is not supported and will skip these steps
-ubtu20cis_syslog_service: 'journald'
+ubtu20cis_syslog_service: 'rsyslog'
 # if this is the journald server client upload to set to true
 journald_log_server: false
 
 # These Entries will need to be populated by the user
 # Journald Settings
 ubtu20cis_journal_upload:
+    remote_url:
     serverkeyfile:
     servercertfile:
     ubtu20cis_journald:
