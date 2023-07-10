@@ -639,6 +639,7 @@ ubtu20cis_su_group: "wheel"
 # Section 5 Control Variables - Logging and Auditing
 
 # Logging
+# Can be rsyslog or journald - anything else is not supported and will skip these steps
 ubtu20cis_syslog_service: 'journald'
 # if this is the journald server client upload to set to true
 journald_log_server: false
@@ -656,7 +657,15 @@ ubtu20cis_journald_log_rotate:
     runtimemaxuse:
     runtimekeepfree:
     maxfilesec:
-##
+
+## rsyslog
+ubtu20cis_system_is_log_server: false
+# ubtu20cis_rsyslog_ansible_managed will toggle ansible automated configurations of rsyslog
+# You should set the rsyslog to your side specific needs.
+ubtu20cis_rsyslog_ansible_managed: true
+
+# ubtu20cis_remote_log_server is the remote logging server
+ubtu20cis_remote_log_server: 192.168.2.100
 
 
 # 
@@ -675,19 +684,8 @@ ubtu20cis_auditd:
     admin_space_left_action: halt
     max_log_file_action: keep_logs
 
-# Control 4.2.1.3
-# ubtu20cis_rsyslog_ansible_managed will toggle ansible automated configurations of rsyslog
-# You should set the rsyslog to your side specific needs. This toggle will use the example from
-# page 347 to set rsyslog loggin based on those configuration suggestions. Settings can be seen
-# in control 4.2.1.3
-ubtu20cis_rsyslog_ansible_managed: true
-
 # Control 4.2.1.5
-# ubtu20cis_remote_log_server is the remote logging server
-ubtu20cis_remote_log_server: 192.168.2.100
 
-# Control 4.2.1.6
-ubtu20cis_system_is_log_server: true
 
 # Control 4.3
 # ubtu20cis_logrotate is the log rotate frequencey. Options are daily, weekly, monthly, and yearly
