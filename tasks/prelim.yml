@@ -1,5 +1,11 @@
 ---
 
+- name: "PRELIM | Section 1.1 | Create list of mount points"
+  ansible.builtin.set_fact:
+      mount_names: "{{ ansible_mounts | map(attribute='mount') | list }}"
+  tags:
+      - always
+
 - name: PRELIM | Capture tmp mount type | discover mount tmp type
   block:
       - name: PRELIM | Capture tmp mount type | discover mount tmp type
@@ -102,12 +108,6 @@
   tags:
       - rule_6.2.6
       - section6
-
-- name: "PRELIM | Section 1.1 | Create list of mount points"
-  ansible.builtin.set_fact:
-      mount_names: "{{ ansible_mounts | map(attribute='mount') | list }}"
-  tags:
-      - always
 
 - name: "PRELIM | List users accounts"
   ansible.builtin.shell: "awk -F: '{print $1}' /etc/passwd"
