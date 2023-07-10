@@ -48,6 +48,7 @@
       path: /etc/sysctl.d/60-kernel_sysctl.conf
       regexp: '^kernel.yama.ptrace_scope '
       line: kernel.yama.ptrace_scope=1
+      create: true
       owner: root
       group: root
       mode: '0644'
