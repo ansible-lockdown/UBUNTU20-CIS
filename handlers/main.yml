@@ -25,13 +25,18 @@
   failed_when: false
 
 - name: restart postfix
-  ansible.builtin.service:
+  ansible.builtin.systemd:
       name: postfix
       state: restarted
 
 - name: restart exim4
-  ansible.builtin.service:
+  ansible.builtin.systemd:
       name: exim4
+      state: restarted
+
+- name: restart timeservice
+  ansible.builtin.systemd:
+      name: "{{ ubtu20cis_time_sync_tool }}"
       state: restarted
 # ---------------
 # ---------------
