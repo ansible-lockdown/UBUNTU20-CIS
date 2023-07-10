@@ -85,12 +85,17 @@
       - skip_ansible_lint
 
 - name: restart rsyslog
-  ansible.builtin.service:
+  ansible.builtin.systemd:
       name: rsyslog
       state: restarted
 
+- name: restart journal-upload
+  ansible.builtin.systemd:
+      name: systemd-journal-upload
+      state: restarted
+
 - name: restart sshd
-  ansible.builtin.service:
+  ansible.builtin.systemd:
       name: sshd
       state: restarted
 

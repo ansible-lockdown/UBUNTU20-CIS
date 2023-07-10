@@ -302,8 +302,33 @@ ubtu20cis_rule_4_5_6: true
 ubtu20cis_rule_4_5_7: true
 
 # Section 5 Fixes
-# Section 5 is Access, Authentication, and Authorization (Configure time-based job schedulers, Configure sudo, Configure SSH Server, Configure PAM
-# and User Accounts and Environment)
+# Section 5 is Logging and Auditing
+
+# journald
+ubtu20cis_rule_5_1_1_1_1: true
+ubtu20cis_rule_5_1_1_1_2: true
+ubtu20cis_rule_5_1_1_1_3: true
+ubtu20cis_rule_5_1_1_1_4: true
+ubtu20cis_rule_5_1_1_2: true
+ubtu20cis_rule_5_1_1_3: true
+ubtu20cis_rule_5_1_1_4: true
+ubtu20cis_rule_5_1_1_5: true
+ubtu20cis_rule_5_1_1_6: true
+ubtu20cis_rule_5_1_1_7: true
+
+# rsyslog
+
+ubtu20cis_rule_5_1_2_1: true
+ubtu20cis_rule_5_1_2_2: true
+ubtu20cis_rule_5_1_2_3: true
+ubtu20cis_rule_5_1_2_4: true
+ubtu20cis_rule_5_1_2_5: true
+ubtu20cis_rule_5_1_2_6: true
+ubtu20cis_rule_5_1_2_7: true
+
+ubtu20cis_rule_5_1_3: true
+
+
 
 ubtu20cis_rule_5_2_1: true
 ubtu20cis_rule_5_2_2: true
@@ -575,7 +600,6 @@ ubtu20cis_sudo_package: "sudo"
 # ubtu20cis_sudo_logfile is the path and file name of the sudo log file
 ubtu20cis_sudo_logfile: "/var/log/sudo.log"
 
-
 # Controls 4.4.x
 ubtu20cis_pw_hash_algo: sha512
 # pam_tally2 login options allows for audit to be removed if required
@@ -612,7 +636,30 @@ ubtu20cis_shell_session_timeout:
 # ubtu20cis_su_group is the su group to use with pam_wheel
 ubtu20cis_su_group: "wheel"
 
-# Section 5 Control Variables
+# Section 5 Control Variables - Logging and Auditing
+
+# Logging
+ubtu20cis_syslog_service: 'journald'
+# if this is the journald server client upload to set to true
+journald_log_server: false
+
+# These Entries will need to be populated by the user
+# Journald Settings
+ubtu20cis_journal_upload:
+    serverkeyfile:
+    servercertfile:
+    ubtu20cis_journald:
+
+ubtu20cis_journald_log_rotate:
+    systemmaxuse:
+    systemkeepfree:
+    runtimemaxuse:
+    runtimekeepfree:
+    maxfilesec:
+##
+
+
+# 
 # Control 4.1.1.4
 # ubtu20cis_audit_back_log_limit is the audit_back_log limit and should be set to a sufficient value
 # The example from CIS uses 8192
