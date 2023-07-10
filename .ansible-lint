@@ -6,6 +6,7 @@ skip_list:
     - 'var-spacing'
     - 'experimental'
     - 'name[play]'
+    - 'key-order[task]'
     - 'name[casing]'
     - 'name[template]'
     - 'fqcn[action]'

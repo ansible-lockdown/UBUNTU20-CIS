@@ -54,11 +54,11 @@
   when:
       - ubtu20cis_rule_1_5_3
   tags:
-    - level1-server
-    - level1-workstation
-    - automated
-    - patch
-    - rule_1.5.3
+      - level1-server
+      - level1-workstation
+      - automated
+      - patch
+      - rule_1.5.3
 
 - name: "1.5.4 | PATCH | Ensure Automatic Error Reporting is not enabled"
   block:

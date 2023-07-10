@@ -148,10 +148,10 @@
       regexp: '({{ item }})'
       replace: '#\1'
   with_items:
-    - '^(\$ModLoad)'
-    - '^(\$InputTCPServerRun)'
-    - '^(module\(load="itcmp"\))'
-    - '^(input\(type="imtcp" port="\d{1,5}"\))'
+      - '^(\$ModLoad)'
+      - '^(\$InputTCPServerRun)'
+      - '^(module\(load="itcmp"\))'
+      - '^(input\(type="imtcp" port="\d{1,5}"\))'
   notify: restart rsyslog
   when:
       - not ubtu20cis_system_is_log_server

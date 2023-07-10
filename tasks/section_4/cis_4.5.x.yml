@@ -127,9 +127,9 @@
 
 - name: "4.5.6 | PATCH | Ensure nologin is not listed in /etc/shells"
   ansible.builtin.lineinfile:
-    path: /etc/shells
-    regex: nologin\b
-    state: absent
+      path: /etc/shells
+      regex: nologin\b
+      state: absent
   when:
       - ubtu20cis_rule_4_5_6
   tags:

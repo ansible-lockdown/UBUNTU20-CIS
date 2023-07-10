@@ -686,26 +686,20 @@ ubtu20cis_rsyslog_ansible_managed: true
 ubtu20cis_remote_log_server: 192.168.2.100
 
 
-# 
-# Control 4.1.1.4
+
 # ubtu20cis_audit_back_log_limit is the audit_back_log limit and should be set to a sufficient value
 # The example from CIS uses 8192
 ubtu20cis_audit_back_log_limit: 8192
 
-# Control 4.1.2.1
 # ubtu20cis_max_log_file_size is largest the log file will become in MB
 # This shoudl be set based on your sites policy
 ubtu20cis_max_log_file_size: 10
 
-# Control 4.1.2.2
+#
 ubtu20cis_auditd:
     admin_space_left_action: halt
     max_log_file_action: keep_logs
 
-# Control 4.2.1.5
-
-
-# Control 4.3
 # ubtu20cis_logrotate is the log rotate frequencey. Options are daily, weekly, monthly, and yearly
 ubtu20cis_logrotate: "daily"
 
@@ -717,30 +711,27 @@ ubtu20cis_logrotate: "daily"
 ubtu20cis_logrotate_create_settings: "0640"
 
 # Section 6 Control Variables
-# Control 6.1.10
+
 # ubtu20cis_no_world_write_adjust will toggle the automated fix to remove world-writable perms from all files
 # Setting to true will remove all world-writable permissions, and false will leave as-is
 ubtu20cis_no_world_write_adjust: true
 
-# Control 6.1.11
 # ubtu20cis_un_owned_owner is the owner to set files to that have no owner
 ubtu20cis_unowned_owner: root
 # ubtu20cis_no_owner_adjust will toggle the automated fix to give a user to unowned files/directories
 # true will give the owner from ubtu20cis_un_owned_owner to all unowned files/directories and false will skip
 ubtu20cis_no_owner_adjust: true
-# Control 6.1.12
+
 # ubtu20cis_ungrouped_group is the group to set files to that have no group
 ubtu20cis_ungrouped_group: root
 # ubtu20cis_no_group_adjust will toggle the automated fix to give a group to ungrouped files/directories
 # true will give the group from ubtu20cis_un_owned_group to all ungrouped files/directories and false will skip
 ubtu20cis_no_group_adjust: true
 
-# Control 6.1.13
 # ubtu20cis_suid_adjust is the toggle to remove the SUID bit from all files on all mounts
 # Set to true this role will remove that bit, set to false we will just warn about the files
 ubtu20cis_suid_adjust: false
 
-# Control 6.1.14
 # ubtu20cis_sgid_adjust is the toggle to remove the GUID bit from all files on all mounts
 # Set to true this role will remove that bit, set to false we will just warn about the files
 ubtu20cis_sgid_adjust: false
@@ -749,13 +740,12 @@ ubtu20cis_sgid_adjust: false
 # ubtu20cis_passwd_label: "{{ (this_item | default(item)).id }}: {{ (this_item | default(item)).dir }}"
 ubtu20cis_passwd_label: "{{ (this_item | default(item)).id }}: {{ (this_item | default(item)).dir }}"
 
-
 #### Audit Configuration Settings ####
 
 ### Audit binary settings ###
 audit_bin_version:
-    release: v0.3.21
-    checksum: 'sha256:9a9200779603acf0353d2c0e85ae46e083596c10838eaf4ee050c924678e4fe3'
+    release: v0.3.23
+    checksum: 'sha256:9e9f24e25f86d6adf2e669a9ffbe8c3d7b9b439f5f877500dea02ba837e10e4d'
 audit_bin_path: /usr/local/bin/
 audit_bin: "{{ audit_bin_path }}goss"
 audit_format: json

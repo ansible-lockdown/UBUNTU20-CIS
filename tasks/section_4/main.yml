@@ -1,5 +1,5 @@
 ---
-- name: "SECTION | 4.1 | Configure job based tiem schedulers"
+- name: "SECTION | 4.1 | Configure job based time schedulers"
   ansible.builtin.import_tasks: cis_4.1.x.yml
 
 - name: "SECTION | 4.2 | Configure SSH Server"
@@ -16,12 +16,3 @@
 
 - name: "SECTION | 4.5.x | User Accounts and Environment | password params"
   ansible.builtin.import_tasks: cis_4.5.x.yml
-
-- name: "SECTION | 4.2.3 | Ensure permissions on all logfiles are configured"
-  ansible.builtin.import_tasks: cis_4.2.3.yml
-
-- name: "SECTION | 4.3 | Ensure logrotate is configured"
-  ansible.builtin.import_tasks: cis_4.3.yml
-
-- name: "SECTION | 4.4 | Ensure logrotate assigns appropriate permissions"
-  ansible.builtin.import_tasks: cis_4.4.yml

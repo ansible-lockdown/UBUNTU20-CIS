@@ -93,20 +93,19 @@
 
 - name: "5.1.1.7 | PATCH | Ensure journald default file permissions configured"
   block:
-  - name: "5.1.1.7 | AUDIT | Ensure journald default file permissions configured | check for override file"
-    ansible.builtin.stat:
-        path: /etc/tmpfiles.d/systemd.conf
-    register: ubtu20cis_5_1_1_7_tmpfile
+      - name: "5.1.1.7 | AUDIT | Ensure journald default file permissions configured | check for override file"
+        ansible.builtin.stat:
+            path: /etc/tmpfiles.d/systemd.conf
+        register: ubtu20cis_5_1_1_7_tmpfile
 
-  - name: "5.1.1.7 | AUDIT | Ensure journald default file permissions configured | update settings if override exists"
-    ansible.builtin.lineinfile:
-        path: /etc/tmpfiles.d/systemd.conf
-        regexp: "{{ item.line }}"
-        line: "{{ item.line }}"
-        backrefs: true
-    when: ubtu20cis_5_1_1_7_tmpfile.stat.exists
-    loop:
-        - { regexp: '.*system.journal.*(:r(w|-)(x|-))(,|$)', line: 'a+ /var/log/journal/%m/system.journal - - - - group:adm:r--'}
-        - { regexp: '.*\/var\/log\/journal\/\%m\s.*(:r(w|-)(x|-))(,|$)', line: 'a+ /var/log/journal/%m - - - - d:group:adm:r-x,group:adm:r-x'}
-        - { regexp: '.*\/var\/log\/journal\s.*(:r(w|-)(x|-))(,|$)', line: 'a+ /var/log/journal    - - - - d:group::r-x,d:group:adm:r-x,group::r-x,group:adm:r-x'}
-
+      - name: "5.1.1.7 | AUDIT | Ensure journald default file permissions configured | update settings if override exists"
+        ansible.builtin.lineinfile:
+            path: /etc/tmpfiles.d/systemd.conf
+            regexp: "{{ item.line }}"
+            line: "{{ item.line }}"
+            backrefs: true
+        when: ubtu20cis_5_1_1_7_tmpfile.stat.exists
+        loop:
+            - { regexp: '.*system.journal.*(:r(w|-)(x|-))(,|$)', line: 'a+ /var/log/journal/%m/system.journal - - - - group:adm:r--'}
+            - { regexp: '.*\/var\/log\/journal\/\%m\s.*(:r(w|-)(x|-))(,|$)', line: 'a+ /var/log/journal/%m - - - - d:group:adm:r-x,group:adm:r-x'}
+            - { regexp: '.*\/var\/log\/journal\s.*(:r(w|-)(x|-))(,|$)', line: 'a+ /var/log/journal    - - - - d:group::r-x,d:group:adm:r-x,group::r-x,group:adm:r-x'}
