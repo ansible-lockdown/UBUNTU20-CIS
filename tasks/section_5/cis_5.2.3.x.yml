@@ -38,7 +38,7 @@
 
 - name: "5.2.3.3 | PATCH | Ensure events that modify the sudo log file are collected"
   ansible.builtin.template:
-      src: ubtu20cis_4_1_3_sudo_log.rules.j2
+      src: audit/ubtu20cis_5_2_3_3_sudo_log.rules.j2
       dest: /etc/audit/rules.d/50-sudo.rules
       owner: root
       group: root
