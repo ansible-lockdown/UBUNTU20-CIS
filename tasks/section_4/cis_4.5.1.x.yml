@@ -100,7 +100,7 @@
         ansible.builtin.shell: chage --inactive {{ ubtu20cis_pass.inactive }} {{ item }}
         failed_when: false
         with_items:
-            - "{{ ubtu20cis_passwd | selectattr('uid', '>=', 1000) | map(attribute='id') | list | intersect(ubtu20cis_5_5_1_4_current_users.stdout_lines) | list }}"
+            - "{{ ubtu20cis_passwd | selectattr('uid', '>=', 1000) | map(attribute='id') | list | intersect(ubtu20cis_4_5_1_4_current_users.stdout_lines) | list }}"
         when:
             - ubtu20cis_disruption_high
             - ubtu20cis_4_5_1_4_current_users.stdout | length > 0
