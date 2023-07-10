@@ -329,10 +329,37 @@ ubtu20cis_rule_5_1_2_7: true
 ubtu20cis_rule_5_1_3: true
 
 
+# Auditd
+ubtu20cis_rule_5_2_1_1: true
+ubtu20cis_rule_5_2_1_2: true
+ubtu20cis_rule_5_2_1_3: true
+ubtu20cis_rule_5_2_1_4: true
+ubtu20cis_rule_5_2_2_1: true
+ubtu20cis_rule_5_2_2_2: true
+ubtu20cis_rule_5_2_2_3: true
 
-ubtu20cis_rule_5_2_1: true
-ubtu20cis_rule_5_2_2: true
-ubtu20cis_rule_5_2_3: true
+ubuntu20cis_rule_5_2_3_1: true
+ubuntu20cis_rule_5_2_3_2: true
+ubuntu20cis_rule_5_2_3_3: true
+ubuntu20cis_rule_5_2_3_4: true
+ubuntu20cis_rule_5_2_3_5: true
+ubuntu20cis_rule_5_2_3_6: true
+ubuntu20cis_rule_5_2_3_7: true
+ubuntu20cis_rule_5_2_3_8: true
+ubuntu20cis_rule_5_2_3_9: true
+ubuntu20cis_rule_5_2_3_10: true
+ubuntu20cis_rule_5_2_3_11: true
+ubuntu20cis_rule_5_2_3_12: true
+ubuntu20cis_rule_5_2_3_13: true
+ubuntu20cis_rule_5_2_3_14: true
+ubuntu20cis_rule_5_2_3_15: true
+ubuntu20cis_rule_5_2_3_16: true
+ubuntu20cis_rule_5_2_3_17: true
+ubuntu20cis_rule_5_2_3_18: true
+ubuntu20cis_rule_5_2_3_19: true
+ubuntu20cis_rule_5_2_3_20: true
+ubuntu20cis_rule_5_2_3_21: true
+
 
 ubtu20cis_rule_5_4_1: true
 ubtu20cis_rule_5_4_2: true
