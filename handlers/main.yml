@@ -89,9 +89,9 @@
   tags:
       - skip_ansible_lint
 
-- name: restart rsyslog
+- name: restart syslog service
   ansible.builtin.systemd:
-      name: rsyslog
+      name: "{{ ubtu20cis_syslog_service }}"
       state: restarted
 
 - name: restart journal-upload
