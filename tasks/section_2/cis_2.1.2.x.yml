@@ -2,6 +2,14 @@
 
 - name: "2.1.2.1 | PATCH | Ensure chrony is configured with authorized timeserver"
   block:
+      - name: "2.1.2.1 | PATCH | Ensure chrony is configured with authorized timeserver | ensure source dir exists"
+        ansible.builtin.file:
+            path: /etc/chrony/sources.d
+            state: directory
+            owner: root
+            group: root
+            mode: '0755'
+
       - name: "2.1.2.1 | PATCH | Ensure chrony is configured with authorized timeserver | sources"
         ansible.builtin.template:
             src: "{{ item }}.j2"
@@ -10,16 +18,16 @@
             owner: root
             group: root
         loop:
-            - etc/chrony/sources.d/pool.source
-            - etc/chrony/sources.d/server.source
-        notify: Restart timeservice
+            - 'etc/chrony/sources.d/pool.sources'
+            - 'etc/chrony/sources.d/server.sources'
+        notify: restart timeservice
 
       - name: "2.1.2.1 | PATCH | Ensure chrony is configured with authorized timeserver | load sources"
         ansible.builtin.lineinfile:
             path: /etc/chrony/chrony.conf
             regexp: '^sourcedir /etc/chrony/sources.d'
             line: sourcedir /etc/chrony/sources.d
-        notify: Restart timeservice
+        notify: restart timeservice
   when:
       - ubtu20cis_rule_2_1_2_1
   tags:
