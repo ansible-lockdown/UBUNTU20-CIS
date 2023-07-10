@@ -22,7 +22,7 @@
       insertafter: "{{ item.after | default (omit) }}"
   notify: restart journal-upload
   loop:
-      - { regexp: 'URL=', line: 'URL={{ ubtu20cis_journald.remote_ip }}' }
+      - { regexp: 'URL=', line: 'URL={{ ubtu20cis_journald_upload.remote_url }}' }
       - { regexp: 'ServerKeyFile=', line: 'ServerKeyFile={{ ubtu20cis_journal_upload.serverkeyfile }}' }
       - { regexp: 'ServerCertificateFile=', line: 'ServerKeyFile={{ ubtu20cis_journal_upload.servercertfile }}' }
       - { regexp: 'TrustedCertificateFile=', line: 'ServerKeyFile={{ ubtu20cis_journal_upload.trustfile }}' }
