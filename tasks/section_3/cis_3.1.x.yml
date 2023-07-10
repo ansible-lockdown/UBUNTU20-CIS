@@ -83,10 +83,12 @@
 - name: "3.1.3 | PATCH | Ensure bluetooth is disabled"
   ansible.builtin.systemd:
       name: bluetooth.service
-      state: disabled
+      state: stopped
+      enabled: false
       masked: true
   when:
       - ubtu20cis_rule_3_1_3
+      - "'bluetooth' in ansible_facts.packages"
   tags:
       - level1-server
       - automated
