@@ -2,17 +2,17 @@
 - name: "SECTION | 5.1.1.1 | Configure journald remote"
   ansible.builtin.import_tasks: cis_5.1.1.1.x.yml
   when:
-      - ubtu20cis_syslog_service: == 'journald'
+      - ubtu20cis_syslog_service == 'journald'
 
 - name: "SECTION | 5.1.1 | Configure journald remote"
   ansible.builtin.import_tasks: cis_5.1.1.x.yml
   when:
-      - ubtu20cis_syslog_service: == 'journald'
+      - ubtu20cis_syslog_service == 'journald'
 
 - name: "SECTION | 5.1.2 | Configure rsyslog"
   ansible.builtin.import_tasks: cis_5.1.2.x.yml
   when:
-      - ubtu20cis_syslog_service: == 'rsyslog'
+      - ubtu20cis_syslog_service == 'rsyslog'
 
 - name: "SECTION | 5.1.3 | Configure logfiles"
   ansible.builtin.import_tasks: cis_5.1.3.yml
