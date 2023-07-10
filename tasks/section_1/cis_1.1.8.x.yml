@@ -10,7 +10,7 @@
       fstype: tmpfs
       state: present
       opts: "defaults,{% if ubtu20cis_rule_1_1_8_1 %}nodev,{% endif %}{% if ubtu20cis_rule_1_1_8_2 %}noexec,{% endif %}{% if ubtu20cis_rule_1_1_8_3 %}nosuid{% endif %}"
-  notify: Remount dev_shm
+  notify: remount dev_shm
   when:
       - ubtu20cis_rule_1_1_8_1 or
         ubtu20cis_rule_1_1_8_2 or
