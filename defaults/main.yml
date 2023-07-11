@@ -509,8 +509,8 @@ ubtu20cis_warning_banner: |
 # Section 2 Control Variables
 # Control 2.1.1.1
 # ubtu20cis_time_sync_tool is the tool in which to synchronize time
-# The two options are chrony, ntp, or timesyncd
-ubtu20cis_time_sync_tool: "chrony"
+# The two options are chrony, ntp, or systemd-timesyncd
+ubtu20cis_time_sync_tool: "systemd-timesyncd"
 
 # This setting allow to use 'pool' or 'server' options using values below.
 # only one wil be applied
