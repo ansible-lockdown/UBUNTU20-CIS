@@ -8,7 +8,7 @@
 
 - name: "SECTION | 2.1.3 | Configure systemd-timesyncd"
   ansible.builtin.import_tasks: cis_2.1.3.x.yml
-  when: ubtu20cis_time_sync_tool == "timesyncd"
+  when: ubtu20cis_time_sync_tool == "systemd-timesyncd"
 
 - name: "SECTION | 2.1.4 | Configure NTP"
   ansible.builtin.import_tasks: cis_2.1.4.x.yml
