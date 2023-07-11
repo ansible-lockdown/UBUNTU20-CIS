@@ -18,15 +18,21 @@
             owner: root
             group: root
         loop:
-            - 'etc/chrony/sources.d/pool.sources'
-            - 'etc/chrony/sources.d/server.sources'
+            - 'etc/chrony/sources.d/time.sources'
+        notify: restart timeservice
+
+      - name: "2.1.2.1 | PATCH | Ensure chrony is configured with authorized timeserver | remove current sources in .conf"
+        ansible.builtin.replace:
+            path: /etc/chrony/chrony.conf
+            regexp: '^(server.*|pool.*)'
+            replace: '#\1'
         notify: restart timeservice
 
       - name: "2.1.2.1 | PATCH | Ensure chrony is configured with authorized timeserver | load sources"
         ansible.builtin.lineinfile:
             path: /etc/chrony/chrony.conf
-            regexp: '^sourcedir /etc/chrony/sources.d'
-            line: sourcedir /etc/chrony/sources.d
+            regexp: '^include /etc/chrony/sources.d.*'
+            line: include /etc/chrony/sources.d/time.sources
         notify: restart timeservice
   when:
       - ubtu20cis_rule_2_1_2_1
