@@ -43,7 +43,7 @@
             - "{{ ubtu20cis_passwd | selectattr('uid', '>=', 1000) | map(attribute='id') | list }}"
         when:
             - ubtu20cis_disruption_high
-            - item.id != 'nobody'
+            - item != 'nobody'
   when:
       - ubtu20cis_rule_4_5_1_2
   tags:
@@ -70,7 +70,7 @@
             - "{{ ubtu20cis_passwd | selectattr('uid', '>=', 1000) | map(attribute='id') | list }}"
         when:
             - ubtu20cis_disruption_high
-            - item.id != 'nobody'
+            - item != 'nobody'
   when:
       - ubtu20cis_rule_4_5_1_3
   tags:
