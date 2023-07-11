@@ -2,7 +2,7 @@
 
 - name: "4.5.2 | PATCH | Ensure system accounts are secured"
   block:
-      - name: "4.5.2 | PATCH | Ensure system accounts are secured | Set system accounts to login"
+      - name: "4.5.2 | PATCH | Ensure system accounts are secured | Set system accounts to nologin"
         ansible.builtin.user:
             name: "{{ item }}"
             shell: /sbin/nologin
@@ -13,6 +13,7 @@
             - item != "sync"
             - item != "shutdown"
             - item != "halt"
+            - item != "irc"
 
       - name: "4.5.2 | PATCH | Ensure system accounts are secured | Lock non-root system accounts"
         ansible.builtin.user:
