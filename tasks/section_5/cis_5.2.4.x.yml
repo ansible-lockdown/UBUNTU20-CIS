@@ -64,12 +64,12 @@
 - name: "5.2.4.5 | PATCH | Ensure audit configuration files are 640 or more restrictive"
   ansible.builtin.file:
       path: "{{ item.path }}"
-      mode: 0640
+      mode: '0640'
   loop: "{{ auditd_conf_files.files }}"
   loop_control:
       label: "{{ item.path }}"
   when:
-      - item.mode != '06(0|4)0'
+      - item.mode > '0640'
       - ubtu20cis_rule_5_2_4_5
   tags:
       - level2-server
