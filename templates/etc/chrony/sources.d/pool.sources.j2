@@ -1,7 +1,0 @@
-## Ansible controlled file
-# Added as part of ansible-lockdown CIS baseline
-# provided by MindPointGroup LLC
-
-{% for pool in ubtu20cis_time_pool %}
-pool {{ pool.name }} {{ pool.options }}
-{% endfor %}
