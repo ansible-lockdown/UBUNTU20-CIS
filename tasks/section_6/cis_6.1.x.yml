@@ -146,17 +146,25 @@
 
 - name: "6.1.10 | PATCH | Ensure permissions on /etc/opasswd are configured"
   block:
+      - name: "6.1.10 | PATCH | Ensure permissions on /etc/opasswd are configured | stat opasswd"
+        ansible.builtin.stat:
+            path: /etc/opasswd
+        register: opasswd
+
+
       - name: "6.1.10 | PATCH | Ensure permissions on /etc/opasswd are configured | opasswd"
         ansible.builtin.file:
             path: /etc/opasswd
             owner: root
             group: root
             mode: 0600
+            state: touch
+        when: opasswd.stat.exists
 
       - name: "6.1.10 | PATCH | Ensure permissions on /etc/opasswd are configured | stat opasswd.old"
         ansible.builtin.stat:
-            path: /etc/opasswd
-        register: opasswd
+            path: /etc/opasswd.old
+        register: opasswd_old
 
       - name: "6.1.10 | PATCH | Ensure permissions on /etc/opasswd are configured | set opasswd.old is exists"
         ansible.builtin.file:
@@ -164,7 +172,7 @@
             owner: root
             group: root
             mode: 0600
-        when: opasswd.stat.exists
+        when: opasswd_old.stat.exists
   when:
       - ubtu20cis_rule_6_1_10
   tags:
@@ -220,7 +228,7 @@
 
       - name: "6.1.12 | AUDIT | Ensure no unowned or ungrouped files or directories exist  | Flatten no_user_items results for easier use"
         ansible.builtin.set_fact:
-            ubtu20cis_6_1_11_no_user_items_flatten: "{{ ubtu20cis_6_1_12_no_user_items.results | map(attribute='stdout_lines') | flatten }}"
+            ubtu20cis_6_1_12_no_user_items_flatten: "{{ ubtu20cis_6_1_12_no_user_items.results | map(attribute='stdout_lines') | flatten }}"
 
       - name: "6.1.12 | AUDIT | Ensure no unowned or ungrouped files or directories exist  | Alert on unowned files and directories"
         ansible.builtin.debug:
@@ -360,7 +368,7 @@
 
       - name: "6.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Flatten sgid_executables results for easier use"
         ansible.builtin.set_fact:
-            ubtu20cis_6_1_13_sgid_executables_flatten: "{{ ubtu20cis_6_1_14_sgid_executables.results | map(attribute='stdout_lines') | flatten }}"
+            ubtu20cis_6_1_13_sgid_executables_flatten: "{{ ubtu20cis_6_1_13_sgid_executables.results | map(attribute='stdout_lines') | flatten }}"
 
       - name: "6.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Alert SGID executables exist"
         ansible.builtin.debug:
