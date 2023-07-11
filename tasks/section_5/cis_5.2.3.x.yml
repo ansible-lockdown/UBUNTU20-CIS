@@ -172,7 +172,7 @@
 
 - name: "5.2.3.10 | PATCH | Ensure successful file system mounts are collected"
   ansible.builtin.template:
-      src: audit/ubtu20cis_5_2_3_10_audit.rules.j2
+      src: audit/ubtu20cis_5_2_3_10_mount.rules.j2
       dest: /etc/audit/rules.d/50-mount.rules
       owner: root
       group: root
@@ -370,7 +370,7 @@
   changed_when: false
   register: ubtu20cis_rule_5_2_3_21_augen_check
   when:
-      - ubtu20cis_rule_5_3_3_21
+      - ubtu20cis_rule_5_2_3_21
   tags:
       - level2-server
       - level2-workstation
