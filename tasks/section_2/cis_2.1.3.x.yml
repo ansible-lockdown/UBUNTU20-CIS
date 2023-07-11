@@ -6,13 +6,12 @@
         ansible.builtin.template:
             src: "{{ item }}.j2"
             dest: "/{{ item }}"
-            state: present
             mode: 0644
             owner: root
             group: root
         loop:
             - "etc/systemd/timesyncd.conf.d/50-timesyncd.conf"
-        notify: Restart timeservice
+        notify: restart timeservice
   when:
       - ubtu20cis_rule_2_1_3_1
   tags:
