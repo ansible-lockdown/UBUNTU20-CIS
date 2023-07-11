@@ -1,5 +1,11 @@
 ---
 
+- name: Gather the package facts
+  ansible.builtin.package_facts:
+      manager: auto
+  tags:
+      - always
+
 - name: "PRELIM | Section 1.1 | Create list of mount points"
   ansible.builtin.set_fact:
       mount_names: "{{ ansible_mounts | map(attribute='mount') | list }}"
@@ -84,6 +90,68 @@
       - ubtu20cis_rule_3_1_2
   tags:
       - rule_3.1.2
+      - always
+
+- name: "PRELIM | PATCH | Ensure auditd is installed"
+  block:
+      - name: "PRELIM | PATCH | Ensure auditd is installed"
+        ansible.builtin.package:
+            name: ['auditd', 'audispd-plugins']
+            state: present
+
+      - name: "PRELIM | 5.2.4.5 | Audit conf and rules files | list files"
+        ansible.builtin.find:
+            path: /etc/audit/
+            file_type: file
+            recurse: true
+            patterns: '*.conf,*.rules'
+        register: auditd_conf_files
+  when:
+      - ubtu20cis_rule_5_2_1_1
+      - "'auditd' not in ansible_facts.packages or
+        'auditd-plugins' not in ansible_facts.packages"
+      - ubtu20cis_rule_5_2_4_5 or
+        ubtu20cis_rule_5_2_4_6 or
+        ubtu20cis_rule_5_2_4_7
+  tags:
+      - level2-server
+      - level2-workstation
+      - patch
+      - auditd
+      - always
+
+- name: "PRELIM | Discover Interactive UID MIN and MIN from logins.def"
+  block:
+      - name: "PRELIM | Capture UID_MIN information from logins.def"
+        ansible.builtin.shell: grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
+        changed_when: false
+        register: uid_min_id
+
+      - name: "PRELIM | Capture UID_MAX information from logins.def"
+        ansible.builtin.shell: grep -w "^UID_MAX" /etc/login.defs | awk '{print $NF}'
+        changed_when: false
+        register: uid_max_id
+
+      - name: "PRELIM | Capture GID_MIN information from logins.def"
+        ansible.builtin.shell: grep -w "^GID_MIN" /etc/login.defs | awk '{print $NF}'
+        changed_when: false
+        register: gid_min_id
+
+      - name: "PRELIM | set_facts for interactive uid/gid"
+        ansible.builtin.set_fact:
+            min_int_uid: "{{ uid_min_id.stdout }}"
+            max_int_uid: "{{ uid_max_id.stdout }}"
+            min_int_gid: "{{ gid_min_id.stdout }}"
+  when:
+      - not discover_int_uid
+  tags:
+      - always
+
+- name: "PRELIM | Interactive User accounts"
+  ansible.builtin.shell: 'cat /etc/passwd | cut -d: -f5,6,7 | grep -Ev ":(/usr|)/(s|)bin/nologin|/root|:/bin:" | cut -d: -f2'
+  changed_when: false
+  register: interactive_users_home
+  tags:
       - always
 
 - name: "PRELIM | Install Network-Manager"
