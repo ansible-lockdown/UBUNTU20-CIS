@@ -43,7 +43,7 @@
             path: "{{ ubtu20cis_grub_file }}"
             owner: root
             group: root
-            mode: 0400
+            mode: 0600
         when:
             - ubtu20cis_1_4_2_grub_cfg_status.stat.exists
   when:
