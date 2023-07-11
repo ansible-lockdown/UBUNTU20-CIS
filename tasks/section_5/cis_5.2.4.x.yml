@@ -27,9 +27,9 @@
             owner: root
             group: root
   when:
-      - ubtu20cis_rule_5.2.4_1 or
-        ubtu20cis_rule_5.2.4_2 or
-        ubtu20cis_rule_5.2.4_3
+      - ubtu20cis_rule_5_2_4_1 or
+        ubtu20cis_rule_5_2_4_2 or
+        ubtu20cis_rule_5_2_4_3
   tags:
       - level2-server
       - level2-workstation
@@ -53,7 +53,7 @@
             mode: 0750
         when: not auditlog_dir.stat.mode is match('07(0|5)0')
   when:
-      - ubtu20cis_rule_5.2.4_4
+      - ubtu20cis_rule_5_2_4_4
   tags:
       - level2-server
       - level2-workstation
@@ -70,7 +70,7 @@
       label: "{{ item.path }}"
   when:
       - item.mode != '06(0|4)0'
-      - ubtu20cis_rule_5.2.4_5
+      - ubtu20cis_rule_5_2_4_5
   tags:
       - level2-server
       - level2-workstation
@@ -86,7 +86,7 @@
   loop_control:
       label: "{{ item.path }}"
   when:
-      - ubtu20cis_rule_5.2.4_6
+      - ubtu20cis_rule_5_2_4_6
   tags:
       - level2-server
       - level2-workstation
@@ -102,7 +102,7 @@
   loop_control:
       label: "{{ item.path }}"
   when:
-      - ubtu20cis_rule_5.2.4_7
+      - ubtu20cis_rule_5_2_4_7
   tags:
       - level2-server
       - level2-workstation
@@ -134,7 +134,7 @@
             label: "{{ item.item }}"
         when: not item.stat.mode is match('07(0|5)0')
   when:
-      - ubtu20cis_rule_5.2.4_8
+      - ubtu20cis_rule_5_2_4_8
   tags:
       - level2-server
       - level2-workstation
@@ -155,7 +155,7 @@
       - /sbin/auditd
       - /sbin/augenrules
   when:
-      - ubtu20cis_rule_5.2.4_9
+      - ubtu20cis_rule_5_2_4_9
   tags:
       - level2-server
       - level2-workstation
@@ -175,7 +175,7 @@
       - /sbin/auditd
       - /sbin/augenrules
   when:
-      - ubtu20cis_rule_5.2.4_10
+      - ubtu20cis_rule_5_2_4_10
   tags:
       - level2-server
       - level2-workstation
@@ -197,7 +197,7 @@
       - /sbin/auditd p+i+n+u+g+s+b+acl+xattrs+sha512
       - /sbin/augenrules p+i+n+u+g+s+b+acl+xattrs+sha512
   when:
-      - ubtu20cis_rule_5.2.4_11
+      - ubtu20cis_rule_5_2_4_11
   tags:
       - level2-server
       - level2-workstation
