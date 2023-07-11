@@ -5,15 +5,17 @@
 ubtu20cis_oscap_scan: false
 ubtu20cis_report_dir: /tmp
 
-ubtu20cis_section1_patch: false
-ubtu20cis_section2_patch: false
-ubtu20cis_section3_patch: false
-ubtu20cis_section4_patch: false
+ubtu20cis_section1_patch: true
+ubtu20cis_section2_patch: true
+ubtu20cis_section3_patch: true
+ubtu20cis_section4_patch: true
 ubtu20cis_section5_patch: true
 ubtu20cis_section6_patch: true
 
 # System will reboot if false, can give better audit results
 skip_reboot: true
+
+system_is_container: false
 
 ## Benchmark name used by auditing control role
 # The audit variable found at the base
@@ -444,6 +446,13 @@ ubtu20cis_ipv6_required: false
 # ubtu20cis_desktop_required is the toggle for requiring desktop environments. True means you use a desktop and will not disable/remove needed items to run a desktop (not recommented for servers)
 # false means you do not require a desktop
 ubtu20cis_desktop_required: false
+
+# UID settings for interactive users
+# These are discovered via logins.def if set true
+discover_int_uid: false
+min_int_uid: 1000
+max_int_uid: 65533
+
 
 # Section 1 Control Variables
 # This will force the tmp_mnt type if not correctly discovered
