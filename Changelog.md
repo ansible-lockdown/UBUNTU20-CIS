@@ -1,5 +1,20 @@
 # Change log for Ubuntu 2004
 
+## V2.0 based upon CIS 2.0.1
+
+- v2.0.1 - refer to change history from official CIS pdf.
+  - ReWrite of many rules
+  - Ordering and numbering of rules
+  - many title updates
+- timesync options increased
+  - default systemd-timesyncd
+  - chrony options updated
+- idempotency improvements
+- new discoveries
+  - interactive users
+  - uid min value
+  - is_container discovery and default var
+
 ## V1.0.1 - based upon CIS 1.1.0
 
 thanks to ikthomas
