@@ -127,20 +127,6 @@
 - name: flush handlers
   ansible.builtin.meta: flush_handlers
 
-- name: reboot system
-  block:
-      - name: reboot system if not skipped
-        ansible.builtin.reboot:
-        when:
-            - not skip_reboot
-
-      - name: Warning a reboot required but skip option set
-        ansible.builtin.debug:
-            msg: "Warning!! changes have been made that require a reboot to be implemented but skip reboot was set - Can affect compliance check results"
-        changed_when: true
-        when:
-            - skip_reboot
-
 - name: run post remediation tasks
   ansible.builtin.import_tasks: post.yml
   tags:
