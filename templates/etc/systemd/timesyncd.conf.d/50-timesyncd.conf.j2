@@ -2,7 +2,9 @@
 # Added as part of ansible-lockdown CIS baseline
 # provided by MindPointGroup LLC
 
-NTP={{ ubtu20cis_time_pool }}
+[Time]
+
+NTP={{ ubtu20cis_time_pool.name }}
 
 
 FallbackNTP={% for servers in ubtu20cis_time_servers %}{{ servers.name }} {% endfor %}
