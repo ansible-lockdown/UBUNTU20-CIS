@@ -58,6 +58,7 @@
       name: network-manager
       state: present
   when:
+      - wireless_interfaces.stdout is defined
       - wireless_interfaces.stdout | length > 0
       - ubtu20cis_install_network_manager
       - ubtu20cis_rule_3_1_2

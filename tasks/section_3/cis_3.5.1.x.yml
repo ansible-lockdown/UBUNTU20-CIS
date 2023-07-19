@@ -164,10 +164,11 @@
       rule: allow
       direction: in
       from_ip: '{{ item.from }}'
-      to_port: '{{ item.ports }}'
+      to_port: '{{ item.port }}'
       proto: '{{ item.proto }}'
-  loop:
-      - "{{ ubtu20cis_ufw_allow_in }}"
+  loop: "{{ ubtu20cis_ufw_allow_in }}"
+  loop_control:
+      label: "{{ item.port }}"
   notify: reload ufw
   when: ufw_add_incoming
   tags:

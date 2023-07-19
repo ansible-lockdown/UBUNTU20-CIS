@@ -396,17 +396,6 @@ ubtu20cis_tmp_fstab_options: "defaults,rw,nosuid,nodev,noexec,relatime"
 # To conform to CIS control 1.1.9 noexec needs to be present
 ubtu20cis_dev_shm_fstab_options: "defaults,noexec,nodev,nosuid"
 
-# Control 1.1.12/1.1.13/1.1.14
-# These are the settings for the /var/tmp mount
-# To conform to CIS control 1.1.12 nodev needs to be present in opts
-# To conform to CIS control 1.1.13 nosuid needs to be present in opts
-# To conform to CIS control 1.1.14 noexec needs to be present in opts
-ubtu20cis_vartmp:
-    source: /tmp
-    fstype: none
-    opts: "defaults,nodev,nosuid,noexec,bind"
-    enabled: false
-
 # Control 1.3.1 - allow aide to be configured
 ubtu20cis_config_aide: true
 
@@ -431,14 +420,14 @@ ubtu20cis_aide_cron:
 ubtu20cis_set_grub_password: true
 ubtu20cis_grub_user_file: /etc/grub.d/40_custom
 ubtu20cis_grub_users: root
-ubtu20cis_grub_pw: "grub.pbkdf2.sha512.10000.ChangeMe"
+ubtu20cis_grub_pw: "grub.pbkdf2.sha512.10000"
 # Change the following value to true if you wish to be prompted to get past grub bootloader
 ubtu20cis_ask_passwd_to_boot: false
 
 # 1.4.4
 # note this needs to be in the encrypted format
 ubtu20cis_set_root_password: true
-ubtu20cis_root_pw: $6$this_is_needs_to_be_changed
+ubtu20cis_root_pw: $6$
 
 # 1.7.1
 # disable dynamic motd to stop extra sshd message from appearing
@@ -454,7 +443,7 @@ ubtu20cis_warning_banner: |
 # Control 2.1.1.1
 # ubtu20cis_time_sync_tool is the tool in which to synchronize time
 # The two options are chrony, ntp, or systemd-timesyncd
-ubtu20cis_time_sync_tool: "ntp"
+ubtu20cis_time_sync_tool: "chrony"
 
 # Control 2.1.1.2
 # ubtu20cis_ntp_server_list is the list ntp servers
@@ -504,7 +493,7 @@ ubtu20cis_ufw_allow_out_ports:
 
 ufw_add_incoming: false
 ubtu20cis_ufw_allow_in:
-    - ports: 22
+    - port: 22
       from: any
       proto: tcp
 

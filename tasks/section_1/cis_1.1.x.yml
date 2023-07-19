@@ -127,7 +127,7 @@
       - automated
       - audit
       - rule_1.1.11
-      - var/tmp
+      - var_tmp
 
 - name: |
     "1.1.12 | PATCH | Ensure /var/tmp partition includes the nodev option"
@@ -135,16 +135,19 @@
     "1.1.14 | PATCH | Ensure /var/tmp partition includes the noexec option"
   ansible.posix.mount:
       name: /var/tmp
-      src: "{{ ubtu20cis_vartmp['source'] }}"
+      src: "{{ item.device }}"
       state: present
-      fstype: "{{ ubtu20cis_vartmp['fstype'] }}"
-      opts: "{{ ubtu20cis_vartmp['opts'] }}"
+      fstype: "{{ item.fstype }}"
+      opts: "defaults,{% if ubtu20cis_rule_1_1_12 %}nodev,{% endif %}{% if ubtu20cis_rule_1_1_13 %}nosuid,{% endif %}{% if ubtu20cis_rule_1_1_14 %}noexec{% endif %}"
+  loop: "{{ ansible_mounts }}"
+  loop_control:
+      label: "{{ item.device }}"
   notify: remount var_tmp
   when:
       - ubtu20cis_rule_1_1_12 or
         ubtu20cis_rule_1_1_13 or
         ubtu20cis_rule_1_1_14
-      - ubtu20cis_vartmp['enabled']
+      - item.mount == '/var/tmp'
   tags:
       - level1-server
       - level1-workstation
@@ -153,7 +156,7 @@
       - rule_1.1.12
       - rule_1.1.13
       - rule_1.1.14
-      - var/tmp
+      - var_tmp
 
 - name: "1.1.15 | AUDIT | Ensure separate partition exists for /var/log"
   block:
@@ -175,7 +178,7 @@
       - automated
       - audit
       - rule_1.1.15
-      - var/log
+      - var_log
 
 - name: "1.1.16 | AUDIT | Ensure separate partition exists for /var/log/audit"
   block:
@@ -196,7 +199,7 @@
       - level2-workstation
       - automated
       - audit
-      - var/log/audit
+      - var_log_audit
 
 - name: "1.1.17 | AUDIT | Ensure separate partition exists for /home"
   block:
@@ -217,7 +220,7 @@
       - level2-workstation
       - automated
       - audit
-      - /home
+      - home
 
 - name: "1.1.18 | PATCH | Ensure /home partition includes the nodev option"
   ansible.posix.mount:
@@ -226,7 +229,7 @@
       state: mounted
       fstype: "{{ item.fstype }}"
       opts: "nodev"
-  with_items: "{{ ansible_mounts }}"
+  loop: "{{ ansible_mounts }}"
   loop_control:
       label: "{{ item.device }}"
   when:
@@ -238,7 +241,7 @@
       - automated
       - patch
       - rule_1.1.18
-      - /home
+      - home
 
 - name: "1.1.19 | AUDIT | Ensure nodev option set on removable media partitions"
   ansible.builtin.debug:
