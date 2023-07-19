@@ -349,6 +349,7 @@
             state: directory
             owner: "{{ item.id }}"
             group: "{{ item.gid }}"
+            mode: "0750"
         register: ubtu20cis_6_2_11_home_dir
         loop: "{{ ubtu20cis_passwd  | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '<=', max_int_uid | int ) | list }}"
         loop_control:
