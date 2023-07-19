@@ -1,9 +1,4 @@
 ---
-# If you would like a report at the end accordin to OpenSCAP as to the report results
-# then you should set ubtu20cis_oscap_scan to true/yes.
-# NOTE: This requires the python_xmltojson package on the control host.
-ubtu20cis_oscap_scan: false
-ubtu20cis_report_dir: /tmp
 
 ubtu20cis_section1_patch: true
 ubtu20cis_section2_patch: true
@@ -498,7 +493,7 @@ ubtu20cis_root_pw: $6$
 
 # 1.7.1
 # disable dynamic motd to stop extra sshd message from appearing
-ubtu20cis_disable_dynamic_motd: false
+ubtu20cis_disable_dynamic_motd: true
 
 # Control 1.8.2
 # This will be the motd banner must not contain the below items in order to be compliant with Ubuntu 20 CIS
@@ -662,8 +657,6 @@ ubtu20cis_shell_session_timeout:
     file: /etc/profile.d/tmout.sh
     timeout: 900
 
-# ubtu20cis_su_group is the su group to use with pam_wheel
-ubtu20cis_su_group: "wheel"
 
 # Section 5 Control Variables - Logging and Auditing
 
