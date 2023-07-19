@@ -175,7 +175,7 @@
       - ufw
       - ufw_in_ports
 
-- name: "3.5.1.7 | PATCH | Ensure ufw default deny firewall policy"
+- name: "3.4.1.7 | PATCH | Ensure ufw default deny firewall policy"
   community.general.ufw:
       default: deny
       direction: "{{ item }}"
@@ -185,12 +185,12 @@
       - outgoing
       - routed
   when:
-      - ubtu20cis_rule_3_5_1_7
+      - ubtu20cis_rule_3_4_1_7
       - ubtu20cis_firewall_package == "ufw"
   tags:
       - level1-server
       - level1-workstation
       - automated
       - patch
-      - rule_3.5.1.7
+      - rule_3.4.1.7
       - ufw
