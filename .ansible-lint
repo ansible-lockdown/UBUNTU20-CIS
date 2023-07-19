@@ -1,15 +1,18 @@
+---
+
 parseable: true
 quiet: true
 skip_list:
     - 'schema'
     - 'no-changed-when'
     - 'var-spacing'
+    - 'fqcn-builtins'
     - 'experimental'
     - 'name[play]'
-    - 'key-order[task]'
     - 'name[casing]'
     - 'name[template]'
     - 'fqcn[action]'
+    - 'key-order[task]'
     - '204'
     - '305'
     - '303'

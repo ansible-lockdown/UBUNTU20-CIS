@@ -327,7 +327,6 @@ ubtu20cis_rule_5_1_2_7: true
 
 ubtu20cis_rule_5_1_3: true
 
-
 # Auditd
 ubtu20cis_rule_5_2_1_1: true
 ubtu20cis_rule_5_2_1_2: true
@@ -399,7 +398,6 @@ ubtu20cis_rule_6_2_9: true
 ubtu20cis_rule_6_2_10: true
 ubtu20cis_rule_6_2_11: true
 ubtu20cis_rule_6_2_12: true
-
 
 # Service configuration variables, set to true to keep service
 ubtu20cis_allow_autofs: false
@@ -561,7 +559,6 @@ ubtu20cis_ufw_allow_in:
 # nftables configs are applied to
 # ubtu20cis_nftables_table_name: "inet filter"
 
-
 # Controls 3.5.3.2.1 through 3.5.3.3.4
 # The iptables module only writes to memory which means a reboot could revert settings
 # The below toggle will install iptables-persistent and save the rules in memory (/etc/iptables/rules.v4 or rules.v6)
@@ -657,7 +654,6 @@ ubtu20cis_shell_session_timeout:
     file: /etc/profile.d/tmout.sh
     timeout: 900
 
-
 # Section 5 Control Variables - Logging and Auditing
 
 # Logging
@@ -689,8 +685,6 @@ ubtu20cis_rsyslog_ansible_managed: true
 
 # ubtu20cis_remote_log_server is the remote logging server
 ubtu20cis_remote_log_server: 192.168.2.100
-
-
 
 # ubtu20cis_audit_back_log_limit is the audit_back_log limit and should be set to a sufficient value
 # The example from CIS uses 8192

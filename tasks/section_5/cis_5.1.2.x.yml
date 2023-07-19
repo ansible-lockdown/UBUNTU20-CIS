@@ -44,7 +44,6 @@
       - journald
       - rule_5.1.2.3
 
-
 - name: "5.1.2.4 | PATCH | Ensure rsyslog default file permissions configured"
   ansible.builtin.lineinfile:
       path: /etc/rsyslog.conf
