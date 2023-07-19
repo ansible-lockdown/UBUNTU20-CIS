@@ -493,7 +493,7 @@ ubtu20cis_ufw_allow_out_ports:
 
 ufw_add_incoming: false
 ubtu20cis_ufw_allow_in:
-    - ports: 22
+    - port: 22
       from: any
       proto: tcp
 
