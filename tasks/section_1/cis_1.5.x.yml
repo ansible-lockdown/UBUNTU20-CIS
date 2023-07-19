@@ -65,6 +65,12 @@
             group: root
             mode: 0644
 
+      - name: "1.5.4 | PATCH | Ensure Automatic Error Reporting is not enabled | stop service"
+        ansible.builtin.systemd:
+            name: apport
+            state: stopped
+            enabled: false
+
       - name: "1.5.4 | PATCH | Ensure Automatic Error Reporting is not enabled | remove package"
         ansible.builtin.package:
             name: apport
