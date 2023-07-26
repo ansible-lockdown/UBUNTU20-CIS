@@ -15,6 +15,8 @@
   - uid min value
   - is_container discovery and default var
 
+- Added test for rule 4.3.4 check user is using sudo has password set before NOPASSWD removed from sudoers
+
 ## V1.0.1 - based upon CIS 1.1.0
 
 thanks to ikthomas
