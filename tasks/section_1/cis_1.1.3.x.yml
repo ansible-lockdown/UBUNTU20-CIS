@@ -31,7 +31,7 @@
       state: present
       fstype: "{{ item.fstype }}"
       opts: defaults,{% if ubtu20cis_rule_1_1_3_2 %}nodev,{% endif %}{% if ubtu20cis_rule_1_1_3_3 %}nosuid{% endif %}
-  notify: Remount var
+  notify: remount var
   loop: "{{ ansible_mounts }}"
   loop_control:
       label: "{{ item.device }}"

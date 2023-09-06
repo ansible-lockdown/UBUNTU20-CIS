@@ -10,9 +10,29 @@
       name: /dev/shm
       state: remounted
 
+- name: remount var
+  ansible.posix.mount:
+      name: /var
+      state: remounted
+
 - name: remount var_tmp
   ansible.posix.mount:
       name: /var/tmp
+      state: remounted
+
+- name: remount var_log
+  ansible.posix.mount:
+      name: /var/log
+      state: remounted
+
+- name: remount var_log_audit
+  ansible.posix.mount:
+      name: /var/log/audit
+      state: remounted
+
+- name: remount home
+  ansible.posix.mount:
+      name: /home
       state: remounted
 
 - name: grub update
