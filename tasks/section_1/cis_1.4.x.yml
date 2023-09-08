@@ -9,7 +9,7 @@
             line: '\1 {{ ubtu20cis_bootloader_password_hash }}'
             insertafter: set superusers="{{ ubtu20cis_grub_user }}"
             state: present
-        notify: Grub update
+        notify: grub update
 
       - name: "1.4.1 | PATCH | Ensure bootloader password is set | allow unrestricted boot"
         ansible.builtin.lineinfile:
@@ -17,7 +17,7 @@
             regexp: '(^CLASS="--class gnu-linux --class gnu --class os).*"$'
             line: '\g<1> --unrestricted"'
             backrefs: true
-        notify: Grub update
+        notify: grub update
         when: not ubtu20cis_ask_passwd_to_boot
   when:
       - ubtu20cis_set_boot_pass
