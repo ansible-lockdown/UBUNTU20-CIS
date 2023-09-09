@@ -8,6 +8,12 @@
             regexp: '^install usb-storage'
             line: 'install usb-storage /bin/true'
             create: true
+      - name: "1.1.10 | PATCH | Disable USB Storage | Set modprobe config blacklist"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/usb_storage.conf
+            regexp: '^blacklist usb-storage'
+            line: 'blacklist usb-storage'
+            create: true
 
       - name: "1.1.10 | PATCH | Disable USB Storage | Remove usb-storage module"
         community.general.modprobe:
