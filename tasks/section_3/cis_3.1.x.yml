@@ -15,7 +15,7 @@
             regexp: '^GRUB_CMDLINE_LINUX'
             line: 'GRUB_CMDLINE_LINUX="{{ ubtu20cis_3_1_1_grub_cmdline_linux_settings.stdout }} ipv6.disable=1"'
         when: "'ipv6.disable' not in ubtu20cis_3_1_1_grub_cmdline_linux_settings.stdout"
-        notify: grub update
+        notify: Grub update
 
       - name: "3.1.1 | PATCH | Disable IPv6 | Set ipv6.disable to 1 if exists"
         ansible.builtin.replace:
@@ -23,7 +23,7 @@
             regexp: 'ipv6\.disable=.'
             replace: 'ipv6.disable=1'
         when: "'ipv6.disable' in ubtu20cis_3_1_1_grub_cmdline_linux_settings.stdout"
-        notify: grub update
+        notify: Grub update
 
       - name: "3.1.1 | PATCH | Disable IPv6 | Remove net.ipv6.conf.all.disable_ipv6"
         ansible.builtin.lineinfile:
@@ -69,6 +69,15 @@
         loop:
             - "{{ wireless_interfaces.stdout_lines }}"
 
+      - name: "3.1.2 | PATCH | Ensure wireless interfaces are not loadable | blacklist"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: 'blacklist\s*{{ item }}\s*'
+            line: "blacklist {{ item.line }}"
+            create: true
+        loop:
+            - "{{ wireless_interfaces.stdout_lines }}"
+
   when:
       - ubtu20cis_rule_3_1_2
       - wireless_interfaces.stdout | length > 0
@@ -97,11 +106,20 @@
       - bluetooth
 
 - name: "3.1.4 | PATCH | Ensure DCCP is disabled"
-  ansible.builtin.lineinfile:
-      path: /etc/modprobe.d/dccp.conf
-      regexp: '^(#)?install dccp(\\s|$)'
-      line: 'install dccp /bin/true'
-      create: true
+  block:
+      - name: "3.1.4 | PATCH | Ensure DCCP is disabled | modprobe"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/dccp.conf
+            regexp: '^(#)?install dccp(\\s|$)'
+            line: 'install dccp /bin/true'
+            create: true
+
+      - name: "3.1.4 | PATCH | Ensure DCCP is disabled | blacklist"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: '^(#)?blacklist dccp(\\s|$)'
+            line: 'blacklist dccp'
+            create: true
   when:
       - ubtu20cis_rule_3_1_4
   tags:
@@ -113,11 +131,21 @@
       - dccp
 
 - name: "3.1.5 | PATCH | Ensure SCTP is disabled"
-  ansible.builtin.lineinfile:
-      path: /etc/modprobe.d/sctp.conf
-      regexp: "^(#)?install sctp(\\s|$)"
-      line: 'install sctp /bin/true'
-      create: true
+  block:
+      - name: "3.1.5 | PATCH | Ensure SCTP is disabled | modprobe"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/sctp.conf
+            regexp: "^(#)?install sctp(\\s|$)"
+            line: 'install sctp /bin/true'
+            create: true
+
+      - name: "3.1.5 | PATCH | Ensure SCTP is disabled | blacklist"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: "^(#)?blacklist sctp(\\s|$)"
+            line: 'blacklist sctp'
+            create: true
+
   when:
       - ubtu20cis_rule_3_1_5
   tags:
@@ -129,11 +157,20 @@
       - sctp
 
 - name: "3.1.6 | PATCH | Ensure RDS is disabled"
-  ansible.builtin.lineinfile:
-      path: /etc/modprobe.d/rds.conf
-      regexp: '^(#)?install rds(\\s|$)'
-      line: 'install rds /bin/true'
-      create: true
+  block:
+      - name: "3.1.6 | PATCH | Ensure RDS is disabled | modprobe"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/rds.conf
+            regexp: '^(#)?install rds(\\s|$)'
+            line: 'install rds /bin/true'
+            create: true
+
+      - name: "3.1.6 | PATCH | Ensure RDS is disabled | blacklist"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: "^(#)?blacklist rds(\\s|$)"
+            line: 'blacklist rds'
+            create: true
   when:
       - ubtu20cis_rule_3_1_6
   tags:
@@ -145,11 +182,20 @@
       - rds
 
 - name: "3.1.7 | PATCH | Ensure TIPC is disabled"
-  ansible.builtin.lineinfile:
-      path: /etc/modprobe.d/tipc.conf
-      regexp: '^(#)?install tipc(\\s|$)'
-      line: install tipc /bin/true
-      create: true
+  block:
+      - name: "3.1.7 | PATCH | Ensure TIPC is disabled | modprobe"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/tipc.conf
+            regexp: '^(#)?install tipc(\\s|$)'
+            line: install tipc /bin/true
+            create: true
+
+      - name: "3.1.7 | PATCH | Ensure TIPC is disabled | blacklist"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: "^(#)?blacklist tipc(\\s|$)"
+            line: 'blacklist tipc'
+            create: true
   when:
       - ubtu20cis_rule_3_1_7
   tags:
