@@ -1,0 +1,22 @@
+[
+ {
+  "Description": "Generic API Key",
+  "StartLine": 479,
+  "EndLine": 479,
+  "StartColumn": 23,
+  "EndColumn": 63,
+  "Match": "password_hash: \"grub.pbkdf2.sha512.10000\"",
+  "Secret": "grub.pbkdf2.sha512.10000",
+  "File": "defaults/main.yml",
+  "SymlinkFile": "",
+  "Commit": "ea067d7f8f12f2a81d7b2b99449799b1fae1ae51",
+  "Entropy": 3.8035088,
+  "Author": "Mark Bolwell",
+  "Email": "mark.bollyuk@gmail.com",
+  "Date": "2023-07-10T15:12:00Z",
+  "Message": "updated default vars\n\nSigned-off-by: Mark Bolwell \u003cmark.bollyuk@gmail.com\u003e",
+  "Tags": [],
+  "RuleID": "generic-api-key",
+  "Fingerprint": "ea067d7f8f12f2a81d7b2b99449799b1fae1ae51:defaults/main.yml:generic-api-key:479"
+ }
+]
