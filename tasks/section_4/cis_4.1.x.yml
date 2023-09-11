@@ -124,7 +124,7 @@
             dest: /etc/cron.allow
             force: false
             owner: root
-            group: root
+            group: crontab
             mode: 0640
   when:
       - ubtu20cis_rule_4_1_8
