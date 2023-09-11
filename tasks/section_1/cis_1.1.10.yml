@@ -14,6 +14,13 @@
             name: usb-storage
             state: absent
         when: ansible_connection != 'docker'
+
+      - name: "1.1.10 | PATCH | Disable USB Storage | blacklist"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: '^blacklist usb-storage'
+            line: 'blacklist usb-storage'
+            create: true
   when:
       - ubtu20cis_rule_1_1_10
       - not ubtu20cis_allow_usb_storage
