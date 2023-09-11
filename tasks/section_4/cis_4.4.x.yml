@@ -151,14 +151,14 @@
             type: password
             control: '[success=1 default=ignore]'
             module_path: pam_unix.so
-            module_arguments: "{{ ubtu20cis_pw_hash_algo }}"
+            module_arguments: "{{ ubtu20cis_passwd_hash_algo }}"
             state: args_present
         when: ubtu20cis_4_4_4_pam_unix_state.stdout | length > 0
 
       - name: "4.4.4 | PATCH | Ensure strong password hashing algorithm is configured | Set hashing if pam_unix.so does not exist"
         ansible.builtin.lineinfile:
             path: /etc/pam.d/common-password
-            line: 'password        [success=1 default=ignore]      pam_unix.so {{ ubtu20cis_pw_hash_algo }}'
+            line: 'password        [success=1 default=ignore]      pam_unix.so {{ ubtu20cis_passwd_hash_algo }}'
             insertafter: '^# end of pam-auth-update config'
         when: ubtu20cis_4_4_4_pam_unix_state.stdout | length == 0
   when:
