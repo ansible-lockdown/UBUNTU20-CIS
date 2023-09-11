@@ -622,7 +622,7 @@ ubtu20cis_sudo_timestamp_timeout: 15
 ubtu20cis_sugroup: nosugroup
 
 # Controls 4.4.x
-ubtu20cis_pw_hash_algo: sha512
+ubtu20cis_passwd_hash_algo: sha512
 # pam_tally2 login options allows for audit to be removed if required
 ubtu20cis_pamtally2_login_opts: 'onerr=fail audit silent deny=5 unlock_time=900'
 

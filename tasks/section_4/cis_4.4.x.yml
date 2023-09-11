@@ -183,7 +183,7 @@
       # This is only looking for sha512 if yescrypt need to change the $6$ to $y$
       - name: "4.4.5 | AUDIT | Ensure all current passwords uses the configured hashing algorithm | check has found"
         ansible.builtin.debug:
-            msg: "Warning!! Passwords found using not using {{ ubtu20cis_passwd_hash_algo }} algorithm - This required manual intervention"
+            msg: "Warning!! Passwords found using not using {{ ubtu20cis_passwd_hash_algo }} algorithm - This requires manual intervention"
         when: "' $6$' not in ubtu20cis_4_4_5_passwd_hash_used.stdout"
 
       - name: "4.4.5 | WARN | Ensure all current passwords uses the configured hashing algorithm | warn_count"
