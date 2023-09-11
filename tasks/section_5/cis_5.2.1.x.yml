@@ -43,7 +43,7 @@
             regexp: '^GRUB_CMDLINE_LINUX='
             line: 'GRUB_CMDLINE_LINUX="{{ ubtu20cis_5_2_1_3_cmdline_settings.stdout }} audit=1"'
         when: "'audit=' not in ubtu20cis_5_2_1_3_cmdline_settings.stdout"
-        notify: grub update
+        notify: Grub update
 
       - name: "5.2.1.3 | PATCH | Ensure auditing for processes that start prior to auditd is enabled | Update setting if exists"
         ansible.builtin.replace:
@@ -52,7 +52,7 @@
             replace: 'audit=1'
             after: '^GRUB_CMDLINE_LINUX="'
             before: '"'
-        notify: grub update
+        notify: Grub update
         when: "'audit=' in ubtu20cis_5_2_1_3_cmdline_settings.stdout"
   when:
       - ubtu20cis_rule_5_2_1_3
@@ -78,7 +78,7 @@
             path: /etc/default/grub
             regexp: '^GRUB_CMDLINE_LINUX='
             line: 'GRUB_CMDLINE_LINUX="{{ ubtu20cis_5_2_1_4_cmdline_settings.stdout }} audit_backlog_limit={{ ubtu20cis_audit_back_log_limit }}"'
-        notify: grub update
+        notify: Grub update
         when: "'audit_backlog_limit=' not in ubtu20cis_5_2_1_4_cmdline_settings.stdout"
 
       - name: "5.2.1.4 | PATCH | Ensure audit_backlog_limit is sufficient | Update setting if exists"
@@ -88,7 +88,7 @@
             replace: 'audit_backlog_limit={{ ubtu20cis_audit_back_log_limit }}'
             after: '^GRUB_CMDLINE_LINUX="'
             before: '"'
-        notify: grub update
+        notify: Grub update
   when:
       - ubtu20cis_rule_5_2_1_4
   tags:
