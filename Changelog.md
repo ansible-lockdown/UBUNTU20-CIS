@@ -14,13 +14,15 @@
   - interactive users
   - uid min value
   - is_container discovery and default var
+- pre-commit added to setup
+- README new layout
 
 - Added test for rule 4.3.4 check user is using sudo has password set before NOPASSWD removed from sudoers
 
 ## V1.0.1 - based upon CIS 1.1.0
 
 thanks to ikthomas
-[#84](https://github.com/ansible-lockdown/UBUNTU20-CIS/issues/84) 
+[#84](https://github.com/ansible-lockdown/UBUNTU20-CIS/issues/84)
 
 ## v1.0.0
 
@@ -29,13 +31,13 @@ thanks to ikthomas
 - ansible version
 
 ## April 2023 Updates
-- Addressed Bugs 
+- Addressed Bugs
   - [#73](https://github.com/ansible-lockdown/UBUNTU20-CIS/issues/73) - Thanks @fnschroeder (Fix Taken From @uk-bolly issue_73 branch)
   - [#80](https://github.com/ansible-lockdown/UBUNTU20-CIS/issues/80) - Thanks @kdebisschop
 - Added Fixes For Outstanding PR's
   - [#81](https://github.com/ansible-lockdown/UBUNTU20-CIS/pull/81) - Thanks @kdebisschop
   - Fixed Linting Errors For Yamllint & Ansbile-Lint
-  - Adjusted Builtin to Posix For sysctl module. 
+  - Adjusted Builtin to Posix For sysctl module.
 
 ## Feb 23 updates - Initial
 
