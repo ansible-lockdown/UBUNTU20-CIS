@@ -1,0 +1,4 @@
+-a always,exit -F arch=b32 -S rename,unlink,unlinkat,renameat -F auid>=1000 -F auid!=unset -k delete
+{% if ansible_architecture == 'x86_64' -%}
+-a always,exit -F arch=b64 -S rename,unlink,unlinkat,renameat -F auid>=1000 -F auid!=unset -k delete
+{% endif %}

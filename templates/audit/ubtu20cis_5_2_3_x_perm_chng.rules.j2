@@ -1,0 +1,12 @@
+{% if ubtu20cis_rule_5_2_3_15 %}
+-a always,exit -F path=/usr/bin/chcon -F perm=x -F auid>=1000 -F auid!=unset -k perm_chng
+{% endif %}
+{% if ubtu20cis_rule_5_2_3_16 %}
+-a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>=1000 -F auid!=unset -k perm_chng
+{% endif %}
+{% if ubtu20cis_rule_5_2_3_17 %}
+-a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>=1000 -F auid!=unset -k perm_chng
+{% endif %}
+{% if ubtu20cis_rule_5_2_3_18 %}
+-a always,exit -F path=/usr/sbin/usermod -F perm=x -F auid>=1000 -F auid!=unset -k usermod
+{% endif %}

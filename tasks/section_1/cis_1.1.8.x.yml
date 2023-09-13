@@ -1,0 +1,26 @@
+---
+
+- name: |
+    "1.1.8.1 | PATCH | Ensure nodev option set on /dev/shm partition"
+    "1.1.8.2 | PATCH | Ensure noexec option set on /dev/shm partition"
+    "1.1.8.3 | PATCH | Ensure nosuid option set on /dev/shm partition"
+  ansible.posix.mount:
+      path: /dev/shm
+      src: /dev/shm
+      fstype: tmpfs
+      state: present
+      opts: "defaults,{% if ubtu20cis_rule_1_1_8_1 %}nodev,{% endif %}{% if ubtu20cis_rule_1_1_8_2 %}noexec,{% endif %}{% if ubtu20cis_rule_1_1_8_3 %}nosuid{% endif %}"
+  notify: remount dev_shm
+  when:
+      - ubtu20cis_rule_1_1_8_1 or
+        ubtu20cis_rule_1_1_8_2 or
+        ubtu20cis_rule_1_1_8_3
+  tags:
+      - level1-server
+      - level1-workstation
+      - automated
+      - patch
+      - rule_1.1.8.1
+      - rule_1.1.8.2
+      - rule_1.1.8.3
+      - dev_shm

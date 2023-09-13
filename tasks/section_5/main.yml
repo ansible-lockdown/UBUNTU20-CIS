@@ -1,21 +1,30 @@
 ---
-- name: "SECTION | 5.1 | Configure time-based job schedulers"
-  ansible.builtin.import_tasks: cis_5.1.x.yml
+- name: "SECTION | 5.1.1.1 | Configure journald remote"
+  ansible.builtin.import_tasks: cis_5.1.1.1.x.yml
+  when:
+      - ubtu20cis_syslog_service == 'journald'
 
-- name: "SECTION | 5.2 | Configure sudo"
-  ansible.builtin.import_tasks: cis_5.2.x.yml
+- name: "SECTION | 5.1.1 | Configure journald remote"
+  ansible.builtin.import_tasks: cis_5.1.1.x.yml
+  when:
+      - ubtu20cis_syslog_service == 'journald'
 
-- name: "SECTION | 5.3 | Configure SSH Server"
-  ansible.builtin.import_tasks: cis_5.3.x.yml
+- name: "SECTION | 5.1.2 | Configure rsyslog"
+  ansible.builtin.import_tasks: cis_5.1.2.x.yml
+  when:
+      - ubtu20cis_syslog_service == 'rsyslog'
 
-- name: "SECTION | 5.4.x | User PAM"
-  ansible.builtin.import_tasks: cis_5.4.x.yml
+- name: "SECTION | 5.1.3 | Configure logfiles"
+  ansible.builtin.import_tasks: cis_5.1.3.yml
 
-- name: "SECTION | 5.5.x | User Accounts and Environment"
-  ansible.builtin.import_tasks: cis_5.5.x.yml
+- name: "SECTION | 5.2.1.x | Configure auditd"
+  ansible.builtin.import_tasks: cis_5.2.1.x.yml
 
-- name: "SECTION | 5.6 | Ensure root login is restricted to system console"
-  ansible.builtin.import_tasks: cis_5.6.yml
+- name: "SECTION | 5.2.2.x | Configure auditd data retention"
+  ansible.builtin.import_tasks: cis_5.2.2.x.yml
 
-- name: "SECTION | 5.7 | Ensure access to the su command is restricted"
-  ansible.builtin.import_tasks: cis_5.7.yml
+- name: "SECTION | 5.2.3.x | Configure auditd rules"
+  ansible.builtin.import_tasks: cis_5.2.3.x.yml
+
+- name: "SECTION | 5.2.4.x | Configure auditd file access"
+  ansible.builtin.import_tasks: cis_5.2.4.x.yml

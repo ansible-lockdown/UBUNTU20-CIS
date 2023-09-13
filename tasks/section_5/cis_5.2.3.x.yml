@@ -1,0 +1,381 @@
+---
+
+- name: "5.2.3.1 | PATCH | Ensure changes to system administration scope (sudoers) is collected"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_1_scope.rules.j2
+      dest: /etc/audit/rules.d/50-scope.rules
+      owner: root
+      group: root
+      mode: 0600
+  notify: restart auditd
+  when:
+      - ubtu20cis_rule_5_2_3_1
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.1
+      - auditd
+
+- name: "5.2.3.2 | PATCH | Ensure actions as another user are always logged"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_2_user_emulation.rules.j2
+      dest: /etc/audit/rules.d/50-user_emulation.rules
+      owner: root
+      group: root
+      mode: 0600
+  notify: restart auditd
+  when:
+      - ubtu20cis_rule_5_2_3_2
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.2
+      - auditd
+
+- name: "5.2.3.3 | PATCH | Ensure events that modify the sudo log file are collected"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_3_sudo_log.rules.j2
+      dest: /etc/audit/rules.d/50-sudo.rules
+      owner: root
+      group: root
+      mode: 0600
+  notify: restart auditd
+  when:
+      - ubtu20cis_rule_5_2_3_3
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.3
+      - auditd
+
+- name: "5.2.3.4 | PATCH | Ensure events that modify date and time information are collected"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_4_timechange.rules.j2
+      dest: /etc/audit/rules.d/50-time-change.rules
+      owner: root
+      group: root
+      mode: 0600
+  notify: restart auditd
+  when:
+      - ubtu20cis_rule_5_2_3_4
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.4
+      - auditd
+
+- name: "5.2.3.5 | PATCH | Ensure events that modify the system's network environment are collected"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_5_systemlocale.rules.j2
+      dest: /etc/audit/rules.d/50-system-locale.rules
+      owner: root
+      group: root
+      mode: 0600
+  notify: restart auditd
+  when:
+      - ubtu20cis_rule_5_2_3_5
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.5
+      - auditd
+
+- name: "5.2.3.6 | PATCH | Ensure use of privileged commands is collected"
+  block:
+      - name: "5.2.3.6 | AUDIT | Ensure use of privileged commands is collected | Get list of privileged programs"
+        ansible.builtin.shell: for i in  $(df | grep '^/dev' | awk '{ print $NF }'); do find $i -xdev -type f -perm -4000 -o -type f -perm -2000 2>/dev/null; done
+        register: priv_procs
+        changed_when: false
+        check_mode: false
+
+      - name: "5.2.3.6 | PATCH | Ensure use of privileged commands is collected | Set privileged rules"
+        ansible.builtin.template:
+            src: audit/ubtu20cis_5_2_3_6_privileged.rules.j2
+            dest: /etc/audit/rules.d/50-privileged.rules
+            owner: root
+            group: root
+            mode: 0600
+        notify: restart auditd
+  when:
+      - ubtu20cis_rule_5_2_3_6
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.6
+      - auditd
+
+- name: "5.2.3.7 | PATCH | Ensure unsuccessfulfile access attempts are collected"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_7_access.rules.j2
+      dest: /etc/audit/rules.d/50-access.rules
+      owner: root
+      group: root
+      mode: 0600
+  notify: restart auditd
+  when:
+      - ubtu20cis_rule_5_2_3_7
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.7
+      - auditd
+
+- name: "5.2.3.8 | PATCH | Ensure events that modify user/group information are collected"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_8_identity.rules.j2
+      dest: /etc/audit/rules.d/50-identity.rules
+      owner: root
+      group: root
+      mode: 0600
+  notify: restart auditd
+  when:
+      - ubtu20cis_rule_5_2_3_8
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.8
+      - auditd
+
+- name: "5.2.3.9 | PATCH | Ensure discretionary access control permission modification events are collected"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_9_permmod.rules.j2
+      dest: /etc/audit/rules.d/50-perm_mod.rules
+      owner: root
+      group: root
+      mode: 0600
+  notify: restart auditd
+  when:
+      - ubtu20cis_rule_5_2_3_9
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.9
+      - auditd
+
+- name: "5.2.3.10 | PATCH | Ensure successful file system mounts are collected"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_10_mount.rules.j2
+      dest: /etc/audit/rules.d/50-mount.rules
+      owner: root
+      group: root
+      mode: 0600
+  notify: restart auditd
+  when:
+      ubtu20cis_rule_5_2_3_10
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.10
+      - auditd
+
+- name: "5.2.3.11 | PATCH | Ensure session initiation information is collected"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_11_session.rules.j2
+      dest: /etc/audit/rules.d/50-session.rules
+      owner: root
+      group: root
+      mode: 0600
+  notify: restart auditd
+  when:
+      - ubtu20cis_rule_5_2_3_11
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.11
+      - auditd
+
+- name: "5.2.3.12 | PATCH | Ensure login and logout events are collected"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_12_logins.rules.j2
+      dest: /etc/audit/rules.d/50-logins.rules
+      owner: root
+      group: root
+      mode: 0600
+  notify: restart auditd
+  when:
+      - ubtu20cis_rule_5_2_3_12
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.12
+      - auditd
+
+- name: "5.2.3.13 | PATCH | Ensure file deletion events by users are collected"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_13_delete.rules.j2
+      dest: /etc/audit/rules.d/50-delete.rules
+      owner: root
+      group: root
+      mode: 0600
+  notify: restart auditd
+  when:
+      - ubtu20cis_rule_5_2_3_13
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.13
+      - auditd
+
+- name: "5.2.3.14 | PATCH | Ensure events that modify the system's Mandatory Access Controls are collected"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_14_macpolicy.rules.j2
+      dest: /etc/audit/rules.d/50-MAC-policy.rules
+      owner: root
+      group: root
+      mode: 0600
+  notify: restart auditd
+  when:
+      - ubtu20cis_rule_5_2_3_14
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.14
+      - auditd
+
+- name: "5.2.3.15 | PATCH | Ensure successful and unsuccessful attempts to use the chcon command are recorded"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_x_perm_chng.rules.j2
+      dest: /etc/audit/rules.d/50-perm_chng.rules
+      owner: root
+      group: root
+      mode: 0600
+  when:
+      - ubtu20cis_rule_5_2_3_15
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.15
+      - auditd
+
+- name: "5.2.3.16 | PATCH | Ensure successful and unsuccessful attempts to use the setfacl command are recorded"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_x_perm_chng.rules.j2
+      dest: /etc/audit/rules.d/50-perm_chng.rules
+      owner: root
+      group: root
+      mode: 0600
+  when:
+      - ubtu20cis_rule_5_2_3_16
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.16
+      - auditd
+
+- name: "5.2.3.17 | PATCH | Ensure successful and unsuccessful attempts to use the chacl command are recorded"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_x_perm_chng.rules.j2
+      dest: /etc/audit/rules.d/50-perm_chng.rules
+      owner: root
+      group: root
+      mode: 0600
+  when:
+      - ubtu20cis_rule_5_2_3_17
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.17
+      - auditd
+
+- name: "5.2.3.18 | PATCH | Ensure successful and unsuccessful attempts to use the usermod command are recorded"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_x_perm_chng.rules.j2
+      dest: /etc/audit/rules.d/50-perm_chng.rules
+      owner: root
+      group: root
+      mode: 0600
+  when:
+      - ubtu20cis_rule_5_2_3_18
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.18
+      - auditd
+
+- name: "5.2.3.19 | PATCH | Ensure kernel module loading and unloading is collected"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_19_modules.rules.j2
+      dest: /etc/audit/rules.d/50-kernel_modules.rules
+      owner: root
+      group: root
+      mode: 0600
+  notify: restart auditd
+  when:
+      - ubtu20cis_rule_5_2_3_19
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_5.2.3.19
+      - auditd
+
+- name: "5.2.3.10 | PATCH | Ensure the audit configuration is immutable"
+  ansible.builtin.template:
+      src: audit/ubtu20cis_5_2_3_20_finalize.rules.j2
+      dest: /etc/audit/rules.d/99-finalize.rules
+      owner: root
+      group: root
+      mode: 0600
+  notify: restart auditd
+  when:
+      - ubtu20cis_rule_5_2_3_20
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - scored
+      - patch
+      - rule_5.2.3.20
+      - auditd
+
+- name: "5.2.3.21 | PATCH | Ensure the running and on disk configuration is the same"
+  ansible.builtin.shell: augenrules --check
+  changed_when: false
+  register: ubtu20cis_rule_5_2_3_21_augen_check
+  when:
+      - ubtu20cis_rule_5_2_3_21
+  tags:
+      - level2-server
+      - level2-workstation
+      - automated
+      - scored
+      - patch
+      - rule_5.2.3.21
+      - auditd
