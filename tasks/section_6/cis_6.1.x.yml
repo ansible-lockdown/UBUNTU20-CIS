@@ -151,7 +151,6 @@
             path: /etc/opasswd
         register: opasswd
 
-
       - name: "6.1.10 | PATCH | Ensure permissions on /etc/opasswd are configured | opasswd"
         ansible.builtin.file:
             path: /etc/opasswd

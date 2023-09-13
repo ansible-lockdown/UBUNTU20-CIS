@@ -16,7 +16,7 @@
 
 - name: "5.1.1.1.2 | PATCH | Ensure systemd-journal-remote is configured"
   ansible.builtin.lineinfile:
-      path:  /etc/systemd/journal-upload.conf
+      path: /etc/systemd/journal-upload.conf
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
       insertafter: "{{ item.after | default (omit) }}"

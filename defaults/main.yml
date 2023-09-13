@@ -207,7 +207,7 @@ ubtu20cis_rule_3_4_1: true
 ubtu20cis_rule_3_4_2: true
 ubtu20cis_rule_3_4_3: true
 ubtu20cis_rule_3_4_4: true
-#ufw
+# ufw
 ubtu20cis_rule_3_4_1_1: true
 ubtu20cis_rule_3_4_1_2: true
 ubtu20cis_rule_3_4_1_3: true
@@ -446,12 +446,10 @@ discover_int_uid: false
 min_int_uid: 1000
 max_int_uid: 65533
 
-
 # Section 1 Control Variables
 # This will force the tmp_mnt type if not correctly discovered
 # either tmp_systemd or fstab
 expected_tmp_mnt: fstab
-
 
 # Control 1.3.1 - allow aide to be configured
 ubtu20cis_config_aide: true
