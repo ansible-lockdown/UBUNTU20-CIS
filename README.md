@@ -14,7 +14,7 @@
 ![Discord Badge](https://img.shields.io/discord/925818806838919229?logo=discord)
 
 ![Devel Build Status](https://img.shields.io/github/actions/workflow/status/ansible-lockdown/ubuntu20-cis/linux_benchmark_testing.yml?label=Devel%20Build%20Status)
-![Devel Commits](https://img.shields.io/github/commit-activity/m/ansible-lockdown/ubuntu20-cis/devel?color=dark%20green&label=Devel%20Branch%20commits)
+![Devel Commits](https://img.shields.io/github/commit-activity/m/ansible-lockdown/ubuntu20-cis/devel?color=dark%20green&label=Devel%20Branch%20Commits)
 
 ![Release Branch](https://img.shields.io/badge/Release%20Branch-Main-brightgreen)
 ![Main Build Status](https://img.shields.io/github/actions/workflow/status/ansible-lockdown/ubuntu20-cis/linux_benchmark_testing.yml?label=Build%20Status)
