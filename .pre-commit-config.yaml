@@ -34,13 +34,14 @@ repos:
   hooks:
   - id: detect-secrets
     args: [ '--baseline', '.config/.secrets.baseline' ]
-    exclude: .config/.gitleaks-report.json
+    exclude: .config/.gitleaks-report.json tasks/parse_etc_password
 
 - repo: https://github.com/gitleaks/gitleaks
   rev: v8.17.0
   hooks:
   - id: gitleaks
     args: ['--baseline-path', '.config/.gitleaks-report.json']
+    exclude: .config/.secrets.baseline
 
 - repo: https://github.com/ansible-community/ansible-lint
   rev: v6.17.2
