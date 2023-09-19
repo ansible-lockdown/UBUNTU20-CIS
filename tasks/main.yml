@@ -51,7 +51,7 @@
             fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set - It can break access"
             success_msg: "You have a password set for sudo user {{ ansible_env.SUDO_USER }}"
         vars:
-            sudo_password_rule: ubtu20cis_rule_4_3_4
+            sudo_password_rule: ubtu20cis_rule_4_3_4  # pragma: allowlist secret
   when:
       - ubtu20cis_rule_4_3_4
       - ansible_env.SUDO_USER is defined

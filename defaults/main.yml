@@ -477,7 +477,7 @@ ubtu20cis_set_grub_password: true
 ubtu20cis_grub_user_file: /etc/grub.d/40_custom
 ubtu20cis_grub_user: root
 ubtu20cis_grub_file: /boot/grub/grub.cfg
-ubtu20cis_bootloader_password_hash: "grub.pbkdf2.sha512.10000"
+ubtu20cis_bootloader_password_hash: "grub.pbkdf2.sha512.10000"  # pragma: allowlist secret
 
 # Change the following value to true if you wish to be prompted to get past grub bootloader
 ubtu20cis_ask_passwd_to_boot: false
@@ -620,7 +620,7 @@ ubtu20cis_sudo_timestamp_timeout: 15
 ubtu20cis_sugroup: nosugroup
 
 # Controls 4.4.x
-ubtu20cis_passwd_hash_algo: sha512
+ubtu20cis_passwd_hash_algo: sha512  # pragma: allowlist secret
 # pam_tally2 login options allows for audit to be removed if required
 ubtu20cis_pamtally2_login_opts: 'onerr=fail audit silent deny=5 unlock_time=900'
 
