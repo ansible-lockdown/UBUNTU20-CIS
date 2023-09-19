@@ -3,12 +3,10 @@ audit_run: ansible # This is forced to wrapper by running the run_audit wrapper 
 
 benchmark_version: '2.0.1'
 
-
-# Some audit tests may need to scan every filesystem or have an impact on a system 
+# Some audit tests may need to scan every filesystem or have an impact on a system
 # these may need be scheduled to minimise impact also ability to set a timeout if taking too long
 run_heavy_tests: {{ audit_run_heavy_tests }}
 timeout_ms: {{ audit_cmd_timeout }}
-
 
 ubtu20cis_section1: true
 ubtu20cis_section2: true
@@ -281,7 +279,6 @@ ubtu20cis_rule_5_1_2_7: {{ ubtu20cis_rule_5_1_2_7 }}
 
 ubtu20cis_rule_5_1_3: {{ ubtu20cis_rule_5_1_3 }}
 
-
 ubtu20cis_rule_5_2_1_1: {{ ubtu20cis_rule_5_2_1_1 }}
 ubtu20cis_rule_5_2_1_2: {{ ubtu20cis_rule_5_2_1_2 }}
 ubtu20cis_rule_5_2_1_3: {{ ubtu20cis_rule_5_2_1_3 }}
@@ -339,7 +336,6 @@ ubtu20cis_rule_6_1_11: {{ ubtu20cis_rule_6_1_11 }}
 ubtu20cis_rule_6_1_12: {{ ubtu20cis_rule_6_1_12 }}
 ubtu20cis_rule_6_1_13: {{ ubtu20cis_rule_6_1_13 }}
 
-
 ubtu20cis_rule_6_2_1: {{ ubtu20cis_rule_6_2_1 }}
 ubtu20cis_rule_6_2_2: {{ ubtu20cis_rule_6_2_2 }}
 ubtu20cis_rule_6_2_3: {{ ubtu20cis_rule_6_2_3 }}
@@ -352,7 +348,6 @@ ubtu20cis_rule_6_2_9: {{ ubtu20cis_rule_6_2_9 }}
 ubtu20cis_rule_6_2_10: {{ ubtu20cis_rule_6_2_10 }}
 ubtu20cis_rule_6_2_11: {{ ubtu20cis_rule_6_2_11 }}
 ubtu20cis_rule_6_2_12: {{ ubtu20cis_rule_6_2_12 }}
-
 
 # AIDE
 ubtu20cis_config_aide: true
@@ -442,7 +437,6 @@ ubtu20_exim_conf:
   - dc_mailname_in_oh='true'
   - dc_localdelivery='mail_spool'
 
-
 ubtu20cis_rsyncd_server: {{ ubtu20cis_rsync_server }}
 ubtu20cis_nis_server: {{ ubtu20cis_nis_server }}
 
@@ -455,14 +449,12 @@ ubtu20cis_telnet_required: {{ ubtu20cis_telnet_required }}
 ubtu20cis_ldap_clients_required: {{ ubtu20cis_ldap_clients_required }}
 ubtu20cis_rpc_required: {{ ubtu20cis_rpc_required }}
 
-
 # Section 3
 # IPv6 required
 ubtu20cis_ipv6_required: {{ ubtu20cis_ipv6_required }}
 
 # System network parameters (host only OR host and router)
 ubtu20cis_is_router: false
-
 
 ubtu20cis_firewall: {{ ubtu20cis_firewall_package }}
 
@@ -518,7 +510,6 @@ ubtu20cis_ssh_weak_kex:
   - diffie-hellman-group1-sha1
   - diffie-hellman-group14-sha1
   - diffie-hellman-group-exchange-sha1
-
 
 ubtu20cis_ssh_aliveinterval: 300
 ubtu20cis_ssh_countmax: 3

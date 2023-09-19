@@ -89,6 +89,7 @@
             regexp: "{{ item.regexp }}"
             line: "{{ item.line }}"
             insertafter: "{{ item.insertafter }}"
+            create: true
         with_items:
             - { regexp: '^\*.emerg', line: '*.emerg                         :omusrmsg:*', insertafter: '^# Emergencies are sent to everybody logged in' }
             - { regexp: '^auth,authpriv.\*', line: 'auth,authpriv.*                  /var/log/auth.log', insertafter: '^# First some standard log files.  Log by facility' }
