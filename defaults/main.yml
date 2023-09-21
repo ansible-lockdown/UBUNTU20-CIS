@@ -477,7 +477,10 @@ ubtu20cis_set_grub_password: true
 ubtu20cis_grub_user_file: /etc/grub.d/40_custom
 ubtu20cis_grub_user: root
 ubtu20cis_grub_file: /boot/grub/grub.cfg
-ubtu20cis_bootloader_password_hash: "grub.pbkdf2.sha512.10000"  # pragma: allowlist secret
+
+# This is used to set the password in grub the full string is required.
+# It is suggested that this variable is overridden by your setup e.g. inventory/ groupvars / vaults etc
+ubtu20cis_bootloader_password_hash: "grub.pbkdf2.sha512.10000.ChangeMe"  # pragma: allowlist secret
 
 # Change the following value to true if you wish to be prompted to get past grub bootloader
 ubtu20cis_ask_passwd_to_boot: false
