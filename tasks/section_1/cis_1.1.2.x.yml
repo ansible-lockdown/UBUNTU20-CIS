@@ -64,7 +64,7 @@
       state: present
       fstype: "{{ item.fstype }}"
       opts: defaults,{% if ubtu20cis_rule_1_1_2_2 %}nodev,{% endif %}{% if ubtu20cis_rule_1_1_2_3 %}noexec,{% endif %}{% if ubtu20cis_rule_1_1_2_4 %}nosuid{% endif %}
-  notify: remount tmp
+  notify: Remount tmp
   with_items:
       - "{{ ansible_mounts }}"
   loop_control:
