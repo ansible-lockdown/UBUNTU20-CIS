@@ -18,6 +18,7 @@
 - README new layout
 
 - Added test for rule 4.3.4 check user is using sudo has password set before NOPASSWD removed from sudoers
+- grub password check update thanks to @s!ghs on discord
 
 ## V1.0.1 - based upon CIS 1.1.0
 
