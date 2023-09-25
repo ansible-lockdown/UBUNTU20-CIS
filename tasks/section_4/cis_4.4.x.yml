@@ -1,0 +1,202 @@
+---
+
+- name: "4.4.1 | PATCH | Ensure password creation requirements are configured"
+  block:
+      - name: "4.4.1 | PATCH | Ensure password creation requirements are configured | Install pam_pwquality module"
+        ansible.builtin.package:
+            name: libpam-pwquality
+            state: present
+
+      - name: "4.4.1 | PATCH | Ensure password creation requirements are configured | Add minlen"
+        ansible.builtin.lineinfile:
+            path: /etc/security/pwquality.conf
+            regexp: '^minlen|^# minlen'
+            line: minlen = 14
+
+      - name: "4.4.1 | PATCH | Ensure password creation requirements are configured | Add minclass"
+        ansible.builtin.lineinfile:
+            path: /etc/security/pwquality.conf
+            regexp: '^minclass|^# minclass'
+            line: 'minclass = 4'
+
+      - name: "4.4.1 | AUDIT | Ensure password creation requirements are configured | Confirm pwquality module in common-password"
+        ansible.builtin.shell: grep 'password.*requisite.*pam_pwquality.so' /etc/pam.d/common-password
+        changed_when: false
+        failed_when: false
+        check_mode: false
+        register: ubtu20cis_4_4_1_pam_pwquality_state
+
+      - name: "4.4.1 | PATCH | Ensure password creation requirements are configured | Set retry to 3 if pwquality exists"
+        community.general.pamd:
+            name: common-password
+            type: password
+            control: requisite
+            module_path: pam_pwquality.so
+            module_arguments: 'retry=3'
+            state: args_present
+        when: ubtu20cis_4_4_1_pam_pwquality_state.stdout | length > 0
+
+      - name: "4.4.1 | PATCH | Ensure password creation requirements are configured | Set retry to 3 if pwquality does not exist"
+        community.general.pamd:
+            name: common-password
+            type: password
+            control: required
+            module_path: pam_permit.so
+            new_type: password
+            new_control: requisite
+            new_module_path: pam_pwquality.so
+            module_arguments: 'retry=3'
+            state: after
+        when: ubtu20cis_4_4_1_pam_pwquality_state.stdout | length == 0
+  when:
+      - ubtu20cis_rule_4_4_1
+  tags:
+      - level1-server
+      - level1-workstation
+      - automated
+      - patch
+      - rule_4.4.1
+      - pam
+
+# -------------
+# -------------
+# There is a bug in pam_tally2.so where the use of the audit keyword may log credentials in the case of user error during authentication.
+# To work around this bug the CIS documentation has you setting pam_tally2 to the account section.
+# Once bug is fixed please set pam_tally2 to the auth sections. We have those commented out in the task
+# -------------
+# -------------
+
+# -------------
+# -------------
+# figure out why pam_deny kills vagrant user. Below is everything working but the pam_deny.so in the last task with_items
+# -------------
+# -------------
+- name: "4.4.2 | PATCH | Ensure lockout for failed password attempts is configured"
+  block:
+
+      - name: "4.4.2 | PATCH | Ensure lockout for failed password attempts is configured | common-account load pam_tally"
+        ansible.builtin.lineinfile:
+            path: /etc/pam.d/common-account
+            regexp: "{{ item.regexp }}"
+            line: "{{ item.line }}"
+            insertafter: '{{ item.after }}'
+        with_items:
+            - { regexp: '^account\s+requisite\s+pam_deny.so', line: 'account    requisite pam_deny.so', after: '^# here.s the fallback if no module succeeds' }
+            - { regexp: '^account\s+required\s+pam_tally2.so', line: 'account    required pam_tally2.so', after: '^account    requisite pam_deny.so' }
+
+      - name: "4.4.2 | PATCH | Ensure lockout for failed password attempts is configured | common-auth pam_tally2 opts"
+        ansible.builtin.lineinfile:
+            path: /etc/pam.d/common-auth
+            regexp: '^auth\s+required pam_tally2.so .*onerr=fail.*'
+            line: 'auth       required pam_tally2.so {{ ubtu20cis_pamtally2_login_opts }}'
+            insertafter: '^# here are the per-package modules'
+  when:
+      - ubtu20cis_rule_4_4_2
+  tags:
+      - level1-server
+      - level1-workstation
+      - automated
+      - patch
+      - rule_4.4.2
+      - pamd
+      - notimplemented
+
+- name: "4.4.3 | PATCH | Ensure password reuse is limited"
+  block:
+      - name: "4.4.3 | AUDIT | Ensure password reuse is limited | Confirm pam_pwhistory.so in common-password"
+        ansible.builtin.shell: grep 'password.*required.*pam_pwhistory.so' /etc/pam.d/common-password
+        changed_when: false
+        failed_when: false
+        check_mode: false
+        register: ubtu20cis_4_4_3_pam_pwhistory_state
+
+      - name: "4.4.3 | PATCH | Ensure password reuse is limited | Set remember value if pam_pwhistory exists"
+        community.general.pamd:
+            name: common-password
+            type: password
+            control: required
+            module_path: pam_pwhistory.so
+            module_arguments: 'remember={{ ubtu20cis_pamd_pwhistory_remember }}'
+            state: args_present
+        when: ubtu20cis_4_4_3_pam_pwhistory_state.stdout | length > 0
+
+      - name: "4.4.3 | PATCH | Ensure password reuse is limited | Set remember value if pam_pwhistory does no exist"
+        ansible.builtin.lineinfile:
+            path: /etc/pam.d/common-password
+            line: 'password        required                        pam_pwhistory.so remember={{ ubtu20cis_pamd_pwhistory_remember }}'
+            insertafter: '^# end of pam-auth-update config'
+        when: ubtu20cis_4_4_3_pam_pwhistory_state.stdout | length == 0
+  when:
+      - ubtu20cis_rule_4_4_3
+  tags:
+      - level1-server
+      - level1-workstation
+      - automated
+      - patch
+      - rule_4.4.3
+      - pamd
+
+- name: "4.4.4 | PATCH | Ensure strong password hashing algorithm is configured"
+  block:
+      - name: "4.4.4 | AUDIT | Ensure strong password hashing algorithm is configured | Confirm pam_unix.so"
+        ansible.builtin.shell: grep -E '^\s*password\s+(\S+\s+)+pam_unix\.so\s+(\S+\s+)*(sha512|yescrypt)\s*(\S+\s*)*(\s+#.*)?$' /etc/pam.d/common-password
+        changed_when: false
+        failed_when: false
+        check_mode: false
+        register: ubtu20cis_4_4_4_pam_unix_state
+
+      - name: "4.4.4 | PATCH | Ensure strong password hashing algorithm is configured | Set hashing if pam_unix.so exists"
+        community.general.pamd:
+            name: common-password
+            type: password
+            control: '[success=1 default=ignore]'
+            module_path: pam_unix.so
+            module_arguments: "{{ ubtu20cis_passwd_hash_algo }}"
+            state: args_present
+        when: ubtu20cis_4_4_4_pam_unix_state.stdout | length > 0
+
+      - name: "4.4.4 | PATCH | Ensure strong password hashing algorithm is configured | Set hashing if pam_unix.so does not exist"
+        ansible.builtin.lineinfile:
+            path: /etc/pam.d/common-password
+            line: 'password        [success=1 default=ignore]      pam_unix.so {{ ubtu20cis_passwd_hash_algo }}'
+            insertafter: '^# end of pam-auth-update config'
+        when: ubtu20cis_4_4_4_pam_unix_state.stdout | length == 0
+  when:
+      - ubtu20cis_rule_4_4_4
+  tags:
+      - level1-server
+      - level1-workstation
+      - automated
+      - patch
+      - rule_4.4.4
+      - pamd
+
+- name: "4.4.5 | PATCH | Ensure password hashing algorithm is up to date with the latest standards"
+  block:
+      - name: "4.4.5 | AUDIT | Ensure all current passwords uses the configured hashing algorithm | capture hash"
+        ansible.builtin.shell: cat /etc/shadow | awk -F':' '{print $1" "$2}' | grep -Ev '(!|\*)'
+        changed_when: false
+        failed_when: false
+        check_mode: false
+        register: ubtu20cis_4_4_5_passwd_hash_used
+
+      # This is only looking for sha512 if yescrypt need to change the $6$ to $y$
+      - name: "4.4.5 | AUDIT | Ensure all current passwords uses the configured hashing algorithm | check has found"
+        ansible.builtin.debug:
+            msg: "Warning!! Passwords found using not using {{ ubtu20cis_passwd_hash_algo }} algorithm - This requires manual intervention"
+        when: "' $6$' not in ubtu20cis_4_4_5_passwd_hash_used.stdout"
+
+      - name: "4.4.5 | WARN | Ensure all current passwords uses the configured hashing algorithm | warn_count"
+        ansible.builtin.import_tasks: warning_facts.yml
+        when: "' $6$' not in ubtu20cis_4_4_5_passwd_hash_used.stdout"
+  vars:
+      warn_control_id: '4.4.5'
+  when:
+      - ubtu20cis_rule_4_4_5
+  tags:
+      - level1-server
+      - level1-workstation
+      - automated
+      - patch
+      - rule_4.4.5
+      - pam

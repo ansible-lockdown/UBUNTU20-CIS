@@ -1,0 +1,68 @@
+---
+
+- name: "5.1.1.1.1 | Ensure systemd-journal-remote is installed"
+  ansible.builtin.package:
+      name: systemd-journal-remote
+      state: present
+  when:
+      - ubtu20cis_rule_5_1_1_1_1
+  tags:
+      - level1-server
+      - level1-workstation
+      - automated
+      - patch
+      - rule_5.1.1.1.1
+      - journald
+
+- name: "5.1.1.1.2 | PATCH | Ensure systemd-journal-remote is configured"
+  ansible.builtin.lineinfile:
+      path: /etc/systemd/journal-upload.conf
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      insertafter: "{{ item.after | default (omit) }}"
+  notify: restart journal-upload
+  loop:
+      - { regexp: 'URL=', line: 'URL={{ ubtu20cis_journald_upload.remote_url }}' }
+      - { regexp: 'ServerKeyFile=', line: 'ServerKeyFile={{ ubtu20cis_journal_upload.serverkeyfile }}' }
+      - { regexp: 'ServerCertificateFile=', line: 'ServerKeyFile={{ ubtu20cis_journal_upload.servercertfile }}' }
+      - { regexp: 'TrustedCertificateFile=', line: 'ServerKeyFile={{ ubtu20cis_journal_upload.trustfile }}' }
+  when:
+      - ubtu20cis_rule_5_1_1_1_2
+  tags:
+      - level1-server
+      - level1-workstation
+      - automated
+      - patch
+      - rule_5.1.1.1.2
+      - journald
+
+- name: "5.1.1.1.3 | PATCH |  Ensure systemd-journal-remote is enabled"
+  ansible.builtin.systemd:
+      name: systemd-journal-upload.service
+      state: started
+      enabled: true
+  when:
+      - ubtu20cis_rule_5.1.1.1.3
+  tags:
+      - level1-server
+      - level1-workstation
+      - automated
+      - patch
+      - rule_5.1.1.1.3
+      - journald
+
+- name: "5.1.1.1.4 | Ensure journald is not configured to receive logs from a remote client"
+  ansible.builtin.systemd:
+      name: systemd-journal-remote
+      state: stopped
+      enabled: false
+  when:
+      - ubtu20cis_rule_5.1.1.1.4
+      - not journald_log_server
+  tags:
+      - level1-server
+      - level1-workstation
+      - automated
+      - patch
+      - rule_5.1.1.1.4
+      - journald

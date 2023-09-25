@@ -1,0 +1,14 @@
+## Ansible controlled file
+# Added as part of ansible-lockdown CIS baseline
+# provided by MindPointGroup LLC
+{% if ubtu20cis_chrony_timesource == 'pool' %}
+# pool chosen as source for time sync
+{% for pool in ubtu20cis_time_pool %}
+pool {{ pool.name }} {{ pool.options }}
+{% endfor %}
+{% elif ubtu20cis_chrony_timesource == 'servers' %}
+# Servers chosen as source for time sync
+{% for server in ubtu20cis_time_servers %}
+server {{ server.name }} {{ server.options }}
+{% endfor %}
+{% endif %}

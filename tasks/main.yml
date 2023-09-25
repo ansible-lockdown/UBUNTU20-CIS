@@ -18,8 +18,8 @@
 - name: Ensure grub password has been changed
   ansible.builtin.assert:
       that:
-          - '"ChangeMe" not in ubtu20cis_grub_pw'
-          - '"grub.pbkdf2.sha512.1000" in ubtu20cis_grub_pw'
+          - '"ChangeMe" not in ubtu20cis_bootloader_password_hash'
+          - '"grub.pbkdf2.sha512.1000" in ubtu20cis_bootloader_password_hash'
       fail_msg: "The default grub password has not been changed"
   when:
       - ubtu20cis_set_grub_password
@@ -33,7 +33,52 @@
       fail_msg: "The root password set does not pass checks"
   when:
       - ubtu20cis_set_root_password
-      - ubtu20cis_rule_1_4_4
+      - ubtu20cis_rule_1_4_3
+
+#  This control should always run as this can pass on unintended issues.
+- name: "Check password set for connecting user"
+  block:
+      - name: Capture current password state of connecting user"
+        ansible.builtin.shell: "grep {{ ansible_env.SUDO_USER }} /etc/shadow | awk -F: '{print $2}'"
+        changed_when: false
+        failed_when: false
+        check_mode: false
+        register: ansible_user_password_set
+
+      - name: "Assert that password set for {{ ansible_env.SUDO_USER }} and account not locked"
+        ansible.builtin.assert:
+            that: ansible_user_password_set.stdout | length != 0 and ansible_user_password_set.stdout != "!!"
+            fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set - It can break access"
+            success_msg: "You have a password set for sudo user {{ ansible_env.SUDO_USER }}"
+        vars:
+            sudo_password_rule: ubtu20cis_rule_4_3_4  # pragma: allowlist secret
+  when:
+      - ubtu20cis_rule_4_3_4
+      - ansible_env.SUDO_USER is defined
+  tags:
+      - always
+
+- name: Setup rules if container
+  block:
+      - name: Discover and set container variable if required
+        ansible.builtin.set_fact:
+            system_is_container: true
+
+      - name: Load variable for container
+        ansible.builtin.include_vars:
+            file: "{{ container_vars_file }}"
+
+      - name: Output if discovered is a container
+        ansible.builtin.debug:
+            msg: system has been discovered as a container
+        when:
+            - system_is_container
+  when:
+      - ansible_connection == 'docker' or
+        ansible_virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+      - container_discovery
+      - always
 
 - name: Import preliminary tasks
   ansible.builtin.import_tasks: prelim.yml
@@ -104,20 +149,6 @@
 
 - name: flush handlers
   ansible.builtin.meta: flush_handlers
-
-- name: reboot system
-  block:
-      - name: reboot system if not skipped
-        ansible.builtin.reboot:
-        when:
-            - not skip_reboot
-
-      - name: Warning a reboot required but skip option set
-        ansible.builtin.debug:
-            msg: "Warning!! changes have been made that require a reboot to be implemented but skip reboot was set - Can affect compliance check results"
-        changed_when: true
-        when:
-            - skip_reboot
 
 - name: run post remediation tasks
   ansible.builtin.import_tasks: post.yml

@@ -1,5 +1,43 @@
 ---
 
+- name: Gather the package facts
+  ansible.builtin.package_facts:
+      manager: auto
+  tags:
+      - always
+
+- name: "PRELIM | Section 1.1 | Create list of mount points"
+  ansible.builtin.set_fact:
+      mount_names: "{{ ansible_mounts | map(attribute='mount') | list }}"
+  tags:
+      - always
+
+- name: PRELIM | Capture tmp mount type | discover mount tmp type
+  block:
+      - name: PRELIM | Capture tmp mount type | discover mount tmp type
+        ansible.builtin.shell: systemctl is-enabled tmp.mount
+        register: discover_tmp_mnt_type
+        changed_when: false
+        failed_when: discover_tmp_mnt_type.rc not in [ 0, 1 ]
+
+      - name: PRELIM | Capture tmp mount type | Set to expected_tmp_mnt variable
+        ansible.builtin.set_fact:
+            tmp_mnt_type: "{{ expected_tmp_mnt }}"
+        when: "'generated' in discover_tmp_mnt_type.stdout"
+
+      - name: PRELIM | Capture tmp mount type | Set systemd service
+        ansible.builtin.set_fact:
+            tmp_mnt_type: tmp_systemd
+        when: "'generated' not in discover_tmp_mnt_type.stdout"
+  when:
+      - "'/tmp' in mount_names"
+      - ubtu20cis_rule_1_1_2_1 or
+        ubtu20cis_rule_1_1_2_2 or
+        ubtu20cis_rule_1_1_2_3 or
+        ubtu20cis_rule_1_1_2_4
+  tags:
+      - always
+
 - name: "PRELIM | register if snap being used"
   ansible.builtin.shell: df -h | grep -wc "/snap"
   changed_when: false
@@ -7,7 +45,7 @@
   register: snap_pkg_mgr
   tags:
       - rule_1.1.1.6
-      - section1
+      - always
 
 - name: "PRELIM | Run apt update"
   ansible.builtin.package:
@@ -18,7 +56,7 @@
   tags:
       - rule_1.3.1
       - rule_1.9
-      - section1
+      - always
 
 - name: "PRELIM | Check for autofs service"
   ansible.builtin.shell: "systemctl show autofs | grep LoadState | cut -d = -f 2"
@@ -26,10 +64,11 @@
   changed_when: false
   check_mode: false
   when:
-      - ubtu20cis_rule_1_1_23
+      - ubtu20cis_rule_1_1_9
   tags:
-      - rule_1.1.23
+      - rule_1.1.9
       - section1
+      - always
 
 - name: "PRELIM | Check for avahi-daemon service"
   ansible.builtin.shell: "systemctl show avahi-daemon | grep LoadState | cut -d = -f 2"
@@ -37,10 +76,10 @@
   changed_when: false
   check_mode: false
   when:
-      - ubtu20cis_rule_2_1_3
+      - ubtu20cis_rule_2_2_2
   tags:
-      - rule_2.1.3
-      - section2
+      - rule_2.2.2
+      - always
 
 - name: "PRELIM | Find wireless network devices"
   ansible.builtin.shell: find /sys/class/net/*/wireless | awk -F'/' awk '{print $5}'
@@ -51,7 +90,69 @@
       - ubtu20cis_rule_3_1_2
   tags:
       - rule_3.1.2
-      - section3
+      - always
+
+- name: "PRELIM | PATCH | Ensure auditd is installed"
+  block:
+      - name: "PRELIM | PATCH | Ensure auditd is installed"
+        ansible.builtin.package:
+            name: ['auditd', 'audispd-plugins']
+            state: present
+
+      - name: "PRELIM | 5.2.4.5 | Audit conf and rules files | list files"
+        ansible.builtin.find:
+            path: /etc/audit/
+            file_type: file
+            recurse: true
+            patterns: '*.conf,*.rules'
+        register: auditd_conf_files
+  when:
+      - ubtu20cis_rule_5_2_1_1
+      - "'auditd' not in ansible_facts.packages or
+        'auditd-plugins' not in ansible_facts.packages"
+      - ubtu20cis_rule_5_2_4_5 or
+        ubtu20cis_rule_5_2_4_6 or
+        ubtu20cis_rule_5_2_4_7
+  tags:
+      - level2-server
+      - level2-workstation
+      - patch
+      - auditd
+      - always
+
+- name: "PRELIM | Discover Interactive UID MIN and MIN from logins.def"
+  block:
+      - name: "PRELIM | Capture UID_MIN information from logins.def"
+        ansible.builtin.shell: grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
+        changed_when: false
+        register: uid_min_id
+
+      - name: "PRELIM | Capture UID_MAX information from logins.def"
+        ansible.builtin.shell: grep -w "^UID_MAX" /etc/login.defs | awk '{print $NF}'
+        changed_when: false
+        register: uid_max_id
+
+      - name: "PRELIM | Capture GID_MIN information from logins.def"
+        ansible.builtin.shell: grep -w "^GID_MIN" /etc/login.defs | awk '{print $NF}'
+        changed_when: false
+        register: gid_min_id
+
+      - name: "PRELIM | set_facts for interactive uid/gid"
+        ansible.builtin.set_fact:
+            min_int_uid: "{{ uid_min_id.stdout }}"
+            max_int_uid: "{{ uid_max_id.stdout }}"
+            min_int_gid: "{{ gid_min_id.stdout }}"
+  when:
+      - not discover_int_uid
+  tags:
+      - always
+
+- name: "PRELIM | Interactive User accounts"
+  ansible.builtin.shell: 'cat /etc/passwd | cut -d: -f5,6,7 | grep -Ev ":(/usr|)/(s|)bin/nologin|/root|:/bin:" | cut -d: -f2'
+  changed_when: false
+  register: interactive_users_home
+  tags:
+      - always
 
 - name: "PRELIM | Install Network-Manager"
   ansible.builtin.package:
@@ -65,7 +166,19 @@
       - not ubtu20cis_system_is_container
   tags:
       - rule_3.1.2
-      - section3
+      - always
+
+- name: "PRELIM | 4.3.4 | Find all sudoers files."
+  ansible.builtin.shell: "find /etc/sudoers /etc/sudoers.d/ -type f ! -name '*~' ! -name '*.*'"
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  register: ubtu20cis_sudoers_files
+  when:
+      - ubtu20cis_rule_4_3_4 or
+        ubtu20cis_rule_4_3_5
+  tags:
+      - always
 
 - name: "PRELIM | Install ACL"
   ansible.builtin.package:
@@ -75,12 +188,6 @@
       - ubtu20cis_rule_6_2_6
   tags:
       - rule_6.2.6
-      - section6
-
-- name: "PRELIM | Section 1.1 | Create list of mount points"
-  ansible.builtin.set_fact:
-      mount_names: "{{ ansible_mounts | map(attribute='mount') | list }}"
-  tags:
       - always
 
 - name: "PRELIM | List users accounts"

@@ -8,6 +8,14 @@
             line: install cramfs /bin/true
             create: true
 
+      - name: "1.1.1.1 | PATCH | Ensure mounting of cramfs filesystems is disabled | blacklist"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: "^(#)?blacklist cramfs(\\s|$)"
+            line: "blacklist cramfs"
+            create: true
+            mode: '0600'
+
       - name: "1.1.1.1 | PATCH | Ensure mounting of cramfs filesystems is disabled | Disable cramfs"
         community.general.modprobe:
             name: cramfs
@@ -37,6 +45,14 @@
             name: freevxfs
             state: absent
         when: ansible_connection != 'docker'
+
+      - name: "1.1.1.2 | PATCH | Ensure mounting of freevxfs filesystems is disabled | blacklist"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: "^(#)?blacklist freevxfs(\\s|$)"
+            line: "blacklist freevxfs"
+            create: true
+            mode: '0600'
   when:
       - ubtu20cis_rule_1_1_1_2
   tags:
@@ -61,6 +77,14 @@
             name: jffs2
             state: absent
         when: ansible_connection != 'docker'
+
+      - name: "1.1.1.3 | PATCH | Ensure mounting of jffs2 filesystems is disabled | blacklist"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: "^(#)?blacklist jffs2(\\s|$)"
+            line: "blacklist jffs2"
+            create: true
+            mode: '0600'
   when:
       - ubtu20cis_rule_1_1_1_3
   tags:
@@ -85,6 +109,14 @@
             name: hfs
             state: absent
         when: ansible_connection != 'docker'
+
+      - name: "1.1.1.4 | PATCH | Ensure mounting of hfs filesystems is disabled | blacklist"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: "^(#)?blacklist hfs(\\s|$)"
+            line: "blacklist hfs"
+            create: true
+            mode: '0600'
   when:
       - ubtu20cis_rule_1_1_1_4
   tags:
@@ -109,6 +141,14 @@
             name: hfsplus
             state: absent
         when: ansible_connection != 'docker'
+
+      - name: "1.1.1.5 | PATCH | Ensure mounting of hfsplus filesystems is disabled | blacklist"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: "^(#)?blacklist hfsplus(\\s|$)"
+            line: "blacklist hfsplus"
+            create: true
+            mode: '0600'
   when:
       - ubtu20cis_rule_1_1_1_5
   tags:
@@ -132,8 +172,16 @@
         community.general.modprobe:
             name: squashfs
             state: absent
-        ignore_errors: true
+        ignore_errors: true  # noqa: ignore-errors
         when: ansible_connection != 'docker'
+
+      - name: "1.1.1.6 | PATCH | Ensure mounting of squashfs filesystems is disabled | blacklist"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: "^(#)?blacklist squashfs(\\s|$)"
+            line: "blacklist squashfs"
+            create: true
+            mode: '0600'
   when:
       - ubtu20cis_rule_1_1_1_6
       - snap_pkg_mgr.stdout == 0
@@ -159,11 +207,19 @@
             name: udf
             state: absent
         when: ansible_connection != 'docker'
+
+      - name: "1.1.1.7 | PATCH | Ensure mounting of udf filesystems is disabled | blacklist"
+        ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: "^(#)?blacklist udf(\\s|$)"
+            line: "blacklist udf"
+            create: true
+            mode: '0600'
   when:
       - ubtu20cis_rule_1_1_1_7
   tags:
-      - level1-server
-      - level1-workstation
+      - level2-server
+      - level2-workstation
       - automated
       - patch
       - rule_1.1.1.7

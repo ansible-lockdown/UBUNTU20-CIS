@@ -1,6 +1,6 @@
 ---
 
-- name: remount tmp
+- name: Remount tmp
   ansible.posix.mount:
       name: /tmp
       state: remounted
@@ -10,12 +10,32 @@
       name: /dev/shm
       state: remounted
 
-- name: remount var_tmp
+- name: Remount var
+  ansible.posix.mount:
+      name: /var
+      state: remounted
+
+- name: Remount var_tmp
   ansible.posix.mount:
       name: /var/tmp
       state: remounted
 
-- name: grub update
+- name: Remount var_log
+  ansible.posix.mount:
+      name: /var/log
+      state: remounted
+
+- name: Remount var_log_audit
+  ansible.posix.mount:
+      name: /var/log/audit
+      state: remounted
+
+- name: Remount home
+  ansible.posix.mount:
+      name: /home
+      state: remounted
+
+- name: Grub update
   ansible.builtin.shell: update-grub
   notify: change_requires_reboot
   failed_when: false
@@ -25,13 +45,18 @@
   failed_when: false
 
 - name: restart postfix
-  ansible.builtin.service:
+  ansible.builtin.systemd:
       name: postfix
       state: restarted
 
 - name: restart exim4
-  ansible.builtin.service:
+  ansible.builtin.systemd:
       name: exim4
+      state: restarted
+
+- name: restart timeservice
+  ansible.builtin.systemd:
+      name: "{{ ubtu20cis_time_sync_tool }}"
       state: restarted
 # ---------------
 # ---------------
@@ -84,13 +109,18 @@
   tags:
       - skip_ansible_lint
 
-- name: restart rsyslog
-  ansible.builtin.service:
-      name: rsyslog
+- name: restart syslog service
+  ansible.builtin.systemd:
+      name: "{{ ubtu20cis_syslog_service }}"
+      state: restarted
+
+- name: restart journal-upload
+  ansible.builtin.systemd:
+      name: systemd-journal-upload
       state: restarted
 
 - name: restart sshd
-  ansible.builtin.service:
+  ansible.builtin.systemd:
       name: sshd
       state: restarted
 

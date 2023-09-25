@@ -28,7 +28,7 @@
             regexp: '^GRUB_CMDLINE_LINUX'
             line: 'GRUB_CMDLINE_LINUX="apparmor=1 security=apparmor {{ ubtu20cis_1_6_1_2_cmdline_settings.stdout }}"'
             insertafter: '^GRUB_'
-        notify: grub update
+        notify: Grub update
         when:
             - "'apparmor' not in ubtu20cis_1_6_1_2_cmdline_settings.stdout"
             - "'security' not in ubtu20cis_1_6_1_2_cmdline_settings.stdout"
@@ -44,7 +44,7 @@
         when:
             - "'apparmor' in ubtu20cis_1_6_1_2_cmdline_settings.stdout"
             - "'security' in ubtu20cis_1_6_1_2_cmdline_settings.stdout"
-        notify: grub update
+        notify: Grub update
   when:
       - ubtu20cis_rule_1_6_1_2
   tags:

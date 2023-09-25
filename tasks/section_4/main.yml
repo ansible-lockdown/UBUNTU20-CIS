@@ -1,24 +1,18 @@
 ---
-- name: "SECTION | 4.1.1 | Ensure auditing is enabled"
-  ansible.builtin.import_tasks: cis_4.1.1.x.yml
-
-- name: "SECTION | 4.1.2 | Configure Data Retention"
-  ansible.builtin.import_tasks: cis_4.1.2.x.yml
-
-- name: "SECTION | 4.1.x | Login Settings"
+- name: "SECTION | 4.1 | Configure job based time schedulers"
   ansible.builtin.import_tasks: cis_4.1.x.yml
 
-- name: "SECTION | 4.2.1 | Configure rsyslog"
-  ansible.builtin.import_tasks: cis_4.2.1.x.yml
+- name: "SECTION | 4.2 | Configure SSH Server"
+  ansible.builtin.import_tasks: cis_4.2.x.yml
 
-- name: "SECTION | 4.2.2 | Configure journald"
-  ansible.builtin.import_tasks: cis_4.2.2.x.yml
+- name: "SECTION | 4.3 | Configure Privilege escalations"
+  ansible.builtin.import_tasks: cis_4.3.x.yml
 
-- name: "SECTION | 4.2.3 | Ensure permissions on all logfiles are configured"
-  ansible.builtin.import_tasks: cis_4.2.3.yml
+- name: "SECTION | 4.4 | Configure PAM"
+  ansible.builtin.import_tasks: cis_4.4.x.yml
 
-- name: "SECTION | 4.3 | Ensure logrotate is configured"
-  ansible.builtin.import_tasks: cis_4.3.yml
+- name: "SECTION | 4.5.1.x | User Accounts and Environment | Shadow Suite"
+  ansible.builtin.import_tasks: cis_4.5.1.x.yml
 
-- name: "SECTION | 4.4 | Ensure logrotate assigns appropriate permissions"
-  ansible.builtin.import_tasks: cis_4.4.yml
+- name: "SECTION | 4.5.x | User Accounts and Environment | password params"
+  ansible.builtin.import_tasks: cis_4.5.x.yml
