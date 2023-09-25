@@ -14,7 +14,8 @@
                 - "{{ ubtu20cis_6_2_1_nonshadowed_users.stdout_lines }}"
 
       - name: "6.2.1 | AUDIT | Ensure accounts in /etc/passwd use shadowed passwords | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when:
             - ubtu20cis_6_2_1_nonshadowed_users.stdout | length > 0
   vars:
@@ -70,7 +71,8 @@
         when: ubtu20cis_6_2_3_passwd_gid_check.stdout | length > 0
 
       - name: "6.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when: ubtu20cis_6_2_3_passwd_gid_check.stdout | length > 0
   vars:
       warn_control_id: '6.2.3'
@@ -98,7 +100,8 @@
         when: getent_group.shadow[2] | length > 0
 
       - name: "6.2.4 | AUDIT | Ensure shadow group is empty | check users in group"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when: getent_group.shadow[2] | length > 0
   vars:
       warn_control_id: '6.2.4'
@@ -122,7 +125,8 @@
         register: ubtu20cis_6_2_5_user_uid_check
 
       - name: "6.2.5 | AUDIT | Ensure no duplicate UIDs exist | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when: ubtu20cis_6_2_5_user_uid_check.stdout | length > 0
 
       - name: "6.2.5 | AUDIT | Ensure no duplicate UIDs exist | Print warning about users with duplicate UIDs"
@@ -156,7 +160,8 @@
         when: ubtu20cis_6_2_6_user_username_check.stdout | length > 0
 
       - name: "6.2.6 | AUDIT | Ensure no duplicate user names exist | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when: ubtu20cis_6_2_6_user_username_check.stdout | length > 0
         vars:
             warn_control_id: '6.2.6'
@@ -185,7 +190,8 @@
         when: ubtu20cis_6_2_7_user_username_check.stdout | length > 0
 
       - name: "6.2.7 | AUDIT | Ensure no duplicate user names exist | Set warning count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when: ubtu20cis_6_2_7_user_username_check.stdout | length > 0
   vars:
       warn_control_id: '6.2.7'
@@ -214,7 +220,8 @@
         when: ubtu20cis_6_2_8_group_group_check.stdout | length > 0
 
       - name: "6.2.8 | AUDIT | Ensure no duplicate group names exist | Set warning count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when: ubtu20cis_6_2_8_group_group_check.stdout | length > 0
   vars:
       warn_control_id: '6.2.8'
@@ -268,7 +275,8 @@
         with_items: "{{ ubtu20cis_rule_6_2_9_dot_in_path.stdout_lines }}"
 
       - name: "6.2.9 | AUDIT | Ensure root PATH Integrity | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when: ubtu20cis_rule_6_2_9_dot_in_path.stdout | length > 0
         vars:
             warn_control_id: '6.2.9'
@@ -314,7 +322,8 @@
             - ubtu20cis_6_2_10_uid_0_notroot.stdout | length > 0
 
       - name: "6.2.10 | AUDIT | Ensure root is the only UID 0 account | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when:
             - ubtu20cis_disruption_high
             - ubtu20cis_6_2_10_uid_0_notroot.stdout | length > 0

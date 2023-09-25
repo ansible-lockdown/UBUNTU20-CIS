@@ -337,7 +337,8 @@
                 - "{{ ubtu20cis_3_4_3_3_4_current_rules.stdout_lines }}"
 
       - name: "3.4.3.3.4 | AUDIT | Ensure ip6tables firewall rules exist for all open ports | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
   vars:
       warn_control_id: '3.4.3.3.4'
   when:

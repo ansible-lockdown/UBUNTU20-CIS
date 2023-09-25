@@ -187,7 +187,8 @@
         when: "' $6$' not in ubtu20cis_4_4_5_passwd_hash_used.stdout"
 
       - name: "4.4.5 | WARN | Ensure all current passwords uses the configured hashing algorithm | warn_count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when: "' $6$' not in ubtu20cis_4_4_5_passwd_hash_used.stdout"
   vars:
       warn_control_id: '4.4.5'
