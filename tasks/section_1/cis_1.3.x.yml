@@ -31,7 +31,8 @@
                 - "{{ ubtu20cis_1_3_2_apt_policy.stdout_lines }}"
 
       - name: "1.3.2 | AUDIT | Ensure package manager repositories are configured | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
   vars:
       warn_control_id: '1.3.2'
   when:
@@ -62,7 +63,8 @@
                 - "{{ ubtu20cis_1_3_3_apt_gpgkeys.stdout_lines }}"
 
       - name: "1.3.3 | AUDIT | Ensure GPG keys are configured | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
   vars:
       warn_control_id: '1.3.3'
   when:

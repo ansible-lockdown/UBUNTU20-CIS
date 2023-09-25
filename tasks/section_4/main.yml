@@ -1,18 +1,24 @@
 ---
 - name: "SECTION | 4.1 | Configure job based time schedulers"
-  ansible.builtin.import_tasks: cis_4.1.x.yml
+  ansible.builtin.import_tasks:
+      file: cis_4.1.x.yml
 
 - name: "SECTION | 4.2 | Configure SSH Server"
-  ansible.builtin.import_tasks: cis_4.2.x.yml
+  ansible.builtin.import_tasks:
+      file: cis_4.2.x.yml
 
 - name: "SECTION | 4.3 | Configure Privilege escalations"
-  ansible.builtin.import_tasks: cis_4.3.x.yml
+  ansible.builtin.import_tasks:
+      file: cis_4.3.x.yml
 
 - name: "SECTION | 4.4 | Configure PAM"
-  ansible.builtin.import_tasks: cis_4.4.x.yml
+  ansible.builtin.import_tasks:
+      file: cis_4.4.x.yml
 
 - name: "SECTION | 4.5.1.x | User Accounts and Environment | Shadow Suite"
-  ansible.builtin.import_tasks: cis_4.5.1.x.yml
+  ansible.builtin.import_tasks:
+      file: cis_4.5.1.x.yml
 
 - name: "SECTION | 4.5.x | User Accounts and Environment | password params"
-  ansible.builtin.import_tasks: cis_4.5.x.yml
+  ansible.builtin.import_tasks:
+      file: cis_4.5.x.yml

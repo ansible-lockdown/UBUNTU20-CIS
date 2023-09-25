@@ -250,7 +250,8 @@
             - ubtu20cis_6_1_12_no_user_items_flatten | length > 0
 
       - name: "6.1.12 | AUDIT | Ensure no unowned or ungrouped files or directories exist  | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when:
             - not ubtu20cis_no_owner_adjust
             - ubtu20cis_6_1_12_no_user_items_flatten | length > 0
@@ -293,7 +294,8 @@
             - ubtu20cis_6_1_12_ungrouped_items_flatten | length > 0
 
       - name: "6.1.12 | AUDIT | Ensure no ungrouped files or directories exist | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when:
             - not ubtu20cis_no_group_adjust
             - ubtu20cis_6_1_12_ungrouped_items_flatten | length > 0
@@ -347,7 +349,8 @@
             - ubtu20cis_6_1_13_suid_executables_flatten | length > 0
 
       - name: "6.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | SUID Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when:
             - ubtu20cis_6_1_13_suid_executables_flatten | length > 0
             - not ubtu20cis_suid_adjust
@@ -380,7 +383,8 @@
             - not ubtu20cis_sgid_adjust
 
       - name: "6.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | SGID Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when:
             - ubtu20cis_6_1_13_sgid_executables_flatten | length > 0
             - not ubtu20cis_sgid_adjust

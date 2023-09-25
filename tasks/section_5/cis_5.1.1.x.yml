@@ -9,7 +9,8 @@
         failed_when: ubtu20cis_5_1_1_2_journald_enabled.rc not in [ 0, 1, 2 ]
 
       - name: "5.1.1.2 | Ensure journald service is enabled | warn count if not as expected"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when: "'static' not in ubtu20cis_5_1_1_2_journald_enabled.stdout"
   vars:
       warn_control_id: '5.1.1.2'
