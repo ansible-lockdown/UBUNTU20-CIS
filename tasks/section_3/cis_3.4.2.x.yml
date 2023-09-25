@@ -43,9 +43,10 @@
             msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
 
       - name: "3.4.2.3 | AUDIT | Ensure iptables are flushed with nftables | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
   vars:
-      warn_control_id: '3.4.2.3 NFTables changes not supported'
+      warn_control_id: '3.4.2.3'
   when:
       - ubtu20cis_rule_3_4_2_3
       - ubtu20cis_firewall_package == "nftables"
@@ -64,9 +65,10 @@
             msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
 
       - name: "3.4.2.4 | AUDIT | Ensure a nftables table exists | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
   vars:
-      warn_control_id: '3.4.2.4 NFTables changes not supported'
+      warn_control_id: '3.4.2.4'
   when:
       - ubtu20cis_rule_3_4_2_4
       - ubtu20cis_firewall_package == "nftables"
@@ -85,9 +87,10 @@
             msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
 
       - name: "3.4.2.5 | AUDIT | Ensure nftables base chains exist | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
   vars:
-      warn_control_id: '3.4.2.5 NFTables changes not supported'
+      warn_control_id: '3.4.2.5'
   when:
       - ubtu20cis_rule_3_4_2_5
       - ubtu20cis_firewall_package == "nftables"
@@ -106,9 +109,10 @@
             msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
 
       - name: "3.4.2.6 | AUDIT | Ensure nftables loopback traffic is configured | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
   vars:
-      warn_control_id: '3.4.2.6 NFTables changes not supported'
+      warn_control_id: '3.4.2.6'
   when:
       - ubtu20cis_rule_3_4_2_6
       - ubtu20cis_firewall_package == "nftables"
@@ -127,9 +131,10 @@
             msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
 
       - name: "3.4.2.7 | AUDIT | Ensure nftables outbound and established connections are configured | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
   vars:
-      warn_control_id: '3.4.2.7 NFTables changes not supported'
+      warn_control_id: '3.4.2.7'
   when:
       - ubtu20cis_rule_3_4_2_7
       - ubtu20cis_firewall_package == "nftables"
@@ -148,9 +153,10 @@
             msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
 
       - name: "3.4.2.8 | AUDIT | Ensure nftables default deny firewall policy | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
   vars:
-      warn_control_id: '3.4.2.8 NFTables changes not supported'
+      warn_control_id: '3.4.2.8'
   when:
       - ubtu20cis_rule_3_4_2_8
       - ubtu20cis_firewall_package == "nftables"
@@ -169,9 +175,10 @@
             msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
 
       - name: "3.4.2.9 | AUDIT | Ensure nftables service is enabled | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
   vars:
-      warn_control_id: '3.4.2.9 NFTables changes not supported'
+      warn_control_id: '3.4.2.9'
   when:
       - ubtu20cis_rule_3_4_2_9
       - ubtu20cis_firewall_package == "nftables"
@@ -190,9 +197,10 @@
             msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
 
       - name: "3.4.2.10 | AUDIT | Ensure nftables rules are permanent | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
   vars:
-      warn_control_id: '3.4.2.10 NFTables changes not supported'
+      warn_control_id: '3.4.2.10'
   when:
       - ubtu20cis_rule_3_4_2_10
       - ubtu20cis_firewall_package == "nftables"

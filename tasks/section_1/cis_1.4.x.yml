@@ -9,6 +9,7 @@
             line: '\1 {{ ubtu20cis_bootloader_password_hash }}'
             insertafter: set superusers="{{ ubtu20cis_grub_user }}"
             state: present
+            create: true
         notify: Grub update
 
       - name: "1.4.1 | PATCH | Ensure bootloader password is set | allow unrestricted boot"

@@ -144,7 +144,8 @@
                 - "{{ ubtu20cis_3_4_1_6_firewall_rules.stdout_lines }}"
 
       - name: "3.4.1.6 | AUDIT | Ensure ufw firewall rules exist for all open ports | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
   vars:
       warn_control_id: '3.4.1.6'
 

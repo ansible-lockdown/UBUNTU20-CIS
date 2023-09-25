@@ -70,7 +70,8 @@
         when: ubtu20cis_rule_1_6_1_3_apparmor_unconfined.stdout != '0'
 
       - name: "1.6.1.3 | AUDIT | Ensure all AppArmor Profiles are in enforce or complain mode | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when: ubtu20cis_rule_1_6_1_3_apparmor_unconfined.stdout != '0'
   vars:
       warn_control_id: '1.6.1.3'
@@ -99,7 +100,8 @@
         when: ubtu20cis_rule_1_6_1_4_apparmor_enforced.stdout != '0'
 
       - name: "1.6.1.4 | AUDIT | Ensure all AppArmor Profiles are enforcing | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when: ubtu20cis_rule_1_6_1_4_apparmor_enforced.stdout != '0'
 
   vars:
