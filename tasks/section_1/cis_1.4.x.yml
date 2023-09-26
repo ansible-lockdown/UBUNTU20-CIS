@@ -2,14 +2,17 @@
 
 - name: "1.4.1 | PATCH | Ensure bootloader password is set"
   block:
-      - name: "1.4.1 | PATCH | Ensure bootloader password is set"
+      - name: "1.4.1 | PATCH | Ensure bootloader password is set | set superusers and password"
         ansible.builtin.lineinfile:
             path: "{{ ubtu20cis_grub_user_file }}"
-            regexp: '^(password_pbkdf2 {{ ubtu20cis_grub_user }}) grub.pbkdf2.*'
-            line: '\1 {{ ubtu20cis_bootloader_password_hash }}'
-            insertafter: set superusers="{{ ubtu20cis_grub_user }}"
+            regexp: "{{ item.regexp }}"
+            line: "{{ item.line }}"
             state: present
+            insertafter: "{{ item.after | default(omit) }}"
             create: true
+        loop:
+          - { regexp: '^set superusers', line: 'set superusers="{{ ubtu20cis_grub_user }}"' }
+          - { regexp: '^password_pbkdf2 {{ ubtu20cis_grub_user }} grub.pbkdf2.*', line: 'password_pbkdf2 {{ ubtu20cis_grub_user }} {{ ubtu20cis_bootloader_password_hash }}', after: 'set superusers="' }
         notify: Grub update
 
       - name: "1.4.1 | PATCH | Ensure bootloader password is set | allow unrestricted boot"
