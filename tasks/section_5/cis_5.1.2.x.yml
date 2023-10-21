@@ -97,7 +97,7 @@
             - { regexp: '^mail.info|^#mail.info', line: 'mail.info                      -/var/log/mail.info', insertafter: '^# Logging for the mail system' }
             - { regexp: '^mail.warn|^#mail.warn', line: 'mail.warn                      -/var/log/mail.warn', insertafter: '^# Logging for the mail system.' }
             - { regexp: '^mail.err|^#mail.err', line: 'mail.err                        /var/log/mail.err', insertafter: '^# Logging for the mail system.' }
-            - { regexp: '^cron.\*|^#cron.\*', line: 'cron.\*                     -/var/log/news/news.notice', insertafter: '^# First some standard log files' }
+            - { regexp: '^cron.\*|^#cron.\*', line: 'cron.\*                     /var/log/cron', insertafter: '^# First some standard log files' }
             - { regexp: '^\*.=warning;\*.=err|^#\*.=warning;\*.=err', line: '*.=warning;*.=err               -/var/log/warn', insertafter: '^# First some standard log files' }
             - { regexp: '^\*.crit|^#\*.crit', line: '*.crit                           /var/log/warn', insertafter: '^# First some standard log files' }
             - { regexp: '^\*.\*;mail.none;news.none|^#\*.\*;mail.none;news.none', line: '*.*;mail.none;news.none         -/var/log/messages', insertafter: '^# First some standard log files' }
