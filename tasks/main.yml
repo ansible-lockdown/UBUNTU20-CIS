@@ -22,7 +22,7 @@
           - '"grub.pbkdf2.sha512.1000" in ubtu20cis_bootloader_password_hash'
       fail_msg: "The default grub password has not been changed"
   when:
-      - ubtu20cis_set_grub_password
+      - ubtu20cis_set_grub_user_password
       - ubtu20cis_rule_1_4_2
 
 - name: Ensure root password has been changed

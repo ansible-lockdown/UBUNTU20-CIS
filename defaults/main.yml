@@ -467,15 +467,17 @@ ubtu20cis_aide_cron:
     aide_weekday: '*'
 
 # Control 1.4.1
-# THIS VARIABLE SHOULD BE CHANGED
+# THESE VARIABLES SHOULD BE CHANGED
 # This will fail assertion if not changed and rule 1.4.2 is enabled
 # insert password as per output of running grub-mkpasswd-pbkdf2
 # refers to https://help.ubuntu.com/community/Grub2/Passwords
 
-ubtu20cis_set_boot_pass: false
-ubtu20cis_set_grub_password: true
-ubtu20cis_grub_user_file: /etc/grub.d/40_custom
+# You maybe changing the root password if grub user root - Ensure you understand the risks
+ubtu20cis_set_grub_user_pass: false
 ubtu20cis_grub_user: root
+ubtu20cis_grub_user_passwd: '$y$j9T$MBA5l/tQyWifM869nQjsi.$cTy0ConcNjIYOn6Cppo5NAky20osrkRxz4fEWA8xac6'  # Set to changeme
+ubtu20cis_set_boot_pass: false
+ubtu20cis_grub_user_file: /etc/grub.d/40_custom
 ubtu20cis_grub_file: /boot/grub/grub.cfg
 
 # This is used to set the password in grub the full string is required.
