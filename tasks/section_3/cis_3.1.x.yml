@@ -7,7 +7,7 @@
             path: /etc/default/grub
             regexp: '^(GRUB_CMDLINE_LINUX=.*)\bipv6\.disable=\d\b(.*$)'
             replace: '\1ipv6.disable=1\2'
-        when: ubtu22cis_ipv6_disable == 'grub'
+        when: ubtu20cis_ipv6_disable == 'grub'
         register: ipv6disable_replaced
         notify: Grub update
 
