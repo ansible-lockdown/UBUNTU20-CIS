@@ -415,7 +415,7 @@ ubtu20cis_dovecot_server: false
 ubtu20cis_smb_server: false
 ubtu20cis_squid_server: false
 ubtu20cis_snmp_server: false
-ubtu20cis_rsync_server: false
+ubtu20cis_rsync_server: mask  # Can be set to true, mask or remove depending on requirements
 ubtu20cis_nis_server: false
 ubtu20cis_nfs_client: false
 # rpcbind is required by nfs-common which is required on client and server
