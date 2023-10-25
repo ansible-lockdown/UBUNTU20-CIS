@@ -70,6 +70,8 @@
             name: apport
             state: stopped
             enabled: false
+        when:
+            - "'apport' in ansible_facts.packages"
 
       - name: "1.5.4 | PATCH | Ensure Automatic Error Reporting is not enabled | remove package"
         ansible.builtin.package:
