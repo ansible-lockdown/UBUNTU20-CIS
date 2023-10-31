@@ -44,13 +44,13 @@
 
           steps:
             - name: Clone ${{ github.event.repository.name }}
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                 ref: ${{ github.event.pull_request.head.sha }}
 
             # Pull in terraform code for linux servers
             - name: Clone github IaC plan
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                 repository: ansible-lockdown/github_linux_IaC
                 path: .github/workflows/github_linux_IaC
@@ -111,7 +111,7 @@
       # Aws deployments taking a while to come up insert sleep or playbook fails
 
             - name: Sleep for 60 seconds
-              run: sleep 60s
+              run: sleep ${{ vars.BUILD_SLEEPTIME }}
 
           # Run the ansible playbook
             - name: Run_Ansible_Playbook
