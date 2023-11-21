@@ -2,22 +2,19 @@
 
 - name: "3.1.1 | PATCH | Disable IPv6"
   block:
-      - name: "3.1.1 | PATCH | Ensure system is checked to determine if IPv6 is enabled | Replace ipv6.disable if it exists"
-        ansible.builtin.replace:
-            path: /etc/default/grub
-            regexp: '^(GRUB_CMDLINE_LINUX=.*)\bipv6\.disable=\d\b(.*$)'
-            replace: '\1ipv6.disable=1\2'
-        when: ubtu20cis_ipv6_disable == 'grub'
-        register: ipv6disable_replaced
-        notify: Grub update
+      - name: "3.1.1 | AUDIT | Disable IPv6 | Get current GRUB_CMDLINE_LINUX settings"
+        ansible.builtin.shell: grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
+        changed_when: false
+        failed_when: false
+        check_mode: false
+        register: ubtu20cis_3_1_1_grub_cmdline_linux_settings
 
-      - name: "3.1.1 | PATCH | Ensure system is checked to determine if IPv6 is enabled | Insert ipv6.disable if it doesn't exist"
+      - name: "3.1.1 | PATCH | Disable IPv6 | Add ipv6.disable if does not exist"
         ansible.builtin.lineinfile:
             path: /etc/default/grub
-            regexp: '^(GRUB_CMDLINE_LINUX=".*)"$'
-            line: '\1 ipv6.disable=1"'
-            backrefs: true
-        when: ipv6disable_replaced is not changed
+            regexp: '^GRUB_CMDLINE_LINUX'
+            line: 'GRUB_CMDLINE_LINUX="{{ ubtu20cis_3_1_1_grub_cmdline_linux_settings.stdout }} ipv6.disable=1"'
+        when: "'ipv6.disable' not in ubtu20cis_3_1_1_grub_cmdline_linux_settings.stdout"
         notify: Grub update
 
       - name: "3.1.1 | PATCH | Disable IPv6 | Set ipv6.disable to 1 if exists"
