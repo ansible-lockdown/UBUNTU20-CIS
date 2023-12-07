@@ -65,7 +65,7 @@
   ansible.builtin.file:
       path: "{{ item.path }}"
       mode: '0640'
-  loop: "{{ auditd_conf_files.files }}"
+  loop: "{{ auditd_conf_files.files|default({})}}"
   loop_control:
       label: "{{ item.path }}"
   when:
