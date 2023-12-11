@@ -191,7 +191,7 @@
 - name: "4.5.1.6 | PATCH | Ensure the number of changed characters in a new password is configured"
   ansible.builtin.lineinfile:
       path: /etc/security/pwquality.conf
-      regexp: '^(#\s+|)difok|'
+      regexp: '^(#\s+|)difok'
       line: 'difok = {{ ubtu20cis_pass.character_changed }}'
       create: true
       mode: 0640
