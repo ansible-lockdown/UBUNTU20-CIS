@@ -22,7 +22,7 @@
           - '"grub.pbkdf2.sha512.1000" in ubtu20cis_bootloader_password_hash'
       fail_msg: "The default grub password has not been changed"
   when:
-      - ubtu20cis_set_grub_password
+      - ubtu20cis_set_grub_user_password
       - ubtu20cis_rule_1_4_2
 
 - name: Ensure root password has been changed
@@ -87,11 +87,20 @@
       - prelim_tasks
       - run_audit
 
-- name: Run pre remediation audit tasks
-  ansible.builtin.import_tasks:
-      file: pre_remediation_audit.yml
+- name: Include audit specific variables
+  ansible.builtin.include_vars: audit.yml
   when:
+      - run_audit or audit_only
+      - setup_audit
+  tags:
+      - setup_audit
       - run_audit
+
+- name: Include pre-remediation audit tasks
+  ansible.builtin.import_tasks: pre_remediation_audit.yml
+  when:
+      - run_audit or audit_only
+      - setup_audit
   tags:
       - run_audit
 

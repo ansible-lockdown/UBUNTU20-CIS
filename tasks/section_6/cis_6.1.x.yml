@@ -5,7 +5,7 @@
       path: /etc/passwd
       owner: root
       group: root
-      mode: 0644
+      mode: '0644'
   when:
       - ubtu20cis_rule_6_1_1
   tags:
@@ -21,7 +21,7 @@
       path: /etc/passwd-
       owner: root
       group: root
-      mode: 0600
+      mode: '0600'
   when:
       - ubtu20cis_rule_6_1_2
   tags:
@@ -37,7 +37,7 @@
       path: /etc/group
       owner: root
       group: root
-      mode: 0644
+      mode: '0644'
   when:
       - ubtu20cis_rule_6_1_3
   tags:
@@ -53,7 +53,7 @@
       path: /etc/group-
       owner: root
       group: root
-      mode: 0644
+      mode: '0644'
   when:
       - ubtu20cis_rule_6_1_4
   tags:
@@ -69,7 +69,7 @@
       path: /etc/shadow
       owner: root
       group: shadow
-      mode: 0640
+      mode: '0640'
   when:
       - ubtu20cis_rule_6_1_5
   tags:
@@ -85,7 +85,7 @@
       path: /etc/shadow-
       owner: root
       group: shadow
-      mode: 0640
+      mode: '0640'
   when:
       - ubtu20cis_rule_6_1_6
   tags:
@@ -101,7 +101,7 @@
       path: /etc/gshadow
       owner: root
       group: shadow
-      mode: 0640
+      mode: '0640'
   when:
       - ubtu20cis_rule_6_1_7
   tags:
@@ -117,7 +117,7 @@
       path: /etc/gshadow-
       owner: root
       group: shadow
-      mode: 0640
+      mode: '0640'
   when:
       - ubtu20cis_rule_6_1_8
   tags:
@@ -133,7 +133,7 @@
       path: /etc/shells
       owner: root
       group: root
-      mode: 0644
+      mode: '0644'
   when:
       - ubtu20cis_rule_6_1_9
   tags:
@@ -156,7 +156,7 @@
             path: /etc/opasswd
             owner: root
             group: root
-            mode: 0600
+            mode: '0600'
             state: touch
         when: opasswd.stat.exists
 
@@ -170,7 +170,7 @@
             path: /etc/opasswd.old
             owner: root
             group: root
-            mode: 0600
+            mode: '0600'
         when: opasswd_old.stat.exists
   when:
       - ubtu20cis_rule_6_1_10
@@ -258,7 +258,7 @@
         vars:
             warn_control_id: '6.1.12_unowned'
 
-      - name: "6.1.12 | AUDIT | Ensure no unowned or ungrouped files or directories exist  | Get ungrouped fiels or directories"
+      - name: "6.1.12 | AUDIT | Ensure no unowned or ungrouped files or directories exist  | Get ungrouped files or directories"
         ansible.builtin.shell: find {{ item.mount }} -xdev -nogroup -not -fstype nfs
         changed_when: false
         failed_when: false
