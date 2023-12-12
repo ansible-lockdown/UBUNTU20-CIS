@@ -1,5 +1,12 @@
 # Change log for Ubuntu 2004
 
+## v2.0.1 based upon CIS 2.0.1
+
+- ability to run goss audit only audit_only variable
+  - audit vars mainly move dto var/audit.yml
+- several control updates
+- goss version update to 0.4.4
+
 ## V2.0 based upon CIS 2.0.1
 
 - v2.0.1 - refer to change history from official CIS pdf.
