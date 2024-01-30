@@ -535,7 +535,7 @@ ubtu20cis_warning_banner: |
 # The two options are chrony, ntp, or systemd-timesyncd
 ubtu20cis_time_sync_tool: "systemd-timesyncd"
 
-# This setting allow to use 'pool' or 'server' options using values below.
+# This setting allow to use 'pool' or 'servers' options using values below.
 # only one wil be applied
 ubtu20cis_chrony_timesource: pool
 
