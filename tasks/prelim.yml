@@ -51,11 +51,11 @@
   ansible.builtin.package:
       update_cache: true
   when:
-      - ubtu20cis_rule_1_3_1 or
-        ubtu20cis_rule_1_9
+      - ubtu20cis_rule_1_2_1 or
+        ubtu20cis_rule_1_3_1
   tags:
       - rule_1.3.1
-      - rule_1.9
+      - rule_1.2.1
       - always
 
 - name: "PRELIM | Check for autofs service"

@@ -1,19 +1,20 @@
-audit_run: ansible # This is forced to wrapper by running the run_audit wrapper script (placeholder only if run via ansible)
+---
+
 ## metadata for Audit benchmark
 
 benchmark_version: '2.0.1'
 
 # Some audit tests may need to scan every filesystem or have an impact on a system
 # these may need be scheduled to minimise impact also ability to set a timeout if taking too long
-run_heavy_tests: {{ audit_run_heavy_tests }}
+
 timeout_ms: {{ audit_cmd_timeout }}
 
-ubtu20cis_section1: true
-ubtu20cis_section2: true
-ubtu20cis_section3: true
-ubtu20cis_section4: true
-ubtu20cis_section5: true
-ubtu20cis_section6: true
+ubtu20cis_section1: {{ ubtu20cis_section1_patch }}
+ubtu20cis_section2: {{ ubtu20cis_section2_patch }}
+ubtu20cis_section3: {{ ubtu20cis_section3_patch }}
+ubtu20cis_section4: {{ ubtu20cis_section4_patch }}
+ubtu20cis_section5: {{ ubtu20cis_section5_patch }}
+ubtu20cis_section6: {{ ubtu20cis_section6_patch }}
 
 ubtu20cis_level_1: true
 ubtu20cis_level_2: true
@@ -21,7 +22,7 @@ ubtu20cis_level_2: true
 ubtu20cis_apparmor_disable: true
 
 #  to enable rules that may have IO impact on a system e.g. full filesystem scans or CPU heavy
-run_heavy_tests: true
+run_heavy_tests: {{ audit_run_heavy_tests }}
 
 #  True is BIOS based system else set to false
 ubtu20_legacy_boot: true
@@ -412,7 +413,7 @@ ubtu20cis_ldap_server: {{ ubtu20cis_ldap_server }}
 ubtu20cis_dns_server: {{ ubtu20cis_dns_server }}
 ubtu20cis_vsftpd_server: {{ ubtu20cis_vsftpd_server }}
 ubtu20cis_httpd_server: {{ ubtu20cis_httpd_server }}
-ubtu20cis_is_mail_server: false
+ubtu20cis_is_mail_server: {{ ubtu20cis_is_mail_server }}
 ubtu20cis_dovecot_server: {{ ubtu20cis_dovecot_server }}
 ubtu20cis_samba_server: {{ ubtu20cis_smb_server }}
 ubtu20cis_squid_server: {{ ubtu20cis_squid_server }}
@@ -454,7 +455,7 @@ ubtu20cis_rpc_required: {{ ubtu20cis_rpc_required }}
 ubtu20cis_ipv6_required: {{ ubtu20cis_ipv6_required }}
 
 # System network parameters (host only OR host and router)
-ubtu20cis_is_router: false
+ubtu20cis_is_router: {{ ubtu20cis_is_router }}
 
 ubtu20cis_firewall: {{ ubtu20cis_firewall_package }}
 

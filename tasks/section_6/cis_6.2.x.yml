@@ -409,7 +409,6 @@
         with_items: "{{ ubtu20cis_6_2_12_audit.stdout_lines }}"
         when:
             - ubtu20cis_6_2_12_audit.stdout | length > 0
-            - ubtu20cis_dotperm_ansibleManaged
 
       - name: "6.2.12 | PATCH | Ensure local interactive user dot files access is configured | Ensure no users have .netrc files"
         ansible.builtin.file:
