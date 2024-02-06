@@ -37,7 +37,7 @@ repos:
     exclude: .config/.gitleaks-report.json tasks/parse_etc_password
 
 - repo: https://github.com/gitleaks/gitleaks
-  rev: v8.18.1
+  rev: v8.18.2
   hooks:
   - id: gitleaks
     args: ['--baseline-path', '.config/.gitleaks-report.json']
