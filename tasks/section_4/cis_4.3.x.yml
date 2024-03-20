@@ -19,7 +19,7 @@
       path: /etc/sudoers
       regexp: '^\s*Defaults\s+use_pty\s*$'
       line: 'Defaults use_pty'
-      insertafter: 'EOF'
+      insertafter: '^\s*Defaults'
   when:
       - ubtu20cis_rule_4_3_2
   tags:
@@ -35,7 +35,7 @@
       path: /etc/sudoers
       regexp: '^\s*Defaults\s+logfile\s*='
       line: 'Defaults logfile="{{ ubtu20cis_sudo_logfile }}"'
-      insertafter: 'EOF'
+      insertafter: '^\s*Defaults'
   when:
       - ubtu20cis_rule_4_3_3
   tags:
@@ -92,6 +92,7 @@
             regexp: '^\s*Defaults\s+timestamp_timeout\s*='
             line: "Defaults timestamp_timeout={{ ubtu20cis_sudo_timestamp_timeout }}"
             validate: '/usr/sbin/visudo -cf %s'
+            insertafter: '^\s*Defaults'
         when: ubtu20cis_4_3_6_timeout_files.stdout | length == 0
 
       - name: "4.3.6 | PATCH | Ensure sudo authentication timeout is configured correctly | Set value if has results"

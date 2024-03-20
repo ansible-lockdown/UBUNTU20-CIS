@@ -100,6 +100,12 @@ ubtu20cis_system_is_container: false
 # skip events for ec2 instance testing pipeline
 system_is_ec2: false
 
+## Root user used
+# Root by default is not used unless setup by user
+# The role will only run certain commands if set to true
+# This allows the ability to skip tasks that may cause an issue
+ubtu20cis_uses_root: false
+
 # Section 1 Fixes
 # Section 1 is Initial setup (FileSystem Configuration, Configure Software Updates, Filesystem Integrity Checking, Secure Boot Settings,
 # Additional Process Hardening, Mandatory Access Control, Command Line Warning Banners, and GNOME Display Manager)
@@ -535,7 +541,7 @@ ubtu20cis_warning_banner: |
 # The two options are chrony, ntp, or systemd-timesyncd
 ubtu20cis_time_sync_tool: "systemd-timesyncd"
 
-# This setting allow to use 'pool' or 'server' options using values below.
+# This setting allow to use 'pool' or 'servers' options using values below.
 # only one wil be applied
 ubtu20cis_chrony_timesource: pool
 
