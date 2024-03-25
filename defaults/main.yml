@@ -727,15 +727,16 @@ ubtu20cis_remote_log_server: 192.168.2.100
 ubtu20cis_audit_back_log_limit: 8192
 
 # ubtu20cis_max_log_file_size is largest the log file will become in MB
-# This shoudl be set based on your sites policy
+# This should be set based on your sites policy
 ubtu20cis_max_log_file_size: 10
 
-#
+# ubtu20cis_auditd sets actions for admin_space_left_action and max_log_file_action
+# CIS allows admin_space_left_action of "halt" or "single"
 ubtu20cis_auditd:
     admin_space_left_action: halt
     max_log_file_action: keep_logs
 
-# ubtu20cis_logrotate is the log rotate frequencey. Options are daily, weekly, monthly, and yearly
+# ubtu20cis_logrotate is the log rotate frequency. Options are daily, weekly, monthly, and yearly
 ubtu20cis_logrotate: "daily"
 
 # Control 4.3
