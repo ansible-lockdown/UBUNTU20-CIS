@@ -3,6 +3,7 @@
 ## v2.0.1 based on CIS v2.0.1
 
 - issue 148 thanks to @karlg100
+- workflow updates for new pipeline
 - audit
   - updated files and variables
   - updated vars/audit.yml
