@@ -1,9 +1,18 @@
 # Change log for Ubuntu 2004
 
+## v2.0.1 based on CIS v2.0.1
+
+- issue 148 thanks to @karlg100
+- workflow updates for new pipeline
+- audit
+  - updated files and variables
+  - updated vars/audit.yml
+  - improved when using local copies or archived
+
 ## v2.0.1 based upon CIS 2.0.1
 
 - ability to run goss audit only audit_only variable
-  - audit vars mainly move dto var/audit.yml
+  - audit vars mainly moved to var/audit.yml
 - several control updates
 - goss version update to 0.4.4
 

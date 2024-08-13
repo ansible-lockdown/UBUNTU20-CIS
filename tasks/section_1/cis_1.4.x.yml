@@ -50,6 +50,7 @@
             mode: 0600
         when:
             - ubtu20cis_1_4_2_grub_cfg_status.stat.exists
+            - ubtu20cis_1_4_2_grub_cfg_status.stat.mode != "0400"
   when:
       - ubtu20cis_rule_1_4_2
   tags:

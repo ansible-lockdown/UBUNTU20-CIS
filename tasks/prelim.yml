@@ -198,6 +198,7 @@
   when:
       - ubtu20cis_rule_6_2_8 or
         ubtu20cis_rule_6_2_9 or
-        ubtu20cis_rule_6_2_10
+        ubtu20cis_rule_6_2_10 or
+        ubtu20cis_rule_6_2_12
   tags:
       - always
