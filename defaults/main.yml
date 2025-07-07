@@ -12,6 +12,13 @@ skip_reboot: true
 
 system_is_container: false
 
+# Used for audit
+ubtu20cis_level_1: true
+ubtu20cis_level_2: true
+
+# Create managed not custom local_facts files
+create_benchmark_facts: true
+ansible_facts_path: /etc/ansible/facts.d
 ## Benchmark name used by auditing control role
 # The audit variable found at the base
 benchmark: UBUNTU20-CIS
@@ -36,16 +43,12 @@ audit_run_heavy_tests: true
 
 ## Only run Audit do not remediate
 audit_only: false
-### As part of audit_only ###
-# This will enable files to be copied back to control node in audit_only mode
-fetch_audit_files: false
-# Path to copy the files to will create dir structure in audit_only mode
-audit_capture_files_dir: /some/location to copy to on control node
+
 #############################
 
 # How to retrieve audit binary
 # Options are copy or download - detailed settings at the bottom of this file
-# you will need to access to either github or the file already dowmloaded
+# you will need to access to either github or the file already downloaded
 get_audit_binary_method: download
 
 ## if get_audit_binary_method - copy the following needs to be updated for your environment
@@ -70,8 +73,23 @@ audit_conf_dest: "/opt"
 # Where the audit logs are stored
 audit_log_dir: '/opt'
 
+## Ability to collect and take audit files moving to a centralised location
+# This enables the collection of the files from the host
+fetch_audit_output: false
+
+# Method of getting,uploading the summary files
+## Ensure access and permissions are available for these to occur.
+## options are
+# fetch - fetches from server and moves to location on the ansible controller (could be a mount point available to controller)
+# copy - copies file to a location available to the managed node
+audit_output_collection_method: fetch
+
+# Location to put the audit files
+audit_output_destination: /opt/audit_summaries/
+
 ### Goss Settings ##
 ####### END ########
+
 # We've defined complexity-high to mean that we cannot automatically remediate
 # the rule in question.  In the future this might mean that the remediation
 # may fail in some cases.
@@ -85,7 +103,7 @@ ubtu20cis_audit_complex: true
 # We've defined disruption-high to indicate items that are likely to cause
 # disruption in a normal workflow.  These items can be remediated automatically
 # but are disabled by default to avoid disruption.
-# Value of true runs duscruptive tasks, value of false will skip disruptive tasks
+# Value of true runs disruptive tasks, value of false will skip disruptive tasks
 ubtu20cis_disruption_high: true
 
 # Show "changed" for disruptive items not remediated per disruption-high
@@ -604,7 +622,7 @@ ubtu20cis_ufw_allow_in:
 # Controls 3.5.3.2.1 through 3.5.3.3.4
 # The iptables module only writes to memory which means a reboot could revert settings
 # The below toggle will install iptables-persistent and save the rules in memory (/etc/iptables/rules.v4 or rules.v6)
-# This makes the CIS role changes permenant
+# This makes the CIS role changes permanent
 ubtu20cis_save_iptables_cis_rules: true
 
 # Section 4 Control Variables
@@ -616,19 +634,19 @@ ubtu20cis_save_iptables_cis_rules: true
 
 # log_level is the log level variable. This needs to be set to VERBOSE or INFO to conform to CIS standards
 
-# max_auth_tries is the max number of authentication attampts per connection.
+# max_auth_tries is the max number of authentication attempts per connection.
 # This value should be 10 or less to conform to CIS standards
 
-# ciphers is a comma seperated list of site approved ciphers
+# ciphers is a comma separated list of site approved ciphers
 # ONLY USE STRONG CIPHERS. Weak ciphers are listed below
 # DO NOT USE: 3des-cbc, aes128-cbc, aes192-cbc, and aes256-cbc
 
-# MACs is the comma seperated list of site approved MAC algorithms that SSH can use during communication
+# MACs is the comma separated list of site approved MAC algorithms that SSH can use during communication
 # ONLY USE STRONG ALGORITHMS. Weak algorithms are listed below
 # DO NOT USE: hmac-md5, hmac-md5-96, hmac-ripemd160, hmac-sha1, hmac-sha1-96, umac-64@openssh.com, umac-128@openssh.com, hmac-md5-etm@openssh.com,
 # hmac-md5-96-etm@openssh.com, hmac-ripemd160-etm@openssh.com, hmac-sha1-etm@openssh.com, hmac-sha1-96-etm@openssh.com, umac-64-etm@openssh.com, umac-128-etm@openssh.com
 
-# kex_algorithms is comma seperated list of the algorithms for key exchange methods
+# kex_algorithms is comma separated list of the algorithms for key exchange methods
 # ONLY USE STRONG ALGORITHMS. Weak algorithms are listed below
 # DO NOT USE: diffie-hellman-group1-sha1, diffie-hellman-group14-sha1, diffie-hellman-group-exchange-sha1
 
@@ -668,7 +686,7 @@ ubtu20cis_passwd_hash_algo: sha512  # pragma: allowlist secret
 # pam_tally2 login options allows for audit to be removed if required
 ubtu20cis_pamtally2_login_opts: 'onerr=fail audit silent deny=5 unlock_time=900'
 
-# ubtu20cis_pamd_pwhistory_remember is number of password chnage cycles a user can re-use a password
+# ubtu20cis_pamd_pwhistory_remember is number of password change cycles a user can re-use a password
 # This needs to be 5 or more to conform to CIS standards
 ubtu20cis_pamd_pwhistory_remember: 5
 
