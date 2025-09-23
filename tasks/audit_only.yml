@@ -2,15 +2,15 @@
 
 - name: Audit_only | Fetch audit files
   when:
-    - fetch_audit_output
-    - audit_only
+      - fetch_audit_output
+      - audit_only
   ansible.builtin.import_tasks:
-    file: fetch_audit_output.yml
+      file: fetch_audit_output.yml
 
 - name: Audit_only | Show Audit Summary
   when: audit_only
   ansible.builtin.debug:
-    msg: "{{ audit_results.split('\n') }}"
+      msg: "{{ audit_results.split('\n') }}"
 
 - name: Audit_only | Stop task for host as audit_only selected
   when: audit_only
