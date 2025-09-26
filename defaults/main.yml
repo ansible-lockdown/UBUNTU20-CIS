@@ -38,8 +38,12 @@ setup_audit: false
 
 # enable audits to run - this runs the audit and get the latest content
 run_audit: false
+
 # Run heavy tests - some tests can have more impact on a system enabling these can have greater impact on a system
 audit_run_heavy_tests: true
+
+# Ability to limit the number of concurrent processes used by goss (default 50)
+audit_max_concurrent: 50
 
 ## Only run Audit do not remediate
 audit_only: false
@@ -428,7 +432,7 @@ ubtu20cis_rule_5_2_4_10: true
 ubtu20cis_rule_5_2_4_11: true
 
 # Section 6 Fixes
-# Section is Systme Maintenance (System File Permissions and User and Group Settings)
+# Section is System Maintenance (System File Permissions and User and Group Settings)
 ubtu20cis_rule_6_1_1: true
 ubtu20cis_rule_6_1_2: true
 ubtu20cis_rule_6_1_3: true
@@ -493,7 +497,7 @@ ubtu20cis_ipv4_required: true
 ubtu20cis_ipv6_required: false
 
 # Other system wide variables
-# ubtu20cis_desktop_required is the toggle for requiring desktop environments. True means you use a desktop and will not disable/remove needed items to run a desktop (not recommented for servers)
+# ubtu20cis_desktop_required is the toggle for requiring desktop environments. True means you use a desktop and will not disable/remove needed items to run a desktop (not recommended for servers)
 # false means you do not require a desktop
 ubtu20cis_desktop_required: false
 
