@@ -4,25 +4,25 @@
   block:
       - name: "4.5.2 | PATCH | Ensure system accounts are secured | Set system accounts to nologin"
         ansible.builtin.user:
-            name: "{{ item }}"
+            name: "{{ item.id }}"
             shell: /sbin/nologin
-        with_items:
-            - "{{ ubtu20cis_passwd | selectattr('uid', '<', 1000) | map(attribute='id') | list }}"
+        loop: "{{ ubtu20cis_passwd | selectattr('uid', '<', 1000) | list }}"
+        loop_control:
+            label: "{{ item.id }}"
         when:
-            - item != "root"
-            - item != "sync"
-            - item != "shutdown"
-            - item != "halt"
-            - item != "irc"
+            - item.id not in ['root', 'sync', 'shutdown', 'halt', 'irc']
+            - item.shell not in ['/sbin/nologin', '/usr/sbin/nologin', '/bin/false']
 
       - name: "4.5.2 | PATCH | Ensure system accounts are secured | Lock non-root system accounts"
         ansible.builtin.user:
-            name: "{{ item }}"
+            name: "{{ item.id }}"
             password_lock: true
-        with_items:
-            - "{{ ubtu20cis_passwd | selectattr('uid', '<', 1000) | map(attribute='id') | list }}"
+        loop: "{{ ubtu20cis_passwd | selectattr('uid', '<', 1000) | list }}"
+        loop_control:
+            label: "{{ item.id }}"
         when:
-            - item != "root"
+            - item.id != "root"
+            - item.shell not in ['/sbin/nologin', '/usr/sbin/nologin', '/bin/false']
   when:
       - ubtu20cis_rule_4_5_2
       - ubtu20cis_disruption_high
