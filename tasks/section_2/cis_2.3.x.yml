@@ -1,89 +1,151 @@
 ---
 
-- name: "2.3.1 | PATCH | Ensure NIS Client is not installed"
-  ansible.builtin.package:
-      name: nis
-      state: absent
-  when:
-      - ubtu20cis_rule_2_3_1
-      - not ubtu20cis_nis_required
+- name: "2.3.1.1 | PATCH | Ensure a single time synchronization daemon is in use"
+  when: ubtu20cis_rule_2_3_1_1
   tags:
-      - level1-server
-      - level1-workstation
-      - rule_2.3.1
-      - nis
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_2.3.1.1
+    - chrony
+    - systemd-timesyncd
+  block:
+    - name: "2.3.1.1 | PATCH | Ensure a single time synchronization daemon is in use | Pkg installed"
+      ansible.builtin.package:
+        name: "{{ ubtu20cis_time_sync_tool }}"
+        state: present
 
-- name: "2.3.2 | PATCH | Ensure rsh client is not installed"
-  ansible.builtin.package:
-      name: rsh-client
-      state: absent
-  when:
-      - ubtu20cis_rule_2_3_2
-      - not ubtu20cis_rsh_required
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_2.3.2
-      - rsh
+    - name: "2.3.1.1 | PATCH | Ensure a single time synchronization daemon is in use | other pkgs removed"
+      when: item != ubtu20cis_time_sync_tool
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: absent
+      loop:
+        - chrony
+        - ntp
 
-- name: "2.3.3 | PATCH | Ensure talk client is not installed"
-  ansible.builtin.package:
-      name: talk
-      state: absent
-  when:
-      - ubtu20cis_rule_2_3_3
-      - not ubtu20cis_talk_required
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_2.3.3
-      - talk
+    - name: "2.3.1.1 | PATCH | Ensure a single time synchronization daemon is in use | mask service"
+      when:
+        - ubtu20cis_time_sync_tool != "systemd-timesyncd"
+        - "'systemd-timesyncd' in ansible_facts.packages"
+      ansible.builtin.service:
+        name: systemd-timesyncd.service
+        state: stopped
+        enabled: false
+        masked: true
 
-- name: "2.3.4 | PATCH | Ensure telnet client is not installed"
-  ansible.builtin.package:
-      name: telnet
-      state: absent
-  when:
-      - ubtu20cis_rule_2_3_4
-      - not ubtu20cis_telnet_required
+- name: "2.3.2.1 | PATCH | Ensure systemd-timesyncd configured with authorized timeserver"
+  when: ubtu20cis_rule_2_3_2_1
   tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_2.3.4
-      - telnet
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_2.3.2.1
+    - timesyncd
+  block:
+    - name: "2.3.2.1 | PATCH | Ensure systemd-timesyncd configured with authorized timeserver | conf directory"
+      ansible.builtin.file:
+        path: /etc/systemd/timesyncd.conf.d
+        state: directory
+        owner: root
+        group: root
+        mode: 'u=rwx,g=rx,o=rx'
 
-- name: "2.3.5 | PATCH | Ensure LDAP client is not installed"
-  ansible.builtin.package:
-      name: ldap-utils
-      state: absent
-  when:
-      - ubtu20cis_rule_2_3_5
-      - not ubtu20cis_ldap_clients_required
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_2.3.5
-      - ldap
+    - name: "2.3.2.1 | PATCH | Ensure systemd-timesyncd configured with authorized timeserver | sources"
+      ansible.builtin.template:
+        src: "{{ item }}.j2"
+        dest: "/{{ item }}"
+        mode: 'u=rw,g=r,o=r'
+        owner: root
+        group: root
+      loop:
+        - "etc/systemd/timesyncd.conf.d/50-timesyncd.conf"
+      notify: restart timeservice
 
-- name: "2.3.6 | PATCH | Ensure RPC is not installed"
-  ansible.builtin.package:
-      name: rpcbind
-      state: absent
-  when:
-      - ubtu20cis_rule_2_3_6
-      - not ubtu20cis_rpc_required
+- name: "2.3.2.2 | PATCH | Ensure systemd-timesyncd is enabled and running"
+  when: ubtu20cis_rule_2_3_2_2
   tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_2.3.6
-      - rpbc
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_2.3.2.2
+    - timesyncd
+  ansible.builtin.systemd:
+    name: systemd-timesyncd
+    state: started
+    enabled: true
+    masked: false
+
+- name: "2.3.3.1 | PATCH | Ensure chrony is configured with authorized timeserver"
+  when: ubtu20cis_rule_2_3_3_1
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_2.3.3.1
+    - chrony
+  block:
+    - name: "2.3.3.1 | PATCH | Ensure chrony is configured with authorized timeserver | ensure source dir exists"
+      ansible.builtin.file:
+        path: /etc/chrony/sources.d
+        state: directory
+        owner: root
+        group: root
+        mode: 'u=rwx,g=rx,o=rx'
+
+    - name: "2.3.3.1 | PATCH | Ensure chrony is configured with authorized timeserver | sources"
+      ansible.builtin.template:
+        src: "{{ item }}.j2"
+        dest: "/{{ item }}"
+        mode: 'u=rw,g=r,o=r'
+        owner: root
+        group: root
+      loop:
+        - 'etc/chrony/sources.d/time.sources'
+      notify: restart timeservice
+
+    - name: "2.3.3.1 | PATCH | Ensure chrony is configured with authorized timeserver | remove current sources in .conf"
+      ansible.builtin.replace:
+        path: /etc/chrony/chrony.conf
+        regexp: '^(server.*|pool.*)'
+        replace: '#\1'
+      notify: restart timeservice
+
+    - name: "2.3.3.1 | PATCH | Ensure chrony is configured with authorized timeserver | load sources"
+      ansible.builtin.lineinfile:
+        path: /etc/chrony/chrony.conf
+        regexp: '^include /etc/chrony/sources.d.*'
+        line: include /etc/chrony/sources.d/time.sources
+      notify: restart timeservice
+
+- name: "2.3.3.2 | PATCH | Ensure chrony is running as user _chrony"
+  when: ubtu20cis_rule_2_3_3_2
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_2.3.3.2
+    - chrony
+  ansible.builtin.lineinfile:
+    path: /etc/chrony/chrony.conf
+    regexp: '^user _chrony'
+    line: 'user _chrony'
+
+- name: "2.3.3.3 | PATCH | Ensure chrony is enabled and running"
+  when: ubtu20cis_rule_2_3_3_3
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_2.3.3.3
+    - chrony
+  ansible.builtin.systemd:
+    name: chrony
+    state: started
+    enabled: true

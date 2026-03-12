@@ -2,7 +2,7 @@
 
 ## Configure a Ubuntu 20 machine to be [CIS](https://www.cisecurity.org/cis-benchmarks/) compliant
 
-### Based on CIS Ubuntu Linux 20.04 LTS Benchmark v2.0.1 [Release](https://learn.cisecurity.org/l/799323/2023-06-27/4t1gmr)
+### Based on CIS Ubuntu Linux 20.04 LTS Benchmark v3.0.0
 
 ![Org Stars](https://img.shields.io/github/stars/ansible-lockdown?label=Org%20Stars&style=social)
 ![Stars](https://img.shields.io/github/stars/ansible-lockdown/ubuntu20-cis?label=Repo%20Stars&style=social)
@@ -43,7 +43,7 @@ On our [Discord Server](https://www.lockdownenterprise.com/discord) to ask quest
 
 This role **will make changes to the system** that could break things. This is not an auditing tool but rather a remediation tool to be used after an audit has been conducted.
 
-This role was developed against a clean install of the Operating System. If you are implimenting to an existing system please review this role for any site specific changes that are needed.
+This role was developed against a clean install of the Operating System. If you are implementing to an existing system please review this role for any site specific changes that are needed.
 
 ## Documentation
 
@@ -63,7 +63,7 @@ This role was developed against a clean install of the Operating System. If you 
   - [Tower User Guide](https://docs.ansible.com/ansible-tower/latest/html/userguide/index.html)
   - [Ansible Community Info](https://docs.ansible.com/ansible/latest/community/index.html)
 - Functioning Ansible and/or Tower Installed, configured, and running. This includes all of the base Ansible/Tower configurations, needed packages installed, and infrastructure setup.
-- Please read through the tasks in this role to gain an understanding of what each control is doing. Some of the tasks are disruptive and can have unintended consiquences in a live production system. Also familiarize yourself with the variables in the defaults/main.yml file.
+- Please read through the tasks in this role to gain an understanding of what each control is doing. Some of the tasks are disruptive and can have unintended consequences in a live production system. Also familiarize yourself with the variables in the defaults/main.yml file.
 **Technical Dependencies:**
 
 - Running Ansible/Tower setup (this role is tested against Ansible version 2.9.1 and newer)

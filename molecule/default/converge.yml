@@ -1,0 +1,53 @@
+---
+
+# This is a playbook to test the tasks.
+- name: Converge
+  hosts: all
+  gather_facts: true
+
+  vars:
+      role_name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
+      ansible_user: root
+      system_is_container: true
+      ubtu20cis_skip_for_travis: true
+      # Disable rules that cannot run in containers
+      ubtu20cis_rule_1_1_1_6: false   # overlay fs - manual remediation
+      ubtu20cis_rule_1_1_1_10: false  # unused fs modules - manual remediation
+      # Disable firewall rules in container
+      ubtu20cis_firewall_package: "none"
+      # Disable auditd rules (no systemd audit support in containers)
+      ubtu20cis_rule_6_3_1_1: false
+      ubtu20cis_rule_6_3_1_2: false
+      ubtu20cis_rule_6_3_1_3: false
+      ubtu20cis_rule_6_3_1_4: false
+      ubtu20cis_rule_6_3_2_1: false
+      ubtu20cis_rule_6_3_2_2: false
+      ubtu20cis_rule_6_3_2_3: false
+      ubtu20cis_rule_6_3_2_4: false
+      ubtu20cis_rule_6_3_3_1: false
+      ubtu20cis_rule_6_3_3_2: false
+      ubtu20cis_rule_6_3_3_3: false
+      ubtu20cis_rule_6_3_3_4: false
+      ubtu20cis_rule_6_3_3_5: false
+      ubtu20cis_rule_6_3_3_6: false
+      ubtu20cis_rule_6_3_3_7: false
+      ubtu20cis_rule_6_3_3_8: false
+      ubtu20cis_rule_6_3_3_9: false
+      ubtu20cis_rule_6_3_3_10: false
+      ubtu20cis_rule_6_3_3_11: false
+      ubtu20cis_rule_6_3_3_12: false
+      ubtu20cis_rule_6_3_3_13: false
+      ubtu20cis_rule_6_3_3_14: false
+      ubtu20cis_rule_6_3_3_15: false
+      ubtu20cis_rule_6_3_3_16: false
+      ubtu20cis_rule_6_3_3_17: false
+      ubtu20cis_rule_6_3_3_18: false
+      ubtu20cis_rule_6_3_3_19: false
+      ubtu20cis_rule_6_3_3_20: false
+      ubtu20cis_rule_6_3_3_21: false
+
+  pre_tasks:
+  tasks:
+      - name: "Include tasks"
+        ansible.builtin.include_role:
+            name: "{{ role_name }}"

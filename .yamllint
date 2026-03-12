@@ -1,4 +1,5 @@
 ---
+
 extends: default
 
 ignore: |
@@ -10,8 +11,8 @@ ignore: |
 
 rules:
     indentation:
-        # Requiring 4 space indentation
-        spaces: 4
+        # Requiring 2 space indentation
+        spaces: 2
         # Requiring consistent indentation within a file, either indented or not
         indent-sequences: consistent
     braces:

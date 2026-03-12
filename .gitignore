@@ -40,6 +40,10 @@ travis.env
 benchparse/
 *xccdf.xml
 *.retry
+*.vault
+*.pem
+*.key
+*.p12
 
 # GitHub Action/Workflow files
 .github/
