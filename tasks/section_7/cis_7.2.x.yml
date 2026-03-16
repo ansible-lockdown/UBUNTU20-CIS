@@ -15,17 +15,16 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_7_2_1_nonshadowed_users
+      register: discovered_nonshadowed_users
 
     - name: "7.2.1 | AUDIT | Ensure accounts in /etc/passwd use shadowed passwords | Alert on findings"
       ansible.builtin.debug:
         msg:
           - "Warning!! You have users that are not using a shadowed password. Please convert the below accounts to use a shadowed password"
-          - "{{ ubtu20cis_7_2_1_nonshadowed_users.stdout_lines }}"
+          - "{{ discovered_nonshadowed_users.stdout_lines }}"
 
     - name: "7.2.1 | AUDIT | Ensure accounts in /etc/passwd use shadowed passwords | Warn Count"
-      when:
-        - ubtu20cis_7_2_1_nonshadowed_users.stdout | length > 0
+      when: discovered_nonshadowed_users.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:
@@ -47,15 +46,15 @@
       changed_when: false
       no_log: true
       check_mode: false
-      register: ubtu20cis_7_2_2_empty_password_acct
+      register: discovered_empty_password_acct
 
     - name: "7.2.2 | PATCH | Ensure /etc/shadow password fields are not empty  | Lock users with empty password"
-      when: ubtu20cis_7_2_2_empty_password_acct.stdout | length > 0
+      when: discovered_empty_password_acct.stdout | length > 0
       ansible.builtin.user:
         name: "{{ item }}"
         password_lock: true
       with_items:
-        - "{{ ubtu20cis_7_2_2_empty_password_acct.stdout_lines }}"
+        - "{{ discovered_empty_password_acct.stdout_lines }}"
       no_log: true
 
 - name: "7.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group"
@@ -73,15 +72,15 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_7_2_3_passwd_gid_check
+      register: discovered_passwd_gid_check
 
     - name: "7.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | Print warning about users with invalid GIDs missing GID entries in /etc/group"
-      when: ubtu20cis_7_2_3_passwd_gid_check.stdout | length > 0
+      when: discovered_passwd_gid_check.stdout | length > 0
       ansible.builtin.debug:
-        msg: "Warning!! The following users have non-existent GIDs (Groups): {{ ubtu20cis_7_2_3_passwd_gid_check.stdout_lines | join(', ') }}"
+        msg: "Warning!! The following users have non-existent GIDs (Groups): {{ discovered_passwd_gid_check.stdout_lines | join(', ') }}"
 
     - name: "7.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | Warn Count"
-      when: ubtu20cis_7_2_3_passwd_gid_check.stdout | length > 0
+      when: discovered_passwd_gid_check.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:
@@ -130,17 +129,17 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_7_2_5_user_uid_check
+      register: discovered_user_uid_check
 
     - name: "7.2.5 | AUDIT | Ensure no duplicate UIDs exist | Warn Count"
-      when: ubtu20cis_7_2_5_user_uid_check.stdout | length > 0
+      when: discovered_user_uid_check.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 
     - name: "7.2.5 | AUDIT | Ensure no duplicate UIDs exist | Print warning about users with duplicate UIDs"
-      when: ubtu20cis_7_2_5_user_uid_check.stdout | length > 0
+      when: discovered_user_uid_check.stdout | length > 0
       ansible.builtin.debug:
-        msg: "Warning!! The following users have UIDs that are duplicates: {{ ubtu20cis_7_2_5_user_uid_check.stdout_lines }}"
+        msg: "Warning!! The following users have UIDs that are duplicates: {{ discovered_user_uid_check.stdout_lines }}"
       vars:
         warn_control_id: '7.2.5'
 
@@ -159,15 +158,15 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_7_2_6_user_username_check
+      register: discovered_user_username_check
 
     - name: "7.2.6 | AUDIT | Ensure no duplicate user names exist | Print warning about users with duplicate User Names"
-      when: ubtu20cis_7_2_6_user_username_check.stdout | length > 0
+      when: discovered_user_username_check.stdout | length > 0
       ansible.builtin.debug:
-        msg: "Warning!! The following user names are duplicates: {{ ubtu20cis_7_2_6_user_username_check.stdout_lines }}"
+        msg: "Warning!! The following user names are duplicates: {{ discovered_user_username_check.stdout_lines }}"
 
     - name: "7.2.6 | AUDIT | Ensure no duplicate user names exist | Warn Count"
-      when: ubtu20cis_7_2_6_user_username_check.stdout | length > 0
+      when: discovered_user_username_check.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:
@@ -188,15 +187,15 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_7_2_7_user_username_check
+      register: discovered_duplicate_username_check
 
     - name: "7.2.7 | AUDIT | Ensure no duplicate user names exist | Print warning about users with duplicate User Names"
-      when: ubtu20cis_7_2_7_user_username_check.stdout | length > 0
+      when: discovered_duplicate_username_check.stdout | length > 0
       ansible.builtin.debug:
-        msg: "Warning!! The following user names are duplicates: {{ ubtu20cis_7_2_7_user_username_check.stdout_lines }}"
+        msg: "Warning!! The following user names are duplicates: {{ discovered_duplicate_username_check.stdout_lines }}"
 
     - name: "7.2.7 | AUDIT | Ensure no duplicate user names exist | Set warning count"
-      when: ubtu20cis_7_2_7_user_username_check.stdout | length > 0
+      when: discovered_duplicate_username_check.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:
@@ -219,15 +218,15 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_7_2_8_group_group_check
+      register: discovered_group_name_check
 
     - name: "7.2.8 | AUDIT | Ensure no duplicate group names exist | Print warning about users with duplicate group names"
-      when: ubtu20cis_7_2_8_group_group_check.stdout | length > 0
+      when: discovered_group_name_check.stdout | length > 0
       ansible.builtin.debug:
-        msg: "Warning!! The following group names are duplicates: {{ ubtu20cis_7_2_8_group_group_check.stdout_lines }}"
+        msg: "Warning!! The following group names are duplicates: {{ discovered_group_name_check.stdout_lines }}"
 
     - name: "7.2.8 | AUDIT | Ensure no duplicate group names exist | Set warning count"
-      when: ubtu20cis_7_2_8_group_group_check.stdout | length > 0
+      when: discovered_group_name_check.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:
@@ -250,11 +249,11 @@
         owner: "{{ item.id }}"
         group: "{{ item.gid }}"
         mode: 'u=rwx,g=rx,o='
-      loop: "{{ ubtu20cis_passwd | selectattr('uid', '>=', min_int_uid | int) | selectattr('uid', '<=', max_int_uid | int) | list }}"
+      loop: "{{ ubtu20cis_passwd | selectattr('uid', '>=', prelim_min_int_uid | int) | selectattr('uid', '<=', prelim_max_int_uid | int) | list }}"
       loop_control:
         label: "{{ item.id }}"
       # set default ACLs so the homedir has an effective umask of 0027
-      register: ubtu20cis_7_2_9_home_dir
+      register: discovered_home_dir
 
     - name: "7.2.9 | PATCH | Ensure local interactive user home directories exist | Set group ACL"
       when: not system_is_container
@@ -264,7 +263,7 @@
         etype: group
         permissions: rx
         state: present
-      loop: "{{ interactive_users_home.stdout_lines }}"
+      loop: "{{ prelim_interactive_users_home.stdout_lines }}"
 
     - name: "7.2.9 | PATCH | Ensure local interactive user home directories exist | Set other ACL"
       when: not system_is_container
@@ -274,7 +273,7 @@
         etype: other
         permissions: 0
         state: present
-      loop: "{{ interactive_users_home.stdout_lines }}"
+      loop: "{{ prelim_interactive_users_home.stdout_lines }}"
 
 - name: "7.2.10 | PATCH | Ensure local interactive user dot files access is configured"
   when:
@@ -293,33 +292,32 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_7_2_10_audit
+      register: discovered_dotfiles_audit
 
     - name: "7.2.10 | PATCH | Ensure local interactive user dot files access is configured | Changes files if dot configured"
-      when:
-        - ubtu20cis_7_2_10_audit.stdout | length > 0
+      when: discovered_dotfiles_audit.stdout | length > 0
       ansible.builtin.file:
         path: '{{ item }}'
         mode: go-w
-      with_items: "{{ ubtu20cis_7_2_10_audit.stdout_lines }}"
+      with_items: "{{ discovered_dotfiles_audit.stdout_lines }}"
 
     - name: "7.2.10 | PATCH | Ensure local interactive user dot files access is configured | Ensure no users have .netrc files"
       ansible.builtin.file:
         dest: "~{{ item }}/.netrc"
         state: absent
       with_items:
-        - "{{ ubtu20cis_users.stdout_lines }}"
+        - "{{ prelim_users.stdout_lines }}"
 
     - name: "7.2.10 | PATCH | Ensure local interactive user dot files access is configured | Ensure no users have .forward files"
       ansible.builtin.file:
         dest: "~{{ item }}/.forward"
         state: absent
       with_items:
-        - "{{ ubtu20cis_users.stdout_lines }}"
+        - "{{ prelim_users.stdout_lines }}"
 
     - name: "7.2.10 | PATCH | Ensure local interactive user dot files access is configured | Ensure no users have .rhost files"
       ansible.builtin.file:
         dest: "~{{ item }}/.rhost"
         state: absent
       with_items:
-        - "{{ ubtu20cis_users.stdout_lines }}"
+        - "{{ prelim_users.stdout_lines }}"

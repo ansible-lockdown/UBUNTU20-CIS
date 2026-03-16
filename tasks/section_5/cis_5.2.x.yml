@@ -57,7 +57,7 @@
     regexp: '^([^#|{% if system_is_ec2 %}ec2-user{% endif %}].*)NOPASSWD(.*)'
     replace: '\1PASSWD\2'
     validate: '/usr/sbin/visudo -cf %s'
-  loop: "{{ ubtu20cis_sudoers_files.stdout_lines }}"
+  loop: "{{ prelim_sudoers_files.stdout_lines }}"
 
 - name: "5.2.5 | PATCH | Ensure re-authentication for privilege escalation is not disabled globally"
   when: ubtu20cis_rule_5_2_5
@@ -73,7 +73,7 @@
     regexp: '^([^#].*)!authenticate(.*)'
     replace: '\1authenticate\2'
     validate: '/usr/sbin/visudo -cf %s'
-  loop: "{{ ubtu20cis_sudoers_files.stdout_lines }}"
+  loop: "{{ prelim_sudoers_files.stdout_lines }}"
 
 - name: "5.2.6 | PATCH | Ensure sudo authentication timeout is configured correctly"
   when: ubtu20cis_rule_5_2_6
@@ -90,10 +90,10 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_5_2_6_timeout_files
+      register: discovered_sudo_timeout_files
 
     - name: "5.2.6 | PATCH | Ensure sudo authentication timeout is configured correctly | Set value if no results"
-      when: ubtu20cis_5_2_6_timeout_files.stdout | length == 0
+      when: discovered_sudo_timeout_files.stdout | length == 0
       ansible.builtin.lineinfile:
         path: /etc/sudoers
         regexp: '^\s*Defaults\s+timestamp_timeout\s*='
@@ -102,13 +102,13 @@
         insertafter: '^\s*Defaults'
 
     - name: "5.2.6 | PATCH | Ensure sudo authentication timeout is configured correctly | Set value if has results"
-      when: ubtu20cis_5_2_6_timeout_files.stdout | length > 0
+      when: discovered_sudo_timeout_files.stdout | length > 0
       ansible.builtin.replace:
         path: "{{ item }}"
         regexp: 'timestamp_timeout\s*=\s*(\d+)'
         replace: "timestamp_timeout={{ ubtu20cis_sudo_timestamp_timeout }}"
         validate: '/usr/sbin/visudo -cf %s'
-      loop: "{{ ubtu20cis_5_2_6_timeout_files.stdout_lines }}"
+      loop: "{{ discovered_sudo_timeout_files.stdout_lines }}"
 
 - name: "5.2.7 | PATCH | Ensure access to the su command is restricted"
   when: ubtu20cis_rule_5_2_7
@@ -124,7 +124,7 @@
       ansible.builtin.group:
         name: "{{ ubtu20cis_sugroup }}"
         state: present
-      register: ubtu20cis_5_2_7_sugroup
+      register: discovered_sugroup
 
     - name: "5.2.7 | PATCH | Ensure access to the su command is restricted | remove users from group"
       ansible.builtin.lineinfile:

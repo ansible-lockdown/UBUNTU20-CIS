@@ -36,19 +36,18 @@
       failed_when: false
       no_log: true
       check_mode: false
-      register: ansible_user_password_set
+      register: prelim_user_password_set
 
     - name: "Assert that password set for {{ ansible_env.SUDO_USER }} and account not locked"  # noqa: name[template]
       ansible.builtin.assert:
-        that: ansible_user_password_set.stdout | length != 0 and ansible_user_password_set.stdout != "!!"
+        that: prelim_user_password_set.stdout | length != 0 and prelim_user_password_set.stdout != "!!"
         fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set - It can break access"
         success_msg: "You have a password set for sudo user {{ ansible_env.SUDO_USER }}"
       vars:
         sudo_password_rule: ubtu20cis_rule_5_2_4  # pragma: allowlist secret
 
 - name: Setup rules if container
-  when:
-    - ansible_connection == 'docker' or ansible_virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
+  when: ansible_connection == 'docker' or ansible_virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - container_discovery
     - always
@@ -62,8 +61,7 @@
         file: "{{ container_vars_file }}"
 
     - name: Output if discovered is a container
-      when:
-        - system_is_container
+      when: system_is_container
       ansible.builtin.debug:
         msg: system has been discovered as a container
 
@@ -87,8 +85,7 @@
   ansible.builtin.import_tasks: pre_remediation_audit.yml
 
 - name: Run parse /etc/passwd
-  when:
-    - ubtu20cis_section5_patch or ubtu20cis_section7_patch
+  when: ubtu20cis_section5_patch or ubtu20cis_section7_patch
   ansible.builtin.import_tasks:
     file: parse_etc_password.yml
 
@@ -98,50 +95,43 @@
     manager: auto
 
 - name: Include section 1 patches
-  when:
-    - ubtu20cis_section1_patch
+  when: ubtu20cis_section1_patch
   tags: section1
   ansible.builtin.import_tasks:
     file: section_1/main.yml
 
 - name: Include section 2 patches
-  when:
-    - ubtu20cis_section2_patch
+  when: ubtu20cis_section2_patch
   tags: section2
   ansible.builtin.import_tasks:
     file: section_2/main.yml
 
 - name: Include section 3 patches
-  when:
-    - ubtu20cis_section3_patch
+  when: ubtu20cis_section3_patch
   tags: section3
   ansible.builtin.import_tasks:
     file: section_3/main.yml
 
 - name: Include section 4 patches
-  when:
-    - ubtu20cis_section4_patch
+  when: ubtu20cis_section4_patch
   tags: section4
   ansible.builtin.import_tasks:
     file: section_4/main.yml
 
 - name: Include section 5 patches
-  when:
-    - ubtu20cis_section5_patch
+  when: ubtu20cis_section5_patch
   tags: section5
   ansible.builtin.import_tasks:
     file: section_5/main.yml
 
 - name: Include section 6 patches
-  when:
-    - ubtu20cis_section6_patch
+  when: ubtu20cis_section6_patch
   tags: section6
   ansible.builtin.import_tasks:
     file: section_6/main.yml
 
 - name: Include section 7 patches
-  when:
-    - ubtu20cis_section7_patch
+  when: ubtu20cis_section7_patch
   tags: section7
   ansible.builtin.import_tasks:
     file: section_7/main.yml
@@ -157,8 +147,7 @@
     file: post.yml
 
 - name: Run post audit
-  when:
-    - run_audit
+  when: run_audit
   ansible.builtin.import_tasks:
     file: post_remediation_audit.yml
 
@@ -193,8 +182,7 @@
     file: fetch_audit_output.yml
 
 - name: Show Audit Summary
-  when:
-    - run_audit
+  when: run_audit
   tags: run_audit
   ansible.builtin.debug:
     msg: "{{ audit_results.split('\n') }}"

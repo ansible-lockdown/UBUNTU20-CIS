@@ -23,15 +23,15 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_5_4_1_1_max_days
+      register: discovered_passwd_max_days
 
     - name: "5.4.1.1 | PATCH | Ensure password expiration is 365 days or less | Set existing users PASS_MAX_DAYS"
       when:
         - ubtu20cis_disruption_high
         - (item != 'root') or (not ubtu20cis_uses_root)
       ansible.builtin.command: chage --maxdays {{ ubtu20cis_pass.max_days }} {{ item }}
-      loop: "{{ ubtu20cis_5_4_1_1_max_days.stdout_lines }}"
-      changed_when: ubtu20cis_5_4_1_1_max_days.stdout | length > 0
+      loop: "{{ discovered_passwd_max_days.stdout_lines }}"
+      changed_when: discovered_passwd_max_days.stdout | length > 0
       failed_when: false
 
 - name: "5.4.1.2 | PATCH | Ensure minimum days between password changes is configured"
@@ -56,15 +56,15 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_5_4_1_2_min_days
+      register: discovered_passwd_min_days
 
     - name: "5.4.1.2 | PATCH | Ensure minimum days between password changes is configured | Set existing users PASS_MIN_DAYS"
       when:
         - ubtu20cis_disruption_high
         - (item != 'root') or (not ubtu20cis_uses_root)
       ansible.builtin.command: chage --mindays {{ ubtu20cis_pass.min_days }} {{ item }}
-      loop: "{{ ubtu20cis_5_4_1_2_min_days.stdout_lines }}"
-      changed_when: ubtu20cis_5_4_1_2_min_days.stdout |length > 0
+      loop: "{{ discovered_passwd_min_days.stdout_lines }}"
+      changed_when: discovered_passwd_min_days.stdout |length > 0
       failed_when: false
 
 - name: "5.4.1.3 | PATCH | Ensure password expiration warning days is 7 or more"
@@ -89,15 +89,15 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_5_4_1_3_warn_days
+      register: discovered_passwd_warn_days
 
     - name: "5.4.1.3 | PATCH | Ensure password expiration warning days is 7 or more | Set existing users PASS_WARN_AGE"
       when:
         - ubtu20cis_disruption_high
         - (item != 'root') or (not ubtu20cis_uses_root)
       ansible.builtin.command: chage --maxdays {{ ubtu20cis_pass.warn_age }} {{ item }}
-      loop: "{{ ubtu20cis_5_4_1_3_warn_days.stdout_lines }}"
-      changed_when: ubtu20cis_5_4_1_3_warn_days.stdout | length > 0
+      loop: "{{ discovered_passwd_warn_days.stdout_lines }}"
+      changed_when: discovered_passwd_warn_days.stdout | length > 0
       failed_when: false
 
 - name: "5.4.1.4 | PATCH | Ensure strong password hashing algorithm is configured"
@@ -115,10 +115,10 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_5_4_1_4_pam_unix_state
+      register: discovered_pam_unix_encrypt_state
 
     - name: "5.4.1.4 | PATCH | Ensure strong password hashing algorithm is configured | Set hashing if pam_unix.so exists"
-      when: ubtu20cis_5_4_1_4_pam_unix_state.stdout | length > 0
+      when: discovered_pam_unix_encrypt_state.stdout | length > 0
       community.general.pamd:
         name: common-password
         type: password
@@ -128,7 +128,7 @@
         state: args_present
 
     - name: "5.4.1.4 | PATCH | Ensure strong password hashing algorithm is configured | Set hashing if pam_unix.so does not exist"
-      when: ubtu20cis_5_4_1_4_pam_unix_state.stdout | length == 0
+      when: discovered_pam_unix_encrypt_state.stdout | length == 0
       ansible.builtin.lineinfile:
         path: /etc/pam.d/common-password
         line: 'password        [success=1 default=ignore]      pam_unix.so {{ ubtu20cis_passwd_hash_algo }}'
@@ -150,17 +150,17 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_5_4_1_5_inactive_period
+      register: discovered_inactive_period
 
     - name: "5.4.1.5 | AUDIT | Ensure inactive password lock is 30 days or less | Get current users out of compliance"
       ansible.builtin.shell: awk -F":" '(/^[^:]+:[^!*]/ && ($7<0 || $7>30)){print $1}' //etc/shadow  # noqa: command-instead-of-shell
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_5_4_1_5_current_users
+      register: discovered_inactive_users
 
     - name: "5.4.1.5 | PATCH | Ensure inactive password lock is 30 days or less | Set inactive period for new users"
-      when: ubtu20cis_5_4_1_5_inactive_period.stdout != ubtu20cis_pass.inactive | string
+      when: discovered_inactive_period.stdout != ubtu20cis_pass.inactive | string
       ansible.builtin.command: useradd -D -f {{ ubtu20cis_pass.inactive }}
       changed_when: true
       failed_when: false
@@ -168,10 +168,10 @@
     - name: "5.4.1.5 | PATCH | Ensure inactive password lock is 30 days or less | Set inactive period for existing users"
       when:
         - ubtu20cis_disruption_high
-        - ubtu20cis_5_4_1_5_current_users.stdout | length > 0
+        - discovered_inactive_users.stdout | length > 0
       ansible.builtin.command: chage --inactive {{ ubtu20cis_pass.inactive }} {{ item }}
       with_items:
-        - "{{ ubtu20cis_passwd | selectattr('uid', '>=', 1000) | map(attribute='id') | list | intersect(ubtu20cis_5_4_1_5_current_users.stdout_lines) | list }}"
+        - "{{ ubtu20cis_passwd | selectattr('uid', '>=', 1000) | map(attribute='id') | list | intersect(discovered_inactive_users.stdout_lines) | list }}"
       changed_when: true
       failed_when: false
 
@@ -191,24 +191,24 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_5_4_1_6_current_time
+      register: discovered_current_time
 
     - name: "5.4.1.6 | AUDIT | Ensure all users last password change date is in the past | Get list of users with last changed PW date in future"
-      ansible.builtin.shell: "cat /etc/shadow | awk -F: '{if($3>{{ ubtu20cis_5_4_1_6_current_time.stdout }})print$1}'"  # noqa: command-instead-of-shell
+      ansible.builtin.shell: "cat /etc/shadow | awk -F: '{if($3>{{ discovered_current_time.stdout }})print$1}'"  # noqa: command-instead-of-shell
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_5_4_1_6_user_list
+      register: discovered_future_pw_users
 
     - name: "5.4.1.6 | PATCH | Ensure all users last password change date is in the past | Warn about users"
-      when: ubtu20cis_5_4_1_6_user_list.stdout | length > 0
+      when: discovered_future_pw_users.stdout | length > 0
       ansible.builtin.debug:
         msg:
           - "Warning!! The following accounts have the last PW change date in the future"
-          - "{{ ubtu20cis_5_4_1_6_user_list.stdout_lines }}"
+          - "{{ discovered_future_pw_users.stdout_lines }}"
 
     - name: "5.4.1.6 | PATCH | Ensure all users last password change date is in the past | Warn Count"
-      when: ubtu20cis_5_4_1_6_user_list.stdout | length > 0
+      when: discovered_future_pw_users.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:
@@ -217,10 +217,10 @@
     - name: "5.4.1.6 | PATCH | Ensure all users last password change date is in the past | Lock accounts with future PW changed dates"
       when:
         - ubtu20cis_disruption_high
-        - ubtu20cis_5_4_1_6_user_list.stdout | length > 0
+        - discovered_future_pw_users.stdout | length > 0
       ansible.builtin.command: passwd --expire {{ item }}
       with_items:
-        - "{{ ubtu20cis_5_4_1_6_user_list.stdout_lines }}"
+        - "{{ discovered_future_pw_users.stdout_lines }}"
       changed_when: true
       failed_when: false
 
@@ -334,10 +334,10 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_5_4_2_6_umask_pam_status
+      register: discovered_umask_pam_status
 
     - name: "5.4.2.6 | PATCH | Ensure default user umask is 027 or more restrictive"
-      when: ubtu20cis_5_4_2_6_umask_pam_status.stdout | length == 0
+      when: discovered_umask_pam_status.stdout | length == 0
       ansible.builtin.lineinfile:
         path: /etc/pam.d/common-session
         line: 'session optional                        pam_umask.so'
@@ -386,8 +386,7 @@
         - "{{ ubtu20cis_passwd | selectattr('uid', '<', 1000) | map(attribute='id') | list }}"
 
     - name: "5.4.2.7 | PATCH | Ensure system accounts are secured | Lock non-root system accounts"
-      when:
-        - item != "root"
+      when: item != "root"
       ansible.builtin.user:
         name: "{{ item }}"
         password_lock: true
@@ -469,10 +468,10 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_5_4_3_3_umask_pam_status
+      register: discovered_umask_pam_root_status
 
     - name: "5.4.3.3 | PATCH | Ensure default user umask is 027 or more restrictive"
-      when: ubtu20cis_5_4_3_3_umask_pam_status.stdout | length == 0
+      when: discovered_umask_pam_root_status.stdout | length == 0
       ansible.builtin.lineinfile:
         path: /etc/pam.d/common-session
         line: 'session optional                        pam_umask.so'

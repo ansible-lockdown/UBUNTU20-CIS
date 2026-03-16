@@ -148,10 +148,10 @@
     - name: "7.1.10 | PATCH | Ensure permissions on /etc/opasswd are configured | stat opasswd"
       ansible.builtin.stat:
         path: /etc/opasswd
-      register: opasswd
+      register: discovered_opasswd
 
     - name: "7.1.10 | PATCH | Ensure permissions on /etc/opasswd are configured | opasswd"
-      when: opasswd.stat.exists
+      when: discovered_opasswd.stat.exists
       ansible.builtin.file:
         path: /etc/opasswd
         owner: root
@@ -162,10 +162,10 @@
     - name: "7.1.10 | PATCH | Ensure permissions on /etc/opasswd are configured | stat opasswd.old"
       ansible.builtin.stat:
         path: /etc/opasswd.old
-      register: opasswd_old
+      register: discovered_opasswd_old
 
     - name: "7.1.10 | PATCH | Ensure permissions on /etc/opasswd are configured | set opasswd.old if exists"
-      when: opasswd_old.stat.exists
+      when: discovered_opasswd_old.stat.exists
       ansible.builtin.file:
         path: /etc/opasswd.old
         owner: root
@@ -191,7 +191,7 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_7_1_11_wwf
+      register: discovered_world_writable_files
 
     - name: "7.1.11 | PATCH | Ensure world writable files and directories are secured | Adjust world-writable files if they exist"
       when: ubtu20cis_no_world_write_adjust
@@ -199,7 +199,7 @@
         path: "{{ item }}"
         mode: o-w
       with_items:
-        - "{{ ubtu20cis_7_1_11_wwf.results | map(attribute='stdout_lines') | flatten }}"
+        - "{{ discovered_world_writable_files.results | map(attribute='stdout_lines') | flatten }}"
 
 - name: "7.1.12 | PATCH | Ensure no unowned or ungrouped files or directories exist"
   when: ubtu20cis_rule_7_1_12
@@ -220,36 +220,36 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_7_1_12_no_user_items
+      register: discovered_no_user_items
 
     - name: "7.1.12 | AUDIT | Ensure no unowned or ungrouped files or directories exist  | Flatten no_user_items results for easier use"
       ansible.builtin.set_fact:
-        ubtu20cis_7_1_12_no_user_items_flatten: "{{ ubtu20cis_7_1_12_no_user_items.results | map(attribute='stdout_lines') | flatten }}"
+        discovered_no_user_items_flatten: "{{ discovered_no_user_items.results | map(attribute='stdout_lines') | flatten }}"
 
     - name: "7.1.12 | AUDIT | Ensure no unowned or ungrouped files or directories exist  | Alert on unowned files and directories"
       when:
         - not ubtu20cis_no_owner_adjust
-        - ubtu20cis_7_1_12_no_user_items_flatten | length > 0
+        - discovered_no_user_items_flatten | length > 0
       ansible.builtin.debug:
         msg:
           - "Warning!! You have unowned files and are configured to not auto-remediate for this task"
           - "Please review the files/directories below and assign an owner"
-          - "{{ ubtu20cis_7_1_12_no_user_items_flatten }}"
+          - "{{ discovered_no_user_items_flatten }}"
 
     - name: "7.1.12 | PATCH | Ensure no unowned or ungrouped files or directories exist  | Set unowned files/directories to configured owner"
       when:
         - ubtu20cis_no_owner_adjust
-        - ubtu20cis_7_1_12_no_user_items_flatten | length > 0
+        - discovered_no_user_items_flatten | length > 0
       ansible.builtin.file:
         path: "{{ item }}"
         owner: "{{ ubtu20cis_unowned_owner }}"
       with_items:
-        - "{{ ubtu20cis_7_1_12_no_user_items_flatten }}"
+        - "{{ discovered_no_user_items_flatten }}"
 
     - name: "7.1.12 | AUDIT | Ensure no unowned or ungrouped files or directories exist | Warn Count"
       when:
         - not ubtu20cis_no_owner_adjust
-        - ubtu20cis_7_1_12_no_user_items_flatten | length > 0
+        - discovered_no_user_items_flatten | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:
@@ -264,36 +264,36 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_7_1_12_ungrouped_items
+      register: discovered_ungrouped_items
 
     - name: "7.1.12 | AUDIT | Ensure no unowned or ungrouped files or directories exist  | Flatten ungrouped_items results for easier use"
       ansible.builtin.set_fact:
-        ubtu20cis_7_1_12_ungrouped_items_flatten: "{{ ubtu20cis_7_1_12_ungrouped_items.results | map(attribute='stdout_lines') | flatten }}"
+        discovered_ungrouped_items_flatten: "{{ discovered_ungrouped_items.results | map(attribute='stdout_lines') | flatten }}"
 
     - name: "7.1.12 | AUDIT | Ensure no unowned or ungrouped files or directories exist  | Alert on ungrouped files and directories"
       when:
         - not ubtu20cis_no_group_adjust
-        - ubtu20cis_7_1_12_ungrouped_items_flatten | length > 0
+        - discovered_ungrouped_items_flatten | length > 0
       ansible.builtin.debug:
         msg:
           - "Warning!! You have ungrouped files/directories and are configured to not auto-remediate for this task"
           - "Please review the files/directories below and assign a group"
-          - "{{ ubtu20cis_7_1_12_ungrouped_items_flatten }}"
+          - "{{ discovered_ungrouped_items_flatten }}"
 
     - name: "7.1.12 | PATCH | Ensure no ungrouped files or directories exist | Set ungrouped files/directories to configured group"
       when:
         - ubtu20cis_no_group_adjust
-        - ubtu20cis_7_1_12_ungrouped_items_flatten | length > 0
+        - discovered_ungrouped_items_flatten | length > 0
       ansible.builtin.file:
         path: "{{ item }}"
         group: "{{ ubtu20cis_ungrouped_group }}"
       with_items:
-        - "{{ ubtu20cis_7_1_12_ungrouped_items_flatten }}"
+        - "{{ discovered_ungrouped_items_flatten }}"
 
     - name: "7.1.12 | AUDIT | Ensure no ungrouped files or directories exist | Warn Count"
       when:
         - not ubtu20cis_no_group_adjust
-        - ubtu20cis_7_1_12_ungrouped_items_flatten | length > 0
+        - discovered_ungrouped_items_flatten | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:
@@ -318,35 +318,35 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_7_1_13_suid_executables
+      register: discovered_suid_executables
 
     - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Flatten suid_executables results for easier use"
       ansible.builtin.set_fact:
-        ubtu20cis_7_1_13_suid_executables_flatten: "{{ ubtu20cis_7_1_13_suid_executables.results | map(attribute='stdout_lines') | flatten }}"
+        discovered_suid_executables_flatten: "{{ discovered_suid_executables.results | map(attribute='stdout_lines') | flatten }}"
 
     - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Alert SUID executables exist"
       when:
-        - ubtu20cis_7_1_13_suid_executables_flatten | length > 0
+        - discovered_suid_executables_flatten | length > 0
         - not ubtu20cis_suid_adjust
       ansible.builtin.debug:
         msg:
           - "Warning!! You have SUID executables"
           - "The files are listed below, please confirm the integrity of these binaries"
-          - "{{ ubtu20cis_7_1_13_suid_executables_flatten }}"
+          - "{{ discovered_suid_executables_flatten }}"
 
     - name: "7.1.13 | PATCH | Ensure SUID and SGID files are reviewed | Remove SUID bit"
       when:
         - ubtu20cis_suid_adjust
-        - ubtu20cis_7_1_13_suid_executables_flatten | length > 0
+        - discovered_suid_executables_flatten | length > 0
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'u-s'
       with_items:
-        - "{{ ubtu20cis_7_1_13_suid_executables_flatten }}"
+        - "{{ discovered_suid_executables_flatten }}"
 
     - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | SUID Warn Count"
       when:
-        - ubtu20cis_7_1_13_suid_executables_flatten | length > 0
+        - discovered_suid_executables_flatten | length > 0
         - not ubtu20cis_suid_adjust
       ansible.builtin.import_tasks:
         file: warning_facts.yml
@@ -362,25 +362,25 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_7_1_13_sgid_executables
+      register: discovered_sgid_executables
 
     - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Flatten sgid_executables results for easier use"
       ansible.builtin.set_fact:
-        ubtu20cis_7_1_13_sgid_executables_flatten: "{{ ubtu20cis_7_1_13_sgid_executables.results | map(attribute='stdout_lines') | flatten }}"
+        discovered_sgid_executables_flatten: "{{ discovered_sgid_executables.results | map(attribute='stdout_lines') | flatten }}"
 
     - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Alert SGID executables exist"
       when:
-        - ubtu20cis_7_1_13_sgid_executables_flatten | length > 0
+        - discovered_sgid_executables_flatten | length > 0
         - not ubtu20cis_sgid_adjust
       ansible.builtin.debug:
         msg:
           - "Warning!! You have SGID executables"
           - "The files are listed below, please review the integrity of these binaries"
-          - "{{ ubtu20cis_7_1_13_sgid_executables_flatten }}"
+          - "{{ discovered_sgid_executables_flatten }}"
 
     - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | SGID Warn Count"
       when:
-        - ubtu20cis_7_1_13_sgid_executables_flatten | length > 0
+        - discovered_sgid_executables_flatten | length > 0
         - not ubtu20cis_sgid_adjust
       ansible.builtin.import_tasks:
         file: warning_facts.yml
@@ -390,9 +390,9 @@
     - name: "7.1.13 | PATCH | Ensure SUID and SGID files are reviewed | Remove SGID bit"
       when:
         - ubtu20cis_sgid_adjust
-        - ubtu20cis_7_1_13_sgid_executables_flatten | length > 0
+        - discovered_sgid_executables_flatten | length > 0
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'g-s'
       with_items:
-        - "{{ ubtu20cis_7_1_13_sgid_executables_flatten }}"
+        - "{{ discovered_sgid_executables_flatten }}"

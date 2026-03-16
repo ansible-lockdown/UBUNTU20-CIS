@@ -33,7 +33,7 @@
 - name: "2.2.3 | PATCH | Ensure talk client is not installed"
   when:
     - ubtu20cis_rule_2_2_3
-    - not ubtu20cis_talk_required
+    - not ubtu20cis_talk_client_required
   tags:
     - level1-server
     - level1-workstation

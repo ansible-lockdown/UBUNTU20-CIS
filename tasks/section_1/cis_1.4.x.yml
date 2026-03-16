@@ -50,12 +50,12 @@
       ansible.builtin.stat:
         path: "{{ ubtu20cis_grub_file }}"
       check_mode: false
-      register: ubtu20cis_1_4_2_grub_cfg_status
+      register: discovered_grub_cfg_status
 
     - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured | Set permissions"
       when:
-        - ubtu20cis_1_4_2_grub_cfg_status.stat.exists
-        - ubtu20cis_1_4_2_grub_cfg_status.stat.mode != "0400"
+        - discovered_grub_cfg_status.stat.exists
+        - discovered_grub_cfg_status.stat.mode != "0400"
       ansible.builtin.file:
         path: "{{ ubtu20cis_grub_file }}"
         owner: root

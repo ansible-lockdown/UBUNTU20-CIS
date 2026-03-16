@@ -21,8 +21,7 @@
         state: present
         reload: true
         ignoreerrors: true
-      notify:
-        - sysctl flush ipv4 route table
+      notify: sysctl flush ipv4 route table
 
     - name: "3.3.1 | PATCH | Ensure IP forwarding is disabled | IPv6 settings"
       when: ubtu20cis_ipv6_required
@@ -33,8 +32,7 @@
         state: present
         reload: true
         ignoreerrors: true
-      notify:
-        - sysctl flush ipv6 route table
+      notify: sysctl flush ipv6 route table
 
 - name: "3.3.2 | PATCH | Ensure packet redirect sending is disabled"
   when:

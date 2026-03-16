@@ -121,8 +121,8 @@ ubtu20cis_uses_root: false
 # UID settings for interactive users
 # These are discovered via logins.def if set true
 discover_int_uid: false
-min_int_uid: 1000
-max_int_uid: 65533
+prelim_min_int_uid: 1000
+prelim_max_int_uid: 65533
 
 ############################
 ## Section 1 Rule Toggles ##
@@ -570,6 +570,22 @@ ubtu20cis_rule_7_2_10: true
 ##############################
 
 # Service configuration variables, set to true to keep service
+##
+# Section 2
+##
+
+##
+## Service configuration variables.
+##
+## Set the respective variable to true to keep the service.
+## otherwise the service is stopped and disabled
+##
+# Service configuration
+# Options are
+# true to leave installed if exists not changes take place
+# false - this removes the package
+# mask - if a dependency for product so cannot be removed
+# Server Services
 ubtu20cis_autofs_services: false
 ubtu20cis_autofs_mask: false
 ubtu20cis_avahi_server: false
@@ -584,24 +600,24 @@ ubtu20cis_ftp_server: false
 ubtu20cis_ftp_mask: false
 ubtu20cis_ldap_server: false
 ubtu20cis_ldap_mask: false
-ubtu20cis_message_server: false
+ubtu20cis_message_server: false  # This is for messaging dovecot and dovecot-pop3
 ubtu20cis_message_mask: false
-ubtu20cis_nfs_server: false
-ubtu20cis_nfs_mask: false
-ubtu20cis_nfs_client: false
-ubtu20cis_nis_server: false
+ubtu20cis_nfs_server: true
+ubtu20cis_nfs_mask: true
+ubtu20cis_nis_server: true  # set to mask if nis client required
 ubtu20cis_nis_mask: false
-ubtu20cis_print_server: false
+ubtu20cis_print_server: false  # replaces cups
 ubtu20cis_print_mask: false
 ubtu20cis_rpc_server: true
 ubtu20cis_rpc_mask: true
-ubtu20cis_rpc_required: "{{ ubtu20cis_nfs_server or ubtu20cis_nfs_client }}"
-ubtu20cis_rsync_server: mask
+ubtu20cis_rsync_server: false
 ubtu20cis_rsync_mask: false
 ubtu20cis_samba_server: false
 ubtu20cis_samba_mask: false
 ubtu20cis_snmp_server: false
 ubtu20cis_snmp_mask: false
+ubtu20cis_telnet_server: false
+ubtu20cis_telnet_mask: false
 ubtu20cis_tftp_server: false
 ubtu20cis_tftp_mask: false
 ubtu20cis_squid_server: false
@@ -612,8 +628,14 @@ ubtu20cis_nginx_server: false
 ubtu20cis_nginx_mask: false
 ubtu20cis_xinetd_server: false
 ubtu20cis_xinetd_mask: false
-ubtu20cis_xwindow_server: false
+ubtu20cis_bluetooth_service: false
+ubtu20cis_bluetooth_mask: false
+ubtu20cis_xwindows_required: false  # will remove mask not an option
 ubtu20cis_is_mail_server: false
+ubtu20cis_rpc_required: "{{ ubtu20cis_nfs_server or ubtu20cis_nfs_client }}"
+ubtu20cis_vsftpd_server: false
+ubtu20cis_vsftpd_mask: false
+ubtu20cis_nis_client_required: false  # set to true if nis server required
 
 # Client Services
 ubtu20cis_nis_required: false
@@ -622,6 +644,7 @@ ubtu20cis_talk_required: false
 ubtu20cis_telnet_required: false
 ubtu20cis_ldap_clients_required: false
 ubtu20cis_ftp_client: false
+ubtu20cis_talk_client_required: false
 
 ## Section 1 Control Variables
 
@@ -641,22 +664,28 @@ ubtu20cis_apparmor_disable: false
 # insert password as per output of running grub-mkpasswd-pbkdf2
 ubtu20cis_set_grub_user_password: false
 ubtu20cis_grub_user: root
-ubtu20cis_grub_user_passwd: 'CHANGE_ME_USE_grub_mkpasswd'  # Set to changeme
 ubtu20cis_set_boot_pass: false
 ubtu20cis_grub_user_file: /etc/grub.d/40_custom
 ubtu20cis_grub_file: /boot/grub/grub.cfg
 ubtu20cis_bootloader_password_hash: "grub.pbkdf2.sha512.10000.ChangeMe"  # pragma: allowlist secret
 ubtu20cis_ask_passwd_to_boot: false
 
+## Controls 1.5.x
+
+## Controls 1.5.x
+# 1.5.3 - only check if core dump installed
+ubtu20cis_core_dump_installed: true
+
 # Controls 1.6.x - Warning banners
 ubtu20cis_warning_banner: |
-        Authorized users only. All activity may be monitored and reported.
+    Authorized users only. All activity may be monitored and reported.
+
+# This variable governs, whether dynamic motd is disabled (as required by control 1.6.1)
 ubtu20cis_disable_dynamic_motd: true
 
 # Controls 1.7.x - Settings for GDM
 ubtu20cis_dconf_db_name: local
 ubtu20cis_screensaver_idle_delay: 900
-ubtu20cis_screensaver_lock_delay: 5
 
 ## Section 2 Control Variables
 
@@ -682,15 +711,14 @@ ubtu20cis_time_servers:
 # Control 3.1.2
 ubtu20cis_install_network_manager: true
 
-# Control 3.1.3 - Bluetooth service management
-ubtu20cis_bluetooth_service: false
-ubtu20cis_bluetooth_mask: false
-
 # IPv4 requirement toggle
 ubtu20cis_ipv4_required: true
 
 # IPv6 requirement toggle
 ubtu20cis_ipv6_required: false
+
+# Method for disabling IPv6 - grub or sysctl
+ubtu20cis_ipv6_disable: grub
 
 # Router toggle
 ubtu20cis_is_router: false

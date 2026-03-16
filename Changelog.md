@@ -1,5 +1,35 @@
 # Change log for Ubuntu 2004
 
+## v3.0.1
+
+### Audit Template Fixes
+- Fixed duplicate keys in `ansible_vars_goss.yml.j2` that caused goss "unable to determine format" error (Go YAML parser rejects duplicates)
+  - Removed duplicate `ubtu20cis_grub_user`, `ubtu20cis_nis_server`, `ubtu20cis_samba_server`, `ubtu20cis_snmp_server`
+- Renamed `ubtu20cis_time_service` to `ubtu20cis_time_sync_tool` in template to match goss test variable references
+- Added missing audit variables to template and `defaults/main.yml`:
+  - `ubtu20cis_bluetooth_service`, `ubtu20cis_bluetooth_mask` (goss test 3.1.3)
+  - `ubtu20cis_ftp_client` (goss test 2.2.6)
+  - `ubtu20cis_ipv6_disable` (goss test 3.1.1)
+  - `ubtu20cis_remote_log_server` (goss tests 6.2.3.6/6.2.3.7)
+- Added `---` YAML document marker to template
+- Quoted string values containing YAML special characters
+
+### Variable Naming Standardization
+- Standardized all `register:` variable prefixes to follow Lockdown conventions:
+  - `prelim_` prefix for all preliminary/discovery variables in `tasks/prelim.yml` (17 variables renamed)
+  - `discovered_` prefix for all section task registered variables (63 variables renamed)
+- Renamed prelim `set_fact` variables: `mount_names` → `prelim_mount_names`, `min_int_uid` → `prelim_min_int_uid`, `max_int_uid` → `prelim_max_int_uid`, etc.
+- Removed inconsistent prefixes (`ubtu20cis_`, `avahi_`, `snap_`, bare names) from registered variables
+- Updated all cross-file references in defaults, templates, and section tasks
+
+### Warn Count Consistency
+- Added missing Warn Count blocks (`import_tasks: warning_facts.yml` + `vars: warn_control_id`) to 34 manual remediation tasks across 11 files
+- Fixed `vars: warn_control_id` placement from block-level to task-level (same indentation as `ansible.builtin.import_tasks:`) in 20+ tasks
+
+### Code Quality
+- Fixed ~85 ansible-lint issues: key-order, command-instead-of-shell, yaml comment indentation, jinja spacing, name casing, risky-file-permissions
+- Fixed yamllint 2-space indentation throughout the playbook
+
 ## v3.0.0 based on CIS v3.0.0
 
 **Major version upgrade from CIS Benchmark v2.0.1 to v3.0.0**

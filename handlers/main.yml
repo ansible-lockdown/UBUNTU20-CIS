@@ -95,8 +95,7 @@
 
 - name: restart auditd
   when: not ubtu20cis_skip_for_travis
-  tags:
-    - skip_ansible_lint
+  tags: skip_ansible_lint
   ansible.builtin.systemd:
     name: auditd
     state: restarted

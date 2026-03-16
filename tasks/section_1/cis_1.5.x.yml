@@ -31,7 +31,9 @@
     mode: 'u=rw,g=r,o=r'
 
 - name: "1.5.3 | PATCH | Ensure core dumps are restricted"
-  when: ubtu20cis_rule_1_5_3
+  when:
+    - ubtu20cis_rule_1_5_3
+    - ubtu20cis_core_dump_installed
   tags:
     - level1-server
     - level1-workstation

@@ -1,8 +1,6 @@
 ---
-
 ## metadata for Audit benchmark
-
-benchmark_version: {{ benchmark_version }}
+benchmark_version: "{{ benchmark_version }}"
 
 # Some audit tests may need to scan every filesystem or have an impact on a system
 # these may need to be scheduled to minimise impact also ability to set a timeout if taking too long
@@ -27,7 +25,6 @@ run_heavy_tests: {{ audit_run_heavy_tests }}
 
 #  True is BIOS based system else set to false
 ubtu20cis_legacy_boot: true
-
 ubtu20_set_boot_pass: {{ ubtu20cis_set_boot_pass }}
 
 # These variables correspond with the CIS rule IDs or paragraph numbers defined in
@@ -434,76 +431,76 @@ ubtu20cis_rule_7_2_10: {{ ubtu20cis_rule_7_2_10 }}
 ubtu20cis_config_aide: {{ ubtu20cis_config_aide }}
 
 # aide setup via - cron, timer
-ubtu20cis_aide_scan: {{ ubtu20cis_aide_scan }}
+ubtu20cis_aide_scan: "{{ ubtu20cis_aide_scan }}"
 
 # AIDE cron settings
 ubtu20_aide_cron:
-  cron_user: {{ ubtu20cis_aide_cron.cron_user }}
-  cron_file: {{ ubtu20cis_aide_cron.cron_file }}
-  aide_job: {{ ubtu20cis_aide_cron.aide_job }}
-  aide_minute: {{ ubtu20cis_aide_cron.aide_minute }}
-  aide_hour: {{ ubtu20cis_aide_cron.aide_hour }}
-  aide_day: '{{ ubtu20cis_aide_cron.aide_day }}'
-  aide_month: '{{ ubtu20cis_aide_cron.aide_month }}'
-  aide_weekday: '{{ ubtu20cis_aide_cron.aide_weekday }}'
+  cron_user: "{{ ubtu20cis_aide_cron.cron_user }}"
+  cron_file: "{{ ubtu20cis_aide_cron.cron_file }}"
+  aide_job: "{{ ubtu20cis_aide_cron.aide_job }}"
+  aide_minute: "{{ ubtu20cis_aide_cron.aide_minute }}"
+  aide_hour: "{{ ubtu20cis_aide_cron.aide_hour }}"
+  aide_day: "{{ ubtu20cis_aide_cron.aide_day }}"
+  aide_month: "{{ ubtu20cis_aide_cron.aide_month }}"
+  aide_weekday: "{{ ubtu20cis_aide_cron.aide_weekday }}"
 
 # 1.1
-ubtu20cis_allow_autofs: {{ ubtu20cis_autofs_services }}
+ubtu20cis_autofs_services: {{ ubtu20cis_autofs_services }}
 
 # 1.4
 ubtu20cis_grub_conf_file: /boot/grub/grub.cfg
-ubtu20cis_grub_user_file: {{ ubtu20cis_grub_user_file }}
-ubtu20cis_grub_username: {{ ubtu20cis_grub_user }}
-ubtu20cis_grub_hash: {{ ubtu20cis_bootloader_password_hash }}
-
-ubtu20cis_root_pw: {{ ubtu20cis_root_pw }}
+ubtu20cis_grub_user_file: "{{ ubtu20cis_grub_user_file }}"
+ubtu20cis_grub_user: "{{ ubtu20cis_grub_user }}"
+ubtu20cis_bootloader_password_hash: "{{ ubtu20cis_bootloader_password_hash }}"
+ubtu20cis_root_pw: "{{ ubtu20cis_root_pw }}"
 
 # 1.3 - Only have apparmor enforcing
 ubtu20cis_apparmor_enforce_only: false
+ubtu20cis_core_dump_installed: {{ ubtu20cis_core_dump_installed }}
 
 # Warning Banner Content (issue, issue.net, motd)
-ubtu20_warning_banner: {{ ubtu20cis_warning_banner }}
+ubtu20cis_warning_banner: "{{ ubtu20cis_warning_banner }}"
 # End Banner
+
+ubtu20cis_disable_dynamic_motd: {{ ubtu20cis_disable_dynamic_motd }}
 
 # Section 2
 # Time sync - can be timesync or chrony
-ubtu20cis_time_service: {{ ubtu20cis_time_sync_tool }}
+ubtu20cis_time_sync_tool: "{{ ubtu20cis_time_sync_tool }}"
 ubtu20cis_time_servers:
 {% for server in ubtu20cis_time_servers %}
-- name: {{ server.name }}
-  options: {{ server.options }}
+- name: "{{ server.name }}"
+  options: "{{ server.options }}"
 {% endfor %}
 
 ubtu20cis_time_pool:
 {% for pool in ubtu20cis_time_pool %}
-- name: {{ pool.name }}
-  options: {{ pool.options }}
+- name: "{{ pool.name }}"
+  options: "{{ pool.options }}"
 {% endfor %}
 
 # Whether or not to run tasks related to auditing/patching the desktop environment
-ubtu20cis_gui: {{ ubtu20cis_desktop_required }}
+ubtu20cis_desktop_required: {{ ubtu20cis_desktop_required }}
 
 # Service configuration booleans set true to keep service
 ubtu20cis_avahi_server: {{ ubtu20cis_avahi_server }}
-ubtu20cis_cups_server: {{ ubtu20cis_print_server }}
+ubtu20cis_print_server: {{ ubtu20cis_print_server }}
 ubtu20cis_nfs_server: {{ ubtu20cis_nfs_server }}
 ubtu20cis_dhcp_server: {{ ubtu20cis_dhcp_server }}
 ubtu20cis_dnsmasq_server: {{ ubtu20cis_dnsmasq_server }}
 ubtu20cis_ldap_server: {{ ubtu20cis_ldap_server }}
 ubtu20cis_dns_server: {{ ubtu20cis_dns_server }}
-ubtu20cis_vsftpd_server: {{ ubtu20cis_ftp_server }}
-ubtu20cis_httpd_server: {{ ubtu20cis_apache2_server }}
+ubtu20cis_vsftpd_server: {{ ubtu20cis_vsftpd_server }}
+ubtu20cis_apache2_server: {{ ubtu20cis_apache2_server }}
 ubtu20cis_is_mail_server: {{ ubtu20cis_is_mail_server }}
-ubtu20cis_dovecot_server: {{ ubtu20cis_message_server }}
-ubtu20cis_samba_server: {{ ubtu20cis_samba_server }}
+ubtu20cis_message_server: {{ ubtu20cis_message_server }}
 ubtu20cis_squid_server: {{ ubtu20cis_squid_server }}
-ubtu20cis_snmp_server: {{ ubtu20cis_snmp_server }}
 
 #  Mail Server config
 {% if ubtu20_cis_mail_transfer_agent is defined %}
-ubtu20cis_mailserver: {{ ubtu20_cis_mail_transfer_agent }}
+ubtu20cis_mailserver: "{{ ubtu20_cis_mail_transfer_agent }}"
 {% else %}
-ubtu20cis_mailserver: Not_defined
+ubtu20cis_mailserver: "Not_defined"
 {% endif %}
 ubtu20_exim_conf:
   - dc_eximconfig_configtype='local'
@@ -519,7 +516,6 @@ ubtu20_exim_conf:
   - dc_localdelivery='mail_spool'
 
 ubtu20cis_rsyncd_server: {{ ubtu20cis_rsync_server }}
-ubtu20cis_nis_server: {{ ubtu20cis_nis_server }}
 
 ubtu20cis_xwindows_required: false
 
@@ -529,15 +525,18 @@ ubtu20cis_talk_required: {{ ubtu20cis_talk_required }}
 ubtu20cis_telnet_required: {{ ubtu20cis_telnet_required }}
 ubtu20cis_ldap_clients_required: {{ ubtu20cis_ldap_clients_required }}
 ubtu20cis_rpc_required: {{ ubtu20cis_rpc_required }}
+ubtu20cis_ftp_client: {{ ubtu20cis_ftp_client }}
+ubtu20cis_talk_client_required: {{ ubtu20cis_talk_client_required }}
 
 # Section 3
 # IPv6 required
 ubtu20cis_ipv6_required: {{ ubtu20cis_ipv6_required }}
+ubtu20cis_ipv6_disable: "{{ ubtu20cis_ipv6_disable }}"
 
 # System network parameters (host only OR host and router)
 ubtu20cis_is_router: {{ ubtu20cis_is_router }}
 
-ubtu20cis_firewall: {{ ubtu20cis_firewall_package }}
+ubtu20cis_firewall_package: "{{ ubtu20cis_firewall_package }}"
 
 ubtu20_default_firewall_zone: public
 ubtu20_firewall_interface:
@@ -556,9 +555,46 @@ ubtu20cis_sshd_access:
   - DenyUser
   - DenyGroup
 
+# Server Services
+ubtu20cis_bluetooth_service: {{ ubtu20cis_bluetooth_service }}
+ubtu20cis_bluetooth_mask: {{ ubtu20cis_bluetooth_mask }}
+ubtu20cis_autofs_mask: {{ ubtu20cis_autofs_mask }}
+ubtu20cis_avahi_mask: {{ ubtu20cis_avahi_mask }}
+ubtu20cis_print_mask: {{ ubtu20cis_print_mask }}
+ubtu20cis_dhcp_mask: {{ ubtu20cis_dhcp_mask }}
+ubtu20cis_dns_mask: {{ ubtu20cis_dns_mask }}
+ubtu20cis_dnsmasq_mask: {{ ubtu20cis_dnsmasq_mask }}
+ubtu20cis_ftp_server: {{ ubtu20cis_ftp_server }}
+ubtu20cis_ftp_mask: {{ ubtu20cis_ftp_mask }}
+ubtu20cis_ldap_mask: {{ ubtu20cis_ldap_mask }}
+ubtu20cis_message_mask: {{ ubtu20cis_message_mask }}
+ubtu20cis_nfs_mask: {{ ubtu20cis_nfs_mask }}
+ubtu20cis_nis_server: {{ ubtu20cis_nis_server }}
+ubtu20cis_nis_mask: {{ ubtu20cis_nis_mask }}
+ubtu20cis_rpc_server: {{ ubtu20cis_rpc_server }}
+ubtu20cis_rpc_mask: {{ ubtu20cis_rpc_mask }}
+ubtu20cis_rsync_server: {{ ubtu20cis_rsync_server }}
+ubtu20cis_rsync_mask: {{ ubtu20cis_rsync_mask }}
+ubtu20cis_samba_server: {{ ubtu20cis_samba_server }}
+ubtu20cis_samba_mask: {{ ubtu20cis_samba_mask }}
+ubtu20cis_snmp_server: {{ ubtu20cis_snmp_server }}
+ubtu20cis_snmp_mask: {{ ubtu20cis_snmp_mask }}
+ubtu20cis_telnet_server: {{ ubtu20cis_telnet_required }}
+ubtu20cis_telnet_mask: {{ ubtu20cis_telnet_required }}
+ubtu20cis_tftp_server: {{ ubtu20cis_tftp_server }}
+ubtu20cis_tftp_mask: {{ ubtu20cis_tftp_mask }}
+ubtu20cis_squid_mask: {{ ubtu20cis_squid_mask }}
+ubtu20cis_apache2_mask: {{ ubtu20cis_apache2_mask }}
+ubtu20cis_nginx_server: {{ ubtu20cis_nginx_server }}
+ubtu20cis_nginx_mask: {{ ubtu20cis_nginx_mask }}
+ubtu20cis_xinetd_server: {{ ubtu20cis_xinetd_server }}
+ubtu20cis_xinetd_mask: {{ ubtu20cis_xinetd_mask }}
+ubtu20cis_xwindow_server: {{ ubtu20cis_xwindows_required }}
+ubtu20cis_nis_client_required: {{ ubtu20cis_nis_client_required }}
+
 ubtu20cis_ssh_strong_ciphers:
 {% for cipher in ubtu20cis_sshd.ciphers.split(',') %}
-  - {{ cipher | trim }}
+  - "{{ cipher | trim }}"
 {% endfor %}
 ubtu20cis_ssh_weak_ciphers:
   - 3des-cbc
@@ -574,7 +610,7 @@ ubtu20cis_ssh_weak_ciphers:
 
 ubtu20cis_ssh_strong_macs:
 {% for mac in ubtu20cis_sshd.macs.split(',') %}
-  - {{ mac | trim }}
+  - "{{ mac | trim }}"
 {% endfor %}
 ubtu20cis_ssh_weak_macs:
   - hmac-md5
@@ -594,7 +630,7 @@ ubtu20cis_ssh_weak_macs:
 
 ubtu20cis_ssh_strong_kex:
 {% for kex in ubtu20cis_sshd.kex_algorithms.split(',') %}
-  - {{ kex | trim }}
+  - "{{ kex | trim }}"
 {% endfor %}
 ubtu20cis_ssh_weak_kex:
   - diffie-hellman-group1-sha1
@@ -613,7 +649,7 @@ ubtu20cis_pam_passwd_retry: "3"
 # choose one of below
 ubtu20cis_pwhistory_so: "14"
 ubtu20cis_unix_so: false
-ubtu20cis_passwd_remember: {{ ubtu20cis_passwd_remember }}
+ubtu20cis_passwd_remember: "{{ ubtu20cis_passwd_remember }}"
 
 # logins.def password settings
 ubtu20cis_pass:
@@ -622,25 +658,26 @@ ubtu20cis_pass:
   warn_age: {{ ubtu20cis_pass.warn_age }}
 
 # set sugroup if differs from wheel
-ubtu20cis_sugroup: {{ ubtu20cis_sugroup }}
+ubtu20cis_sugroup: "{{ ubtu20cis_sugroup }}"
 
 # sugroup users list
 ubtu20_sugroup_users: "root"
 
 # var log location variable
-ubtu20_varlog_location: {{ ubtu20cis_sudo_logfile }}
+ubtu20_varlog_location: "{{ ubtu20cis_sudo_logfile }}"
 
 ### Section 6
 ## auditd settings
 ubtu20cis_auditd:
   space_left_action: email
   action_mail_acct: root
-  admin_space_left_action: {{ ubtu20cis_auditd.admin_space_left_action }}
-  max_log_file_action: {{ ubtu20cis_auditd.max_log_file_action }}
+  admin_space_left_action: "{{ ubtu20cis_auditd.admin_space_left_action }}"
+  max_log_file_action: "{{ ubtu20cis_auditd.max_log_file_action }}"
   auditd_backlog_limit: {{ ubtu20cis_audit_back_log_limit }}
 
 ## syslog
-ubtu20cis_syslog_service: {{ ubtu20cis_syslog_service }}
+ubtu20cis_syslog_service: "{{ ubtu20cis_syslog_service }}"
 ubtu20cis_is_syslog_server: {{ ubtu20cis_system_is_log_server }}
+ubtu20cis_remote_log_server: "{{ ubtu20cis_remote_log_server }}"
 
-ubtu20cis_min_uid: {{ min_int_uid }}
+ubtu20cis_min_uid: {{ prelim_min_int_uid }}

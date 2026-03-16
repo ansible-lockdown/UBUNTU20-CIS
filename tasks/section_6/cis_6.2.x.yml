@@ -13,12 +13,12 @@
     - name: "6.2.1.1 | Ensure journald service is enabled | capture status"
       ansible.builtin.command: systemctl is-enabled systemd-journald.service  # noqa: command-instead-of-module
       changed_when: false
-      failed_when: ubtu20cis_6_2_1_1_journald_enabled.rc not in [ 0, 1, 2 ]
+      failed_when: discovered_journald_enabled.rc not in [ 0, 1, 2 ]
       check_mode: false
-      register: ubtu20cis_6_2_1_1_journald_enabled
+      register: discovered_journald_enabled
 
     - name: "6.2.1.1 | Ensure journald service is enabled | warn count if not as expected"
-      when: "'static' not in ubtu20cis_6_2_1_1_journald_enabled.stdout"
+      when: "'static' not in discovered_journald_enabled.stdout"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:
@@ -37,10 +37,10 @@
     - name: "6.2.1.2 | AUDIT | Ensure journald default file permissions configured | check for override file"
       ansible.builtin.stat:
         path: /etc/tmpfiles.d/systemd.conf
-      register: ubtu20cis_6_2_1_2_tmpfile
+      register: discovered_journald_tmpfile
 
     - name: "6.2.1.2 | AUDIT | Ensure journald default file permissions configured | update settings if override exists"
-      when: ubtu20cis_6_2_1_2_tmpfile.stat.exists
+      when: discovered_journald_tmpfile.stat.exists
       ansible.builtin.lineinfile:
         path: /etc/tmpfiles.d/systemd.conf
         regexp: "{{ item.line }}"
@@ -195,7 +195,7 @@
         paths: "/var/log"
         file_type: file
         recurse: true
-      register: logfiles
+      register: discovered_logfiles
 
     - name: "6.2.4.1 | PATCH | Ensure permissions on all logfiles are configured | change permissions"
       when:
@@ -205,6 +205,6 @@
       ansible.builtin.file:
         path: "{{ item.path }}"
         mode: 'u=rw,g=r,o='
-      loop: "{{ logfiles.files }}"
+      loop: "{{ discovered_logfiles.files }}"
       loop_control:
         label: "{{ item.path }}"

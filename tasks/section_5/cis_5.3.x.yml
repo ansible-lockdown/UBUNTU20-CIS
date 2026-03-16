@@ -136,10 +136,10 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_5_3_2_3_pam_pwquality_state
+      register: discovered_pam_pwquality_state
 
     - name: "5.3.2.3 | PATCH | Ensure password creation requirements are configured | Set retry to 3 if pwquality exists"
-      when: ubtu20cis_5_3_2_3_pam_pwquality_state.stdout | length > 0
+      when: discovered_pam_pwquality_state.stdout | length > 0
       community.general.pamd:
         name: common-password
         type: password
@@ -149,7 +149,7 @@
         state: args_present
 
     - name: "5.3.2.3 | PATCH | Ensure password creation requirements are configured | Set retry to 3 if pwquality does not exist"
-      when: ubtu20cis_5_3_2_3_pam_pwquality_state.stdout | length == 0
+      when: discovered_pam_pwquality_state.stdout | length == 0
       community.general.pamd:
         name: common-password
         type: password
@@ -391,10 +391,10 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_5_3_3_3_1_pam_pwhistory_state
+      register: discovered_pam_pwhistory_state
 
     - name: "5.3.3.3.1 | PATCH | Ensure password reuse is limited | Set remember value if pam_pwhistory exists"
-      when: ubtu20cis_5_3_3_3_1_pam_pwhistory_state.stdout | length > 0
+      when: discovered_pam_pwhistory_state.stdout | length > 0
       community.general.pamd:
         name: common-password
         type: password
@@ -404,7 +404,7 @@
         state: args_present
 
     - name: "5.3.3.3.1 | PATCH | Ensure password reuse is limited | Set remember value if pam_pwhistory does not exist"
-      when: ubtu20cis_5_3_3_3_1_pam_pwhistory_state.stdout | length == 0
+      when: discovered_pam_pwhistory_state.stdout | length == 0
       ansible.builtin.lineinfile:
         path: /etc/pam.d/common-password
         line: 'password        required                        pam_pwhistory.so remember={{ ubtu20cis_passwd_remember }}'
@@ -501,10 +501,10 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_5_3_3_4_3_pam_unix_state
+      register: discovered_pam_unix_state
 
     - name: "5.3.3.4.3 | PATCH | Ensure strong password hashing algorithm is configured | Set hashing if pam_unix.so exists"
-      when: ubtu20cis_5_3_3_4_3_pam_unix_state.stdout | length > 0
+      when: discovered_pam_unix_state.stdout | length > 0
       community.general.pamd:
         name: common-password
         type: password
@@ -514,7 +514,7 @@
         state: args_present
 
     - name: "5.3.3.4.3 | PATCH | Ensure strong password hashing algorithm is configured | Set hashing if pam_unix.so does not exist"
-      when: ubtu20cis_5_3_3_4_3_pam_unix_state.stdout | length == 0
+      when: discovered_pam_unix_state.stdout | length == 0
       ansible.builtin.lineinfile:
         path: /etc/pam.d/common-password
         line: 'password        [success=1 default=ignore]      pam_unix.so {{ ubtu20cis_passwd_hash_algo }}'
@@ -527,15 +527,15 @@
       failed_when: false
       no_log: true
       check_mode: false
-      register: ubtu20cis_5_3_3_4_3_passwd_hash_used
+      register: discovered_passwd_hash_used
 
     - name: "5.3.3.4.3 | AUDIT | Ensure password hashing algorithm is up to date with the latest standards | check hash found"
-      when: "' $6$' not in ubtu20cis_5_3_3_4_3_passwd_hash_used.stdout"
+      when: "' $6$' not in discovered_passwd_hash_used.stdout"
       ansible.builtin.debug:
         msg: "Warning!! Passwords found not using {{ ubtu20cis_passwd_hash_algo }} algorithm - This requires manual intervention"
 
     - name: "5.3.3.4.3 | WARN | Ensure password hashing algorithm is up to date with the latest standards | warn_count"
-      when: "' $6$' not in ubtu20cis_5_3_3_4_3_passwd_hash_used.stdout"
+      when: "' $6$' not in discovered_passwd_hash_used.stdout"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:

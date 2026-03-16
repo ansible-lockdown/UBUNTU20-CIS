@@ -3,7 +3,7 @@
 - name: "2.1.1 | PATCH | Disable Automounting"
   when:
     - ubtu20cis_rule_2_1_1
-    - ubtu20cis_autofs_service_status.stdout == "loaded"
+    - prelim_autofs_service_status.stdout == "loaded"
     - not ubtu20cis_allow_autofs
   tags:
     - level1-server
@@ -33,14 +33,14 @@
     - services
   block:
     - name: "2.1.2 | PATCH | Ensure Avahi Server is not installed| Stop/Disable avahi-daemon.service"
-      when: avahi_service_status.stdout == "loaded"
+      when: prelim_avahi_service_status.stdout == "loaded"
       ansible.builtin.service:
         name: avahi-daemon.service
         state: stopped
         enabled: false
 
     - name: "2.1.2 | PATCH | Ensure Avahi Server is not installed | Stop/Disable avahi-daemon.socket"
-      when: avahi_service_status.stdout == "loaded"
+      when: prelim_avahi_service_status.stdout == "loaded"
       ansible.builtin.systemd:
         name: avahi-daemon.socket
         state: stopped
@@ -446,17 +446,17 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_2_1_22_services
+      register: discovered_nonessential_services
 
     - name: "2.1.22 | AUDIT | Ensure nonessential services are removed or masked | Message out running services"
-      when: ubtu20cis_2_1_22_services.stdout | length > 0
+      when: discovered_nonessential_services.stdout | length > 0
       ansible.builtin.debug:
         msg:
           - "Warning!! Below are the running services. Please review and remove as well as mask un-needed services"
-          - "{{ ubtu20cis_2_1_22_services.stdout_lines }}"
+          - "{{ discovered_nonessential_services.stdout_lines }}"
 
     - name: "2.1.22 | AUDIT | Ensure nonessential services are removed or masked | Set warning count"
-      when: ubtu20cis_2_1_22_services.stdout | length > 0
+      when: discovered_nonessential_services.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:

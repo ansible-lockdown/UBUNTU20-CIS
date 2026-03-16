@@ -154,14 +154,14 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_4_2_7_open_listen_ports
+      register: discovered_ufw_open_listen_ports
 
     - name: "4.2.7 | AUDIT | Ensure ufw firewall rules exist for all open ports | Get list of firewall rules"
       ansible.builtin.command: ufw status
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_4_2_7_firewall_rules
+      register: discovered_ufw_firewall_rules
 
     - name: "4.2.7 | AUDIT | Ensure ufw firewall rules exist for all open ports | Message out settings"
       ansible.builtin.debug:
@@ -169,9 +169,9 @@
           - "Warning!! Below are the listening ports and firewall rules"
           - "Please create firewall rule for any open ports if not already done"
           - "*****---Open Listen Ports---*****"
-          - "{{ ubtu20cis_4_2_7_open_listen_ports.stdout_lines }}"
+          - "{{ discovered_ufw_open_listen_ports.stdout_lines }}"
           - "*****---Firewall Rules---*****"
-          - "{{ ubtu20cis_4_2_7_firewall_rules.stdout_lines }}"
+          - "{{ discovered_ufw_firewall_rules.stdout_lines }}"
 
     - name: "4.2.7 | AUDIT | Ensure ufw firewall rules exist for all open ports | Warn Count"
       ansible.builtin.import_tasks:

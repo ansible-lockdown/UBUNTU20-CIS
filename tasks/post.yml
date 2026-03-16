@@ -32,7 +32,6 @@
         warn_control_id: Reboot_required
 
 - name: If Warning count is 0 set fact
-  when:
-    - warn_count == '0'
+  when: warn_count == '0'
   ansible.builtin.set_fact:
     control_number: "Congratulations None Found"

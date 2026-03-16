@@ -72,26 +72,26 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_6_2_3_5_rsyslog_config_path
+      register: discovered_rsyslog_config_path
 
     - name: "6.2.3.5 | AUDIT | Ensure logging is configured | Gather rsyslog current config"
-      ansible.builtin.command: "cat {{ ubtu20cis_6_2_3_5_rsyslog_config_path.stdout }}"
+      ansible.builtin.command: "cat {{ discovered_rsyslog_config_path.stdout }}"
       changed_when: false
       failed_when: false
       check_mode: false
-      register: ubtu20cis_6_2_3_5_rsyslog_config
+      register: discovered_rsyslog_config
 
     - name: "6.2.3.5 | AUDIT | Ensure logging is configured | Message out config"
       when: not ubtu20cis_rsyslog_ansible_managed
       ansible.builtin.debug:
         msg:
           - "Warning!! Below is the current logging configurations for rsyslog, please review"
-          - "{{ ubtu20cis_6_2_3_5_rsyslog_config.stdout_lines }}"
+          - "{{ discovered_rsyslog_config.stdout_lines }}"
 
     - name: "6.2.3.5 | PATCH | Ensure logging is configured | Automated rsyslog configuration"
       when: ubtu20cis_rsyslog_ansible_managed
       ansible.builtin.lineinfile:
-        path: "{{ ubtu20cis_6_2_3_5_rsyslog_config_path.stdout }}"
+        path: "{{ discovered_rsyslog_config_path.stdout }}"
         regexp: "{{ item.regexp }}"
         line: "{{ item.line }}"
         insertafter: "{{ item.insertafter }}"

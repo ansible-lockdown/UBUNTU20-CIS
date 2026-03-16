@@ -182,7 +182,7 @@
 - name: "1.1.1.7 | PATCH | Ensure mounting of squashfs filesystems is disabled"
   when:
     - ubtu20cis_rule_1_1_1_7
-    - snap_pkg_mgr.stdout == 0
+    - prelim_snap_pkg_mgr.stdout == 0
   tags:
     - level2-server
     - level2-workstation
