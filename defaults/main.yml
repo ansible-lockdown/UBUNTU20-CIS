@@ -11,7 +11,7 @@ ubtu20cis_section7_patch: true
 # System will reboot if false, can give better audit results
 skip_reboot: true
 
-system_is_container: false
+system_is_container: false # set true if running inside a container (skips kernel/mount tasks)
 
 # Place to find the container yml file for your environment - /vars/...
 container_vars_file: is_container.yml
@@ -104,13 +104,13 @@ audit_output_destination: /opt/audit_summaries/
 # Value of true runs disruptive tasks, value of false will skip disruptive tasks
 ubtu20cis_disruption_high: true
 
-ubtu20cis_skip_for_travis: false
+ubtu20cis_skip_for_travis: false # skip tests that fail in CI/Travis environments
 
 # tweak role to run in a non-privileged container
-ubtu20cis_system_is_container: false
+ubtu20cis_system_is_container: false # set true to skip privileged operations in containers
 
 # skip events for ec2 instance testing pipeline
-system_is_ec2: false
+system_is_ec2: false # set true to skip EC2-incompatible tasks (e.g., GRUB, reboot)
 
 ## Root user used
 # Root by default is not used unless setup by user
@@ -600,13 +600,13 @@ ubtu20cis_ftp_server: false
 ubtu20cis_ftp_mask: false
 ubtu20cis_ldap_server: false
 ubtu20cis_ldap_mask: false
-ubtu20cis_message_server: false  # This is for messaging dovecot and dovecot-pop3
+ubtu20cis_message_server: false # This is for messaging dovecot and dovecot-pop3
 ubtu20cis_message_mask: false
 ubtu20cis_nfs_server: true
 ubtu20cis_nfs_mask: true
-ubtu20cis_nis_server: true  # set to mask if nis client required
+ubtu20cis_nis_server: true # set to mask if nis client required
 ubtu20cis_nis_mask: false
-ubtu20cis_print_server: false  # replaces cups
+ubtu20cis_print_server: false # replaces cups
 ubtu20cis_print_mask: false
 ubtu20cis_rpc_server: true
 ubtu20cis_rpc_mask: true
@@ -630,21 +630,21 @@ ubtu20cis_xinetd_server: false
 ubtu20cis_xinetd_mask: false
 ubtu20cis_bluetooth_service: false
 ubtu20cis_bluetooth_mask: false
-ubtu20cis_xwindows_required: false  # will remove mask not an option
+ubtu20cis_xwindows_required: false # will remove mask not an option
 ubtu20cis_is_mail_server: false
 ubtu20cis_rpc_required: "{{ ubtu20cis_nfs_server or ubtu20cis_nfs_client }}"
 ubtu20cis_vsftpd_server: false
 ubtu20cis_vsftpd_mask: false
-ubtu20cis_nis_client_required: false  # set to true if nis server required
+ubtu20cis_nis_client_required: false # set true if NIS client (ypbind) is needed
 
-# Client Services
-ubtu20cis_nis_required: false
-ubtu20cis_rsh_required: false
-ubtu20cis_talk_required: false
-ubtu20cis_telnet_required: false
-ubtu20cis_ldap_clients_required: false
-ubtu20cis_ftp_client: false
-ubtu20cis_talk_client_required: false
+# Client Services - set to true to keep the client package installed
+ubtu20cis_nis_required: false # NIS client (ypbind)
+ubtu20cis_rsh_required: false # RSH client (rsh-client)
+ubtu20cis_talk_required: false # talk client
+ubtu20cis_telnet_required: false # telnet client
+ubtu20cis_ldap_clients_required: false # LDAP client (ldap-utils)
+ubtu20cis_ftp_client: false # FTP client
+ubtu20cis_talk_client_required: false # talk client (duplicate check)
 
 ## Section 1 Control Variables
 
@@ -656,19 +656,19 @@ expected_tmp_mnt: fstab
 ubtu20cis_config_aide: true
 
 # Controls 1.3.1.3 and 1.3.1.4 - AppArmor enforce/complain mode
-ubtu20cis_apparmor_disable: false
+ubtu20cis_apparmor_disable: false # set true to disable AppArmor entirely (not recommended)
 
 # Control 1.4.1
 # THESE VARIABLES SHOULD BE CHANGED
 # This will fail assertion if not changed and rule 1.4.2 is enabled
 # insert password as per output of running grub-mkpasswd-pbkdf2
-ubtu20cis_set_grub_user_password: false
-ubtu20cis_grub_user: root
-ubtu20cis_set_boot_pass: false
-ubtu20cis_grub_user_file: /etc/grub.d/40_custom
-ubtu20cis_grub_file: /boot/grub/grub.cfg
-ubtu20cis_bootloader_password_hash: "grub.pbkdf2.sha512.10000.ChangeMe"  # pragma: allowlist secret
-ubtu20cis_ask_passwd_to_boot: false
+ubtu20cis_set_grub_user_password: false # enable GRUB superuser password
+ubtu20cis_grub_user: root # GRUB superuser account name
+ubtu20cis_set_boot_pass: false # require password to boot (not just edit)
+ubtu20cis_grub_user_file: /etc/grub.d/40_custom # GRUB custom config file for superuser
+ubtu20cis_grub_file: /boot/grub/grub.cfg # path to GRUB configuration
+ubtu20cis_bootloader_password_hash: "grub.pbkdf2.sha512.10000.ChangeMe" # pragma: allowlist secret # CHANGE THIS - output of grub-mkpasswd-pbkdf2
+ubtu20cis_ask_passwd_to_boot: false # require password for normal boot (not just GRUB edit)
 
 ## Controls 1.5.x
 
@@ -678,38 +678,38 @@ ubtu20cis_core_dump_installed: true
 
 # Controls 1.6.x - Warning banners
 ubtu20cis_warning_banner: |
-    Authorized users only. All activity may be monitored and reported.
+  Authorized users only. All activity may be monitored and reported.
 
 # This variable governs, whether dynamic motd is disabled (as required by control 1.6.1)
 ubtu20cis_disable_dynamic_motd: true
 
 # Controls 1.7.x - Settings for GDM
-ubtu20cis_dconf_db_name: local
-ubtu20cis_screensaver_idle_delay: 900
+ubtu20cis_dconf_db_name: local # dconf database name for GNOME settings
+ubtu20cis_screensaver_idle_delay: 900 # screensaver idle timeout in seconds
 
 ## Section 2 Control Variables
 
 # Control 2.3.1.1
-ubtu20cis_time_sync_tool: "systemd-timesyncd"
-ubtu20cis_chrony_timesource: pool
+ubtu20cis_time_sync_tool: "systemd-timesyncd" # options: systemd-timesyncd, chrony
+ubtu20cis_chrony_timesource: pool # chrony source type: pool or server
 
 # Controls 2.3.x - Configure time pools & servers
 ubtu20cis_time_pool:
-    - name: time.nist.gov
-      options: iburst maxsources 4
+  - name: time.nist.gov
+    options: iburst maxsources 4
 
 ubtu20cis_time_servers:
-    - name: time-a-g.nist.gov
-      options: iburst
-    - name: time-b-g.nist.gov
-      options: iburst
-    - name: time-c-g.nist.gov
-      options: iburst
+  - name: time-a-g.nist.gov
+    options: iburst
+  - name: time-b-g.nist.gov
+    options: iburst
+  - name: time-c-g.nist.gov
+    options: iburst
 
 ## Section 3 Control Variables
 
 # Control 3.1.2
-ubtu20cis_install_network_manager: true
+ubtu20cis_install_network_manager: true # install NetworkManager for wireless management
 
 # IPv4 requirement toggle
 ubtu20cis_ipv4_required: true
@@ -734,65 +734,65 @@ ubtu20cis_firewall_package: "ufw"
 
 # UFW outbound ports
 ubtu20cis_ufw_allow_out_ports:
-    - 53
-    - 80
-    - 443
+  - 53
+  - 80
+  - 443
 
-ufw_add_incoming: false
+ufw_add_incoming: false # set true to add incoming firewall rules from list below
 ubtu20cis_ufw_allow_in:
-    - port: 22
-      from: any
-      proto: tcp
+  - port: 22
+    from: any
+    proto: tcp
 
 ## Section 5 Control Variables
 
-# SSH configuration
+# SSH configuration - maps to sshd_config directives
 ubtu20cis_sshd:
-    log_level: "INFO"
-    max_auth_tries: 4
-    ciphers: "chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr"
-    macs: "hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256"
-    kex_algorithms: "curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256"
-    client_alive_interval: 300
-    client_alive_count_max: 3
-    login_grace_time: 60
-    max_sessions: 4
-    allow_users: "vagrant ubuntu"
-    allow_groups: "vagrant ubuntu"
+  log_level: "INFO" # LogLevel - VERBOSE for detailed logging
+  max_auth_tries: 4 # MaxAuthTries - max failed auth attempts per connection
+  ciphers: "chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr" # approved encryption ciphers
+  macs: "hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256" # approved MACs
+  kex_algorithms: "curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256" # approved key exchange algorithms
+  client_alive_interval: 300 # seconds between keepalive messages
+  client_alive_count_max: 3 # max keepalive failures before disconnect
+  login_grace_time: 60 # seconds to authenticate before disconnect
+  max_sessions: 4 # max concurrent sessions per connection
+  allow_users: "vagrant ubuntu" # CHANGE THIS - space-separated list of allowed SSH users
+  allow_groups: "vagrant ubuntu" # CHANGE THIS - space-separated list of allowed SSH groups
 
 # Sudo configuration
-ubtu20cis_sudo_package: "sudo"
-ubtu20cis_sudo_logfile: "/var/log/sudo.log"
-ubtu20cis_sudo_timestamp_timeout: 15
-ubtu20cis_sugroup: nosugroup
+ubtu20cis_sudo_package: "sudo" # sudo package name (sudo or sudo-ldap)
+ubtu20cis_sudo_logfile: "/var/log/sudo.log" # sudo log file path
+ubtu20cis_sudo_timestamp_timeout: 15 # minutes before sudo requires re-authentication
+ubtu20cis_sugroup: nosugroup # group allowed to use su (set to restrict su access)
 
 # PAM configuration
-ubtu20cis_passwd_hash_algo: sha512  # pragma: allowlist secret
+ubtu20cis_passwd_hash_algo: sha512 # pragma: allowlist secret # password hashing algorithm (sha512 or yescrypt)
 ubtu20cis_pam_password:
-    minlen: "14"
-    minclass: "4"
-ubtu20cis_pam_passwd_retry: "3"
-ubtu20cis_pwhistory_so: "14"
-ubtu20cis_passwd_remember: "5"
+  minlen: "14" # minimum password length
+  minclass: "4" # minimum number of character classes (upper, lower, digit, special)
+ubtu20cis_pam_passwd_retry: "3" # max password change retries before failure
+ubtu20cis_pwhistory_so: "14" # pam_pwhistory enforced password history depth
+ubtu20cis_passwd_remember: "5" # pam_unix remembered passwords to prevent reuse
 
-# Password policy
+# Password policy - maps to /etc/login.defs
 ubtu20cis_pass:
-    max_days: 365
-    min_days: 1
-    warn_age: 7
-    inactive: 30
-    character_changed: 5
-    max_repeat_letters: 3
+  max_days: 365 # PASS_MAX_DAYS - max days between password changes
+  min_days: 1 # PASS_MIN_DAYS - min days between password changes
+  warn_age: 7 # PASS_WARN_AGE - days warning before password expires
+  inactive: 30 # INACTIVE - days after expiry before account is locked
+  character_changed: 5 # difok - min characters that must differ from old password
+  max_repeat_letters: 3 # maxrepeat - max consecutive identical characters
 
 # Shell timeout
 ubtu20cis_shell_session_timeout:
-    file: /etc/profile.d/tmout.sh
-    timeout: 900
+  file: /etc/profile.d/tmout.sh
+  timeout: 900
 
-ubtu20cis_bash_umask: '027'
+ubtu20cis_bash_umask: '027' # default umask for bash sessions (027 = rwxr-x---)
 
-# Root password (encrypted format)
-ubtu20cis_root_pw: $6$
+# Root password - encrypted hash prefix to verify root has a valid password set
+ubtu20cis_root_pw: $6$ # SHA-512 hash prefix ($6$=sha512, $y$=yescrypt)
 
 ## Section 6 Control Variables
 
@@ -800,47 +800,48 @@ ubtu20cis_root_pw: $6$
 # 6.1.2 - aide scan method (cron or timer)
 ubtu20cis_aide_scan: cron
 ubtu20cis_aide_cron:
-    cron_user: root
-    cron_file: /etc/cron.d/aide_cron
-    aide_job: '/usr/bin/aide.wrapper --config /etc/aide/aide.conf --check'
-    aide_minute: 0
-    aide_hour: 5
-    aide_day: '*'
-    aide_month: '*'
-    aide_weekday: '*'
+  cron_user: root
+  cron_file: /etc/cron.d/aide_cron
+  aide_job: '/usr/bin/aide.wrapper --config /etc/aide/aide.conf --check'
+  aide_minute: 0
+  aide_hour: 5
+  aide_day: '*'
+  aide_month: '*'
+  aide_weekday: '*'
 
 # Logging - syslog service (rsyslog or journald)
-ubtu20cis_syslog_service: 'rsyslog'
-journald_log_server: false
-ubtu20cis_system_is_log_server: false
+ubtu20cis_syslog_service: 'rsyslog' # options: rsyslog, journald
+journald_log_server: false # set true if this host receives remote journal logs
+ubtu20cis_system_is_log_server: false # set true if this host is a central log server
 
-# Journald Settings
+# Journald Settings - systemd-journal-upload configuration
 ubtu20cis_journal_upload:
-    remote_url:
-    serverkeyfile:
-    servercertfile:
-    ubtu20cis_journald:
+  remote_url: # URL of remote journal server (e.g., https://loghost:19532)
+  serverkeyfile: # path to TLS server key file
+  servercertfile: # path to TLS server certificate file
+  ubtu20cis_journald: # additional journald.conf overrides
 
+# Journald log rotation - maps to journald.conf storage limits
 ubtu20cis_journald_log_rotate:
-    systemmaxuse:
-    systemkeepfree:
-    runtimemaxuse:
-    runtimekeepfree:
-    maxfilesec:
+  systemmaxuse: # max persistent journal disk usage (e.g., 4G)
+  systemkeepfree: # min free disk space to maintain (e.g., 1G)
+  runtimemaxuse: # max volatile journal memory usage (e.g., 256M)
+  runtimekeepfree: # min free memory to maintain (e.g., 128M)
+  maxfilesec: # max time to store entries in a single file (e.g., 1month)
 
 # rsyslog
-ubtu20cis_rsyslog_ansible_managed: true
-ubtu20cis_remote_log_server: 192.168.2.100
+ubtu20cis_rsyslog_ansible_managed: true # add Ansible managed header to rsyslog config
+ubtu20cis_remote_log_server: 192.168.2.100 # CHANGE THIS - remote syslog server IP/hostname
 
-# auditd
-ubtu20cis_audit_back_log_limit: 8192
-ubtu20cis_max_log_file_size: 10
+# auditd - audit daemon configuration
+ubtu20cis_audit_back_log_limit: 8192 # kernel audit backlog limit (boot parameter)
+ubtu20cis_max_log_file_size: 10 # max audit log file size in MB
 ubtu20cis_auditd:
-    admin_space_left_action: halt
-    max_log_file_action: keep_logs
-    space_left_action: email
-    action_mail_acct: root
-    auditd_backlog_limit: 8192
+  admin_space_left_action: halt # action when admin space threshold reached (halt/single/email)
+  max_log_file_action: keep_logs # action when max log file size reached (keep_logs/rotate/compress)
+  space_left_action: email # action when disk space low (email/exec/syslog)
+  action_mail_acct: root # email account for space warnings
+  auditd_backlog_limit: 8192 # auditd internal backlog limit
 
 ## Section 7 Control Variables
 
@@ -848,11 +849,11 @@ ubtu20cis_auditd:
 ubtu20cis_no_world_write_adjust: true
 
 # Owner/group for unowned files
-ubtu20cis_unowned_owner: root
-ubtu20cis_no_owner_adjust: true
-ubtu20cis_ungrouped_group: root
-ubtu20cis_no_group_adjust: true
+ubtu20cis_unowned_owner: root # owner to assign to files with no valid owner
+ubtu20cis_no_owner_adjust: true # set true to fix ownership on unowned files
+ubtu20cis_ungrouped_group: root # group to assign to files with no valid group
+ubtu20cis_no_group_adjust: true # set true to fix group on ungrouped files
 
 # SUID/SGID toggles
-ubtu20cis_suid_adjust: false
-ubtu20cis_sgid_adjust: false
+ubtu20cis_suid_adjust: false # set true to remove unexpected SUID bits (CAUTION: may break apps)
+ubtu20cis_sgid_adjust: false # set true to remove unexpected SGID bits (CAUTION: may break apps)

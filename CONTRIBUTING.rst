@@ -1,5 +1,5 @@
-Contributing to MindPoint Group Projects
-========================================
+Contributing to Ansible Lockdown Projects
+=========================================
 
 Rules
 -----
@@ -22,7 +22,7 @@ Signing your contribution
 
 We've chosen to use the Developer's Certificate of Origin (DCO) method
 that is employed by the Linux Kernel Project, which provides a simple
-way to contribute to MindPoint Group projects.
+way to contribute to Ansible Lockdown projects.
 
 The process is to certify the below DCO 1.1 text
 ::

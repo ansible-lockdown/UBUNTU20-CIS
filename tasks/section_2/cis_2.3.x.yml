@@ -62,7 +62,7 @@
         group: root
       loop:
         - "etc/systemd/timesyncd.conf.d/50-timesyncd.conf"
-      notify: restart timeservice
+      notify: Restart timeservice
 
 - name: "2.3.2.2 | PATCH | Ensure systemd-timesyncd is enabled and running"
   when: ubtu20cis_rule_2_3_2_2
@@ -106,21 +106,21 @@
         group: root
       loop:
         - 'etc/chrony/sources.d/time.sources'
-      notify: restart timeservice
+      notify: Restart timeservice
 
     - name: "2.3.3.1 | PATCH | Ensure chrony is configured with authorized timeserver | remove current sources in .conf"
       ansible.builtin.replace:
         path: /etc/chrony/chrony.conf
         regexp: '^(server.*|pool.*)'
         replace: '#\1'
-      notify: restart timeservice
+      notify: Restart timeservice
 
     - name: "2.3.3.1 | PATCH | Ensure chrony is configured with authorized timeserver | load sources"
       ansible.builtin.lineinfile:
         path: /etc/chrony/chrony.conf
         regexp: '^include /etc/chrony/sources.d.*'
         line: include /etc/chrony/sources.d/time.sources
-      notify: restart timeservice
+      notify: Restart timeservice
 
 - name: "2.3.3.2 | PATCH | Ensure chrony is running as user _chrony"
   when: ubtu20cis_rule_2_3_3_2

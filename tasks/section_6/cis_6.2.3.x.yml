@@ -40,7 +40,7 @@
     path: /etc/systemd/journald.conf
     regexp: ^ForwardToSyslog=
     line: ForwardToSyslog=yes
-  notify: restart syslog service
+  notify: Restart syslog service
 
 - name: "6.2.3.4 | PATCH | Ensure rsyslog default file permissions configured"
   when: ubtu20cis_rule_6_2_3_4
@@ -55,7 +55,7 @@
     path: /etc/rsyslog.conf
     regexp: '^\$FileCreateMode|^#\$FileCreateMode'
     line: '$FileCreateMode 0640'
-  notify: restart syslog service
+  notify: Restart syslog service
 
 - name: "6.2.3.5 | PATCH | Ensure logging is configured"
   when: ubtu20cis_rule_6_2_3_5
@@ -114,7 +114,7 @@
         - {regexp: '^local6,local7.\*|^#local6,local7.\*', line: 'local6,local7.*                 -/var/log/localmessages', insertafter: '^# First some standard log files'}
       loop_control:
         label: "{{ item.line }}"
-      notify: restart syslog service
+      notify: Restart syslog service
 
     - name: "6.2.3.5 | AUDIT | Ensure logging is configured | Warn Count"
       when: not ubtu20cis_rsyslog_ansible_managed
@@ -159,7 +159,7 @@
     - '^(\$InputTCPServerRun)'
     - '^(module\(load="itcmp"\))'
     - '^(input\(type="imtcp" port="\d{1,5}"\))'
-  notify: restart syslog service
+  notify: Restart syslog service
 
 - name: "6.2.3.8 | PATCH | Ensure logrotate is configured"
   when: ubtu20cis_rule_6_2_3_8

@@ -53,7 +53,7 @@
     - "{{ ansible_mounts }}"
   loop_control:
     label: "{{ item.device }}"
-  notify: remount tmp
+  notify: Remount tmp
 
 - name: |
     "1.1.2.1.2 | PATCH | Ensure nodev option set on /tmp partition | fstab"
@@ -83,7 +83,7 @@
     - "{{ ansible_mounts }}"
   loop_control:
     label: "{{ item.device }}"
-  notify: remount tmp
+  notify: Remount tmp
 
 - name: "1.1.2.2.1 | PATCH | Ensure nodev option set on /dev/shm partition"
   when: ubtu20cis_rule_1_1_2_2_1
@@ -139,7 +139,7 @@
     fstype: tmpfs
     state: present
     opts: "defaults,{% if ubtu20cis_rule_1_1_2_2_1 %}nodev,{% endif %}{% if ubtu20cis_rule_1_1_2_2_3 %}noexec,{% endif %}{% if ubtu20cis_rule_1_1_2_2_4 %}nosuid{% endif %}"
-  notify: remount dev_shm
+  notify: Remount dev_shm
 
 - name: "1.1.2.3.1 | AUDIT | Ensure /home is a separate partition"
   when:
@@ -188,7 +188,7 @@
   loop: "{{ ansible_mounts }}"
   loop_control:
     label: "{{ item.device }}"
-  notify: remount home
+  notify: Remount home
 
 - name: "1.1.2.4.1 | AUDIT | Ensure separate partition exists for /var"
   when:
@@ -237,7 +237,7 @@
   loop: "{{ ansible_mounts }}"
   loop_control:
     label: "{{ item.device }}"
-  notify: remount var
+  notify: Remount var
 
 - name: "1.1.2.5.1 | AUDIT | Ensure separate partition exists for /var/tmp"
   when:
@@ -288,7 +288,7 @@
   with_items: "{{ ansible_mounts }}"
   loop_control:
     label: "{{ item.device }}"
-  notify: remount var_tmp
+  notify: Remount var_tmp
 
 - name: "1.1.2.6.1 | AUDIT | Ensure separate partition exists for /var/log"
   when:
@@ -339,7 +339,7 @@
   loop: "{{ ansible_mounts }}"
   loop_control:
     label: "{{ item.device }}"
-  notify: remount var_log
+  notify: Remount var_log
 
 - name: "1.1.2.7.1 | AUDIT | Ensure separate partition exists for /var/log/audit"
   when:
@@ -389,4 +389,4 @@
   loop: "{{ ansible_mounts }}"
   loop_control:
     label: "{{ item.device }}"
-  notify: remount var_log_audit
+  notify: Remount var_log_audit

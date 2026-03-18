@@ -25,7 +25,7 @@
         path: /etc/default/grub
         regexp: '^GRUB_CMDLINE_LINUX'
         line: 'GRUB_CMDLINE_LINUX="{{ discovered_grub_cmdline_linux_settings.stdout }} ipv6.disable=1"'
-      notify: grub update
+      notify: Grub update
 
     - name: "3.1.1 | PATCH | Disable IPv6 | Set ipv6.disable to 1 if exists"
       when: "'ipv6.disable' in discovered_grub_cmdline_linux_settings.stdout"
@@ -33,7 +33,7 @@
         path: /etc/default/grub
         regexp: 'ipv6\.disable=.'
         replace: 'ipv6.disable=1'
-      notify: grub update
+      notify: Grub update
 
     - name: "3.1.1 | PATCH | Disable IPv6 | Remove net.ipv6.conf.all.disable_ipv6"
       ansible.builtin.lineinfile:

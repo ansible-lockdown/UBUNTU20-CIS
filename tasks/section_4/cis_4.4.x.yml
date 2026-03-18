@@ -67,7 +67,7 @@
         destination_port: 22
         jump: ACCEPT
         ctstate: 'NEW,ESTABLISHED'
-      notify: persistent ip4tables
+      notify: Persistent ip4tables
 
     - name: "4.4.2.1 | PATCH | Ensure iptables default deny firewall policy | Configure SSH to be allowed out"
       ansible.builtin.iptables:
@@ -76,14 +76,14 @@
         source_port: 22
         jump: ACCEPT
         ctstate: 'NEW,ESTABLISHED'
-      notify: persistent ip4tables
+      notify: Persistent ip4tables
 
     - name: "4.4.2.1 | PATCH | Ensure iptables default deny firewall policy | Enable apt traffic"
       ansible.builtin.iptables:
         chain: INPUT
         ctstate: 'ESTABLISHED'
         jump: ACCEPT
-      notify: persistent ip4tables
+      notify: Persistent ip4tables
 
     - name: "4.4.2.1 | PATCH | Ensure iptables default deny firewall policy | Set drop items"
       ansible.builtin.iptables:
@@ -93,7 +93,7 @@
         - INPUT
         - FORWARD
         - OUTPUT
-      notify: persistent ip4tables
+      notify: Persistent ip4tables
 
 - name: "4.4.2.2 | PATCH | Ensure iptables loopback traffic is configured"
   when:
@@ -114,7 +114,7 @@
         chain: INPUT
         in_interface: lo
         jump: ACCEPT
-      notify: persistent ip4tables
+      notify: Persistent ip4tables
 
     - name: "4.4.2.2 | PATCH | Ensure iptables loopback traffic is configured | OUTPUT loopback ACCEPT"
       ansible.builtin.iptables:
@@ -122,7 +122,7 @@
         chain: OUTPUT
         out_interface: lo
         jump: ACCEPT
-      notify: persistent ip4tables
+      notify: Persistent ip4tables
 
     - name: "4.4.2.2 | PATCH | Ensure iptables loopback traffic is configured | OUTPUT loopback ACCEPT"
       ansible.builtin.iptables:
@@ -130,7 +130,7 @@
         chain: INPUT
         source: 127.0.0.0/8
         jump: DROP
-      notify: persistent ip4tables
+      notify: Persistent ip4tables
 
 - name: "4.4.2.3 | PATCH | Ensure iptables outbound and established connections are configured"
   when:
@@ -158,7 +158,7 @@
     - {chain: INPUT, protocol: tcp, ctstate: 'ESTABLISHED'}
     - {chain: INPUT, protocol: udp, ctstate: 'ESTABLISHED'}
     - {chain: INPUT, protocol: icmp, ctstate: 'ESTABLISHED'}
-  notify: persistent ip4tables
+  notify: Persistent ip4tables
 
 - name: "4.4.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports"
   when:
@@ -176,7 +176,7 @@
   block:
     - name: "4.4.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Get list of open ports"
       ansible.builtin.command: ss -4tuln
-      notify: persistent ip4tables
+      notify: Persistent ip4tables
       changed_when: false
       failed_when: false
       check_mode: false
@@ -184,7 +184,7 @@
 
     - name: "4.4.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Get list of rules"
       ansible.builtin.command: iptables -L INPUT -v -n
-      notify: persistent ip4tables
+      notify: Persistent ip4tables
       changed_when: false
       failed_when: false
       check_mode: false
@@ -199,7 +199,7 @@
           - "{{ discovered_ip4_open_ports.stdout_lines }}"
           - "Current Rules:"
           - "{{ discovered_ip4_current_rules.stdout_lines }}"
-      notify: persistent ip4tables
+      notify: Persistent ip4tables
 
 - name: "4.4.3.1 | PATCH | Ensure ip6tables default deny firewall policy"
   when:

@@ -1,61 +1,61 @@
 ---
 
-- name: remount tmp
+- name: Remount tmp
   ansible.posix.mount:
     name: /tmp
     state: remounted
 
-- name: remount dev_shm
+- name: Remount dev_shm
   ansible.posix.mount:
     name: /dev/shm
     state: remounted
 
-- name: remount var
+- name: Remount var
   ansible.posix.mount:
     name: /var
     state: remounted
 
-- name: remount var_tmp
+- name: Remount var_tmp
   ansible.posix.mount:
     name: /var/tmp
     state: remounted
 
-- name: remount var_log
+- name: Remount var_log
   ansible.posix.mount:
     name: /var/log
     state: remounted
 
-- name: remount var_log_audit
+- name: Remount var_log_audit
   ansible.posix.mount:
     name: /var/log/audit
     state: remounted
 
-- name: remount home
+- name: Remount home
   ansible.posix.mount:
     name: /home
     state: remounted
 
-- name: grub update
-  ansible.builtin.shell: update-grub
-  notify: change requires reboot
+- name: Grub update
+  ansible.builtin.command: update-grub
+  notify: Change requires reboot
   changed_when: true
   failed_when: false
 
-- name: update dconf
+- name: Update dconf
   ansible.builtin.command: dconf update
   changed_when: true
 
-- name: restart postfix
+- name: Restart postfix
   ansible.builtin.systemd:
     name: postfix
     state: restarted
 
-- name: restart exim4
+- name: Restart exim4
   ansible.builtin.systemd:
     name: exim4
     state: restarted
 
-- name: restart timeservice
+- name: Restart timeservice
   ansible.builtin.systemd:
     name: "{{ ubtu20cis_time_sync_tool }}"
     state: restarted
@@ -69,52 +69,52 @@
 # ---------------
 # ---------------
 
-- name: persistent ip4tables
+- name: Persistent ip4tables
   ansible.builtin.shell: bash -c "iptables-save > /etc/iptables/rules.v4"
   changed_when: ubtu20cis_iptables_save.rc == 0
   failed_when: ubtu20cis_iptables_save.rc > 0
   register: ubtu20cis_iptables_save
 
-- name: sysctl flush ipv4 route table
+- name: Sysctl flush ipv4 route table
   when: ansible_virtualization_type != "docker"
   ansible.posix.sysctl:
     name: net.ipv4.route.flush
     value: '1'
     sysctl_set: true
 
-- name: reload ufw
+- name: Reload ufw
   community.general.ufw:
     state: reloaded
 
-- name: sysctl flush ipv6 route table
+- name: Sysctl flush ipv6 route table
   when: ansible_virtualization_type != "docker"
   ansible.posix.sysctl:
     name: net.ipv6.route.flush
     value: '1'
     sysctl_set: true
 
-- name: restart auditd
+- name: Restart auditd
   when: not ubtu20cis_skip_for_travis
   tags: skip_ansible_lint
   ansible.builtin.systemd:
     name: auditd
     state: restarted
 
-- name: restart syslog service
+- name: Restart syslog service
   ansible.builtin.systemd:
     name: "{{ ubtu20cis_syslog_service }}"
     state: restarted
 
-- name: restart journal-upload
+- name: Restart journal-upload
   ansible.builtin.systemd:
     name: systemd-journal-upload
     state: restarted
 
-- name: restart sshd
+- name: Restart sshd
   ansible.builtin.systemd:
     name: sshd
     state: restarted
 
-- name: change requires reboot
+- name: Change requires reboot
   ansible.builtin.set_fact:
     change_requires_reboot: true

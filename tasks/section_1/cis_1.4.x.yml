@@ -25,7 +25,7 @@
       loop:
         - {regexp: '^set superusers', line: 'set superusers="{{ ubtu20cis_grub_user }}"'}
         - {regexp: '^password_pbkdf2 {{ ubtu20cis_grub_user }} grub.pbkdf2.*', line: 'password_pbkdf2 {{ ubtu20cis_grub_user }} {{ ubtu20cis_bootloader_password_hash }}', after: 'set superusers="'}
-      notify: grub update
+      notify: Grub update
 
     - name: "1.4.1 | PATCH | Ensure bootloader password is set | allow unrestricted boot"
       when: not ubtu20cis_ask_passwd_to_boot
@@ -34,7 +34,7 @@
         regexp: '(^CLASS="--class gnu-linux --class gnu --class os).*"$'
         line: '\g<1> --unrestricted"'
         backrefs: true
-      notify: grub update
+      notify: Grub update
 
 - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured"
   when: ubtu20cis_rule_1_4_2

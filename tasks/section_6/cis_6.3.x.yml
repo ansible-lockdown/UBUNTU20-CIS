@@ -50,7 +50,7 @@
         path: /etc/default/grub
         regexp: '^GRUB_CMDLINE_LINUX='
         line: 'GRUB_CMDLINE_LINUX="{{ discovered_auditd_cmdline_settings.stdout }} audit=1"'
-      notify: grub update
+      notify: Grub update
 
     - name: "6.3.1.3 | PATCH | Ensure auditing for processes that start prior to auditd is enabled | Update setting if exists"
       when: "'audit=' in discovered_auditd_cmdline_settings.stdout"
@@ -60,7 +60,7 @@
         replace: 'audit=1'
         after: '^GRUB_CMDLINE_LINUX="'
         before: '"'
-      notify: grub update
+      notify: Grub update
 
 - name: "6.3.1.4 | PATCH | Ensure audit_backlog_limit is sufficient"
   when: ubtu20cis_rule_6_3_1_4
@@ -85,7 +85,7 @@
         path: /etc/default/grub
         regexp: '^GRUB_CMDLINE_LINUX='
         line: 'GRUB_CMDLINE_LINUX="{{ discovered_auditd_backlog_cmdline.stdout }} audit_backlog_limit={{ ubtu20cis_audit_back_log_limit }}"'
-      notify: grub update
+      notify: Grub update
 
     - name: "6.3.1.4 | PATCH | Ensure audit_backlog_limit is sufficient | Update setting if exists"
       ansible.builtin.replace:
@@ -94,7 +94,7 @@
         replace: 'audit_backlog_limit={{ ubtu20cis_audit_back_log_limit }}'
         after: '^GRUB_CMDLINE_LINUX="'
         before: '"'
-      notify: grub update
+      notify: Grub update
 
 - name: "6.3.2.1 | PATCH | Ensure audit log storage size is configured"
   when: ubtu20cis_rule_6_3_2_1
@@ -110,7 +110,7 @@
     regexp: "^max_log_file( |=)"
     line: "max_log_file = {{ ubtu20cis_max_log_file_size }}"
     state: present
-  notify: restart auditd
+  notify: Restart auditd
 
 - name: "6.3.2.2 | PATCH | Ensure audit logs are not automatically deleted"
   when: ubtu20cis_rule_6_3_2_2
@@ -125,7 +125,7 @@
     path: /etc/audit/auditd.conf
     regexp: '^max_log_file_action'
     line: "max_log_file_action = {{ ubtu20cis_auditd['max_log_file_action'] }}"
-  notify: restart auditd
+  notify: Restart auditd
 
 - name: "6.3.2.3 | PATCH | Ensure system is disabled when audit logs are full"
   when: ubtu20cis_rule_6_3_2_3
@@ -144,7 +144,7 @@
     - {regexp: '^space_left_action', line: 'space_left_action = email'}
     - {regexp: '^action_mail_acct', line: 'action_mail_acct = root'}
     - {regexp: '^admin_space_left_action', line: "admin_space_left_action = {{ ubtu20cis_auditd['admin_space_left_action'] }}"}
-  notify: restart auditd
+  notify: Restart auditd
 
 - name: "6.3.2.4 | PATCH | Ensure audit log file space warning is configured"
   when: ubtu20cis_rule_6_3_2_4

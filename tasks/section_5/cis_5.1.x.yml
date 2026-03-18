@@ -85,7 +85,7 @@
         path: /etc/ssh/sshd_config
         regexp: '^AllowUsers|^#AllowUsers'
         line: 'AllowUsers {{ ubtu20cis_sshd.allow_users }}'
-      notify: restart sshd
+      notify: Restart sshd
 
     - name: "5.1.4 | PATCH | Ensure SSH access is limited | Add allowed groups"
       when: "ubtu20cis_sshd['allow_groups']|default('') != ''"
@@ -93,7 +93,7 @@
         path: /etc/ssh/sshd_config
         regexp: '^AllowGroups|^#AllowGroups'
         line: 'AllowGroups {{ ubtu20cis_sshd.allow_groups }}'
-      notify: restart sshd
+      notify: Restart sshd
 
     - name: "5.1.4 | PATCH | Ensure SSH access is limited | Add deny users"
       when: "ubtu20cis_sshd['deny_users']|default('') != ''"
@@ -101,7 +101,7 @@
         path: /etc/ssh/sshd_config
         regexp: '^DenyUsers|^#DenyUsers'
         line: 'DenyUsers {{ ubtu20cis_sshd.deny_users }}'
-      notify: restart sshd
+      notify: Restart sshd
 
     - name: "5.1.4 | PATCH | Ensure SSH access is limited | Add deny groups"
       when: "ubtu20cis_sshd['deny_groups']|default('') != ''"
@@ -109,7 +109,7 @@
         path: /etc/ssh/sshd_config
         regexp: '^DenyGroups|^#DenyGroups'
         line: 'DenyGroups {{ ubtu20cis_sshd.deny_groups }}'
-      notify: restart sshd
+      notify: Restart sshd
 
 - name: "5.1.5 | PATCH | Ensure SSH warning banner is configured"
   when: ubtu20cis_rule_5_1_5
@@ -125,7 +125,7 @@
     regexp: '^Banner|^#Banner'
     line: Banner /etc/issue.net
     insertafter: '^# no default banner path'
-  notify: restart sshd
+  notify: Restart sshd
 
 - name: "5.1.6 | PATCH | Ensure only strong Ciphers are used"
   when: ubtu20cis_rule_5_1_6
@@ -141,7 +141,7 @@
     regexp: '^Ciphers|^#Ciphers'
     line: 'Ciphers {{ ubtu20cis_sshd.ciphers }}'
     insertafter: '^# Ciphers and keying'
-  notify: restart sshd
+  notify: Restart sshd
 
 - name: "5.1.7 | PATCH | Ensure SSH Idle Timeout Interval is configured"
   when: ubtu20cis_rule_5_1_7
@@ -159,7 +159,7 @@
   with_items:
     - {regexp: '^ClientAliveInterval|^#ClientAliveInterval', line: 'ClientAliveInterval {{ ubtu20cis_sshd.client_alive_interval }}'}
     - {regexp: '^ClientAliveCountMax|^#ClientAliveCountMax', line: 'ClientAliveCountMax {{ ubtu20cis_sshd.client_alive_count_max }}'}
-  notify: restart sshd
+  notify: Restart sshd
 
 - name: "5.1.8 | PATCH | Ensure SSH DisableForwarding is enabled"
   when: ubtu20cis_rule_5_1_8
@@ -174,7 +174,7 @@
     path: /etc/ssh/sshd_config
     regexp: '^DisableForwarding|^#DisableForwarding'
     line: 'DisableForwarding yes'
-  notify: restart sshd
+  notify: Restart sshd
 
 - name: "5.1.9 | PATCH | Ensure sshd GSSAPIAuthentication is disabled"
   when: ubtu20cis_rule_5_1_9
@@ -208,7 +208,7 @@
     path: /etc/ssh/sshd_config
     regexp: '^HostbasedAuthentication|^#HostbasedAuthentication'
     line: 'HostbasedAuthentication no'
-  notify: restart sshd
+  notify: Restart sshd
 
 - name: "5.1.11 | PATCH | Ensure SSH IgnoreRhosts is enabled"
   when: ubtu20cis_rule_5_1_11
@@ -223,7 +223,7 @@
     path: /etc/ssh/sshd_config
     regexp: '^IgnoreRhosts|^#IgnoreRhosts'
     line: 'IgnoreRhosts yes'
-  notify: restart sshd
+  notify: Restart sshd
 
 - name: "5.1.12 | PATCH | Ensure only strong Key Exchange algorithms are used"
   when: ubtu20cis_rule_5_1_12
@@ -239,7 +239,7 @@
     regexp: '^KexAlgorithms|^#KexAlgorithms'
     line: 'KexAlgorithms {{ ubtu20cis_sshd.kex_algorithms }}'
     insertafter: '^# Ciphers and keying'
-  notify: restart sshd
+  notify: Restart sshd
 
 - name: "5.1.13 | PATCH | Ensure SSH LoginGraceTime is set to one minute or less"
   when: ubtu20cis_rule_5_1_13
@@ -255,7 +255,7 @@
     regexp: '^LoginGraceTime|^#LoginGraceTime'
     line: 'LoginGraceTime {{ ubtu20cis_sshd.login_grace_time }}'
     insertafter: '^# Authentication'
-  notify: restart sshd
+  notify: Restart sshd
 
 - name: "5.1.14 | PATCH | Ensure SSH LogLevel is appropriate"
   when: ubtu20cis_rule_5_1_14
@@ -271,7 +271,7 @@
     regexp: '^LogLevel|^#LogLevel'
     line: 'LogLevel {{ ubtu20cis_sshd.log_level }}'
     insertafter: '^# Logging'
-  notify: restart sshd
+  notify: Restart sshd
 
 - name: "5.1.15 | PATCH | Ensure only strong MAC algorithms are used"
   when: ubtu20cis_rule_5_1_15
@@ -287,7 +287,7 @@
     regexp: '^MACs|^#MACs'
     line: 'MACs {{ ubtu20cis_sshd.macs }}'
     insertafter: '^# Ciphers and keying'
-  notify: restart sshd
+  notify: Restart sshd
 
 - name: "5.1.16 | PATCH | Ensure SSH MaxAuthTries is set to 4 or less"
   when: ubtu20cis_rule_5_1_16
@@ -303,7 +303,7 @@
     regexp: '^MaxAuthTries|^#MaxAuthTries'
     line: 'MaxAuthTries {{ ubtu20cis_sshd.max_auth_tries }}'
     insertafter: '^# Authentication'
-  notify: restart sshd
+  notify: Restart sshd
 
 - name: "5.1.17 | PATCH | Ensure SSH MaxSessions is set to 10 or less"
   when: ubtu20cis_rule_5_1_17
@@ -319,7 +319,7 @@
     regexp: '^MaxSessions|^#MaxSessions'
     line: 'MaxSessions {{ ubtu20cis_sshd.max_sessions }}'
     insertafter: '^# Authentication'
-  notify: restart sshd
+  notify: Restart sshd
 
 - name: "5.1.18 | PATCH | Ensure SSH MaxStartups is configured"
   when: ubtu20cis_rule_5_1_18
@@ -334,7 +334,7 @@
     path: /etc/ssh/sshd_config
     regexp: '^MaxStartups|^#MaxStartups'
     line: 'MaxStartups 10:30:60'
-  notify: restart sshd
+  notify: Restart sshd
 
 - name: "5.1.19 | PATCH | Ensure SSH PermitEmptyPasswords is disabled"
   when: ubtu20cis_rule_5_1_19
@@ -350,7 +350,7 @@
     regexp: '^PermitEmptyPasswords|^#PermitEmptyPasswords'
     line: 'PermitEmptyPasswords no'
     insertafter: '# To disable tunneled clear text passwords'
-  notify: restart sshd
+  notify: Restart sshd
 
 - name: "5.1.20 | PATCH | Ensure SSH root login is disabled"
   when: ubtu20cis_rule_5_1_20
@@ -365,7 +365,7 @@
     path: /etc/ssh/sshd_config
     regexp: '^PermitRootLogin|^#PermitRootLogin'
     line: 'PermitRootLogin no'
-  notify: restart sshd
+  notify: Restart sshd
 
 - name: "5.1.21 | PATCH | Ensure SSH PermitUserEnvironment is disabled"
   when: ubtu20cis_rule_5_1_21
@@ -380,7 +380,7 @@
     path: /etc/ssh/sshd_config
     regexp: '^PermitUserEnvironment|^#PermitUserEnvironment'
     line: 'PermitUserEnvironment no'
-  notify: restart sshd
+  notify: Restart sshd
 
 - name: "5.1.22 | PATCH | Ensure SSH PAM is enabled"
   when: ubtu20cis_rule_5_1_22
@@ -397,4 +397,4 @@
     regexp: '^UsePAM|^#UsePAM'
     line: 'UsePAM yes'
     insertafter: '^# and ChallengeResponseAuthentication'
-  notify: restart sshd
+  notify: Restart sshd

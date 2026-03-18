@@ -40,7 +40,7 @@
     - {regexp: '\[org\/gnome\/login-screen\]', line: '[org/gnome/login-screen]', insertafter: EOF}
     - {regexp: 'banner-message-enable', line: 'banner-message-enable=true', insertafter: '\[org\/gnome\/login-screen\]'}
     - {regexp: 'banner-message-text', line: "banner-message-text='{{ ubtu20cis_warning_banner | regex_replace('\n', ' ') | trim }}'", insertafter: 'banner-message-enable'}
-  notify: update dconf
+  notify: Update dconf
 
 - name: "1.7.3 | PATCH | Ensure disable-user-list is enabled"
   when:
@@ -62,7 +62,7 @@
     owner: root
     group: root
     mode: 'u=rw,g=r,o=r'
-  notify: update dconf
+  notify: Update dconf
 
 - name: "1.7.4 | PATCH | Ensure GDM screen locks when the user is idle"
   when:
@@ -93,7 +93,7 @@
         group: root
         mode: 'u=rwx,g=rx,o=rx'
         state: directory
-      notify: update dconf
+      notify: Update dconf
 
     - name: "1.7.4 | PATCH | Ensure GDM screen locks when the user is idle | session script"
       ansible.builtin.template:
@@ -102,7 +102,7 @@
         owner: root
         group: root
         mode: 'u=rw,g=r,o=r'
-      notify: update dconf
+      notify: Update dconf
 
 - name: "1.7.5 | PATCH | Ensure GDM screen locks cannot be overridden"
   when:
@@ -123,7 +123,7 @@
         group: root
         mode: 'u=rwx,g=rx,o=rx'
         state: directory
-      notify: update dconf
+      notify: Update dconf
 
     - name: "1.7.5 | PATCH | Ensure GDM screen locks cannot be overridden | make lockfile"
       ansible.builtin.template:
@@ -132,7 +132,7 @@
         owner: root
         group: root
         mode: 'u=rw,g=r,o=r'
-      notify: update dconf
+      notify: Update dconf
 
 - name: "1.7.6 | PATCH | Ensure GDM automatic mounting of removable media is disabled"
   when:
@@ -153,7 +153,7 @@
         group: root
         mode: 'u=rwx,g=rx,o=rx'
         state: directory
-      notify: update dconf
+      notify: Update dconf
 
     - name: "1.7.6 | PATCH | Ensure GDM automatic mounting of removable media is disabled | session script"
       ansible.builtin.template:
@@ -162,7 +162,7 @@
         owner: root
         group: root
         mode: 'u=rw,g=r,o=r'
-      notify: update dconf
+      notify: Update dconf
 
 - name: "1.7.7 | PATCH | Ensure GDM disabling automatic mounting of removable media is not overridden"
   when:
@@ -183,7 +183,7 @@
         group: root
         mode: 'u=rwx,g=rx,o=rx'
         state: directory
-      notify: update dconf
+      notify: Update dconf
 
     - name: "1.7.7 | PATCH | Ensure GDM disabling automatic mounting of removable media is not overridden | make lockfile"
       ansible.builtin.template:
@@ -192,7 +192,7 @@
         owner: root
         group: root
         mode: 'u=rw,g=r,o=r'
-      notify: update dconf
+      notify: Update dconf
 
 - name: "1.7.8 | PATCH | Ensure GDM autorun-never is enabled"
   when:
@@ -213,7 +213,7 @@
         group: root
         mode: 'u=rwx,g=rx,o=rx'
         state: directory
-      notify: update dconf
+      notify: Update dconf
 
     - name: "1.7.8 | PATCH | Ensure GDM autorun-never is enabled | session script"
       ansible.builtin.template:
@@ -222,7 +222,7 @@
         owner: root
         group: root
         mode: 'u=rw,g=r,o=r'
-      notify: update dconf
+      notify: Update dconf
 
 - name: "1.7.9 | PATCH | Ensure GDM autorun-never is not overridden"
   when:
@@ -243,7 +243,7 @@
         group: root
         mode: 'u=rwx,g=rx,o=rx'
         state: directory
-      notify: update dconf
+      notify: Update dconf
 
     - name: "1.7.9 | PATCH | Ensure GDM autorun-never is not overridden | make lockfile"
       ansible.builtin.template:
@@ -252,7 +252,7 @@
         owner: root
         group: root
         mode: 'u=rw,g=r,o=r'
-      notify: update dconf
+      notify: Update dconf
 
 - name: "1.7.10 | PATCH | Ensure XDCMP is not enabled"
   when: ubtu20cis_rule_1_7_10

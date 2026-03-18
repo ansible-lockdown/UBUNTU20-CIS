@@ -103,7 +103,7 @@
     - {regexp: 'ServerKeyFile=', line: 'ServerKeyFile={{ ubtu20cis_journal_upload.serverkeyfile }}'}
     - {regexp: 'ServerCertificateFile=', line: 'ServerKeyFile={{ ubtu20cis_journal_upload.servercertfile }}'}
     - {regexp: 'TrustedCertificateFile=', line: 'ServerKeyFile={{ ubtu20cis_journal_upload.trustfile }}'}
-  notify: restart journal-upload
+  notify: Restart journal-upload
 
 - name: "6.2.2.1.3 | PATCH | Ensure systemd-journal-remote is enabled"
   when: ubtu20cis_rule_6_2_2_1_3

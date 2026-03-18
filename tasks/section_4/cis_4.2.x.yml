@@ -84,21 +84,21 @@
         rule: allow
         direction: in
         interface: lo
-      notify: reload ufw
+      notify: Reload ufw
 
     - name: "4.2.5 | PATCH | Ensure loopback traffic is configured | Set allow out ufw rules"
       community.general.ufw:
         rule: allow
         direction: out
         interface: lo
-      notify: reload ufw
+      notify: Reload ufw
 
     - name: "4.2.5 | PATCH | Ensure loopback traffic is configured | Set deny ufw rules IPv4"
       community.general.ufw:
         rule: deny
         direction: in
         from_ip: 127.0.0.0/8
-      notify: reload ufw
+      notify: Reload ufw
 
     - name: "4.2.5 | PATCH | Ensure loopback traffic is configured | Set deny ufw rules IPv6"
       when: ubtu20cis_ipv6_required
@@ -106,7 +106,7 @@
         rule: deny
         direction: in
         from_ip: "::1"
-      notify: reload ufw
+      notify: Reload ufw
 
 - name: "4.2.6 | PATCH | Ensure ufw outbound connections are configured"
   when:
@@ -128,14 +128,14 @@
         to_port: '{{ item }}'
       with_items:
         - "{{ ubtu20cis_ufw_allow_out_ports }}"
-      notify: reload ufw
+      notify: Reload ufw
 
     - name: "4.2.6 | PATCH | Ensure ufw outbound connections are configured | Allow all"
       when: "'all' in ubtu20cis_ufw_allow_out_ports"
       community.general.ufw:
         rule: allow
         direction: out
-      notify: reload ufw
+      notify: Reload ufw
 
 - name: "4.2.7 | AUDIT | Ensure ufw firewall rules exist for all open ports"
   when:
@@ -193,7 +193,7 @@
   loop: "{{ ubtu20cis_ufw_allow_in }}"
   loop_control:
     label: "{{ item.port }}"
-  notify: reload ufw
+  notify: Reload ufw
 
 - name: "4.2.8 | PATCH | Ensure ufw default deny firewall policy"
   when:
@@ -213,4 +213,4 @@
     - incoming
     - outgoing
     - routed
-  notify: reload ufw
+  notify: Reload ufw

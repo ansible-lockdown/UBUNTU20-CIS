@@ -3,8 +3,8 @@
 ##### CI for use by github no need for action to be added
 ##### Inherited
 ci:
-    autofix_prs: false
-    skip: [detect-aws-credentials, ansible-lint ]
+  autofix_prs: false
+  skip: [detect-aws-credentials, ansible-lint ]
 
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
