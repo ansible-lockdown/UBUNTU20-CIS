@@ -101,25 +101,23 @@
       ansible.builtin.template:
         src: "{{ item }}.j2"
         dest: "/{{ item }}"
-        mode: 'u=rw,g=r,o=r'
+        mode: 'g=r,o-rwx'
         owner: root
-        group: root
+        group: "root"
       loop:
-        - 'etc/chrony/sources.d/time.sources'
-      notify: Restart timeservice
-
-    - name: "2.3.3.1 | PATCH | Ensure chrony is configured with authorized timeserver | remove current sources in .conf"
-      ansible.builtin.replace:
-        path: /etc/chrony/chrony.conf
-        regexp: '^(server.*|pool.*)'
-        replace: '#\1'
+        - etc/chrony/sources.d/time.sources
       notify: Restart timeservice
 
     - name: "2.3.3.1 | PATCH | Ensure chrony is configured with authorized timeserver | load sources"
       ansible.builtin.lineinfile:
         path: /etc/chrony/chrony.conf
-        regexp: '^include /etc/chrony/sources.d.*'
-        line: include /etc/chrony/sources.d/time.sources
+        regexp: '^sourcedir /etc/chrony/sources.d'
+        line: sourcedir /etc/chrony/sources.d
+        state: present
+        create: true
+        owner: root
+        group: "root"
+        mode: 'g=r,o-rwx'
       notify: Restart timeservice
 
 - name: "2.3.3.2 | PATCH | Ensure chrony is running as user _chrony"
@@ -137,7 +135,9 @@
     line: 'user _chrony'
 
 - name: "2.3.3.3 | PATCH | Ensure chrony is enabled and running"
-  when: ubtu20cis_rule_2_3_3_3
+  when:
+    - ubtu20cis_rule_2_3_3_3
+    - ubtu20cis_time_sync_tool == "chrony"
   tags:
     - level1-server
     - level1-workstation

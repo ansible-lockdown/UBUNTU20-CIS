@@ -1,6 +1,6 @@
 ---
 
-- name: "6.3.1.1 | PATCH | Ensure auditd is installed"
+- name: "6.3.1.1 | PATCH | Ensure auditd packages are installed"
   when: ubtu20cis_rule_6_3_1_1
   tags:
     - level2-server
@@ -62,7 +62,7 @@
         before: '"'
       notify: Grub update
 
-- name: "6.3.1.4 | PATCH | Ensure audit_backlog_limit is sufficient"
+- name: "6.3.1.4 | PATCH | Ensure audit_backlog_limit is configured"
   when: ubtu20cis_rule_6_3_1_4
   tags:
     - level2-server
@@ -72,14 +72,14 @@
     - rule_6.3.1.4
     - auditd
   block:
-    - name: "6.3.1.4 | PATCH | Ensure audit_backlog_limit is sufficient | Get current GRUB_CMDLINE_LINUX"
+    - name: "6.3.1.4 | PATCH | Ensure audit_backlog_limit is configured | Get current GRUB_CMDLINE_LINUX"
       ansible.builtin.shell: grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
       changed_when: false
       failed_when: false
       check_mode: false
       register: discovered_auditd_backlog_cmdline
 
-    - name: "6.3.1.4 | PATCH | Ensure audit_backlog_limit is sufficient | Add setting if doesn't exist"
+    - name: "6.3.1.4 | PATCH | Ensure audit_backlog_limit is configured | Add setting if doesn't exist"
       when: "'audit_backlog_limit=' not in discovered_auditd_backlog_cmdline.stdout"
       ansible.builtin.lineinfile:
         path: /etc/default/grub
@@ -87,7 +87,7 @@
         line: 'GRUB_CMDLINE_LINUX="{{ discovered_auditd_backlog_cmdline.stdout }} audit_backlog_limit={{ ubtu20cis_audit_back_log_limit }}"'
       notify: Grub update
 
-    - name: "6.3.1.4 | PATCH | Ensure audit_backlog_limit is sufficient | Update setting if exists"
+    - name: "6.3.1.4 | PATCH | Ensure audit_backlog_limit is configured | Update setting if exists"
       ansible.builtin.replace:
         dest: /etc/default/grub
         regexp: 'audit_backlog_limit=([0-9]+)'
@@ -146,7 +146,7 @@
     - {regexp: '^admin_space_left_action', line: "admin_space_left_action = {{ ubtu20cis_auditd['admin_space_left_action'] }}"}
   notify: Restart auditd
 
-- name: "6.3.2.4 | PATCH | Ensure audit log file space warning is configured"
+- name: "6.3.2.4 | PATCH | Ensure system warns when audit logs are low on space"
   when: ubtu20cis_rule_6_3_2_4
   tags:
     - level1-server
@@ -155,11 +155,11 @@
     - patch
     - rule_6.3.2.4
   block:
-    - name: "6.3.2.4 | AUDIT | Ensure audit log file space warning is configured | check status"
+    - name: "6.3.2.4 | AUDIT | Ensure system warns when audit logs are low on space | check status"
       ansible.builtin.debug:
         msg: "This control requires manual remediation"
 
-    - name: "6.3.2.4 | AUDIT | Ensure audit log file space warning is configured | Warn Count"
+    - name: "6.3.2.4 | AUDIT | Ensure system warns when audit logs are low on space | Warn Count"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:

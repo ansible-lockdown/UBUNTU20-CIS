@@ -8,7 +8,7 @@
 - name: "PRELIM | Section 1.1 | Create list of mount points"
   tags: always
   ansible.builtin.set_fact:
-    prelim_mount_names: "{{ ansible_mounts | map(attribute='mount') | list }}"
+    prelim_mount_names: "{{ ansible_facts.mounts | map(attribute='mount') | list }}"
 
 - name: PRELIM | Capture tmp mount type | discover mount tmp type
   when:
@@ -17,7 +17,7 @@
   tags: always
   block:
     - name: PRELIM | Capture tmp mount type | discover mount tmp type
-      ansible.builtin.command: systemctl is-enabled tmp.mount  # noqa: command-instead-of-module
+      ansible.builtin.command: systemctl is-enabled tmp.mount # noqa: command-instead-of-module
       changed_when: false
       failed_when: prelim_tmp_mnt_type.rc not in [ 0, 1 ]
       check_mode: false
@@ -58,7 +58,7 @@
     - rule_2.1.1
     - section2
     - always
-  ansible.builtin.shell: "systemctl show autofs | grep LoadState | cut -d = -f 2"  # noqa: command-instead-of-module command-instead-of-shell
+  ansible.builtin.shell: "systemctl show autofs | grep LoadState | cut -d = -f 2" # noqa: command-instead-of-module command-instead-of-shell
   changed_when: false
   check_mode: false
   register: prelim_autofs_service_status
@@ -68,7 +68,7 @@
   tags:
     - rule_2.1.2
     - always
-  ansible.builtin.shell: "systemctl show avahi-daemon | grep LoadState | cut -d = -f 2"  # noqa: command-instead-of-module command-instead-of-shell
+  ansible.builtin.shell: "systemctl show avahi-daemon | grep LoadState | cut -d = -f 2" # noqa: command-instead-of-module command-instead-of-shell
   changed_when: false
   check_mode: false
   register: prelim_avahi_service_status

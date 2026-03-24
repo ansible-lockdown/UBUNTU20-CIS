@@ -1,6 +1,6 @@
 ---
 
-- name: "6.2.1.1 | PATCH | Ensure journald service is enabled"
+- name: "6.2.1.1 | PATCH | Ensure journald service is enabled and active"
   when: ubtu20cis_rule_6_2_1_1
   tags:
     - level1-server
@@ -11,7 +11,7 @@
     - journald
   block:
     - name: "6.2.1.1 | Ensure journald service is enabled | capture status"
-      ansible.builtin.command: systemctl is-enabled systemd-journald.service  # noqa: command-instead-of-module
+      ansible.builtin.command: systemctl is-enabled systemd-journald.service # noqa: command-instead-of-module
       changed_when: false
       failed_when: discovered_journald_enabled.rc not in [ 0, 1, 2 ]
       check_mode: false
@@ -24,7 +24,7 @@
       vars:
         warn_control_id: '6.2.1.1'
 
-- name: "6.2.1.2 | PATCH | Ensure journald default file permissions configured"
+- name: "6.2.1.2 | PATCH | Ensure journald log file access is configured"
   when: ubtu20cis_rule_6_2_1_2
   tags:
     - level1-server
@@ -34,12 +34,12 @@
     - rule_6.2.1.2
     - journald
   block:
-    - name: "6.2.1.2 | AUDIT | Ensure journald default file permissions configured | check for override file"
+    - name: "6.2.1.2 | AUDIT | Ensure journald log file access is configured | check for override file"
       ansible.builtin.stat:
         path: /etc/tmpfiles.d/systemd.conf
       register: discovered_journald_tmpfile
 
-    - name: "6.2.1.2 | AUDIT | Ensure journald default file permissions configured | update settings if override exists"
+    - name: "6.2.1.2 | AUDIT | Ensure journald log file access is configured | update settings if override exists"
       when: discovered_journald_tmpfile.stat.exists
       ansible.builtin.lineinfile:
         path: /etc/tmpfiles.d/systemd.conf
@@ -51,7 +51,7 @@
         - {regexp: '.*\/var\/log\/journal\/\%m\s.*(:r(w|-)(x|-))(,|$)', line: 'a+ /var/log/journal/%m - - - - d:group:adm:r-x,group:adm:r-x'}
         - {regexp: '.*\/var\/log\/journal\s.*(:r(w|-)(x|-))(,|$)', line: 'a+ /var/log/journal    - - - - d:group::r-x,d:group:adm:r-x,group::r-x,group:adm:r-x'}
 
-- name: "6.2.1.3 | PATCH | Ensure journald log rotation is configured per site policy"
+- name: "6.2.1.3 | PATCH | Ensure journald log file rotation is configured"
   when: ubtu20cis_rule_6_2_1_3
   tags:
     - level1-server
@@ -84,7 +84,7 @@
     name: systemd-journal-remote
     state: present
 
-- name: "6.2.2.1.2 | PATCH | Ensure systemd-journal-remote is configured"
+- name: "6.2.2.1.2 | PATCH | Ensure systemd-journal-upload authentication is configured"
   when: ubtu20cis_rule_6_2_2_1_2
   tags:
     - level1-server
@@ -105,7 +105,7 @@
     - {regexp: 'TrustedCertificateFile=', line: 'ServerKeyFile={{ ubtu20cis_journal_upload.trustfile }}'}
   notify: Restart journal-upload
 
-- name: "6.2.2.1.3 | PATCH | Ensure systemd-journal-remote is enabled"
+- name: "6.2.2.1.3 | PATCH | Ensure systemd-journal-upload is enabled and active"
   when: ubtu20cis_rule_6_2_2_1_3
   tags:
     - level1-server
@@ -119,7 +119,7 @@
     state: started
     enabled: true
 
-- name: "6.2.2.1.4 | PATCH | Ensure journald is not configured to receive logs from a remote client"
+- name: "6.2.2.1.4 | PATCH | Ensure systemd-journal-remote service is not in use"
   when:
     - ubtu20cis_rule_6_2_2_1_4
     - not journald_log_server
@@ -135,7 +135,7 @@
     state: stopped
     enabled: false
 
-- name: "6.2.2.2 | PATCH | Ensure journald is not configured to send logs to rsyslog"
+- name: "6.2.2.2 | PATCH | Ensure journald ForwardToSyslog is disabled"
   when: ubtu20cis_rule_6_2_2_2
   tags:
     - level1-server
@@ -150,7 +150,7 @@
     line: 'ForwardToSyslog=no'
     insertafter: '\[Journal\]'
 
-- name: "6.2.2.3 | PATCH | Ensure journald is configured to compress large log files"
+- name: "6.2.2.3 | PATCH | Ensure journald Compress is configured"
   when: ubtu20cis_rule_6_2_2_3
   tags:
     - level1-server
@@ -165,7 +165,7 @@
     line: 'Compress=yes'
     insertafter: '\[Journal\]'
 
-- name: "6.2.2.4 | PATCH | Ensure journald is configured to write logfiles to persistent disk"
+- name: "6.2.2.4 | PATCH | Ensure journald Storage is configured"
   when: ubtu20cis_rule_6_2_2_4
   tags:
     - level1-server
@@ -180,7 +180,7 @@
     line: 'Storage=persistent'
     insertafter: '\[Journal\]'
 
-- name: "6.2.4.1 | PATCH | Ensure permissions on all logfiles are configured"
+- name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured"
   when: ubtu20cis_rule_6_2_4_1
   tags:
     - level1-server
@@ -190,14 +190,14 @@
     - logfiles
     - rule_6.2.4.1
   block:
-    - name: "6.2.4.1 | AUDIT | Ensure permissions on all logfiles are configured | find files"
+    - name: "6.2.4.1 | AUDIT | Ensure access to all logfiles has been configured | find files"
       ansible.builtin.find:
         paths: "/var/log"
         file_type: file
         recurse: true
       register: discovered_logfiles
 
-    - name: "6.2.4.1 | PATCH | Ensure permissions on all logfiles are configured | change permissions"
+    - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
       when:
         - item.path != "/var/log/btmp"
         - item.path != "/var/log/utmp"

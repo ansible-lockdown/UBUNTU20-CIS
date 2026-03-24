@@ -70,6 +70,23 @@
 - Added missing Warn Count blocks (`import_tasks: warning_facts.yml` + `vars: warn_control_id`) to 34 manual remediation tasks across 11 files
 - Fixed `vars: warn_control_id` placement from block-level to task-level (same indentation as `ansible.builtin.import_tasks:`) in 20+ tasks
 
+### Benchmark Title and Logic Alignment
+
+- Validated all 313 task titles against CIS v3.0.0 benchmark JSON — fixed 150+ stale v2 titles
+- Fixed 8 critical logic bugs where tasks implemented the wrong control:
+  - 2.2.6: Changed from RPC removal (rpcbind) to FTP client removal (ftp) per v3.0.0
+  - 7.1.10: Fixed file paths from /etc/opasswd to /etc/security/opasswd (4 references)
+  - 7.2.6: Changed from duplicate username check to duplicate GID check per v3.0.0
+  - 1.1.2.1.3/1.1.2.1.4: Fixed nosuid/noexec swap in both task logic and systemd template
+  - 5.3.3.2.7/5.3.3.2.8: Fixed swapped PAM quality titles
+  - 5.4.2.6: Fixed title to "Ensure root user umask is configured"
+  - 5.4.2.8: Replaced manual stub with actual logic to find and lock accounts without valid login shells
+  - 3.1.1: Changed from active IPv6 disable to audit-first approach per v3.0.0
+
+### Cross-Repo Alignment (Remediation + Audit)
+
+- Fixed remediation 2.4.1.7: replaced manual stub with proper file permission task for /etc/cron.yearly
+
 ### Bug Fixes
 
 - Added missing "Update dconf" handler (14 task references)

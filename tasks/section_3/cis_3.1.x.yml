@@ -1,25 +1,58 @@
 ---
 
-- name: "3.1.1 | PATCH | Disable IPv6"
+- name: "3.1.1 | AUDIT | Ensure IPv6 status is identified"
+  when:
+    - ubtu20cis_rule_3_1_1
+  tags:
+    - level1-server
+    - level1-workstation
+    - manual
+    - audit
+    - rule_3.1.1
+    - ipv6
+  block:
+    - name: "3.1.1 | AUDIT | Ensure IPv6 status is identified | Check sysctl"
+      ansible.builtin.command: sysctl net.ipv6.conf.all.disable_ipv6
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_ipv6_sysctl_status
+
+    - name: "3.1.1 | AUDIT | Ensure IPv6 status is identified | Check GRUB"
+      ansible.builtin.shell: grep -c "ipv6.disable=1" /etc/default/grub || true
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_ipv6_grub_status
+
+    - name: "3.1.1 | AUDIT | Ensure IPv6 status is identified | Report status"
+      ansible.builtin.debug:
+        msg:
+          - "IPv6 sysctl status: {{ discovered_ipv6_sysctl_status.stdout | default('unable to determine') }}"
+          - "IPv6 disabled in GRUB: {{ 'yes' if discovered_ipv6_grub_status.stdout | int > 0 else 'no' }}"
+          - "Verify IPv6 status matches site policy. Set ubtu20cis_ipv6_disable to 'grub' or 'sysctl' to disable."
+
+- name: "3.1.1 | PATCH | Ensure IPv6 status is identified | Disable IPv6 via GRUB"
   when:
     - ubtu20cis_rule_3_1_1
     - not ubtu20cis_ipv6_required
+    - ubtu20cis_ipv6_disable == 'grub'
   tags:
-    - level2-server
-    - level2-workstation
+    - level1-server
+    - level1-workstation
     - manual
     - patch
     - rule_3.1.1
     - ipv6
   block:
-    - name: "3.1.1 | AUDIT | Disable IPv6 | Get current GRUB_CMDLINE_LINUX settings"
+    - name: "3.1.1 | PATCH | Ensure IPv6 status is identified | Get current GRUB_CMDLINE_LINUX settings"
       ansible.builtin.shell: grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
       changed_when: false
       failed_when: false
       check_mode: false
       register: discovered_grub_cmdline_linux_settings
 
-    - name: "3.1.1 | PATCH | Disable IPv6 | Add ipv6.disable if does not exist"
+    - name: "3.1.1 | PATCH | Ensure IPv6 status is identified | Add ipv6.disable if does not exist"
       when: "'ipv6.disable' not in discovered_grub_cmdline_linux_settings.stdout"
       ansible.builtin.lineinfile:
         path: /etc/default/grub
@@ -27,7 +60,7 @@
         line: 'GRUB_CMDLINE_LINUX="{{ discovered_grub_cmdline_linux_settings.stdout }} ipv6.disable=1"'
       notify: Grub update
 
-    - name: "3.1.1 | PATCH | Disable IPv6 | Set ipv6.disable to 1 if exists"
+    - name: "3.1.1 | PATCH | Ensure IPv6 status is identified | Set ipv6.disable to 1 if exists"
       when: "'ipv6.disable' in discovered_grub_cmdline_linux_settings.stdout"
       ansible.builtin.replace:
         path: /etc/default/grub
@@ -35,13 +68,13 @@
         replace: 'ipv6.disable=1'
       notify: Grub update
 
-    - name: "3.1.1 | PATCH | Disable IPv6 | Remove net.ipv6.conf.all.disable_ipv6"
+    - name: "3.1.1 | PATCH | Ensure IPv6 status is identified | Remove sysctl ipv6 disable"
       ansible.builtin.lineinfile:
         path: /etc/sysctl.conf
         regexp: '^net.ipv6.conf.all.disable_ipv6.*'
         state: absent
 
-- name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled"
+- name: "3.1.2 | PATCH | Ensure wireless interfaces are not available"
   when:
     - ubtu20cis_rule_3_1_2
     - prelim_wireless_interfaces.stdout | length > 0
@@ -53,7 +86,7 @@
     - rule_3.1.2
     - wireless
   block:
-    - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Check for wifi status "
+    - name: "3.1.2 | PATCH | Ensure wireless interfaces are not available | Check for wifi status"
       when: ubtu20cis_install_network_manager
       ansible.builtin.command: nmcli radio wifi
       changed_when: false
@@ -61,7 +94,7 @@
       check_mode: false
       register: discovered_wifi_status
 
-    - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Disable wireless if enabled nmcli"
+    - name: "3.1.2 | PATCH | Ensure wireless interfaces are not available | Disable wireless if enabled nmcli"
       when:
         - ubtu20cis_install_network_manager
         - discovered_wifi_status.stdout == 'enabled'
@@ -70,7 +103,7 @@
       check_mode: false
       register: discovered_nmcli_radio_off
 
-    - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | disable driver"
+    - name: "3.1.2 | PATCH | Ensure wireless interfaces are not available | disable driver"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/disable_wireless.conf
         regexp: 'install\s*{{ item }}\s*/bin/true'
@@ -80,7 +113,7 @@
       loop:
         - "{{ prelim_wireless_interfaces.stdout_lines }}"
 
-    - name: "3.1.2 | PATCH | Ensure wireless interfaces are not loadable | blacklist"
+    - name: "3.1.2 | PATCH | Ensure wireless interfaces are not available | blacklist"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/blacklist.conf
         regexp: 'blacklist\s*{{ item }}\s*'
@@ -90,7 +123,7 @@
       loop:
         - "{{ prelim_wireless_interfaces.stdout_lines }}"
 
-- name: "3.1.3 | PATCH | Ensure bluetooth is disabled"
+- name: "3.1.3 | PATCH | Ensure bluetooth services are not in use"
   when:
     - ubtu20cis_rule_3_1_3
     - "'bluetooth' in ansible_facts.packages"

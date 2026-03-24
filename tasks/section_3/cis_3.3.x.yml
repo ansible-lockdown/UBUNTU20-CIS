@@ -1,6 +1,6 @@
 ---
 
-- name: "3.3.1 | PATCH | Ensure IP forwarding is disabled"
+- name: "3.3.1 | PATCH | Ensure ip forwarding is disabled"
   when:
     - ubtu20cis_rule_3_3_1
     - not ubtu20cis_is_router
@@ -13,7 +13,7 @@
     - ip_forwarding
     - sysctl
   block:
-    - name: "3.3.1 | PATCH | Ensure IP forwarding is disabled | IPv4 settings"
+    - name: "3.3.1 | PATCH | Ensure ip forwarding is disabled | IPv4 settings"
       ansible.posix.sysctl:
         name: net.ipv4.ip_forward
         value: '0'
@@ -23,7 +23,7 @@
         ignoreerrors: true
       notify: Sysctl flush ipv4 route table
 
-    - name: "3.3.1 | PATCH | Ensure IP forwarding is disabled | IPv6 settings"
+    - name: "3.3.1 | PATCH | Ensure ip forwarding is disabled | IPv6 settings"
       when: ubtu20cis_ipv6_required
       ansible.posix.sysctl:
         name: net.ipv6.conf.all.forwarding
@@ -58,7 +58,7 @@
     - net.ipv4.conf.default.send_redirects
   notify: Sysctl flush ipv4 route table
 
-- name: "3.3.3 | PATCH | Ensure bogus ICMP responses are ignored"
+- name: "3.3.3 | PATCH | Ensure bogus icmp responses are ignored"
   when: ubtu20cis_rule_3_3_3
   tags:
     - level1-server
@@ -77,7 +77,7 @@
     ignoreerrors: true
   notify: Sysctl flush ipv4 route table
 
-- name: "3.3.4 | PATCH | Ensure broadcast ICMP requests are ignored"
+- name: "3.3.4 | PATCH | Ensure broadcast icmp requests are ignored"
   when: ubtu20cis_rule_3_3_4
   tags:
     - level1-server
@@ -96,7 +96,7 @@
     ignoreerrors: true
   notify: Sysctl flush ipv4 route table
 
-- name: "3.3.5 | PATCH | Ensure ICMP redirects are not accepted"
+- name: "3.3.5 | PATCH | Ensure icmp redirects are not accepted"
   when: ubtu20cis_rule_3_3_5
   tags:
     - level1-server
@@ -107,7 +107,7 @@
     - icmp
     - sysctl
   block:
-    - name: "3.3.5 | PATCH | Ensure ICMP redirects are not accepted | IPv4 settings"
+    - name: "3.3.5 | PATCH | Ensure icmp redirects are not accepted | IPv4 settings"
       ansible.posix.sysctl:
         name: "{{ item }}"
         value: '0'
@@ -120,7 +120,7 @@
         - net.ipv4.conf.default.accept_redirects
       notify: Sysctl flush ipv4 route table
 
-    - name: "3.3.5 | PATCH | Ensure ICMP redirects are not accepted | IPv6 settings"
+    - name: "3.3.5 | PATCH | Ensure icmp redirects are not accepted | IPv6 settings"
       when: ubtu20cis_ipv6_required
       ansible.posix.sysctl:
         name: "{{ item }}"
@@ -134,7 +134,7 @@
         - net.ipv6.conf.default.accept_redirects
       notify: Sysctl flush ipv6 route table
 
-- name: "3.3.6 | PATCH | Ensure secure ICMP redirects are not accepted"
+- name: "3.3.6 | PATCH | Ensure secure icmp redirects are not accepted"
   when: ubtu20cis_rule_3_3_6
   tags:
     - level1-server
@@ -156,7 +156,7 @@
     - net.ipv4.conf.default.secure_redirects
   notify: Sysctl flush ipv4 route table
 
-- name: "3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled"
+- name: "3.3.7 | PATCH | Ensure reverse path filtering is enabled"
   when: ubtu20cis_rule_3_3_7
   tags:
     - level1-server
@@ -240,7 +240,7 @@
     - net.ipv4.conf.default.log_martians
   notify: Sysctl flush ipv4 route table
 
-- name: "3.3.10 | PATCH | Ensure TCP SYN Cookies is enabled"
+- name: "3.3.10 | PATCH | Ensure tcp syn cookies is enabled"
   when: ubtu20cis_rule_3_3_10
   tags:
     - level1-server
@@ -259,7 +259,7 @@
     ignoreerrors: true
   notify: Sysctl flush ipv4 route table
 
-- name: "3.3.11 | PATCH | Ensure IPv6 router advertisements are not accepted"
+- name: "3.3.11 | PATCH | Ensure ipv6 router advertisements are not accepted"
   when:
     - ubtu20cis_rule_3_3_11
     - ubtu20cis_ipv6_required

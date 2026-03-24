@@ -25,7 +25,7 @@ on:
     branches:
       - latest
   schedule:
-    - cron: '0 13 * * *'  # 13:00 UTC → 9 AM ET (DST) / 8 AM ET (Standard Time)
+    - cron: '0 13 * * *' # 13:00 UTC → 9 AM ET (DST) / 8 AM ET (Standard Time)
   workflow_dispatch:
 
 jobs:

@@ -1,6 +1,6 @@
 ---
 
-- name: "1.7.1 | PATCH | Ensure GNOME Display Manager is removed"
+- name: "1.7.1 | PATCH | Ensure GDM is removed"
   when:
     - ubtu20cis_rule_1_7_1
     - not ubtu20cis_desktop_required
@@ -42,7 +42,7 @@
     - {regexp: 'banner-message-text', line: "banner-message-text='{{ ubtu20cis_warning_banner | regex_replace('\n', ' ') | trim }}'", insertafter: 'banner-message-enable'}
   notify: Update dconf
 
-- name: "1.7.3 | PATCH | Ensure disable-user-list is enabled"
+- name: "1.7.3 | PATCH | Ensure GDM disable-user-list option is enabled"
   when:
     - ubtu20cis_rule_1_7_3
     - ubtu20cis_desktop_required
@@ -254,7 +254,7 @@
         mode: 'u=rw,g=r,o=r'
       notify: Update dconf
 
-- name: "1.7.10 | PATCH | Ensure XDCMP is not enabled"
+- name: "1.7.10 | PATCH | Ensure XDMCP is not enabled"
   when: ubtu20cis_rule_1_7_10
   tags:
     - level1-server

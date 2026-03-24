@@ -36,7 +36,7 @@
         backrefs: true
       notify: Grub update
 
-- name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured"
+- name: "1.4.2 | PATCH | Ensure access to bootloader config is configured"
   when: ubtu20cis_rule_1_4_2
   tags:
     - level1-server
@@ -46,13 +46,13 @@
     - rule_1.4.2
     - grub
   block:
-    - name: "1.4.2 | AUDIT | Ensure permissions on bootloader config are configured | Check for Grub file"
+    - name: "1.4.2 | AUDIT | Ensure access to bootloader config is configured | Check for Grub file"
       ansible.builtin.stat:
         path: "{{ ubtu20cis_grub_file }}"
       check_mode: false
       register: discovered_grub_cfg_status
 
-    - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured | Set permissions"
+    - name: "1.4.2 | PATCH | Ensure access to bootloader config is configured | Set permissions"
       when:
         - discovered_grub_cfg_status.stat.exists
         - discovered_grub_cfg_status.stat.mode != "0400"

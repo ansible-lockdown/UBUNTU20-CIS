@@ -15,13 +15,13 @@
     - rule_6.3.4.2
     - rule_6.3.4.3
   block:
-    - name: "6.3.4.1 | AUDIT | Ensure audit log files are mode 0640 or less permissive | discover file"
+    - name: "6.3.4.1 | AUDIT | Ensure audit log files mode is configured | discover file"
       ansible.builtin.shell: grep ^log_file /etc/audit/auditd.conf | awk '{ print $NF }'
       changed_when: false
       check_mode: false
       register: discovered_audit_logfile
 
-    - name: "6.3.4.1 | AUDIT | Ensure audit log files are mode 0640 or less permissive | stat file"
+    - name: "6.3.4.1 | AUDIT | Ensure audit log files mode is configured | stat file"
       ansible.builtin.stat:
         path: "{{ discovered_audit_logfile.stdout }}"
       changed_when: false
@@ -37,7 +37,7 @@
         owner: root
         group: root
 
-- name: "6.3.4.4 | PATCH | Ensure the audit log directory is 0750 or more restrictive"
+- name: "6.3.4.4 | PATCH | Ensure the audit log file directory mode is configured"
   when: ubtu20cis_rule_6_3_4_4
   tags:
     - level2-server
@@ -47,19 +47,19 @@
     - auditd
     - rule_6.3.4.4
   block:
-    - name: "6.3.4.4 | AUDIT | Ensure the audit log directory is 0750 or more restrictive | get current permissions"
+    - name: "6.3.4.4 | AUDIT | Ensure the audit log file directory mode is configured | get current permissions"
       ansible.builtin.stat:
         path: "{{ discovered_audit_logfile.stdout | dirname }}"
       register: discovered_auditlog_dir
 
-    - name: "6.3.4.4 | PATCH | Ensure the audit log directory is 0750 or more restrictive | set"
+    - name: "6.3.4.4 | PATCH | Ensure the audit log file directory mode is configured | set"
       when: not discovered_auditlog_dir.stat.mode is match('07(0|5)0')
       ansible.builtin.file:
         path: "{{ discovered_audit_logfile.stdout | dirname }}"
         state: directory
         mode: 'u=rwx,g=rx,o='
 
-- name: "6.3.4.5 | PATCH | Ensure audit configuration files are 640 or more restrictive"
+- name: "6.3.4.5 | PATCH | Ensure audit configuration files mode is configured"
   when:
     - item.mode > '0640'
     - ubtu20cis_rule_6_3_4_5
@@ -77,7 +77,7 @@
   loop_control:
     label: "{{ item.path }}"
 
-- name: "6.3.4.6 | PATCH | Ensure audit configuration files are owned by root"
+- name: "6.3.4.6 | PATCH | Ensure audit configuration files owner is configured"
   when: ubtu20cis_rule_6_3_4_6
   tags:
     - level2-server
@@ -93,7 +93,7 @@
   loop_control:
     label: "{{ item.path }}"
 
-- name: "6.3.4.7 | PATCH | Ensure audit configuration files belong to group root"
+- name: "6.3.4.7 | PATCH | Ensure audit configuration files group owner is configured"
   when: ubtu20cis_rule_6_3_4_7
   tags:
     - level2-server
@@ -109,7 +109,7 @@
   loop_control:
     label: "{{ item.path }}"
 
-- name: "6.3.4.8 | PATCH | Ensure audit tools are 755 or more restrictive"
+- name: "6.3.4.8 | PATCH | Ensure audit tools mode is configured"
   when: ubtu20cis_rule_6_3_4_8
   tags:
     - level2-server
@@ -119,7 +119,7 @@
     - auditd
     - rule_6.3.4.8
   block:
-    - name: "6.3.4.8 | AUDIT | Get audit binary file stat | get current mode"
+    - name: "6.3.4.8 | AUDIT | Ensure audit tools mode is configured | get current mode"
       ansible.builtin.stat:
         path: "{{ item }}"
       loop:
@@ -131,7 +131,7 @@
         - /sbin/augenrules
       register: discovered_audit_bins
 
-    - name: "6.3.4.8 | PATCH | Ensure audit tools are 755 or more restrictive | set if required"
+    - name: "6.3.4.8 | PATCH | Ensure audit tools mode is configured | set if required"
       when: not item.stat.mode is match('07(0|5)0')
       ansible.builtin.file:
         path: "{{ item.item }}"
@@ -140,7 +140,7 @@
       loop_control:
         label: "{{ item.item }}"
 
-- name: "6.3.4.9 | PATCH | Ensure audit tools are owned by root"
+- name: "6.3.4.9 | PATCH | Ensure audit tools owner is configured"
   when: ubtu20cis_rule_6_3_4_9
   tags:
     - level2-server
@@ -161,7 +161,7 @@
     - /sbin/auditd
     - /sbin/augenrules
 
-- name: "6.3.4.10 | PATCH | Ensure audit tools belong to group root"
+- name: "6.3.4.10 | PATCH | Ensure audit tools group owner is configured"
   when: ubtu20cis_rule_6_3_4_10
   tags:
     - level2-server

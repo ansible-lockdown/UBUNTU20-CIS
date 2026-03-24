@@ -38,13 +38,13 @@
       check_mode: false
       register: prelim_user_password_set
 
-    - name: "Assert that password set for {{ ansible_env.SUDO_USER }} and account not locked"  # noqa: name[template]
+    - name: "Assert that password set for {{ ansible_env.SUDO_USER }} and account not locked" # noqa: name[template]
       ansible.builtin.assert:
         that: prelim_user_password_set.stdout | length != 0 and prelim_user_password_set.stdout != "!!"
         fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set - It can break access"
         success_msg: "You have a password set for sudo user {{ ansible_env.SUDO_USER }}"
       vars:
-        sudo_password_rule: ubtu20cis_rule_5_2_4  # pragma: allowlist secret
+        sudo_password_rule: ubtu20cis_rule_5_2_4 # pragma: allowlist secret
 
 - name: Setup rules if container
   when: ansible_connection == 'docker' or ansible_virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]

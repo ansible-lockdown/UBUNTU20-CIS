@@ -395,20 +395,23 @@ ubtu20cis_rule_5_2_5: true
 ubtu20cis_rule_5_2_6: true
 ubtu20cis_rule_5_2_7: true
 
+# 5.3 Pluggable Authentication Modules
 # 5.3.1 Configure PAM Software Packages
 ubtu20cis_rule_5_3_1_1: true
 ubtu20cis_rule_5_3_1_2: true
 ubtu20cis_rule_5_3_1_3: true
-# 5.3.2 Configure pam-auth-update Profiles
+# 5.3.2 Configure pam-auth-update profiles
 ubtu20cis_rule_5_3_2_1: true
-ubtu20cis_rule_5_3_2_2: true
+ubtu20cis_rule_5_3_2_2: false # This is disruptive to enable and can cause lockouts if not used with care, set to false by default
 ubtu20cis_rule_5_3_2_3: true
 ubtu20cis_rule_5_3_2_4: true
-# 5.3.3.1 Configure pam_faillock Module
+
+# 5.3.3 Configure PAM Arguments
+# 5.3.3.1.x Configure pam_faillock Module
 ubtu20cis_rule_5_3_3_1_1: true
 ubtu20cis_rule_5_3_3_1_2: true
 ubtu20cis_rule_5_3_3_1_3: true
-# 5.3.3.2 Configure pam_pwquality Module
+# 5.3.3.2.x Configure pam_pwquality Module
 ubtu20cis_rule_5_3_3_2_1: true
 ubtu20cis_rule_5_3_3_2_2: true
 ubtu20cis_rule_5_3_3_2_3: true
@@ -417,11 +420,11 @@ ubtu20cis_rule_5_3_3_2_5: true
 ubtu20cis_rule_5_3_3_2_6: true
 ubtu20cis_rule_5_3_3_2_7: true
 ubtu20cis_rule_5_3_3_2_8: true
-# 5.3.3.3 Configure pam_pwhistory Module
+# 5.3.3.3.x Configure pam_pwhistory Module
 ubtu20cis_rule_5_3_3_3_1: true
 ubtu20cis_rule_5_3_3_3_2: true
 ubtu20cis_rule_5_3_3_3_3: true
-# 5.3.3.4 Configure pam_unix Module
+# 5.3.3.4.x Configure pam_unix Module
 ubtu20cis_rule_5_3_3_4_1: true
 ubtu20cis_rule_5_3_3_4_2: true
 ubtu20cis_rule_5_3_3_4_3: true
@@ -652,6 +655,9 @@ ubtu20cis_talk_client_required: false # talk client (duplicate check)
 # either tmp_systemd or fstab
 expected_tmp_mnt: fstab
 
+# Control 1.1.1.x - toggle for filesystem kernel modules
+ubtu20cis_allow_usb_storage: false # set true to allow USB storage devices (not recommended)
+
 # Control 1.3.1 - allow aide to be configured
 ubtu20cis_config_aide: true
 
@@ -688,6 +694,15 @@ ubtu20cis_dconf_db_name: local # dconf database name for GNOME settings
 ubtu20cis_screensaver_idle_delay: 900 # screensaver idle timeout in seconds
 
 ## Section 2 Control Variables
+
+# Controls 2.1.x - Server services
+ubtu20cis_dovecot_server: false # set to true to keep dovecot mail server installed (controls 2.1.8)
+
+ubtu20cis_cups_server: false # set to true to keep CUPS print server installed (controls 2.1.11)
+
+ubtu20cis_smb_server: false # set to true to keep Samba server installed (controls 2.1.14)
+
+ubtu20cis_httpd_server: false # set to true to keep Apache2 HTTP server installed (controls 2.1.18)
 
 # Control 2.3.1.1
 ubtu20cis_time_sync_tool: "systemd-timesyncd" # options: systemd-timesyncd, chrony

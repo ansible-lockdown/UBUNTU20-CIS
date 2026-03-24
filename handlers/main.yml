@@ -115,6 +115,10 @@
     name: sshd
     state: restarted
 
+- name: Pam auth update pwfaillock notify
+  ansible.builtin.command: pam-auth-update --enable faillock
+  changed_when: true
+
 - name: Change requires reboot
   ansible.builtin.set_fact:
     change_requires_reboot: true

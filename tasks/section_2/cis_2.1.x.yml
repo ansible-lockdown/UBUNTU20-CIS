@@ -1,6 +1,6 @@
 ---
 
-- name: "2.1.1 | PATCH | Disable Automounting"
+- name: "2.1.1 | PATCH | Ensure autofs services are not in use"
   when:
     - ubtu20cis_rule_2_1_1
     - prelim_autofs_service_status.stdout == "loaded"
@@ -17,7 +17,7 @@
     state: stopped
     enabled: false
 
-- name: "2.1.2 | PATCH | Ensure Avahi Server is not installed"
+- name: "2.1.2 | PATCH | Ensure avahi daemon services are not in use"
   when:
     - ubtu20cis_rule_2_1_2
     - not ubtu20cis_avahi_server
@@ -32,26 +32,26 @@
     - avahi
     - services
   block:
-    - name: "2.1.2 | PATCH | Ensure Avahi Server is not installed| Stop/Disable avahi-daemon.service"
+    - name: "2.1.2 | PATCH | Ensure avahi daemon services are not in use"
       when: prelim_avahi_service_status.stdout == "loaded"
       ansible.builtin.service:
         name: avahi-daemon.service
         state: stopped
         enabled: false
 
-    - name: "2.1.2 | PATCH | Ensure Avahi Server is not installed | Stop/Disable avahi-daemon.socket"
+    - name: "2.1.2 | PATCH | Ensure avahi daemon services are not in use | Stop/Disable avahi-daemon.socket"
       when: prelim_avahi_service_status.stdout == "loaded"
       ansible.builtin.systemd:
         name: avahi-daemon.socket
         state: stopped
         enabled: false
 
-    - name: "2.1.2 | PATCH | Ensure Avahi Server is not installed | Remove avahi-daemon"
+    - name: "2.1.2 | PATCH | Ensure avahi daemon services are not in use | Remove avahi-daemon"
       ansible.builtin.package:
         name: avahi-daemon
         state: absent
 
-- name: "2.1.3 | PATCH | Ensure DHCP Server is not installed"
+- name: "2.1.3 | PATCH | Ensure dhcp server services are not in use"
   when:
     - ubtu20cis_rule_2_1_3
     - not ubtu20cis_dhcp_server
@@ -68,7 +68,7 @@
     name: isc-dhcp-server
     state: absent
 
-- name: "2.1.4 | PATCH | Ensure DNS Server is not installed"
+- name: "2.1.4 | PATCH | Ensure dns server services are not in use"
   when:
     - ubtu20cis_rule_2_1_4
     - not ubtu20cis_dns_server
@@ -85,7 +85,7 @@
     name: bind9
     state: absent
 
-- name: "2.1.5 | PATCH | Ensure dnsmasq service is not installed"
+- name: "2.1.5 | PATCH | Ensure dnsmasq services are not in use"
   when:
     - ubtu20cis_rule_2_1_5
     - not ubtu20cis_dnsmasq_server
@@ -101,7 +101,7 @@
     name: dnsmasq
     state: absent
 
-- name: "2.1.6 | PATCH | Ensure FTP Server is not installed"
+- name: "2.1.6 | PATCH | Ensure ftp server services are not in use"
   when:
     - ubtu20cis_rule_2_1_6
     - not ubtu20cis_vsftpd_server
@@ -118,7 +118,7 @@
     name: vsftpd
     state: absent
 
-- name: "2.1.7 | PATCH | Ensure LDAP server is not installed"
+- name: "2.1.7 | PATCH | Ensure ldap server services are not in use"
   when:
     - ubtu20cis_rule_2_1_7
     - not ubtu20cis_ldap_server
@@ -135,7 +135,7 @@
     name: slapd
     state: absent
 
-- name: "2.1.8 | PATCH | Ensure IMAP and POP3 server are not installed"
+- name: "2.1.8 | PATCH | Ensure message access server services are not in use"
   when:
     - ubtu20cis_rule_2_1_8
     - not ubtu20cis_dovecot_server
@@ -152,7 +152,7 @@
     name: ['dovecot-imapd', 'dovecot-pop3d']
     state: absent
 
-- name: "2.1.9 | PATCH | Ensure NFS is not installed"
+- name: "2.1.9 | PATCH | Ensure network file system services are not in use"
   when:
     - ubtu20cis_rule_2_1_9
     - not ubtu20cis_nfs_server
@@ -170,7 +170,7 @@
     name: nfs-kernel-server
     state: absent
 
-- name: "2.1.10 | PATCH | Ensure NIS Server is not installed"
+- name: "2.1.10 | PATCH | Ensure nis server services are not in use"
   when:
     - ubtu20cis_rule_2_1_10
     - not ubtu20cis_nis_server
@@ -187,7 +187,7 @@
     name: nis
     state: absent
 
-- name: "2.1.11 | PATCH | Ensure CUPS is not installed"
+- name: "2.1.11 | PATCH | Ensure print server services are not in use"
   when:
     - ubtu20cis_rule_2_1_11
     - not ubtu20cis_cups_server
@@ -204,7 +204,7 @@
     name: cups
     state: absent
 
-- name: "2.1.12 | PATCH | Ensure rpcbind is not installed or the rpcbind services are masked"
+- name: "2.1.12 | PATCH | Ensure rpcbind services are not in use"
   when: ubtu20cis_rule_2_1_12
   tags:
     - level1-server
@@ -213,17 +213,17 @@
     - patch
     - rule_2.1.12
   block:
-    - name: "2.1.12 | AUDIT | Ensure rpcbind is not installed or the rpcbind services are masked | check status"
+    - name: "2.1.12 | AUDIT | Ensure rpcbind services are not in use | check status"
       ansible.builtin.debug:
         msg: "This control requires manual remediation"
 
-    - name: "2.1.12 | AUDIT | Ensure rpcbind is not installed or the rpcbind services are masked | Warn Count"
+    - name: "2.1.12 | AUDIT | Ensure rpcbind services are not in use | Warn Count"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:
         warn_control_id: '2.1.12'
 
-- name: "2.1.13 | PATCH | Ensure rsync service is either not installed or masked"
+- name: "2.1.13 | PATCH | Ensure rsync services are not in use"
   when:
     - ubtu20cis_rule_2_1_13
     - "'rsync' in ansible_facts.packages"
@@ -235,7 +235,7 @@
     - rule_2.1.13
     - rsync
   block:
-    - name: "2.1.13 | PATCH | Ensure rsync service is either not installed or masked | remove pkg"
+    - name: "2.1.13 | PATCH | Ensure rsync services are not in use | remove pkg"
       when:
         - ubtu20cis_rule_2_1_13
         - ubtu20cis_rsync_server == 'remove'
@@ -243,7 +243,7 @@
         name: rsync
         state: absent
 
-    - name: "2.1.13 | PATCH | Ensure rsync service is either not installed or masked | mask service"
+    - name: "2.1.13 | PATCH | Ensure rsync services are not in use | mask service"
       when:
         - ubtu20cis_rule_2_1_13
         - ubtu20cis_rsync_server == 'mask'
@@ -253,7 +253,7 @@
         enabled: false
         masked: true
 
-- name: "2.1.14 | PATCH | Ensure Samba is not installed"
+- name: "2.1.14 | PATCH | Ensure samba file server services are not in use"
   when:
     - ubtu20cis_rule_2_1_14
     - not ubtu20cis_smb_server
@@ -270,7 +270,7 @@
     name: samba
     state: absent
 
-- name: "2.1.15 | PATCH | Ensure SNMP Server is not installed"
+- name: "2.1.15 | PATCH | Ensure snmp services are not in use"
   when:
     - ubtu20cis_rule_2_1_15
     - not ubtu20cis_snmp_server
@@ -287,7 +287,7 @@
     name: snmpd
     state: absent
 
-- name: "2.1.16 | PATCH | Ensure tftp server is not installed"
+- name: "2.1.16 | PATCH | Ensure tftp server services are not in use"
   when: ubtu20cis_rule_2_1_16
   tags:
     - level1-server
@@ -296,17 +296,17 @@
     - patch
     - rule_2.1.16
   block:
-    - name: "2.1.16 | AUDIT | Ensure tftp server is not installed | check status"
+    - name: "2.1.16 | AUDIT | Ensure tftp server services are not in use | check status"
       ansible.builtin.debug:
         msg: "This control requires manual remediation"
 
-    - name: "2.1.16 | AUDIT | Ensure tftp server is not installed | Warn Count"
+    - name: "2.1.16 | AUDIT | Ensure tftp server services are not in use | Warn Count"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:
         warn_control_id: '2.1.16'
 
-- name: "2.1.17 | PATCH | Ensure HTTP Proxy Server is not installed"
+- name: "2.1.17 | PATCH | Ensure web proxy server services are not in use"
   when:
     - ubtu20cis_rule_2_1_17
     - not ubtu20cis_squid_server
@@ -323,7 +323,7 @@
     name: squid
     state: absent
 
-- name: "2.1.18 | PATCH | Ensure HTTP server is not installed"
+- name: "2.1.18 | PATCH | Ensure web server services are not in use"
   when:
     - ubtu20cis_rule_2_1_18
     - not ubtu20cis_httpd_server
@@ -340,7 +340,7 @@
     name: apache2
     state: absent
 
-- name: "2.1.19 | PATCH | Ensure xinetd is not installed"
+- name: "2.1.19 | PATCH | Ensure xinetd services are not in use"
   when: ubtu20cis_rule_2_1_19
   tags:
     - level1-server
@@ -349,17 +349,17 @@
     - patch
     - rule_2.1.19
   block:
-    - name: "2.1.19 | AUDIT | Ensure xinetd is not installed | check status"
+    - name: "2.1.19 | AUDIT | Ensure xinetd services are not in use | check status"
       ansible.builtin.debug:
         msg: "This control requires manual remediation"
 
-    - name: "2.1.19 | AUDIT | Ensure xinetd is not installed | Warn Count"
+    - name: "2.1.19 | AUDIT | Ensure xinetd services are not in use | Warn Count"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:
         warn_control_id: '2.1.19'
 
-- name: "2.1.20 | PATCH | Ensure X Window System is not installed"
+- name: "2.1.20 | PATCH | Ensure X window server services are not in use"
   when:
     - ubtu20cis_rule_2_1_20
     - not ubtu20cis_desktop_required
@@ -373,7 +373,7 @@
     name: xserver-xorg*
     state: absent
 
-- name: "2.1.21 | PATCH | Ensure mail transfer agent is configured for local-only mode"
+- name: "2.1.21 | PATCH | Ensure mail transfer agents are configured for local-only mode"
   when:
     - ubtu20cis_rule_2_1_21
     - not ubtu20cis_is_mail_server
@@ -385,7 +385,7 @@
     - rule_2.1.21
     - postfix
   block:
-    - name: "2.1.21 | PATCH | Ensure mail transfer agent is configured for local-only mode | Make changes if exim4 installed"
+    - name: "2.1.21 | PATCH | Ensure mail transfer agents are configured for local-only mode | Make changes if exim4 installed"
       when: "'exim4' in ansible_facts.packages"
       ansible.builtin.lineinfile:
         path: /etc/exim4/update-exim4.conf.conf
@@ -405,7 +405,7 @@
         - {regexp: '^dc_localdelivery', line: "dc_localdelivery='mail_spool'"}
       notify: Restart exim4
 
-    - name: "2.1.21 | PATCH | Ensure mail transfer agent is configured for local-only mode | Make changes if postfix is installed"
+    - name: "2.1.21 | PATCH | Ensure mail transfer agents are configured for local-only mode | Make changes if postfix is installed"
       when: "'postfix' in ansible_facts.packages"
       ansible.builtin.lineinfile:
         path: /etc/postfix/main.cf
@@ -413,7 +413,7 @@
         line: 'inet_interfaces = loopback-only'
       notify: Restart postfix
 
-    - name: "2.1.21 | PATCH | Ensure mail transfer agent is configured for local-only mode | Message out other main agents"
+    - name: "2.1.21 | PATCH | Ensure mail transfer agents are configured for local-only mode | Message out other main agents"
       when:
         - "'exim4' not in ansible_facts.packages"
         - "'postfix' not in ansible_facts.packages"
@@ -431,7 +431,7 @@
       vars:
         warn_control_id: '2.1.21'
 
-- name: "2.1.22 | AUDIT | Ensure nonessential services are removed or masked"
+- name: "2.1.22 | AUDIT | Ensure only approved services are listening on a network interface"
   when: ubtu20cis_rule_2_1_22
   tags:
     - level1-server
@@ -441,21 +441,21 @@
     - rule_2.1.22
     - services
   block:
-    - name: "2.1.22 | AUDIT | Ensure nonessential services are removed or masked | Check for services"
+    - name: "2.1.22 | AUDIT | Ensure only approved services are listening on a network interface | Check for services"
       ansible.builtin.shell: lsof -i -P -n | grep -v "(ESTABLISHED)"
       changed_when: false
       failed_when: false
       check_mode: false
       register: discovered_nonessential_services
 
-    - name: "2.1.22 | AUDIT | Ensure nonessential services are removed or masked | Message out running services"
+    - name: "2.1.22 | AUDIT | Ensure only approved services are listening on a network interface | Message out running services"
       when: discovered_nonessential_services.stdout | length > 0
       ansible.builtin.debug:
         msg:
           - "Warning!! Below are the running services. Please review and remove as well as mask un-needed services"
           - "{{ discovered_nonessential_services.stdout_lines }}"
 
-    - name: "2.1.22 | AUDIT | Ensure nonessential services are removed or masked | Set warning count"
+    - name: "2.1.22 | AUDIT | Ensure only approved services are listening on a network interface | Set warning count"
       when: discovered_nonessential_services.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
