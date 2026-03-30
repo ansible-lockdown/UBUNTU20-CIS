@@ -1,5 +1,14 @@
 ---
 
+# defaults file for UBUNTU20-CIS
+# WARNING:
+# These values may be overridden by other vars-setting options(e.g. like the below 'container_vars_file'), as explained here:
+# https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
+
+## Switching on/off specific baseline sections
+# These variables govern whether the tasks of a particular section are to be executed when running the role.
+# E.g: If you want to execute the tasks of Section 1 you should set the "_section1" variable
+# to "true". If you do not want the tasks from that section to get executed you simply set the variable to "false".
 ubtu20cis_section1_patch: true
 ubtu20cis_section2_patch: true
 ubtu20cis_section3_patch: true
@@ -8,6 +17,7 @@ ubtu20cis_section5_patch: true
 ubtu20cis_section6_patch: true
 ubtu20cis_section7_patch: true
 
+## Reboot system before audit
 # System will reboot if false, can give better audit results
 skip_reboot: true
 
@@ -129,6 +139,9 @@ prelim_max_int_uid: 65533
 ############################
 # Section 1 is Initial Setup (FileSystem Configuration, Package Management, Mandatory Access Control,
 # Bootloader, Process Hardening, Warning Banners, and GNOME Display Manager)
+
+# If system uses squashfs e.g. snap package manager set true
+ubtu20cis_squashfs_required: true
 
 # 1.1.1 Configure Filesystem Kernel Modules
 ubtu20cis_rule_1_1_1_1: true
@@ -402,7 +415,7 @@ ubtu20cis_rule_5_3_1_2: true
 ubtu20cis_rule_5_3_1_3: true
 # 5.3.2 Configure pam-auth-update profiles
 ubtu20cis_rule_5_3_2_1: true
-ubtu20cis_rule_5_3_2_2: false # This is disruptive to enable and can cause lockouts if not used with care, set to false by default
+ubtu20cis_rule_5_3_2_2: true # This is disruptive to enable and can cause lockouts if not used with care, set to false by default
 ubtu20cis_rule_5_3_2_3: true
 ubtu20cis_rule_5_3_2_4: true
 
@@ -589,6 +602,7 @@ ubtu20cis_rule_7_2_10: true
 # false - this removes the package
 # mask - if a dependency for product so cannot be removed
 # Server Services
+ubtu20cis_allow_autofs: false  # set true if autofs is required for the system
 ubtu20cis_autofs_services: false
 ubtu20cis_autofs_mask: false
 ubtu20cis_avahi_server: false
@@ -606,6 +620,7 @@ ubtu20cis_ldap_mask: false
 ubtu20cis_message_server: false # This is for messaging dovecot and dovecot-pop3
 ubtu20cis_message_mask: false
 ubtu20cis_nfs_server: true
+ubtu20cis_nfs_client: false # set to true to keep nfs client installed if nfs server is not required
 ubtu20cis_nfs_mask: true
 ubtu20cis_nis_server: true # set to mask if nis client required
 ubtu20cis_nis_mask: false
@@ -637,12 +652,12 @@ ubtu20cis_xwindows_required: false # will remove mask not an option
 ubtu20cis_is_mail_server: false
 ubtu20cis_rpc_required: "{{ ubtu20cis_nfs_server or ubtu20cis_nfs_client }}"
 ubtu20cis_vsftpd_server: false
-ubtu20cis_vsftpd_mask: false
 ubtu20cis_nis_client_required: false # set true if NIS client (ypbind) is needed
 
 # Client Services - set to true to keep the client package installed
 ubtu20cis_nis_required: false # NIS client (ypbind)
 ubtu20cis_rsh_required: false # RSH client (rsh-client)
+ubtu20cis_rsh_client: false # RSH client (duplicate check)
 ubtu20cis_talk_required: false # talk client
 ubtu20cis_telnet_required: false # telnet client
 ubtu20cis_ldap_clients_required: false # LDAP client (ldap-utils)
@@ -675,8 +690,6 @@ ubtu20cis_grub_user_file: /etc/grub.d/40_custom # GRUB custom config file for su
 ubtu20cis_grub_file: /boot/grub/grub.cfg # path to GRUB configuration
 ubtu20cis_bootloader_password_hash: "grub.pbkdf2.sha512.10000.ChangeMe" # pragma: allowlist secret # CHANGE THIS - output of grub-mkpasswd-pbkdf2
 ubtu20cis_ask_passwd_to_boot: false # require password for normal boot (not just GRUB edit)
-
-## Controls 1.5.x
 
 ## Controls 1.5.x
 # 1.5.3 - only check if core dump installed
@@ -760,6 +773,108 @@ ubtu20cis_ufw_allow_in:
     proto: tcp
 
 ## Section 5 Control Variables
+
+## 5.3.2.x
+# Path to find templates and where to put file for pam-auth
+ubtu20cis_pam_confd_dir: 'usr/share/pam-configs/'
+### Note: controls also managed with disruption high due to the nature of pam changes
+# Create file will create/replace with the name
+
+# Controls 5.3.2.1 - pam_unix
+# Name of file for the pam unix configuration
+ubtu20cis_pam_pwunix_file: 'pam_unix'
+# Should NOT be enabled if allowing custom config that enabled pam_faillock
+ubtu20cis_pam_create_pamunix_file: false
+# Allow pam-auth-update --enable ubtu20cis_pam_pwunix_file to run
+ubtu20cis_pam_auth_unix: true
+
+# 5.3.2.2 - pam_faillock
+# Name of files for pam
+ubtu20cis_pam_faillock_file: 'faillock'
+ubtu20cis_pam_faillock_notify_file: 'faillock_notify'
+# Allow pam-auth-update --enable ubtu20cis_pam_faillock_file
+# and
+# Allow pam-auth-update --enable ubtu20cis_pam_faillock_notify_file
+ubtu20cis_pam_auth_faillock: true
+# Allow new file to be created or overwrite existing with same name
+ubtu20cis_pam_create_faillock_files: true
+
+# 5.3.2.3 - pam_pwquality
+# Name of file for pwquality
+ubtu20cis_pam_pwquality_file: 'pwquality'
+# Allow new file to be created or overwrite existing with same name
+ubtu20cis_pam_create_pwquality_files: true
+
+# 5.3.2.4 - pam_pwhistory
+# Name of file for the pam history file
+ubtu20cis_pam_pwhistory_file: 'pwhistory'
+# Allow new file to be created or overwrite existing with same name
+# filepath also affects controls 5.3.3.3.1, 5.3.3.3.2, 5.3.3.3.3
+ubtu20cis_pam_create_pwhistory_files: true
+
+# 5.3.3.1.1 - faillock_deny
+# Lock system using faillock fate 3 bad tries
+ubtu20cis_faillock_deny: 3
+
+# 5.3.3.1.2 - faillock unlock time
+# Timeout before releasing the faillock on an account
+ubtu20cis_faillock_unlock_time: 900
+
+# 5.3.3.1.3 - lock root
+# This gives the ability to even_deny_root and or add a root_unlock_time in the options
+# Option is used for the regexp to be amended and string is what to replace with.
+ubtu20cis_pamroot_lock_option: even_deny_root
+ubtu20cis_pamroot_lock_string: even_deny_root
+
+# 5.3.3.2.1 - password difok
+# Pam difok settings - file and number of difference that must take place in the file
+# difok = the minimum number of characters that must be different from the old password
+ubtu20cis_passwd_difok_file: etc/security/pwquality.conf.d/50-pwdifok.conf  # pragma: allowlist secret
+ubtu20cis_passwd_difok_value: 2
+
+# 5.3.3.2.2 - password minlength
+# minlen = minimum password length
+ubtu20cis_passwd_minlen_file: etc/security/pwquality.conf.d/50-pwlength.conf  # pragma: allowlist secret
+ubtu20cis_passwd_minlen_value: 14
+
+# 5.3.3.2.3 - password complex
+ubtu20cis_passwd_complex_file: etc/security/pwquality.conf.d/50-pwcomplexity.conf  # pragma: allowlist secret
+ubtu20cis_passwd_minclass: 3  # minclass = the minimum number of character types that must be used (i.e., uppercase, lowercase, digits, other)
+ubtu20cis_passwd_dcredit: -1  # dcredit = maximum number of digits that will generate a credit
+ubtu20cis_passwd_ucredit: -2  # ucredit = maximum number of uppercase characters that will generate a credit
+ubtu20cis_passwd_ocredit: 0  # ocredit = maximum number of other characters that will generate a credit
+ubtu20cis_passwd_lcredit: -2  # lcredit = maximum number of lowercase characters that will generate a credit
+
+# 5.3.3.2.4 - password maxrepeat
+# maxrepeat = the maximum number of times a single character may be repeated
+ubtu20cis_passwd_maxrepeat_file: etc/security/pwquality.conf.d/50-pwrepeat.conf  # pragma: allowlist secret
+ubtu20cis_passwd_maxrepeat_value: 3
+
+# 5.3.3.2.5 - password maxsequence
+ubtu20cis_passwd_maxsequence_file: etc/security/pwquality.conf.d/50-pwmaxsequence.conf  # pragma: allowlist secret
+ubtu20cis_passwd_maxsequence_value: 3
+
+# 5.3.3.2.6 - password dictcheck
+# dictcheck = whether to check for the words from the cracklib dictionary (enabled if the value is not 0)
+ubtu20cis_passwd_dictcheck_file: etc/security/pwquality.conf.d/50-pwdictcheck.conf  # pragma: allowlist secret
+ubtu20cis_passwd_dictcheck_value: 1
+
+# 5.3.3.2.7 - password quality enforce
+# enforcing = new password is rejected if it fails the check and the value is not 0
+ubtu20cis_passwd_quality_enforce_file: etc/security/pwquality.conf.d/50-pwquality_enforce.conf  # pragma: allowlist secret
+ubtu20cis_passwd_quality_enforce_value: 1
+
+# 5.3.3.2.8 - password quality enforce for root included with 5.3.3.2.7
+# enforce_for_root: This ensures that the password policies are adhered to even if its the root user configuring the passwords.
+ubtu20cis_passwd_quality_enforce_root_file: etc/security/pwquality.conf.d/50-pwroot.conf  # pragma: allowlist secret
+ubtu20cis_passwd_quality_enforce_root_value: enforce_for_root  # pragma: allowlist secret
+
+## 5.3.3.3 Configure pam_pwhistory module
+# Uses value for ubtu20cis_pam_pwhistory_file in 5.3.2.4
+# Control 5.3.3.3.1
+# This variable represents the number of password change cycles, after which
+# a user can re-use a password. # CIS requires a value of 24 or more.
+ubtu20cis_pamd_pwhistory_remember: 24
 
 # SSH configuration - maps to sshd_config directives
 ubtu20cis_sshd:
@@ -847,6 +962,9 @@ ubtu20cis_journald_log_rotate:
 # rsyslog
 ubtu20cis_rsyslog_ansible_managed: true # add Ansible managed header to rsyslog config
 ubtu20cis_remote_log_server: 192.168.2.100 # CHANGE THIS - remote syslog server IP/hostname
+ubtu20cis_remote_log_host: "192.168.2.100"  # remote syslog host (used in rsyslog omfwd action)
+ubtu20cis_remote_log_port: "514"             # remote syslog port
+ubtu20cis_remote_log_protocol: "tcp"         # remote syslog protocol (tcp or udp)
 
 # auditd - audit daemon configuration
 ubtu20cis_audit_back_log_limit: 8192 # kernel audit backlog limit (boot parameter)

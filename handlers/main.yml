@@ -71,9 +71,9 @@
 
 - name: Persistent ip4tables
   ansible.builtin.shell: bash -c "iptables-save > /etc/iptables/rules.v4"
+  register: ubtu20cis_iptables_save
   changed_when: ubtu20cis_iptables_save.rc == 0
   failed_when: ubtu20cis_iptables_save.rc > 0
-  register: ubtu20cis_iptables_save
 
 - name: Sysctl flush ipv4 route table
   when: ansible_virtualization_type != "docker"
@@ -115,8 +115,24 @@
     name: sshd
     state: restarted
 
+- name: Pam auth update pwunix
+  ansible.builtin.command: pam-auth-update --enable {{ ubtu20cis_pam_pwunix_file }}
+  changed_when: true
+
+- name: Pam auth update pwfaillock
+  ansible.builtin.command: pam-auth-update --enable {{ ubtu20cis_pam_faillock_file }}
+  changed_when: true
+
 - name: Pam auth update pwfaillock notify
-  ansible.builtin.command: pam-auth-update --enable faillock
+  ansible.builtin.command: pam-auth-update --enable {{ ubtu20cis_pam_faillock_notify_file }}
+  changed_when: true
+
+- name: Pam auth update pwquality
+  ansible.builtin.command: pam-auth-update --enable {{ ubtu20cis_pam_pwquality_file }}
+  changed_when: true
+
+- name: Pam auth update pwhistory
+  ansible.builtin.command: pam-auth-update --enable {{ ubtu20cis_pam_pwhistory_file }}
   changed_when: true
 
 - name: Change requires reboot

@@ -4,6 +4,10 @@
 
 ### Based on CIS Ubuntu Linux 20.04 LTS Benchmark v3.0.0
 
+---
+
+## Public Repository 📣
+
 ![Org Stars](https://img.shields.io/github/stars/ansible-lockdown?label=Org%20Stars&style=social)
 ![Stars](https://img.shields.io/github/stars/ansible-lockdown/ubuntu20-cis?label=Repo%20Stars&style=social)
 ![Forks](https://img.shields.io/github/forks/ansible-lockdown/ubuntu20-cis?style=social)
@@ -11,6 +15,15 @@
 [![X URL](https://img.shields.io/twitter/url/https/twitter.com/AnsibleLockdown.svg?style=social&label=Follow%20%40AnsibleLockdown)](https://X.com/AnsibleLockdown)
 
 ![Discord Badge](https://img.shields.io/discord/925818806838919229?logo=discord)
+
+![License](https://img.shields.io/github/license/ansible-lockdown/UBUNTU20-CIS?label=License)
+
+## Lint & Pre-Commit Tools 🔧
+
+![YamlLint](https://img.shields.io/badge/yamllint-Present-brightgreen?style=flat&logo=yaml&logoColor=white)
+![Ansible-Lint](https://img.shields.io/badge/ansible--lint-Present-brightgreen?style=flat&logo=ansible&logoColor=white)
+
+## Community Release Information 📂
 
 ![Release Branch](https://img.shields.io/badge/Release%20Branch-Main-brightgreen)
 ![Release Tag](https://img.shields.io/github/v/release/ansible-lockdown/UBUNTU20-CIS)
@@ -79,6 +92,7 @@ This is managed using tags:
 The control found in defaults main also need to reflect this as this control the testing that takes place if you are using the audit component.
 
 ---
+
 ## Requirements ✅
 
 **General:**
@@ -145,10 +159,24 @@ default                    : ok=270  changed=23   unreachable=0    failed=0    s
 - [Per-Host Configuration](https://www.lockdownenterprise.com/docs/per-host-lockdown-enterprise-configuration#GH_AL_UBUNTU20_cis)
 - [Getting the Most Out of the Role](https://www.lockdownenterprise.com/docs/get-the-most-out-of-lockdown-enterprise#GH_AL_UBUNTU20_cis)
 
+**Ansible Collections** (install via `ansible-galaxy collection install -r collections/requirements.yml`):
+
+- `community.general`
+- `community.crypto`
+- `ansible.posix`
+
+**Python packages:**
+
+- `python-def`
+- `libselinux-python`
+
+**Galaxy dependencies:** None (`meta/main.yml` declares no role dependencies)
 
 ## Role Variables
 
 This role is designed that the end user should not have to edit the tasks themselves. All customizing should be done via the defaults/main.yml file or with extra vars within the project, job, workflow, etc.
+
+See `defaults/main.yml` for the complete list of 250+ individual rule toggles organized by section.
 
 ## Tags 🏷️
 
@@ -184,7 +212,6 @@ Below is an example of the tag section from a control within this role. Using th
       - rule_2.2.4
 ```
 
-
 ## Community Contribution 🧑‍🤝‍🧑
 
 We encourage you (the community) to contribute to this role. Please read the rules below.
@@ -206,7 +233,6 @@ uses:
 
 ## Known Issues
 
-
 ## Local Testing 💻
 
 ### example
@@ -225,7 +251,6 @@ local testing uses:
 - molecule-podman 2.0.2
 - molecule-vagrant 1.0.0
 - molecule-azure 0.5.0
-
 
 ## Credits and Thanks 🙏
 

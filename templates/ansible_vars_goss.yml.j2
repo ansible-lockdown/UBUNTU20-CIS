@@ -15,10 +15,10 @@ ubtu20cis_section5: {{ ubtu20cis_section5_patch }}
 ubtu20cis_section6: {{ ubtu20cis_section6_patch }}
 ubtu20cis_section7: {{ ubtu20cis_section7_patch }}
 
-ubtu20cis_level_1: true
-ubtu20cis_level_2: true
+ubtu20cis_level_1: {{ ubtu20cis_level_1 }}
+ubtu20cis_level_2: {{ ubtu20cis_level_2 }}
 
-ubtu20cis_apparmor_disable: true
+ubtu20cis_apparmor_disable: {{ ubtu20cis_apparmor_disable }}
 
 #  to enable rules that may have IO impact on a system e.g. full filesystem scans or CPU heavy
 run_heavy_tests: {{ audit_run_heavy_tests }}
@@ -445,6 +445,7 @@ ubtu20_aide_cron:
   aide_weekday: "{{ ubtu20cis_aide_cron.aide_weekday }}"
 
 # 1.1
+ubtu20cis_squashfs_required: {{ ubtu20cis_squashfs_required }}
 ubtu20cis_autofs_services: {{ ubtu20cis_autofs_services }}
 
 # 1.4
@@ -517,10 +518,12 @@ ubtu20_exim_conf:
 
 ubtu20cis_rsyncd_server: {{ ubtu20cis_rsync_server }}
 
-ubtu20cis_xwindows_required: false
+ubtu20cis_xwindows_required: {{ ubtu20cis_xwindows_required }}
 
 # 2.2 client services
+ubtu20cis_nis_required: {{ ubtu20cis_nis_required }}
 ubtu20cis_rsh_required: {{ ubtu20cis_rsh_required }}
+ubtu20cis_rsh_client: {{ ubtu20cis_rsh_client }}
 ubtu20cis_talk_required: {{ ubtu20cis_talk_required }}
 ubtu20cis_telnet_required: {{ ubtu20cis_telnet_required }}
 ubtu20cis_ldap_clients_required: {{ ubtu20cis_ldap_clients_required }}
@@ -529,7 +532,8 @@ ubtu20cis_ftp_client: {{ ubtu20cis_ftp_client }}
 ubtu20cis_talk_client_required: {{ ubtu20cis_talk_client_required }}
 
 # Section 3
-# IPv6 required
+# IPv4/IPv6 required
+ubtu20cis_ipv4_required: {{ ubtu20cis_ipv4_required }}
 ubtu20cis_ipv6_required: {{ ubtu20cis_ipv6_required }}
 ubtu20cis_ipv6_disable: "{{ ubtu20cis_ipv6_disable }}"
 
@@ -579,8 +583,8 @@ ubtu20cis_samba_server: {{ ubtu20cis_samba_server }}
 ubtu20cis_samba_mask: {{ ubtu20cis_samba_mask }}
 ubtu20cis_snmp_server: {{ ubtu20cis_snmp_server }}
 ubtu20cis_snmp_mask: {{ ubtu20cis_snmp_mask }}
-ubtu20cis_telnet_server: {{ ubtu20cis_telnet_required }}
-ubtu20cis_telnet_mask: {{ ubtu20cis_telnet_required }}
+ubtu20cis_telnet_server: {{ ubtu20cis_telnet_server }}
+ubtu20cis_telnet_mask: {{ ubtu20cis_telnet_mask }}
 ubtu20cis_tftp_server: {{ ubtu20cis_tftp_server }}
 ubtu20cis_tftp_mask: {{ ubtu20cis_tftp_mask }}
 ubtu20cis_squid_mask: {{ ubtu20cis_squid_mask }}
@@ -637,17 +641,17 @@ ubtu20cis_ssh_weak_kex:
   - diffie-hellman-group14-sha1
   - diffie-hellman-group-exchange-sha1
 
-ubtu20cis_ssh_aliveinterval: 300
-ubtu20cis_ssh_countmax: 3
+ubtu20cis_ssh_aliveinterval: {{ ubtu20cis_sshd.client_alive_interval }}
+ubtu20cis_ssh_countmax: {{ ubtu20cis_sshd.client_alive_count_max }}
 ## PAM
 ubtu20cis_pam_password:
-  minlen: "14"
-  minclass: "4"
+  minlen: {{ ubtu20cis_pam_password.minlen }}
+  minclass: {{ ubtu20cis_pam_password.minclass }}
 
-ubtu20cis_pam_passwd_retry: "3"
+ubtu20cis_pam_passwd_retry: {{ ubtu20cis_pam_passwd_retry }}
 
 # choose one of below
-ubtu20cis_pwhistory_so: "14"
+ubtu20cis_pwhistory_so: {{ ubtu20cis_pwhistory_so }}
 ubtu20cis_unix_so: false
 ubtu20cis_passwd_remember: "{{ ubtu20cis_passwd_remember }}"
 
@@ -664,13 +668,13 @@ ubtu20cis_sugroup: "{{ ubtu20cis_sugroup }}"
 ubtu20_sugroup_users: "root"
 
 # var log location variable
-ubtu20_varlog_location: "{{ ubtu20cis_sudo_logfile }}"
+ubtu20cis_varlog_location: "{{ ubtu20cis_sudo_logfile }}"
 
 ### Section 6
 ## auditd settings
 ubtu20cis_auditd:
-  space_left_action: email
-  action_mail_acct: root
+  space_left_action: {{ ubtu20cis_auditd.space_left_action }}
+  action_mail_acct: {{ ubtu20cis_auditd.action_mail_acct }}
   admin_space_left_action: "{{ ubtu20cis_auditd.admin_space_left_action }}"
   max_log_file_action: "{{ ubtu20cis_auditd.max_log_file_action }}"
   auditd_backlog_limit: {{ ubtu20cis_audit_back_log_limit }}
@@ -679,5 +683,8 @@ ubtu20cis_auditd:
 ubtu20cis_syslog_service: "{{ ubtu20cis_syslog_service }}"
 ubtu20cis_is_syslog_server: {{ ubtu20cis_system_is_log_server }}
 ubtu20cis_remote_log_server: "{{ ubtu20cis_remote_log_server }}"
+ubtu20cis_remote_log_host: "{{ ubtu20cis_remote_log_host }}"
+ubtu20cis_remote_log_port: "{{ ubtu20cis_remote_log_port }}"
+ubtu20cis_remote_log_protocol: "{{ ubtu20cis_remote_log_protocol }}"
 
 ubtu20cis_min_uid: {{ prelim_min_int_uid }}

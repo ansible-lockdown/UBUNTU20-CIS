@@ -86,6 +86,10 @@
 ### Cross-Repo Alignment (Remediation + Audit)
 
 - Fixed remediation 2.4.1.7: replaced manual stub with proper file permission task for /etc/cron.yearly
+- Fixed bridge template (`ansible_vars_goss.yml.j2`): `ubtu20cis_telnet_server` and `ubtu20cis_telnet_mask` were both mapped from `ubtu20cis_telnet_required` instead of their actual defaults variables
+- Fixed bridge template: `ubtu20_varlog_location` renamed to `ubtu20cis_varlog_location` to match audit `vars/CIS.yml`
+- Added missing `ubtu20cis_remote_log_host`, `ubtu20cis_remote_log_port`, `ubtu20cis_remote_log_protocol` to defaults/main.yml and bridge template (goss test 6.2.3.6 references these)
+- Added missing `ubtu20cis_ipv4_required` to bridge template (was in defaults but not passed to audit)
 
 ### Bug Fixes
 
