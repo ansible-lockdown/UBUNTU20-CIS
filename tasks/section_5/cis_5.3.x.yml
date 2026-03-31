@@ -38,24 +38,21 @@
       vars:
         warn_control_id: '5.3.1.2'
 
-- name: "5.3.1.3 | PATCH | Ensure latest version of libpam-pwquality is installed"
-  when: ubtu20cis_rule_5_3_1_3
+- name: "5.3.1.3 | PATCH | Ensure libpam-pwquality is installed"
+  when:
+    - ubtu20cis_rule_5_3_1_3
+    - "'libpam-pwquality' not in ansible_facts.packages"
   tags:
     - level1-server
     - level1-workstation
-    - automated
     - patch
+    - pam
     - rule_5.3.1.3
-  block:
-    - name: "5.3.1.3 | AUDIT | Ensure latest version of libpam-pwquality is installed | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
-
-    - name: "5.3.1.3 | AUDIT | Ensure latest version of libpam-pwquality is installed | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '5.3.1.3'
+    - NIST800-53R5_NA
+  ansible.builtin.package:
+    name: libpam-pwquality
+    state: latest
+    lock_timeout: "{{ ubtu20cis_apt_lock_timeout }}"
 
 - name: "5.3.2.1 | PATCH | Ensure pam_unix module is enabled"
   when:
@@ -148,6 +145,8 @@
     mode: 'go-rwx'
   notify: Pam auth update pwhistory
 
+## 5.3.3.1.x - Faillock configuration
+
 - name: "5.3.3.1.1 | PATCH | Ensure password failed attempts lockout is configured"
   when: ubtu20cis_rule_5_3_3_1_1
   tags:
@@ -156,16 +155,32 @@
     - automated
     - patch
     - rule_5.3.3.1.1
+    - pam
   block:
-    - name: "5.3.3.1.1 | AUDIT | Ensure password failed attempts lockout is configured | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "5.3.3.1.1 | PATCH | Ensure password failed attempts lockout is configured | configure faillock.conf"
+      ansible.builtin.lineinfile:
+        path: /etc/security/faillock.conf
+        regexp: '^deny'
+        line: "deny = {{ ubtu20cis_faillock_deny }}"
+        insertafter: '^# end of pam-auth-update config'
+        create: true
+        owner: root
+        group: root
+        mode: 'go-wx'
 
-    - name: "5.3.3.1.1 | AUDIT | Ensure password failed attempts lockout is configured | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '5.3.3.1.1'
+    - name: "5.3.3.1.1 | AUDIT | Ensure password failed attempts lockout is configured | discover pam config with deny"
+      ansible.builtin.shell: grep -Pl -- '\bpam_faillock\.so\h+([^#\n\r]+\h+)?deny\b' /usr/share/pam-configs/*
+      changed_when: false
+      failed_when: discovered_faillock_deny_files.rc not in [ 0, 1 ]
+      register: discovered_faillock_deny_files
+
+    - name: "5.3.3.1.1 | PATCH | Ensure password failed attempts lockout is configured | remove deny from faillock line in pam-auth conf files"
+      when: discovered_faillock_deny_files.stdout | length > 0
+      ansible.builtin.replace:
+        path: "{{ item.path }}"
+        regexp: '(*.pam_faillock.so\s*)deny\s*=\s*\d+\b(.*)'
+        replace: \1\2
+      loop: "{{ prelim_pam_conf_files.files }}"
 
 - name: "5.3.3.1.2 | PATCH | Ensure password unlock time is configured"
   when: ubtu20cis_rule_5_3_3_1_2
@@ -175,16 +190,32 @@
     - automated
     - patch
     - rule_5.3.3.1.2
+    - pam
   block:
-    - name: "5.3.3.1.2 | AUDIT | Ensure password unlock time is configured | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "5.3.3.1.2 | PATCH | Ensure password unlock time is configured | configure faillock.conf"
+      ansible.builtin.lineinfile:
+        path: /etc/security/faillock.conf
+        regexp: '^unlock_time'
+        line: "unlock_time = {{ ubtu20cis_faillock_unlock_time }}"
+        insertafter: '^# end of pam-auth-update config'
+        create: true
+        owner: root
+        group: root
+        mode: 'go-wx'
 
-    - name: "5.3.3.1.2 | AUDIT | Ensure password unlock time is configured | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '5.3.3.1.2'
+    - name: "5.3.3.1.2 | AUDIT | Ensure password unlock time is configured | discover pam config with unlock_time"
+      ansible.builtin.shell: grep -Pl -- '\bpam_faillock\.so\h+([^#\n\r]+\h+)?unlock_time\b' /usr/share/pam-configs/*
+      changed_when: false
+      failed_when: discovered_faillock_unlock_files.rc not in [ 0, 1 ]
+      register: discovered_faillock_unlock_files
+
+    - name: "5.3.3.1.2 | PATCH | Ensure password unlock time is configured | remove unlock_time from faillock line in pam-auth conf files"
+      when: discovered_faillock_unlock_files.stdout | length > 0
+      ansible.builtin.replace:
+        path: "{{ item.path }}"
+        regexp: '(*.pam_faillock.so\s*)unlock_time\s*=\s*\b(.*)'
+        replace: \1\2
+      loop: "{{ prelim_pam_conf_files.files }}"
 
 - name: "5.3.3.1.3 | PATCH | Ensure password failed attempts lockout includes root account"
   when: ubtu20cis_rule_5_3_3_1_3
@@ -194,16 +225,34 @@
     - automated
     - patch
     - rule_5.3.3.1.3
+    - pam
   block:
-    - name: "5.3.3.1.3 | AUDIT | Ensure password failed attempts lockout includes root account | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "5.3.3.1.3 | PATCH | Ensure password failed attempts lockout includes root account | configure faillock.conf"
+      ansible.builtin.lineinfile:
+        path: /etc/security/faillock.conf
+        regexp: '^{{ ubtu20cis_pamroot_lock_option }}'
+        line: "{{ ubtu20cis_pamroot_lock_string }}"
+        insertafter: '^# end of pam-auth-update config'
+        create: true
+        owner: root
+        group: root
+        mode: 'go-wx'
 
-    - name: "5.3.3.1.3 | AUDIT | Ensure password failed attempts lockout includes root account | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '5.3.3.1.3'
+    - name: "5.3.3.1.3 | AUDIT | Ensure password failed attempts lockout includes root account | discover pam config with root lock"
+      ansible.builtin.shell: grep -Pl -- '\bpam_faillock\.so\h+([^#\n\r]+\h+)?(even_deny_root\b|root_unlock_time\s*=\s*\d+\b)' /usr/share/pam-configs/*
+      changed_when: false
+      failed_when: discovered_faillock_rootlock_files.rc not in [ 0, 1 ]
+      register: discovered_faillock_rootlock_files
+
+    - name: "5.3.3.1.3 | PATCH | Ensure password failed attempts lockout includes root account | remove root lock from faillock line in pam-auth conf files"
+      when: discovered_faillock_rootlock_files.stdout | length > 0
+      ansible.builtin.replace:
+        path: "{{ item.path }}"
+        regexp: '(*.pam_faillock.so\s*)(even_deny_root\b|root_unlock_time\s*=\s*\d+\b)(.*)'
+        replace: \1\3
+      loop: "{{ prelim_pam_conf_files.files }}"
+
+## 5.3.3.2.x - PWQuality configuration (drop-in template files)
 
 - name: "5.3.3.2.1 | PATCH | Ensure password number of changed characters is configured"
   when: ubtu20cis_rule_5_3_3_2_1
@@ -213,14 +262,27 @@
     - automated
     - patch
     - rule_5.3.3.2.1
-    - user
-    - login
-  ansible.builtin.lineinfile:
-    path: /etc/security/pwquality.conf
-    regexp: '^(#\s+|)difok'
-    line: 'difok = {{ ubtu20cis_pass.character_changed }}'
-    create: true
-    mode: 'u=rw,g=r,o='
+    - pam
+  block:
+    - name: "5.3.3.2.1 | PATCH | Ensure password number of changed characters is configured | Remove difok from conf files except expected file"
+      when: "ubtu20cis_passwd_difok_file not in item.path"
+      failed_when: false
+      ansible.builtin.replace:
+        path: "{{ item.path }}"
+        regexp: 'difok\s*=\s*\d+\b'
+        replace: ''
+      with_items:
+        - "{{ prelim_pam_pwquality_confs.files }}"
+        - { path: '/etc/security/pwquality.conf'}
+        - { path: '/etc/pam.d/common-password' }
+
+    - name: "5.3.3.2.1 | PATCH | Ensure password number of changed characters is configured | Ensure difok file exists"
+      ansible.builtin.template:
+        src: "{{ ubtu20cis_passwd_difok_file }}.j2"
+        dest: "/{{ ubtu20cis_passwd_difok_file }}"
+        owner: root
+        group: root
+        mode: 'go-rwx'
 
 - name: "5.3.3.2.2 | PATCH | Ensure minimum password length is configured"
   when: ubtu20cis_rule_5_3_3_2_2
@@ -231,10 +293,26 @@
     - patch
     - rule_5.3.3.2.2
     - pam
-  ansible.builtin.lineinfile:
-    path: /etc/security/pwquality.conf
-    regexp: '^(#\s*)?minlen\s*='
-    line: "minlen = {{ ubtu20cis_pam_password.minlen }}"
+  block:
+    - name: "5.3.3.2.2 | PATCH | Ensure minimum password length is configured | Remove minlen from conf files except expected file"
+      when: "ubtu20cis_passwd_minlen_file not in item.path"
+      failed_when: false
+      ansible.builtin.replace:
+        path: "{{ item.path }}"
+        regexp: 'minlen\s*=\s*\d+\b'
+        replace: ''
+      with_items:
+        - "{{ prelim_pam_pwquality_confs.files }}"
+        - { path: '/etc/security/pwquality.conf'}
+        - { path: '/etc/pam.d/common-password' }
+
+    - name: "5.3.3.2.2 | PATCH | Ensure minimum password length is configured | Ensure minlen file exists"
+      ansible.builtin.template:
+        src: "{{ ubtu20cis_passwd_minlen_file }}.j2"
+        dest: "/{{ ubtu20cis_passwd_minlen_file }}"
+        owner: root
+        group: root
+        mode: 'go-rwx'
 
 - name: "5.3.3.2.3 | PATCH | Ensure password complexity is configured"
   when: ubtu20cis_rule_5_3_3_2_3
@@ -244,16 +322,27 @@
     - automated
     - patch
     - rule_5.3.3.2.3
+    - pam
   block:
-    - name: "5.3.3.2.3 | AUDIT | Ensure password complexity is configured | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "5.3.3.2.3 | PATCH | Ensure password complexity is configured | Remove pwd complex settings from conf files except expected file"
+      when: "ubtu20cis_passwd_complex_file not in item.path"
+      failed_when: false
+      ansible.builtin.replace:
+        path: "{{ item.path }}"
+        regexp: '(minclass|[dulo]credit)\s*=\s*(-\d|\d+)\b'
+        replace: ''
+      with_items:
+        - "{{ prelim_pam_pwquality_confs.files }}"
+        - { path: '/etc/security/pwquality.conf'}
+        - { path: '/etc/pam.d/common-password' }
 
-    - name: "5.3.3.2.3 | AUDIT | Ensure password complexity is configured | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '5.3.3.2.3'
+    - name: "5.3.3.2.3 | PATCH | Ensure password complexity is configured | Ensure complexity file exists"
+      ansible.builtin.template:
+        src: "{{ ubtu20cis_passwd_complex_file }}.j2"
+        dest: "/{{ ubtu20cis_passwd_complex_file }}"
+        owner: root
+        group: root
+        mode: 'go-rwx'
 
 - name: "5.3.3.2.4 | PATCH | Ensure password same consecutive characters is configured"
   when: ubtu20cis_rule_5_3_3_2_4
@@ -263,12 +352,27 @@
     - automated
     - patch
     - rule_5.3.3.2.4
-    - user
-    - login
-  ansible.builtin.lineinfile:
-    path: /etc/security/pwquality.conf
-    regexp: '^(#\s+|)maxrepeat'
-    line: 'maxrepeat = {{ ubtu20cis_pass.max_repeat_letters }}'
+    - pam
+  block:
+    - name: "5.3.3.2.4 | PATCH | Ensure password same consecutive characters is configured | Remove maxrepeat settings from conf files except expected file"
+      when: "ubtu20cis_passwd_maxrepeat_file not in item.path"
+      failed_when: false
+      ansible.builtin.replace:
+        path: "{{ item.path }}"
+        regexp: 'maxrepeat\s*=\s*\d+\b'
+        replace: ''
+      with_items:
+        - "{{ prelim_pam_pwquality_confs.files }}"
+        - { path: '/etc/security/pwquality.conf'}
+        - { path: '/etc/pam.d/common-password' }
+
+    - name: "5.3.3.2.4 | PATCH | Ensure password same consecutive characters is configured | Ensure maxrepeat file exists"
+      ansible.builtin.template:
+        src: "{{ ubtu20cis_passwd_maxrepeat_file }}.j2"
+        dest: "/{{ ubtu20cis_passwd_maxrepeat_file }}"
+        owner: root
+        group: root
+        mode: 'go-rwx'
 
 - name: "5.3.3.2.5 | PATCH | Ensure password maximum sequential characters is configured"
   when: ubtu20cis_rule_5_3_3_2_5
@@ -278,16 +382,27 @@
     - automated
     - patch
     - rule_5.3.3.2.5
+    - pam
   block:
-    - name: "5.3.3.2.5 | AUDIT | Ensure password maximum sequential characters is configured | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "5.3.3.2.5 | PATCH | Ensure password maximum sequential characters is configured | Remove maxsequence settings from conf files except expected file"
+      when: "ubtu20cis_passwd_maxsequence_file not in item.path"
+      failed_when: false
+      ansible.builtin.replace:
+        path: "{{ item.path }}"
+        regexp: 'maxsequence\s*=\s*\d+\b'
+        replace: ''
+      with_items:
+        - "{{ prelim_pam_pwquality_confs.files }}"
+        - { path: '/etc/security/pwquality.conf'}
+        - { path: '/etc/pam.d/common-password' }
 
-    - name: "5.3.3.2.5 | AUDIT | Ensure password maximum sequential characters is configured | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '5.3.3.2.5'
+    - name: "5.3.3.2.5 | PATCH | Ensure password maximum sequential characters is configured | Ensure maxsequence file exists"
+      ansible.builtin.template:
+        src: "{{ ubtu20cis_passwd_maxsequence_file }}.j2"
+        dest: "/{{ ubtu20cis_passwd_maxsequence_file }}"
+        owner: root
+        group: root
+        mode: 'go-rwx'
 
 - name: "5.3.3.2.6 | PATCH | Ensure password dictionary check is enabled"
   when: ubtu20cis_rule_5_3_3_2_6
@@ -297,14 +412,27 @@
     - automated
     - patch
     - rule_5.3.3.2.6
-    - user
-    - login
-  ansible.builtin.lineinfile:
-    path: /etc/security/pwquality.conf
-    regexp: '^(#\s+|)dictcheck'
-    line: 'dictcheck = 1'
-    create: true
-    mode: 'u=rw,g=r,o='
+    - pam
+  block:
+    - name: "5.3.3.2.6 | PATCH | Ensure password dictionary check is enabled | Remove dictcheck settings from conf files except expected file"
+      when: "ubtu20cis_passwd_dictcheck_file not in item.path"
+      failed_when: false
+      ansible.builtin.replace:
+        path: "{{ item.path }}"
+        regexp: 'dictcheck\s*=\s*\d+\b'
+        replace: ''
+      with_items:
+        - "{{ prelim_pam_pwquality_confs.files }}"
+        - { path: '/etc/security/pwquality.conf'}
+        - { path: '/etc/pam.d/common-password' }
+
+    - name: "5.3.3.2.6 | PATCH | Ensure password dictionary check is enabled | Ensure dictcheck file exists"
+      ansible.builtin.template:
+        src: "{{ ubtu20cis_passwd_dictcheck_file }}.j2"
+        dest: "/{{ ubtu20cis_passwd_dictcheck_file }}"
+        owner: root
+        group: root
+        mode: 'go-rwx'
 
 - name: "5.3.3.2.7 | PATCH | Ensure password quality checking is enforced"
   when: ubtu20cis_rule_5_3_3_2_7
@@ -314,16 +442,27 @@
     - automated
     - patch
     - rule_5.3.3.2.7
+    - pam
   block:
-    - name: "5.3.3.2.7 | AUDIT | Ensure password quality checking is enforced | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "5.3.3.2.7 | PATCH | Ensure password quality checking is enforced | Remove quality enforcement settings from conf files except expected file"
+      when: "ubtu20cis_passwd_quality_enforce_file not in item.path"
+      failed_when: false
+      ansible.builtin.replace:
+        path: "{{ item.path }}"
+        regexp: 'enforcing\s*=\s*\d+\b'
+        replace: ''
+      with_items:
+        - "{{ prelim_pam_pwquality_confs.files }}"
+        - { path: '/etc/security/pwquality.conf'}
+        - { path: '/etc/pam.d/common-password' }
 
-    - name: "5.3.3.2.7 | AUDIT | Ensure password quality checking is enforced | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '5.3.3.2.7'
+    - name: "5.3.3.2.7 | PATCH | Ensure password quality checking is enforced | Ensure quality enforcement file exists"
+      ansible.builtin.template:
+        src: "{{ ubtu20cis_passwd_quality_enforce_file }}.j2"
+        dest: "/{{ ubtu20cis_passwd_quality_enforce_file }}"
+        owner: root
+        group: root
+        mode: 'go-rwx'
 
 - name: "5.3.3.2.8 | PATCH | Ensure password quality is enforced for the root user"
   when: ubtu20cis_rule_5_3_3_2_8
@@ -333,107 +472,125 @@
     - automated
     - patch
     - rule_5.3.3.2.8
-  block:
-    - name: "5.3.3.2.8 | AUDIT | Ensure password quality is enforced for the root user | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - pam
+  ansible.builtin.template:
+    src: "{{ ubtu20cis_passwd_quality_enforce_root_file }}.j2"
+    dest: "/{{ ubtu20cis_passwd_quality_enforce_root_file }}"
+    owner: root
+    group: root
+    mode: 'go-rwx'
 
-    - name: "5.3.3.2.8 | AUDIT | Ensure password quality is enforced for the root user | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '5.3.3.2.8'
+## 5.3.3.3.x - PAM pwhistory configuration
 
 - name: "5.3.3.3.1 | PATCH | Ensure password history remember is configured"
-  when: ubtu20cis_rule_5_3_3_3_1
+  when:
+    - ubtu20cis_rule_5_3_3_3_1
+    - ubtu20cis_disruption_high
   tags:
     - level1-server
     - level1-workstation
     - automated
     - patch
     - rule_5.3.3.3.1
-    - pamd
+    - pam
   block:
-    - name: "5.3.3.3.1 | AUDIT | Ensure password history remember is configured | Confirm pam_pwhistory.so in common-password"
-      ansible.builtin.shell: grep 'password.*required.*pam_pwhistory.so' /etc/pam.d/common-password
+    - name: "5.3.3.3.1 | AUDIT | Ensure password history remember is configured | Check existing files"
+      ansible.builtin.shell: grep -Psi -- '^\s*password\s+[^#\n\r]+\s+pam_pwhistory\.so\s+([^#\n\r]+\s+)?remember=\d+\b' /etc/pam.d/common-password
       changed_when: false
-      failed_when: false
-      check_mode: false
-      register: discovered_pam_pwhistory_state
+      failed_when: discovered_pwhistory_remember.rc not in [0, 1]
+      register: discovered_pwhistory_remember
 
-    - name: "5.3.3.3.1 | PATCH | Ensure password history remember is configured | Set remember value if pam_pwhistory exists"
-      when: discovered_pam_pwhistory_state.stdout | length > 0
-      community.general.pamd:
-        name: common-password
-        type: password
-        control: required
-        module_path: pam_pwhistory.so
-        module_arguments: 'remember={{ ubtu20cis_passwd_remember }}'
-        state: args_present
-
-    - name: "5.3.3.3.1 | PATCH | Ensure password history remember is configured | Set remember value if pam_pwhistory does not exist"
-      when: discovered_pam_pwhistory_state.stdout | length == 0
+    - name: "5.3.3.3.1 | PATCH | Ensure password history remember is configured | Ensure remember is set"
+      when: discovered_pwhistory_remember.stdout | length > 0
       ansible.builtin.lineinfile:
-        path: /etc/pam.d/common-password
-        line: 'password        required                        pam_pwhistory.so remember={{ ubtu20cis_passwd_remember }}'
-        insertafter: '^# end of pam-auth-update config'
+        path: "/{{ ubtu20cis_pam_confd_dir }}{{ ubtu20cis_pam_pwhistory_file }}"
+        regexp: ^(password\s+[^#\n\r]+\s+pam_pwhistory\.so\s+)(.*)(remember=\d+)
+        line: '\1\2\3 remember={{ ubtu20cis_pamd_pwhistory_remember }}'
+        backrefs: true
+      notify: Pam auth update pwhistory
 
 - name: "5.3.3.3.2 | PATCH | Ensure password history is enforced for the root user"
-  when: ubtu20cis_rule_5_3_3_3_2
+  when:
+    - ubtu20cis_rule_5_3_3_3_2
+    - ubtu20cis_disruption_high
   tags:
     - level1-server
     - level1-workstation
     - automated
     - patch
     - rule_5.3.3.3.2
+    - pam
   block:
-    - name: "5.3.3.3.2 | AUDIT | Ensure password history is enforced for the root user | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "5.3.3.3.2 | AUDIT | Ensure password history is enforced for the root user | Check existing files"
+      ansible.builtin.shell: grep -Psi -- '^\s*password\s+[^#\n\r]+\s+pam_pwhistory\.so\s+([^#\n\r]+\s+)?enforce_for_root\b' /etc/pam.d/common-password
+      changed_when: false
+      failed_when: discovered_pwhistory_enforce_for_root.rc not in [0, 1]
+      register: discovered_pwhistory_enforce_for_root
 
-    - name: "5.3.3.3.2 | AUDIT | Ensure password history is enforced for the root user | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '5.3.3.3.2'
+    - name: "5.3.3.3.2 | PATCH | Ensure password history is enforced for the root user | Ensure enforce_for_root is set"
+      when: discovered_pwhistory_enforce_for_root.stdout | length > 0
+      ansible.builtin.lineinfile:
+        path: "/{{ ubtu20cis_pam_confd_dir }}{{ ubtu20cis_pam_pwhistory_file }}"
+        regexp: ^(password\s+[^#\n\r]+\s+pam_pwhistory\.so\s+)(.*)(enforce_for_root)
+        line: '\1\2\3 enforce_for_root'
+        backrefs: true
+      notify: Pam auth update pwhistory
 
 - name: "5.3.3.3.3 | PATCH | Ensure pam_pwhistory includes use_authtok"
-  when: ubtu20cis_rule_5_3_3_3_3
+  when:
+    - ubtu20cis_rule_5_3_3_3_3
+    - ubtu20cis_disruption_high
   tags:
     - level1-server
     - level1-workstation
     - automated
     - patch
     - rule_5.3.3.3.3
+    - pam
   block:
-    - name: "5.3.3.3.3 | AUDIT | Ensure pam_pwhistory includes use_authtok | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "5.3.3.3.3 | AUDIT | Ensure pam_pwhistory includes use_authtok | Check existing files"
+      ansible.builtin.shell: grep -Psi -- '^\s*password\s+[^#\n\r]+\s+pam_pwhistory\.so\s+([^#\n\r]+\s+)?use_authtok\b' /etc/pam.d/common-password
+      changed_when: false
+      failed_when: discovered_pwhistory_use_authtok.rc not in [0, 1]
+      register: discovered_pwhistory_use_authtok
 
-    - name: "5.3.3.3.3 | AUDIT | Ensure pam_pwhistory includes use_authtok | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '5.3.3.3.3'
+    - name: "5.3.3.3.3 | PATCH | Ensure pam_pwhistory includes use_authtok | Ensure use_authtok is set"
+      when: discovered_pwhistory_use_authtok.stdout | length > 0
+      ansible.builtin.lineinfile:
+        path: "/{{ ubtu20cis_pam_confd_dir }}{{ ubtu20cis_pam_pwhistory_file }}"
+        regexp: ^(password\s+[^#\n\r]+\s+pam_pwhistory\.so\s+)(.*)(use_authtok)
+        line: '\1\2\3 use_authtok'
+        backrefs: true
+      notify: Pam auth update pwhistory
+
+## 5.3.3.4.x - PAM Unix configuration
 
 - name: "5.3.3.4.1 | PATCH | Ensure pam_unix does not include nullok"
-  when: ubtu20cis_rule_5_3_3_4_1
+  when:
+    - ubtu20cis_rule_5_3_3_4_1
+    - ubtu20cis_disruption_high
   tags:
     - level1-server
     - level1-workstation
     - automated
     - patch
     - rule_5.3.3.4.1
+    - pam
   block:
-    - name: "5.3.3.4.1 | AUDIT | Ensure pam_unix does not include nullok | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "5.3.3.4.1 | AUDIT | Ensure pam_unix does not include nullok | capture state"
+      ansible.builtin.shell: grep -E "pam_unix.so.*nullok" /etc/pam.d/common-* /usr/share/pam-configs/* | cut -d ':' -f1 | uniq
+      changed_when: false
+      failed_when: discovered_pam_nullok.rc not in [ 0, 1 ]
+      register: discovered_pam_nullok
 
-    - name: "5.3.3.4.1 | AUDIT | Ensure pam_unix does not include nullok | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '5.3.3.4.1'
+    - name: "5.3.3.4.1 | PATCH | Ensure pam_unix does not include nullok | Ensure nullok removed"
+      when: discovered_pam_nullok.stdout | length > 0
+      ansible.builtin.replace:
+        path: "{{ item }}"
+        regexp: nullok
+        replace: ''
+      loop: "{{ discovered_pam_nullok.stdout_lines }}"
+      notify: Pam auth update pwunix
 
 - name: "5.3.3.4.2 | PATCH | Ensure pam_unix does not include remember"
   when: ubtu20cis_rule_5_3_3_4_2
@@ -443,16 +600,21 @@
     - automated
     - patch
     - rule_5.3.3.4.2
+    - pam
   block:
-    - name: "5.3.3.4.2 | AUDIT | Ensure pam_unix does not include remember | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "5.3.3.4.2 | AUDIT | Ensure pam_unix does not include remember | capture state"
+      ansible.builtin.shell: grep -PH -- '^\h*^\h*[^#\n\r]+\h+pam_unix\.so\b' /etc/pam.d/common-{password,auth,account,session,session-noninteractive} | grep -Pv -- '\bremember=\d\b'
+      changed_when: false
+      failed_when: discovered_pam_remember.rc not in [ 0, 1 ]
+      register: discovered_pam_remember
 
-    - name: "5.3.3.4.2 | AUDIT | Ensure pam_unix does not include remember | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '5.3.3.4.2'
+    - name: "5.3.3.4.2 | PATCH | Ensure pam_unix does not include remember | Ensure remember removed"
+      when: discovered_pam_remember.stdout | length > 0
+      ansible.builtin.replace:
+        path: "/{{ ubtu20cis_pam_confd_dir }}{{ ubtu20cis_pam_pwunix_file }}"
+        regexp: remember=\d+
+        replace: ''
+      notify: Pam auth update pwunix
 
 - name: "5.3.3.4.3 | PATCH | Ensure pam_unix includes a strong password hashing algorithm"
   when: ubtu20cis_rule_5_3_3_4_3
@@ -517,13 +679,20 @@
     - automated
     - patch
     - rule_5.3.3.4.4
+    - pam
   block:
-    - name: "5.3.3.4.4 | AUDIT | Ensure pam_unix includes use_authtok | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "5.3.3.4.4 | AUDIT | Ensure pam_unix includes use_authtok | capture state"
+      ansible.builtin.shell: grep -PH -- '^\h*password\h+([^#\n\r]+)\h+pam_unix\.so\h+([^#\n\r]+\h+)?use_authtok\b' /etc/pam.d/common-password
+      changed_when: false
+      failed_when: discovered_pam_authtok.rc not in [ 0, 1 ]
+      register: discovered_pam_authtok
 
-    - name: "5.3.3.4.4 | AUDIT | Ensure pam_unix includes use_authtok | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '5.3.3.4.4'
+    - name: "5.3.3.4.4 | PATCH | Ensure pam_unix includes use_authtok | pam_files"
+      when:
+        - discovered_pam_authtok is defined
+        - discovered_pam_authtok | length > 0
+      ansible.builtin.lineinfile:
+        path: "/etc/pam.d/common-password"
+        regexp: ^(\s*password\s+[success=end.*]\s+pam_unix\.so)(.*)\s+use_authtok\s*=\s*\S+(.*$)
+        line: \1\2\3 use_authtok
+        backrefs: true

@@ -19,7 +19,7 @@
         insertafter: '# Password aging controls'
 
     - name: "5.4.1.1 | PATCH | Ensure password expiration is configured | Get existing users PASS_MAX_DAYS"
-      ansible.builtin.shell: "awk -F: '(/^[^:]+:[^!*]/ && ($5>{{ ubtu20cis_pass.max_days }} || $5<{{ ubtu20cis_pass.min_days }} || $5 == -1)){print $1}' /etc/shadow" # noqa: command-instead-of-shell
+      ansible.builtin.shell: "awk -F: '(/^[^:]+:[^!*]/ && ($5>{{ ubtu20cis_pass.max_days }} || $5<{{ ubtu20cis_pass.min_days }} || $5 == -1)){print $1}' /etc/shadow"  # noqa: command-instead-of-shell
       changed_when: false
       failed_when: false
       check_mode: false
@@ -52,7 +52,7 @@
         line: 'PASS_MIN_DAYS {{ ubtu20cis_pass.min_days }}'
 
     - name: "5.4.1.2 | PATCH | Ensure minimum password days is configured | Get existing users PASS_MIN_DAYS"
-      ansible.builtin.shell: "awk -F: '(/^[^:]+:[^!*]/ && ($4<{{ ubtu20cis_pass.min_days }})) {print $1}' /etc/shadow" # noqa: command-instead-of-shell
+      ansible.builtin.shell: "awk -F: '(/^[^:]+:[^!*]/ && ($4<{{ ubtu20cis_pass.min_days }})) {print $1}' /etc/shadow"  # noqa: command-instead-of-shell
       changed_when: false
       failed_when: false
       check_mode: false
@@ -85,7 +85,7 @@
         line: 'PASS_WARN_AGE {{ ubtu20cis_pass.warn_age }}'
 
     - name: "5.4.1.3 | PATCH | Ensure password expiration warning days is configured | Get existing users PASS_WARN_AGE"
-      ansible.builtin.shell: "awk -F: '(/^[^:]+:[^!*]/ && $6<{{ ubtu20cis_pass.warn_age }}){print $1}' /etc/shadow" # noqa: command-instead-of-shell
+      ansible.builtin.shell: "awk -F: '(/^[^:]+:[^!*]/ && $6<{{ ubtu20cis_pass.warn_age }}){print $1}' /etc/shadow"  # noqa: command-instead-of-shell
       changed_when: false
       failed_when: false
       check_mode: false
@@ -111,7 +111,7 @@
     - pamd
   block:
     - name: "5.4.1.4 | AUDIT | Ensure strong password hashing algorithm is configured | Confirm pam_unix.so"
-      ansible.builtin.shell: grep -E '^\s*password\s+(\S+\s+)+pam_unix\.so\s+(\S+\s+)*(sha512|yescrypt)\s*(\S+\s*)*(\s+#.*)?$' /etc/pam.d/common-password # noqa: command-instead-of-shell
+      ansible.builtin.shell: grep -E '^\s*password\s+(\S+\s+)+pam_unix\.so\s+(\S+\s+)*(sha512|yescrypt)\s*(\S+\s*)*(\s+#.*)?$' /etc/pam.d/common-password  # noqa: command-instead-of-shell
       changed_when: false
       failed_when: false
       check_mode: false
@@ -146,14 +146,14 @@
     - login
   block:
     - name: "5.4.1.5 | AUDIT | Ensure inactive password lock is configured | Get current inactive period"
-      ansible.builtin.shell: useradd -D | grep INACTIVE | cut -d= -f2 # noqa: command-instead-of-shell
+      ansible.builtin.shell: useradd -D | grep INACTIVE | cut -d= -f2  # noqa: command-instead-of-shell
       changed_when: false
       failed_when: false
       check_mode: false
       register: discovered_inactive_period
 
     - name: "5.4.1.5 | AUDIT | Ensure inactive password lock is configured | Get current users out of compliance"
-      ansible.builtin.shell: awk -F":" '(/^[^:]+:[^!*]/ && ($7<0 || $7>30)){print $1}' //etc/shadow # noqa: command-instead-of-shell
+      ansible.builtin.shell: awk -F":" '(/^[^:]+:[^!*]/ && ($7<0 || $7>30)){print $1}' //etc/shadow  # noqa: command-instead-of-shell
       changed_when: false
       failed_when: false
       check_mode: false
@@ -187,14 +187,14 @@
     - login
   block:
     - name: "5.4.1.6 | AUDIT | Ensure all users last password change date is in the past | Get current date in Unix Time"
-      ansible.builtin.shell: echo $(($(date --utc --date "$1" +%s)/86400)) # noqa: command-instead-of-shell
+      ansible.builtin.shell: echo $(($(date --utc --date "$1" +%s)/86400))  # noqa: command-instead-of-shell
       changed_when: false
       failed_when: false
       check_mode: false
       register: discovered_current_time
 
     - name: "5.4.1.6 | AUDIT | Ensure all users last password change date is in the past | Get list of users with last changed PW date in future"
-      ansible.builtin.shell: "cat /etc/shadow | awk -F: '{if($3>{{ discovered_current_time.stdout }})print$1}'" # noqa: command-instead-of-shell
+      ansible.builtin.shell: "cat /etc/shadow | awk -F: '{if($3>{{ discovered_current_time.stdout }})print$1}'"  # noqa: command-instead-of-shell
       changed_when: false
       failed_when: false
       check_mode: false
@@ -330,7 +330,7 @@
     - user
   block:
     - name: "5.4.2.6 | AUDIT | Ensure root user umask is configured"
-      ansible.builtin.shell: grep -E '^session\s+optional\s+pam_umask.so' /etc/pam.d/common-session # noqa: command-instead-of-shell
+      ansible.builtin.shell: grep -E '^session\s+optional\s+pam_umask.so' /etc/pam.d/common-session  # noqa: command-instead-of-shell
       changed_when: false
       failed_when: false
       check_mode: false
@@ -491,7 +491,7 @@
     - user
   block:
     - name: "5.4.3.3 | AUDIT | Ensure default user umask is configured"
-      ansible.builtin.shell: grep -E '^session\s+optional\s+pam_umask.so' /etc/pam.d/common-session # noqa: command-instead-of-shell
+      ansible.builtin.shell: grep -E '^session\s+optional\s+pam_umask.so' /etc/pam.d/common-session  # noqa: command-instead-of-shell
       changed_when: false
       failed_when: false
       check_mode: false

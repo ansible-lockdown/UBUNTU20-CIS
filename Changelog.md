@@ -118,6 +118,19 @@
 - Updated all rule_X.Y.Z tags to v3.0.0 IDs
 - Updated level tags for controls that changed profile
 
+### PAM Section 5 Implementations
+
+- **Faillock (5.3.3.1.1-5.3.3.1.3)**: Configure deny, unlock_time, and root lockout via lineinfile on `/etc/security/faillock.conf` with cleanup of pam-config files
+- **PWQuality (5.3.3.2.1-5.3.3.2.8)**: Template-based drop-in files in `/etc/security/pwquality.conf.d/` with replace to clean duplicate settings from other locations
+- **PWHistory (5.3.3.3.1-5.3.3.3.3)**: Shell audit + lineinfile with backrefs for remember, enforce_for_root, and use_authtok on pam_pwhistory.so
+- **PAM Unix (5.3.3.4.1-5.3.3.4.2, 5.3.3.4.4)**: Shell audit + replace to remove nullok and remember from pam_unix.so; lineinfile for use_authtok
+- Updated existing tasks 5.3.3.2.1, 5.3.3.2.2, 5.3.3.2.4, 5.3.3.2.6 from legacy `ubtu20cis_pass.*` variables to new `ubtu20cis_passwd_*` variables
+- Created 8 pwquality drop-in template files in `templates/etc/security/pwquality.conf.d/`
+- Added 3 prelim tasks: `prelim_pam_conf_files`, `prelim_pam_pwquality_confs` discovery, and `pwquality.conf.d` directory creation
+- Wired up all 25 previously-unused PAM/password defaults variables to tasks and templates
+- Fixed `register:` ordering in 6 tasks (prelim.yml, cis_5.3.x.yml, handlers/main.yml) — `register:` now appears after `changed_when:`/`failed_when:` per Lockdown conventions
+- Fixed `ubtu20cis_journald_upload` typo in `cis_6.2.x.yml:102` — should be `ubtu20cis_journal_upload` (would cause undefined variable error at runtime)
+
 ## v2.0.1 based on CIS v2.0.1
 
 - issue 148 thanks to @karlg100

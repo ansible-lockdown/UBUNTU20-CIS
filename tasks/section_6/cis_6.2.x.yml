@@ -11,7 +11,7 @@
     - journald
   block:
     - name: "6.2.1.1 | Ensure journald service is enabled | capture status"
-      ansible.builtin.command: systemctl is-enabled systemd-journald.service # noqa: command-instead-of-module
+      ansible.builtin.command: systemctl is-enabled systemd-journald.service  # noqa: command-instead-of-module
       changed_when: false
       failed_when: discovered_journald_enabled.rc not in [ 0, 1, 2 ]
       check_mode: false
@@ -99,7 +99,7 @@
     line: "{{ item.line }}"
     insertafter: "{{ item.after | default(omit) }}"
   loop:
-    - {regexp: 'URL=', line: 'URL={{ ubtu20cis_journald_upload.remote_url }}'}
+    - {regexp: 'URL=', line: 'URL={{ ubtu20cis_journal_upload.remote_url }}'}
     - {regexp: 'ServerKeyFile=', line: 'ServerKeyFile={{ ubtu20cis_journal_upload.serverkeyfile }}'}
     - {regexp: 'ServerCertificateFile=', line: 'ServerKeyFile={{ ubtu20cis_journal_upload.servercertfile }}'}
     - {regexp: 'TrustedCertificateFile=', line: 'ServerKeyFile={{ ubtu20cis_journal_upload.trustfile }}'}

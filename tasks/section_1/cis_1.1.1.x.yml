@@ -204,7 +204,7 @@
       community.general.modprobe:
         name: squashfs
         state: absent
-      ignore_errors: true # noqa: ignore-errors
+      ignore_errors: true  # noqa: ignore-errors
 
     - name: "1.1.1.7 | PATCH | Ensure squashfs kernel module is not available | blacklist"
       ansible.builtin.lineinfile:

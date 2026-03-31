@@ -71,9 +71,9 @@
 
 - name: Persistent ip4tables
   ansible.builtin.shell: bash -c "iptables-save > /etc/iptables/rules.v4"
-  register: ubtu20cis_iptables_save
-  changed_when: ubtu20cis_iptables_save.rc == 0
-  failed_when: ubtu20cis_iptables_save.rc > 0
+  changed_when: discovered_iptables_save.rc == 0
+  failed_when: discovered_iptables_save.rc > 0
+  register: discovered_iptables_save
 
 - name: Sysctl flush ipv4 route table
   when: ansible_virtualization_type != "docker"
