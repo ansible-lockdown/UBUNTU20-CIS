@@ -1,13 +1,13 @@
 ---
 
 galaxy_info:
-  author: "George Nalen, Mark Bolwell, and DFed"
+  author: "Ansible-Lockdown Team"
   description: "Apply the Ubuntu 20 CIS benchmarks"
   company: "MindPoint Group"
   license: MIT
   role_name: ubuntu20_cis
   namespace: mindpointgroup
-  min_ansible_version: "2.12"
+  min_ansible_version: "2.12.1"
   platforms:
     - name: Ubuntu
       versions:
