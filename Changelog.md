@@ -150,6 +150,11 @@
 - Added prelim tasks: `prelim_uid_zero_accounts_except_root`, `prelim_interactive_usernames`
 - Added `files/fs_with_cves.sh` discovery script for unused filesystem modules
 - Added `failed_when: false` to pwquality replace tasks (5.3.3.2.1-2.7) for missing file resilience
+- **4.2.2**: nftables removal — `package_facts` check + `ansible.builtin.package` to remove nftables when ufw is the chosen firewall (was manual)
+- **5.4.2.3**: GID 0 group audit — shell discovers non-root groups with GID 0 and warns with group names (was manual stub with no audit logic)
+- **5.4.2.4**: Root access controlled — `passwd -S root` check with assert to verify root password is set (was manual)
+- **6.2.3.8**: Logrotate configuration — `ansible.builtin.find` + `ansible.builtin.replace` to set rotation frequency in `/etc/logrotate.conf` and all `/etc/logrotate.d/` drop-in files using new `ubtu20cis_logrotate` variable (was manual)
+- **6.3.2.4**: Audit log space warning — lineinfile to set `space_left_action` and `admin_space_left_action` in `/etc/audit/auditd.conf` using existing `ubtu20cis_auditd` variables, notifies `Restart auditd` (was manual)
 
 ## v2.0.1 based on CIS v2.0.1
 

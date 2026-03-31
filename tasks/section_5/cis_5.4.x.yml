@@ -278,11 +278,21 @@
     - patch
     - rule_5.4.2.3
   block:
-    - name: "5.4.2.3 | AUDIT | Ensure group root is the only GID 0 group | check status"
+    - name: "5.4.2.3 | AUDIT | Ensure group root is the only GID 0 group | Get groups with GID 0"
+      ansible.builtin.shell: "awk -F: '$3==\"0\"{print $1}' /etc/group | grep -vw 'root'"
+      changed_when: false
+      failed_when: discovered_gid0_groups.rc not in [ 0, 1 ]
+      register: discovered_gid0_groups
+
+    - name: "5.4.2.3 | AUDIT | Ensure group root is the only GID 0 group | Warning if other GID 0 groups"
+      when: discovered_gid0_groups.stdout | length > 0
       ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+        msg:
+          - "Warning!! You have other groups assigned to GID 0 - Please resolve"
+          - "{{ discovered_gid0_groups.stdout_lines }}"
 
     - name: "5.4.2.3 | AUDIT | Ensure group root is the only GID 0 group | Warn Count"
+      when: discovered_gid0_groups.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:
@@ -297,11 +307,20 @@
     - patch
     - rule_5.4.2.4
   block:
-    - name: "5.4.2.4 | AUDIT | Ensure root account access is controlled | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "5.4.2.4 | AUDIT | Ensure root account access is controlled | Check root password status"
+      ansible.builtin.shell: LC_ALL=C passwd -S root | grep -E "(Password set, SHA512 crypt|root P |root L |Password locked)"
+      changed_when: false
+      failed_when: false
+      register: discovered_root_passwd_status
+
+    - name: "5.4.2.4 | AUDIT | Ensure root account access is controlled | Assert root password set"
+      ansible.builtin.assert:
+        that: discovered_root_passwd_status.rc == 0
+        fail_msg: "Warning!! Root password is not set or account is in an unexpected state - Please set a root password"
+        success_msg: "Root password is set"
 
     - name: "5.4.2.4 | AUDIT | Ensure root account access is controlled | Warn Count"
+      when: discovered_root_passwd_status.rc != 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:

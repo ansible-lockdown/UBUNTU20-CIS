@@ -963,6 +963,10 @@ ubtu20cis_journald_log_rotate:
   runtimekeepfree:  # min free memory to maintain (e.g., 128M)
   maxfilesec:  # max time to store entries in a single file (e.g., 1month)
 
+# logrotate - rotation frequency for rsyslog and other log files
+# options: daily, weekly, monthly, yearly
+ubtu20cis_logrotate: "daily"
+
 # rsyslog
 ubtu20cis_rsyslog_ansible_managed: true  # add Ansible managed header to rsyslog config
 ubtu20cis_remote_log_server: 192.168.2.100  # CHANGE THIS - remote syslog server IP/hostname

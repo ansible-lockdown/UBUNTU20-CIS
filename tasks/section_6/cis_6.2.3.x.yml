@@ -170,12 +170,22 @@
     - patch
     - rule_6.2.3.8
   block:
-    - name: "6.2.3.8 | AUDIT | Ensure logrotate is configured | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "6.2.3.8 | AUDIT | Ensure logrotate is configured | Get logrotate config files"
+      ansible.builtin.find:
+        paths: /etc/logrotate.d/
+      register: discovered_logrotate_conf
 
-    - name: "6.2.3.8 | AUDIT | Ensure logrotate is configured | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '6.2.3.8'
+    - name: "6.2.3.8 | PATCH | Ensure logrotate is configured | Set rotation in drop-in files"
+      ansible.builtin.replace:
+        path: "{{ item.path }}"
+        regexp: '^(\s*)(daily|weekly|monthly|yearly)$'
+        replace: "\\1{{ ubtu20cis_logrotate }}"
+      loop: "{{ discovered_logrotate_conf.files }}"
+      loop_control:
+        label: "{{ item.path }}"
+
+    - name: "6.2.3.8 | PATCH | Ensure logrotate is configured | Set rotation in logrotate.conf"
+      ansible.builtin.replace:
+        path: /etc/logrotate.conf
+        regexp: '^(\s*)(daily|weekly|monthly|yearly)$'
+        replace: "\\1{{ ubtu20cis_logrotate }}"

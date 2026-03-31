@@ -25,15 +25,17 @@
     - patch
     - rule_4.2.2
   block:
-    - name: "4.2.2 | AUDIT | Ensure nftables is not in use with ufw | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "4.2.2 | AUDIT | Ensure nftables is not in use with ufw | Check if nftables installed"
+      ansible.builtin.package_facts:
+        manager: auto
 
-    - name: "4.2.2 | AUDIT | Ensure nftables is not in use with ufw | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '4.2.2'
+    - name: "4.2.2 | PATCH | Ensure nftables is not in use with ufw | Remove nftables"
+      when:
+        - "'nftables' in ansible_facts.packages"
+        - ubtu20cis_firewall_package == "ufw"
+      ansible.builtin.package:
+        name: nftables
+        state: absent
 
 - name: "4.2.3 | PATCH | Ensure iptables-persistent is not installed with ufw"
   when:
