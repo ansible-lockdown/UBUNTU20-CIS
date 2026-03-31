@@ -115,6 +115,10 @@
     name: sshd
     state: restarted
 
+- name: Systemd daemon reload
+  ansible.builtin.systemd:
+    daemon_reload: true
+
 - name: Pam auth update pwunix
   ansible.builtin.command: pam-auth-update --enable {{ ubtu20cis_pam_pwunix_file }}
   changed_when: true

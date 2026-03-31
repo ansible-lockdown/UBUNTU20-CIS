@@ -213,15 +213,27 @@
     - patch
     - rule_2.1.12
   block:
-    - name: "2.1.12 | AUDIT | Ensure rpcbind services are not in use | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "2.1.12 | PATCH | Ensure rpcbind services are not in use | Remove package"
+      when:
+        - not ubtu20cis_rpc_server
+        - not ubtu20cis_rpc_mask
+      ansible.builtin.package:
+        name: rpcbind
+        state: absent
 
-    - name: "2.1.12 | AUDIT | Ensure rpcbind services are not in use | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '2.1.12'
+    - name: "2.1.12 | PATCH | Ensure rpcbind services are not in use | Mask service"
+      when:
+        - not ubtu20cis_rpc_server
+        - ubtu20cis_rpc_mask
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        enabled: false
+        state: stopped
+        masked: true
+      loop:
+        - rpcbind.service
+        - rpcbind.socket
+      notify: Systemd daemon reload
 
 - name: "2.1.13 | PATCH | Ensure rsync services are not in use"
   when:
@@ -296,15 +308,24 @@
     - patch
     - rule_2.1.16
   block:
-    - name: "2.1.16 | AUDIT | Ensure tftp server services are not in use | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "2.1.16 | PATCH | Ensure tftp server services are not in use | Remove package"
+      when:
+        - not ubtu20cis_tftp_server
+        - not ubtu20cis_tftp_mask
+      ansible.builtin.package:
+        name: tftpd-hpa
+        state: absent
 
-    - name: "2.1.16 | AUDIT | Ensure tftp server services are not in use | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '2.1.16'
+    - name: "2.1.16 | PATCH | Ensure tftp server services are not in use | Mask service"
+      when:
+        - not ubtu20cis_tftp_server
+        - ubtu20cis_tftp_mask
+      ansible.builtin.systemd:
+        name: tftpd-hpa.service
+        enabled: false
+        state: stopped
+        masked: true
+      notify: Systemd daemon reload
 
 - name: "2.1.17 | PATCH | Ensure web proxy server services are not in use"
   when:
@@ -349,15 +370,24 @@
     - patch
     - rule_2.1.19
   block:
-    - name: "2.1.19 | AUDIT | Ensure xinetd services are not in use | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "2.1.19 | PATCH | Ensure xinetd services are not in use | Remove package"
+      when:
+        - not ubtu20cis_xinetd_server
+        - not ubtu20cis_xinetd_mask
+      ansible.builtin.package:
+        name: xinetd
+        state: absent
 
-    - name: "2.1.19 | AUDIT | Ensure xinetd services are not in use | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '2.1.19'
+    - name: "2.1.19 | PATCH | Ensure xinetd services are not in use | Mask service"
+      when:
+        - not ubtu20cis_xinetd_server
+        - ubtu20cis_xinetd_mask
+      ansible.builtin.systemd:
+        name: xinetd.service
+        enabled: false
+        masked: true
+        state: stopped
+      notify: Systemd daemon reload
 
 - name: "2.1.20 | PATCH | Ensure X window server services are not in use"
   when:

@@ -99,36 +99,19 @@
       ansible.builtin.debug:
         msg: "Handled together with 1.1.2.2.3 and 1.1.2.2.4"
 
-- name: "1.1.2.2.2 | PATCH | Ensure nodev option set on /dev/shm partition"
-  when: ubtu20cis_rule_1_1_2_2_2
-  tags:
-    - level1-server
-    - level1-workstation
-    - automated
-    - patch
-    - rule_1.1.2.2.2
-  block:
-    - name: "1.1.2.2.2 | AUDIT | Ensure nodev option set on /dev/shm partition | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
-
-    - name: "1.1.2.2.2 | AUDIT | Ensure nodev option set on /dev/shm partition | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '1.1.2.2.2'
-
 - name: |
-    "1.1.2.2.1 | PATCH | Ensure nodev option set on /dev/shm partition"
+    "1.1.2.2.1 | PATCH | Ensure /dev/shm is a separate partition"
+    "1.1.2.2.2 | PATCH | Ensure nodev option set on /dev/shm partition"
     "1.1.2.2.3 | PATCH | Ensure noexec option set on /dev/shm partition"
     "1.1.2.2.4 | PATCH | Ensure nosuid option set on /dev/shm partition"
-  when: ubtu20cis_rule_1_1_2_2_1 or ubtu20cis_rule_1_1_2_2_3 or ubtu20cis_rule_1_1_2_2_4
+  when: ubtu20cis_rule_1_1_2_2_1 or ubtu20cis_rule_1_1_2_2_2 or ubtu20cis_rule_1_1_2_2_3 or ubtu20cis_rule_1_1_2_2_4
   tags:
     - level1-server
     - level1-workstation
     - automated
     - patch
     - rule_1.1.2.2.1
+    - rule_1.1.2.2.2
     - rule_1.1.2.2.3
     - rule_1.1.2.2.4
     - dev_shm
@@ -138,7 +121,7 @@
     src: /dev/shm
     fstype: tmpfs
     state: present
-    opts: "defaults,{% if ubtu20cis_rule_1_1_2_2_1 %}nodev,{% endif %}{% if ubtu20cis_rule_1_1_2_2_3 %}noexec,{% endif %}{% if ubtu20cis_rule_1_1_2_2_4 %}nosuid{% endif %}"
+    opts: "defaults,{% if ubtu20cis_rule_1_1_2_2_1 or ubtu20cis_rule_1_1_2_2_2 %}nodev,{% endif %}{% if ubtu20cis_rule_1_1_2_2_3 %}noexec,{% endif %}{% if ubtu20cis_rule_1_1_2_2_4 %}nosuid{% endif %}"
   notify: Remount dev_shm
 
 - name: "1.1.2.3.1 | AUDIT | Ensure separate partition exists for /home"

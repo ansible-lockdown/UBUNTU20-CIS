@@ -225,26 +225,25 @@
       failed_when: false
 
 - name: "5.4.2.1 | PATCH | Ensure root is the only UID 0 account"
-  when: ubtu20cis_rule_5_4_2_1
+  when:
+    - ubtu20cis_rule_5_4_2_1
+    - prelim_uid_zero_accounts_except_root.rc
+    - ubtu20cis_disruption_high
   tags:
     - level1-server
     - level1-workstation
     - automated
     - patch
     - rule_5.4.2.1
-  block:
-    - name: "5.4.2.1 | AUDIT | Ensure root is the only UID 0 account | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
-
-    - name: "5.4.2.1 | AUDIT | Ensure root is the only UID 0 account | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '5.4.2.1'
+  ansible.builtin.command: passwd -l {{ item }}
+  changed_when: false
+  failed_when: false
+  loop: "{{ prelim_uid_zero_accounts_except_root.stdout_lines }}"
 
 - name: "5.4.2.2 | PATCH | Ensure root is the only GID 0 account"
-  when: ubtu20cis_rule_5_4_2_2
+  when:
+    - ubtu20cis_rule_5_4_2_2
+    - ubtu20cis_disruption_high
   tags:
     - level1-server
     - level1-workstation
@@ -252,15 +251,23 @@
     - patch
     - rule_5.4.2.2
   block:
-    - name: "5.4.2.2 | AUDIT | Ensure root is the only GID 0 account | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "5.4.2.2 | AUDIT | Ensure root is the only GID 0 account | Get members of gid 0"
+      ansible.builtin.shell: >-
+        awk -F: '($1 !~ /^(sync|shutdown|halt|operator)/ && $4=="0") {print $1}' /etc/passwd | grep -wv 'root'
+      changed_when: false
+      failed_when: discovered_gid0_members.rc not in [ 0, 1 ]
+      register: discovered_gid0_members
 
-    - name: "5.4.2.2 | AUDIT | Ensure root is the only GID 0 account | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '5.4.2.2'
+    - name: "5.4.2.2 | PATCH | Ensure root is the only GID 0 account | Remove users not root from gid 0"
+      when:
+        - discovered_gid0_members is defined
+        - discovered_gid0_members.stdout | length > 0
+      ansible.builtin.user:
+        name: "{{ item }}"
+        group: "{{ item }}"
+      loop: "{{ discovered_gid0_members.stdout_lines }}"
+      loop_control:
+        label: "{{ item }}"
 
 - name: "5.4.2.3 | PATCH | Ensure group root is the only GID 0 group"
   when: ubtu20cis_rule_5_4_2_3
@@ -309,15 +316,62 @@
     - patch
     - rule_5.4.2.5
   block:
-    - name: "5.4.2.5 | AUDIT | Ensure root path integrity | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "5.4.2.5 | AUDIT | Ensure root path integrity | Get root paths"
+      ansible.builtin.shell: sudo -Hiu root env | grep '^PATH' | cut -d= -f2
+      changed_when: false
+      register: discovered_root_paths
 
-    - name: "5.4.2.5 | AUDIT | Ensure root path integrity | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '5.4.2.5'
+    - name: "5.4.2.5 | AUDIT | Ensure root path integrity | Get root paths split"
+      when: discovered_root_paths is defined
+      ansible.builtin.shell: sudo -Hiu root env | grep '^PATH' | cut -d= -f2 | tr ":" "\n"
+      changed_when: false
+      register: discovered_root_paths_split
+
+    - name: "5.4.2.5 | AUDIT | Ensure root path integrity | Set fact"
+      when: discovered_root_paths is defined
+      ansible.builtin.set_fact:
+        root_paths: "{{ discovered_root_paths.stdout }}"
+
+    - name: "5.4.2.5 | AUDIT | Ensure root path integrity | Check for empty dirs"
+      when: root_paths is defined
+      ansible.builtin.shell: "echo '{{ root_paths }}' | grep -q '::' && echo 'roots path contains an empty directory (::)'"
+      changed_when: false
+      failed_when: discovered_root_path_empty_dir.rc not in [ 0, 1 ]
+      register: discovered_root_path_empty_dir
+
+    - name: "5.4.2.5 | AUDIT | Ensure root path integrity | Check for trailing colon"
+      when: root_paths is defined
+      ansible.builtin.shell: "echo '{{ root_paths }}' | grep -q ':$' && echo 'roots path contains a trailing (:)'"
+      changed_when: false
+      failed_when: discovered_root_path_trailing_colon.rc not in [ 0, 1 ]
+      register: discovered_root_path_trailing_colon
+
+    - name: "5.4.2.5 | PATCH | Ensure root path integrity | Check and fix owner and permissions"
+      when: root_paths is defined
+      block:
+        - name: "5.4.2.5 | AUDIT | Ensure root path integrity | Stat path directories"
+          ansible.builtin.stat:
+            path: "{{ item }}"
+          register: discovered_root_path_perms
+          loop: "{{ discovered_root_paths_split.stdout_lines }}"
+
+        - name: "5.4.2.5 | PATCH | Ensure root path integrity | Set permissions"
+          when:
+            - item.stat.exists
+            - item.stat.isdir
+            - item.stat.pw_name != 'root' or item.stat.gr_name != 'root' or item.stat.woth or item.stat.wgrp
+            - item != 'root'
+            - not ubtu20cis_uses_root
+          ansible.builtin.file:
+            path: "{{ item.stat.path }}"
+            state: directory
+            owner: root
+            group: root
+            mode: 'go-w'
+            follow: false
+          loop: "{{ discovered_root_path_perms.results }}"
+          loop_control:
+            label: "{{ item }}"
 
 - name: "5.4.2.6 | PATCH | Ensure root user umask is configured"
   when: ubtu20cis_rule_5_4_2_6

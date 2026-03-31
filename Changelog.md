@@ -131,6 +131,26 @@
 - Fixed `register:` ordering in 6 tasks (prelim.yml, cis_5.3.x.yml, handlers/main.yml) — `register:` now appears after `changed_when:`/`failed_when:` per Lockdown conventions
 - Fixed `ubtu20cis_journald_upload` typo in `cis_6.2.x.yml:102` — should be `ubtu20cis_journal_upload` (would cause undefined variable error at runtime)
 
+### Automated Controls (ported from UBUNTU22-CIS)
+
+- **1.1.1.6**: Overlay kernel module — lineinfile to `/etc/modprobe.d/CIS.conf` + blacklist + modprobe disable (was manual)
+- **1.1.1.10**: Unused filesystem modules — deploys `fs_with_cves.sh` discovery script, warns on loaded modules (was manual)
+- **1.1.2.2.2**: `/dev/shm` nodev option — merged into combined 1.1.2.2.x mount options task with `ansible.posix.mount` (was manual)
+- **2.1.12**: rpcbind — package removal or systemd mask via `ubtu20cis_rpc_server`/`ubtu20cis_rpc_mask` variables (was manual)
+- **2.1.16**: tftp server — package removal or systemd mask via `ubtu20cis_tftp_server`/`ubtu20cis_tftp_mask` variables (was manual)
+- **2.1.19**: xinetd — package removal or systemd mask via `ubtu20cis_xinetd_server`/`ubtu20cis_xinetd_mask` variables (was manual)
+- **4.1.1**: Firewall utility — installs ufw package (was manual)
+- **5.1.9**: SSH GSSAPIAuthentication — lineinfile to set `GSSAPIAuthentication no` in sshd_config (was manual)
+- **5.3.1.1**: PAM runtime — installs latest `libpam-runtime` package (was manual)
+- **5.3.1.2**: PAM modules — installs latest `libpam-modules` package (was manual)
+- **5.4.2.1**: UID 0 accounts — `passwd -l` to lock non-root UID 0 accounts (was manual)
+- **5.4.2.2**: GID 0 accounts — discovers and removes non-root accounts from GID 0 (was manual)
+- **5.4.2.5**: Root PATH integrity — stat/file module to audit and fix directory ownership and permissions (was manual)
+- Added `Systemd daemon reload` handler for service masking tasks
+- Added prelim tasks: `prelim_uid_zero_accounts_except_root`, `prelim_interactive_usernames`
+- Added `files/fs_with_cves.sh` discovery script for unused filesystem modules
+- Added `failed_when: false` to pwquality replace tasks (5.3.3.2.1-2.7) for missing file resilience
+
 ## v2.0.1 based on CIS v2.0.1
 
 - issue 148 thanks to @karlg100

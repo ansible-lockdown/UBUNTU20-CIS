@@ -169,15 +169,27 @@
     - patch
     - rule_1.1.1.6
   block:
-    - name: "1.1.1.6 | AUDIT | Ensure overlay kernel module is not available | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "1.1.1.6 | PATCH | Ensure overlay kernel module is not available | Edit modprobe config"
+      ansible.builtin.lineinfile:
+        path: /etc/modprobe.d/CIS.conf
+        regexp: "^(#)?install overlay(\\s|$)"
+        line: "install overlay /bin/true"
+        create: true
+        mode: 'go-rwx'
 
-    - name: "1.1.1.6 | AUDIT | Ensure overlay kernel module is not available | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '1.1.1.6'
+    - name: "1.1.1.6 | PATCH | Ensure overlay kernel module is not available | blacklist"
+      ansible.builtin.lineinfile:
+        path: /etc/modprobe.d/blacklist.conf
+        regexp: "^(#)?blacklist overlay(\\s|$)"
+        line: "blacklist overlay"
+        create: true
+        mode: 'go-rwx'
+
+    - name: "1.1.1.6 | PATCH | Ensure overlay kernel module is not available | Disable overlay"
+      when: not system_is_container
+      community.general.modprobe:
+        name: overlay
+        state: absent
 
 - name: "1.1.1.7 | PATCH | Ensure squashfs kernel module is not available"
   when:
@@ -289,11 +301,27 @@
     - patch
     - rule_1.1.1.10
   block:
-    - name: "1.1.1.10 | AUDIT | Ensure unused filesystems kernel modules are not available | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
+    - name: "1.1.1.10 | PATCH | Ensure unused filesystems kernel modules are not available | Add discovery script"
+      ansible.builtin.copy:
+        src: fs_with_cves.sh
+        dest: /var/fs_with_cves.sh
+        owner: root
+        group: root
+        mode: 'u+x,go-wx'
 
-    - name: "1.1.1.10 | AUDIT | Ensure unused filesystems kernel modules are not available | Warn Count"
+    - name: "1.1.1.10 | AUDIT | Ensure unused filesystems kernel modules are not available | Run discovery script"
+      ansible.builtin.command: /var/fs_with_cves.sh
+      changed_when: false
+      failed_when: discovered_fs_modules_loaded.rc not in [ 0, 99 ]
+      register: discovered_fs_modules_loaded
+
+    - name: "1.1.1.10 | AUDIT | Ensure unused filesystems kernel modules are not available | Output Warning"
+      when: discovered_fs_modules_loaded.stdout | length > 0
+      ansible.builtin.debug:
+        msg: "{{ ['Warning!! Discovered loaded Filesystem modules that need attention'] + discovered_fs_modules_loaded.stdout_lines }}"
+
+    - name: "1.1.1.10 | AUDIT | Ensure unused filesystems kernel modules are not available | Capture Warning"
+      when: discovered_fs_modules_loaded.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:

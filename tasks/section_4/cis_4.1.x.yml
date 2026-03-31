@@ -8,13 +8,7 @@
     - automated
     - patch
     - rule_4.1.1
-  block:
-    - name: "4.1.1 | AUDIT | Ensure a single firewall configuration utility is in use | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
-
-    - name: "4.1.1 | AUDIT | Ensure a single firewall configuration utility is in use | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '4.1.1'
+    - ufw
+  ansible.builtin.package:
+    name: ufw
+    state: present

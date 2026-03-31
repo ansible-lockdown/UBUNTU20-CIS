@@ -184,16 +184,13 @@
     - automated
     - patch
     - rule_5.1.9
-  block:
-    - name: "5.1.9 | AUDIT | Ensure sshd GSSAPIAuthentication is disabled | check status"
-      ansible.builtin.debug:
-        msg: "This control requires manual remediation"
-
-    - name: "5.1.9 | AUDIT | Ensure sshd GSSAPIAuthentication is disabled | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '5.1.9'
+    - sshd
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: (?i)^(#?)\s*GSSAPIAuthentication
+    line: GSSAPIAuthentication no
+    validate: sshd -t -f %s
+  notify: Restart sshd
 
 - name: "5.1.10 | PATCH | Ensure sshd HostbasedAuthentication is disabled"
   when: ubtu20cis_rule_5_1_10
