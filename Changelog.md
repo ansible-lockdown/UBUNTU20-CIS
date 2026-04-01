@@ -130,6 +130,7 @@
 - Wired up all 25 previously-unused PAM/password defaults variables to tasks and templates
 - Fixed `register:` ordering in 6 tasks (prelim.yml, cis_5.3.x.yml, handlers/main.yml) — `register:` now appears after `changed_when:`/`failed_when:` per Lockdown conventions
 - Fixed `ubtu20cis_journald_upload` typo in `cis_6.2.x.yml:102` — should be `ubtu20cis_journal_upload` (would cause undefined variable error at runtime)
+- Fixed: added prelim_tmp_mnt_type.stdout is defined guard on line 32's when
 
 ### Automated Controls (ported from UBUNTU22-CIS)
 

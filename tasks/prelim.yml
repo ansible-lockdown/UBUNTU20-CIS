@@ -29,7 +29,9 @@
         prelim_tmp_mnt_type: "{{ expected_tmp_mnt }}"
 
     - name: PRELIM | Capture tmp mount type | Set systemd service
-      when: "'generated' not in prelim_tmp_mnt_type.stdout"
+      when:
+        - prelim_tmp_mnt_type.stdout is defined
+        - "'generated' not in prelim_tmp_mnt_type.stdout"
       ansible.builtin.set_fact:
         prelim_tmp_mnt_type: tmp_systemd
 
