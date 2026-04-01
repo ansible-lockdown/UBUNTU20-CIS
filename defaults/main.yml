@@ -37,7 +37,7 @@ ansible_facts_path: /etc/ansible/facts.d
 # The audit variable found at the base
 benchmark: UBUNTU20-CIS
 ## metadata for Audit benchmark
-benchmark_version: 'v3.0.0'
+benchmark_version: '3.0.0'
 
 ###
 ### Settings for associated Audit role using Goss
