@@ -61,7 +61,7 @@
 - Standardized all `register:` variable prefixes to follow Lockdown conventions:
   - `prelim_` prefix for all preliminary/discovery variables in `tasks/prelim.yml` (17 variables renamed)
   - `discovered_` prefix for all section task registered variables (63 variables renamed)
-- Renamed prelim `set_fact` variables: `mount_names` → `prelim_mount_names`, `min_int_uid` → `prelim_min_int_uid`, `max_int_uid` → `prelim_max_int_uid`, etc.
+- Renamed prelim `set_fact` variables: `mount_names` → `prelim_mount_names`, etc.
 - Removed inconsistent prefixes (`ubtu20cis_`, `avahi_`, `snap_`, bare names) from registered variables
 - Updated all cross-file references in defaults, templates, and section tasks
 
@@ -130,7 +130,9 @@
 - Wired up all 25 previously-unused PAM/password defaults variables to tasks and templates
 - Fixed `register:` ordering in 6 tasks (prelim.yml, cis_5.3.x.yml, handlers/main.yml) — `register:` now appears after `changed_when:`/`failed_when:` per Lockdown conventions
 - Fixed `ubtu20cis_journald_upload` typo in `cis_6.2.x.yml:102` — should be `ubtu20cis_journal_upload` (would cause undefined variable error at runtime)
-- Fixed: added prelim_tmp_mnt_type.stdout is defined guard on line 32's when
+- Fixed: added `prelim_tmp_mnt_type.stdout is defined` guard on tmp mount type conditional to prevent attribute error when `set_fact` overwrites command result with string
+- Moved all inline comments in `defaults/main.yml` to the line above their variable (~70 occurrences) for consistency — `pragma: allowlist secret` directives kept inline
+- Renamed `prelim_min_int_gid` to `min_int_gid` in prelim set_facts to match `min_int_uid`/`max_int_uid` naming convention
 
 ### Automated Controls (ported from UBUNTU22-CIS)
 

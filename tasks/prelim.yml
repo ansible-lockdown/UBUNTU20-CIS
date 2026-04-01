@@ -23,10 +23,10 @@
       check_mode: false
       register: prelim_tmp_mnt_type
 
-    - name: PRELIM | Capture tmp mount type | Set to expected_tmp_mnt variable
+    - name: PRELIM | Capture tmp mount type | Set to ubtu20cis_expected_tmp_mnt variable
       when: "'generated' in prelim_tmp_mnt_type.stdout"
       ansible.builtin.set_fact:
-        prelim_tmp_mnt_type: "{{ expected_tmp_mnt }}"
+        prelim_tmp_mnt_type: "{{ ubtu20cis_expected_tmp_mnt }}"
 
     - name: PRELIM | Capture tmp mount type | Set systemd service
       when:
@@ -135,9 +135,9 @@
 
     - name: "PRELIM | set_facts for interactive uid/gid"
       ansible.builtin.set_fact:
-        prelim_min_int_uid: "{{ prelim_uid_min_id.stdout }}"
-        prelim_max_int_uid: "{{ prelim_uid_max_id.stdout }}"
-        prelim_min_int_gid: "{{ prelim_gid_min_id.stdout }}"
+        min_int_uid: "{{ prelim_uid_min_id.stdout }}"
+        max_int_uid: "{{ prelim_uid_max_id.stdout }}"
+        min_int_gid: "{{ prelim_gid_min_id.stdout }}"
 
 - name: "PRELIM | Interactive User accounts"
   tags: always
