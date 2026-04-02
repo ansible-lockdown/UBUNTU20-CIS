@@ -27,7 +27,7 @@
         mode: 'u=rw,g=,o='
 
     - name: "1.1.1.1 | PATCH | Ensure cramfs kernel module is not available | Disable cramfs"
-      when: ansible_connection != 'docker'
+      when: ansible_connection not in ['docker', 'community.docker.docker']
       community.general.modprobe:
         name: cramfs
         state: absent
@@ -51,7 +51,7 @@
         mode: 'u=rw,g=,o='
 
     - name: "1.1.1.2 | PATCH | Ensure freevxfs kernel module is not available | Disable freevxfs"
-      when: ansible_connection != 'docker'
+      when: ansible_connection not in ['docker', 'community.docker.docker']
       community.general.modprobe:
         name: freevxfs
         state: absent
@@ -83,7 +83,7 @@
         mode: 'u=rw,g=,o='
 
     - name: "1.1.1.3 | PATCH | Ensure hfs kernel module is not available | Disable hfs"
-      when: ansible_connection != 'docker'
+      when: ansible_connection not in ['docker', 'community.docker.docker']
       community.general.modprobe:
         name: hfs
         state: absent
@@ -115,7 +115,7 @@
         mode: 'u=rw,g=,o='
 
     - name: "1.1.1.4 | PATCH | Ensure hfsplus kernel module is not available | Disable hfsplus"
-      when: ansible_connection != 'docker'
+      when: ansible_connection not in ['docker', 'community.docker.docker']
       community.general.modprobe:
         name: hfsplus
         state: absent
@@ -147,7 +147,7 @@
         mode: 'u=rw,g=,o='
 
     - name: "1.1.1.5 | PATCH | Ensure jffs2 kernel module is not available | Disable jffs2"
-      when: ansible_connection != 'docker'
+      when: ansible_connection not in ['docker', 'community.docker.docker']
       community.general.modprobe:
         name: jffs2
         state: absent
@@ -212,7 +212,7 @@
         mode: 'u=rw,g=,o='
 
     - name: "1.1.1.7 | PATCH | Ensure squashfs kernel module is not available | Disable squashfs"
-      when: ansible_connection != 'docker'
+      when: ansible_connection not in ['docker', 'community.docker.docker']
       community.general.modprobe:
         name: squashfs
         state: absent
@@ -245,7 +245,7 @@
         mode: 'u=rw,g=,o='
 
     - name: "1.1.1.8 | PATCH | Ensure udf kernel module is not available | Disable udf"
-      when: ansible_connection != 'docker'
+      when: ansible_connection not in ['docker', 'community.docker.docker']
       community.general.modprobe:
         name: udf
         state: absent
@@ -279,7 +279,7 @@
         mode: 'u=rw,g=,o='
 
     - name: "1.1.1.9 | PATCH | Ensure usb-storage kernel module is not available | Remove usb-storage module"
-      when: ansible_connection != 'docker'
+      when: ansible_connection not in ['docker', 'community.docker.docker']
       community.general.modprobe:
         name: usb-storage
         state: absent

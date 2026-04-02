@@ -159,6 +159,19 @@
 - **6.2.3.8**: Logrotate configuration — `ansible.builtin.find` + `ansible.builtin.replace` to set rotation frequency in `/etc/logrotate.conf` and all `/etc/logrotate.d/` drop-in files using new `ubtu20cis_logrotate` variable (was manual)
 - **6.3.2.4**: Audit log space warning — lineinfile to set `space_left_action` and `admin_space_left_action` in `/etc/audit/auditd.conf` using existing `ubtu20cis_auditd` variables, notifies `Restart auditd` (was manual)
 
+### Molecule Docker Testing
+
+- Fixed FQCN connection detection: added `community.docker.docker` to `ansible_connection` checks in `tasks/main.yml` (container detection block) and `tasks/section_1/cis_1.1.1.x.yml` (8 modprobe skip conditions). Molecule uses the FQCN `community.docker.docker` connection plugin, not the short name `docker`
+- Fixed `molecule/default/molecule.yml`: changed cgroup volume mount from `:ro` to `:rw` and added `cgroupns_mode: host` for full systemd support on cgroups v2 hosts (macOS Docker Desktop)
+- Created `molecule/default/prepare.yml`: installs `openssh-server`, `libpam-pwquality`, `sudo`, `acl`, `kmod`, `cron`, `chrony`, `rsyslog`, `aide`, `aide-common`, `logrotate`; creates `/run/sshd`; starts cron and rsyslog services
+- Simplified `molecule/default/converge.yml`: removed redundant rule overrides now handled by `vars/is_container.yml` auto-loading
+- Updated `vars/is_container.yml`:
+  - Added `ubtu20cis_rule_1_3_1_2: false` (AppArmor bootloader config — no grub in containers)
+  - Added `ubtu20cis_ipv6_disable: sysctl` (use sysctl instead of grub method)
+  - Added `ubtu20cis_rule_6_3_4_1` through `6_3_4_10: false` (audit log file permissions — no auditd)
+  - Re-enabled AIDE (6.1.x), cron (2.4.x), time sync (2.3.x), rsyslog (6.2.3.x), and logging (6.2.1.x) rules — now functional with prepare.yml packages and working systemd
+- Fixed cron idempotence: added `changed_when: false` to 7 cron access tasks (2.4.1.2–2.4.1.8) that used `state: touch` which always reports changed
+
 ## v2.0.1 based on CIS v2.0.1
 
 - issue 148 thanks to @karlg100
