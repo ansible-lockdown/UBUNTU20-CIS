@@ -10,6 +10,8 @@
       ansible_user: root
       system_is_container: true
       ubtu20cis_skip_for_travis: true
+      setup_audit: true
+      run_audit: true
       # Disable rules that cannot run in containers
       ubtu20cis_rule_1_1_1_6: false   # overlay fs - manual remediation
       ubtu20cis_rule_1_1_1_10: false  # unused fs modules - manual remediation

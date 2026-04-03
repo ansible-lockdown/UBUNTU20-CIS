@@ -32,7 +32,7 @@
     - avahi
     - services
   block:
-    - name: "2.1.2 | PATCH | Ensure avahi daemon services are not in use"
+    - name: "2.1.2 | PATCH | Ensure avahi daemon services are not in use | Stop/Disable avahi-daemon.service"
       when: prelim_avahi_service_status.stdout == "loaded"
       ansible.builtin.service:
         name: avahi-daemon.service

@@ -145,7 +145,7 @@
     - rule_7.1.10
     - permissions
   block:
-    - name: "7.1.10 | PATCH | Ensure access to /etc/security/opasswd is configured | stat opasswd"
+    - name: "7.1.10 | AUDIT | Ensure access to /etc/security/opasswd is configured | stat opasswd"
       ansible.builtin.stat:
         path: /etc/security/opasswd
       register: discovered_opasswd
@@ -158,7 +158,7 @@
         group: root
         mode: 'u=rw,g=,o='
 
-    - name: "7.1.10 | PATCH | Ensure access to /etc/security/opasswd is configured | stat opasswd.old"
+    - name: "7.1.10 | AUDIT | Ensure access to /etc/security/opasswd is configured | stat opasswd.old"
       ansible.builtin.stat:
         path: /etc/security/opasswd.old
       register: discovered_opasswd_old
@@ -183,14 +183,14 @@
   block:
     - name: "7.1.11 | AUDIT | Ensure world writable files and directories are secured | Get list of world-writable files"
       ansible.builtin.command: find {{ item.mount }} -xdev -type f -perm -0002 -not -fstype nfs
-      with_items:
-        - "{{ ansible_mounts }}"
-      loop_control:
-        label: "{{ item.mount }}"
       changed_when: false
       failed_when: false
       check_mode: false
       register: discovered_world_writable_files
+      with_items:
+        - "{{ ansible_mounts }}"
+      loop_control:
+        label: "{{ item.mount }}"
 
     - name: "7.1.11 | PATCH | Ensure world writable files and directories are secured | Adjust world-writable files if they exist"
       when: ubtu20cis_no_world_write_adjust
@@ -212,14 +212,14 @@
   block:
     - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Get unowned files or directories"
       ansible.builtin.command: find {{ item.mount }} -xdev -nouser -not -fstype nfs
-      with_items:
-        - "{{ ansible_mounts }}"
-      loop_control:
-        label: "{{ item.mount }}"
       changed_when: false
       failed_when: false
       check_mode: false
       register: discovered_no_user_items
+      with_items:
+        - "{{ ansible_mounts }}"
+      loop_control:
+        label: "{{ item.mount }}"
 
     - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Flatten no_user_items results for easier use"
       ansible.builtin.set_fact:

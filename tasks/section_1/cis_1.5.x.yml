@@ -95,14 +95,16 @@
     - prelink
   block:
     - name: "1.5.4 | PATCH | Ensure prelink is not installed | Restore binaries to normal"
+      when: "'prelink' in ansible_facts.packages"
       ansible.builtin.command: prelink -ua
       changed_when: false
       failed_when: false
 
-    - name: "1.5.4 | PATCH | Ensure prelink is not installed"
+    - name: "1.5.4 | PATCH | Ensure prelink is not installed | Remove prelink package"
       ansible.builtin.package:
         name: prelink
         state: absent
+        purge: "{{ ubtu20cis_purge_apt }}"
 
 - name: "1.5.5 | PATCH | Ensure Automatic Error Reporting is not enabled"
   when: ubtu20cis_rule_1_5_5
@@ -136,3 +138,4 @@
       ansible.builtin.package:
         name: apport
         state: absent
+        purge: "{{ ubtu20cis_purge_apt }}"

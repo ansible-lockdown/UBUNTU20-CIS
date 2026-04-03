@@ -96,18 +96,18 @@
     - rule_7.2.4
     - user
   block:
-    - name: "7.2.4 | AUDIT | Ensure shadow group is empty | check users in group"
+    - name: "7.2.4 | AUDIT | Ensure shadow group is empty | Get shadow group information"
       ansible.builtin.getent:
         database: group
         split: ':'
         key: shadow
 
-    - name: "7.2.4 | AUDIT | Ensure shadow group is empty | check users in group"
+    - name: "7.2.4 | AUDIT | Ensure shadow group is empty | Print warning about users in shadow group"
       when: getent_group.shadow[2] | length > 0
       ansible.builtin.debug:
         msg: "Warning!! - You have users in the shadow group"
 
-    - name: "7.2.4 | AUDIT | Ensure shadow group is empty | check users in group"
+    - name: "7.2.4 | AUDIT | Ensure shadow group is empty | Warn Count"
       when: getent_group.shadow[2] | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml

@@ -181,7 +181,11 @@
       vars:
         warn_control_id: '4.2.7'
 
-- name: "OPTIONAL | UFW incoming ports"
+# Opens user-defined incoming firewall ports via UFW.
+# Gated by the 'ufw_add_incoming' toggle (defaults/main.yml).
+# Loops over 'ubtu20cis_ufw_allow_in' — each item expects:
+#   { from: "<source_ip/cidr>", port: "<port>", proto: "<tcp|udp>" }
+- name: "OPTIONAL  | PATCH | UFW incoming ports"
   when: ufw_add_incoming
   tags:
     - ufw

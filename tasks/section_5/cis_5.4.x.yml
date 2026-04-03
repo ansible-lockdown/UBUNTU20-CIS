@@ -537,11 +537,11 @@
     - rule_5.4.3.2
     - user
   ansible.builtin.blockinfile:
+    path: "{{ item.path }}"
+    marker: "# {mark} ANSIBLE MANAGED"
+    state: "{{ item.state }}"
     create: true
     mode: 'u=rw,g=r,o=r'
-    dest: "{{ item.dest }}"
-    state: "{{ item.state }}"
-    marker: "# {mark} ANSIBLE MANAGED"
     block: |
       # Set session timeout - CIS ID 5.4.3.2
       # only set TMOUT if it isn't set yet to avoid a shell error
@@ -549,9 +549,9 @@
       readonly TMOUT
       export TMOUT
   with_items:
-    - {dest: "{{ ubtu20cis_shell_session_timeout.file }}", state: present}
-    - {dest: /etc/profile, state: "{{ (ubtu20cis_shell_session_timeout.file == '/etc/profile') | ternary('present', 'absent') }}"}
-    - {dest: /etc/bash.bashrc, state: present}
+    - {path: "{{ ubtu20cis_shell_session_timeout.file }}", state: present}
+    - {path: /etc/profile, state: "{{ (ubtu20cis_shell_session_timeout.file == '/etc/profile') | ternary('present', 'absent') }}"}
+    - {path: /etc/bash.bashrc, state: present}
 
 - name: "5.4.3.3 | PATCH | Ensure default user umask is configured"
   when: ubtu20cis_rule_5_4_3_3

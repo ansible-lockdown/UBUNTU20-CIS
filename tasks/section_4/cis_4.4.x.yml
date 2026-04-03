@@ -176,7 +176,6 @@
   block:
     - name: "4.4.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Get list of open ports"
       ansible.builtin.command: ss -4tuln
-      notify: Persistent ip4tables
       changed_when: false
       failed_when: false
       check_mode: false
@@ -184,7 +183,6 @@
 
     - name: "4.4.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Get list of rules"
       ansible.builtin.command: iptables -L INPUT -v -n
-      notify: Persistent ip4tables
       changed_when: false
       failed_when: false
       check_mode: false
@@ -199,7 +197,6 @@
           - "{{ discovered_ip4_open_ports.stdout_lines }}"
           - "Current Rules:"
           - "{{ discovered_ip4_current_rules.stdout_lines }}"
-      notify: Persistent ip4tables
 
 - name: "4.4.3.1 | PATCH | Ensure ip6tables default deny firewall policy"
   when:

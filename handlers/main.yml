@@ -37,9 +37,9 @@
 
 - name: Grub update
   ansible.builtin.command: update-grub
-  notify: Change requires reboot
   changed_when: true
   failed_when: false
+  notify: Change requires reboot
 
 - name: Update dconf
   ansible.builtin.command: dconf update

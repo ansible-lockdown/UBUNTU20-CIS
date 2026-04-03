@@ -124,7 +124,6 @@
       ansible.builtin.group:
         name: "{{ ubtu20cis_sugroup }}"
         state: present
-      register: discovered_sugroup
 
     - name: "5.2.7 | PATCH | Ensure access to the su command is restricted | remove users from group"
       ansible.builtin.lineinfile:

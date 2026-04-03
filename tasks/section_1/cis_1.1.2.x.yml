@@ -85,20 +85,6 @@
     label: "{{ item.device }}"
   notify: Remount tmp
 
-- name: "1.1.2.2.1 | PATCH | Ensure /dev/shm is a separate partition"
-  when: ubtu20cis_rule_1_1_2_2_1
-  tags:
-    - level1-server
-    - level1-workstation
-    - automated
-    - patch
-    - rule_1.1.2.2.1
-    - dev_shm
-  block:
-    - name: "1.1.2.2.1 | AUDIT | Ensure /dev/shm is a separate partition | check status"
-      ansible.builtin.debug:
-        msg: "Handled together with 1.1.2.2.3 and 1.1.2.2.4"
-
 - name: |
     "1.1.2.2.1 | PATCH | Ensure /dev/shm is a separate partition"
     "1.1.2.2.2 | PATCH | Ensure nodev option set on /dev/shm partition"
