@@ -960,6 +960,10 @@ ubtu20cis_sshd:
   allow_users: "vagrant ubuntu"
   # CHANGE THIS - space-separated list of allowed SSH groups
   allow_groups: "vagrant ubuntu"
+  # CHANGE THIS - space-separated list of denied SSH users
+  deny_users: "nobody"
+  # CHANGE THIS - space-separated list of denied SSH groups
+  deny_groups: "nobodygroup"
 
 # Sudo configuration
 # sudo package name (sudo or sudo-ldap)
@@ -1006,8 +1010,8 @@ ubtu20cis_shell_session_timeout:
   file: /etc/profile.d/tmout.sh
   timeout: 900
 
-# default umask for bash sessions (027 = rwxr-x---)
-ubtu20cis_bash_umask: '027'
+# default umask for bash sessions (0027 = rwxr-x---)
+ubtu20cis_bash_umask: '0027'
 
 # Root password - encrypted hash prefix to verify root has a valid password set
 # SHA-512 hash prefix ($6$=sha512, $y$=yescrypt)

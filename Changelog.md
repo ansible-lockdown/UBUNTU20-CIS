@@ -91,6 +91,24 @@
 - Added missing `ubtu20cis_remote_log_host`, `ubtu20cis_remote_log_port`, `ubtu20cis_remote_log_protocol` to defaults/main.yml and bridge template (goss test 6.2.3.6 references these)
 - Added missing `ubtu20cis_ipv4_required` to bridge template (was in defaults but not passed to audit)
 
+### QA Fixes (April 3rd)
+
+- Added `ubtu20cis_purge_apt` variable (default `false`) to control apt package purging; applied to prelink (1.5.4) and apport (1.5.5) removal tasks
+- Fixed handler key ordering in `Grub update`: moved `notify` after `changed_when`/`failed_when` per Lockdown conventions
+- Removed duplicate 1.1.2.2.1 debug stub — `/dev/shm` partition check is already handled in the combined 1.1.2.2.x mount options task
+- Fixed 1.5.4 prelink: added `when: 'prelink' in ansible_facts.packages` guard on `prelink -ua` command; renamed task for clarity
+- Fixed 2.1.2 avahi: improved task name to specify Stop/Disable action
+- Fixed 3.1.1/3.1.2: corrected task name prefixes from `PATCH` to `AUDIT` on read-only commands
+- Fixed 4.2.x: added inline documentation comments for optional UFW incoming ports task
+- Fixed 4.4.2.4: removed `notify: Persistent ip4tables` from 3 audit-only tasks where `changed_when: false` prevented the handler from ever firing
+- Fixed 5.2.7: removed unused `register: discovered_sugroup` from group creation task
+- Fixed 5.4.3.2 TMOUT: replaced deprecated `dest` parameter with `path` in `blockinfile` module; reordered keys to match Lockdown conventions
+- Fixed 7.1.10: corrected task name prefixes from `PATCH` to `AUDIT` on stat tasks
+- Fixed 7.1.11/7.1.12: reordered `changed_when`/`failed_when`/`check_mode`/`register` to appear before `with_items`/`loop_control` per Lockdown conventions
+- Fixed 7.2.4: gave all three shadow group tasks unique names instead of duplicate "check users in group"
+- Fixed 5.4.2.6: added missing `automated` tag; expanded to configure umask in both `/root/.bash_profile` and `/root/.bashrc` using a block
+- Enabled goss audit in molecule converge (`setup_audit: true`, `run_audit: true`)
+
 ### Bug Fixes
 
 - Added missing "Update dconf" handler (14 task references)

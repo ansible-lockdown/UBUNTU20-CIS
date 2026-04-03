@@ -154,7 +154,7 @@
         dest: /etc/cron.allow
         force: false
         owner: root
-        group: crontab
+        group: root
         mode: 'u=rw,g=r,o='
 
 - name: "2.4.2.1 | PATCH | Ensure access to at is configured"

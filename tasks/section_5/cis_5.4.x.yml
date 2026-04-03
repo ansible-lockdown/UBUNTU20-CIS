@@ -399,38 +399,30 @@
     - level1-workstation
     - automated
     - patch
+    - shadow_suite
     - rule_5.4.2.6
-    - user
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
   block:
-    - name: "5.4.2.6 | AUDIT | Ensure root user umask is configured"
-      ansible.builtin.shell: grep -E '^session\s+optional\s+pam_umask.so' /etc/pam.d/common-session  # noqa: command-instead-of-shell
-      changed_when: false
-      failed_when: false
-      check_mode: false
-      register: discovered_umask_pam_status
-
-    - name: "5.4.2.6 | PATCH | Ensure root user umask is configured"
-      when: discovered_umask_pam_status.stdout | length == 0
+    - name: "5.4.2.6 | PATCH | Ensure root user umask is configured | /root/.bash_profile"
       ansible.builtin.lineinfile:
-        path: /etc/pam.d/common-session
-        line: 'session optional                        pam_umask.so'
-        insertbefore: '^# end of pam-auth-update config'
+        path: /root/.bash_profile
+        regexp: \s*umask
+        line: "umask {{ ubtu20cis_bash_umask }}"
+        create: true
+        owner: root
+        group: root
+        mode: 'g-wx,o-rwx'
 
-    - name: "5.4.2.6 | PATCH | Ensure root user umask is configured"
+    - name: "5.4.2.6 | PATCH | Ensure root user umask is configured | /root/.bashrc"
       ansible.builtin.lineinfile:
-        path: "{{ item.path }}"
-        regexp: '(?i)(umask\s*\d\d\d)'
-        line: '{{ item.line }} {{ ubtu20cis_bash_umask }}'
-      with_items:
-        - {path: '/etc/bash.bashrc', line: 'umask'}
-        - {path: '/etc/profile', line: 'umask'}
-        - {path: '/etc/login.defs', line: 'UMASK'}
-
-    - name: "5.4.2.6 | PATCH | Ensure root user umask is configured"
-      ansible.builtin.lineinfile:
-        path: /etc/login.defs
-        regexp: '^USERGROUPS_ENAB'
-        line: USERGROUPS_ENAB no
+        path: /root/.bashrc
+        regexp: \s*umask
+        line: "umask {{ ubtu20cis_bash_umask }}"
+        create: true
+        owner: root
+        group: root
+        mode: 'g-wx,o-rwx'
 
 - name: "5.4.2.7 | PATCH | Ensure system accounts do not have a valid login shell"
   when:
