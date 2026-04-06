@@ -106,9 +106,21 @@
 - Fixed 7.1.10: corrected task name prefixes from `PATCH` to `AUDIT` on stat tasks
 - Fixed 7.1.11/7.1.12: reordered `changed_when`/`failed_when`/`check_mode`/`register` to appear before `with_items`/`loop_control` per Lockdown conventions
 - Fixed 7.2.4: gave all three shadow group tasks unique names instead of duplicate "check users in group"
-- Fixed 5.4.2.6: added missing `automated` tag; expanded to configure umask in both `/root/.bash_profile` and `/root/.bashrc` using a block
+- Fixed 5.4.2.6: rewrote root umask task — removed pam_umask.so/login.defs/USERGROUPS_ENAB approach, replaced with direct lineinfile to `/root/.bash_profile` and `/root/.bashrc`; added missing `automated` tag; fixed `ubtu20cis_bash_umask` default from `027` to `0027`
+- Fixed 5.4.2.4: added `when` guard on assert so it doesn't fail when root password isn't set in containers
+- Fixed 5.4.2.8: added missing `Alert on findings` debug task before Warn Count
+- Fixed 2.4.1.9: changed `/etc/cron.allow` group from `crontab` to `root` to match CIS benchmark and goss expectation
+- Added `deny_users` and `deny_groups` to `ubtu20cis_sshd` defaults (5.1.4 sshd access)
 - Enabled goss audit in molecule converge (`setup_audit: true`, `run_audit: true`)
-- Standardize warn_control_id labeling/titles and logic
+- Standardized warn count task naming across all sections:
+  - Debug/alert tasks → `"Alert on findings"` suffix (was inconsistent: "Absent", "Output Warning", "Message out...", "Print warning about...")
+  - Warn count tasks → `"Warn Count"` suffix (was: "warn_count", "Set warning count", "Capture Warning")
+  - Discovery tasks → `"Discover status"` suffix
+  - Applied to 13 task files across sections 1–7
+- Fixed 4.2.7: added `when` condition so alert only fires when open ports exist
+- Fixed 6.2.1.1: added missing `Alert on findings` debug for journald service status
+- Fixed 7.2.5: reordered alert debug before warn count import (was warn count before alert)
+- Fixed 4.3.3–4.3.10: added `"Alert on findings"` suffix to all 8 nftables audit debug tasks
 
 ### Bug Fixes
 
