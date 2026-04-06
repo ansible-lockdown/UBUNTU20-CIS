@@ -73,7 +73,7 @@
       check_mode: false
       register: discovered_apparmor_unconfined
 
-    - name: "1.3.1.3 | AUDIT | Ensure all AppArmor Profiles are not disabled | Warning"
+    - name: "1.3.1.3 | AUDIT | Ensure all AppArmor Profiles are not disabled | Alert on findings"
       when: discovered_apparmor_unconfined.stdout != '0'
       ansible.builtin.debug:
         msg: "Warning!! AppArmor mode needs to be confirmed | Any unconfined processes may need to have a profile created"
@@ -102,7 +102,7 @@
       check_mode: false
       register: discovered_apparmor_enforced
 
-    - name: "1.3.1.4 | AUDIT | Ensure all AppArmor Profiles are enforcing | Warning"
+    - name: "1.3.1.4 | AUDIT | Ensure all AppArmor Profiles are enforcing | Alert on findings"
       when: discovered_apparmor_enforced.stdout != '0'
       ansible.builtin.debug:
         msg: "Warning!! AppArmor mode is not in enforcing | Any unconfined processes may need to have a profile created"

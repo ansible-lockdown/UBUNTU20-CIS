@@ -81,7 +81,7 @@
       check_mode: false
       register: discovered_rsyslog_config
 
-    - name: "6.2.3.5 | AUDIT | Ensure rsyslog logging is configured | Message out config"
+    - name: "6.2.3.5 | AUDIT | Ensure rsyslog logging is configured | Alert on findings"
       when: not ubtu20cis_rsyslog_ansible_managed
       ansible.builtin.debug:
         msg:

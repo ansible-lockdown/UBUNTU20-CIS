@@ -165,7 +165,8 @@
       check_mode: false
       register: discovered_ufw_firewall_rules
 
-    - name: "4.2.7 | AUDIT | Ensure ufw firewall rules exist for all open ports | Message out settings"
+    - name: "4.2.7 | AUDIT | Ensure ufw firewall rules exist for all open ports | Alert on findings"
+      when: discovered_ufw_open_listen_ports.stdout != ''
       ansible.builtin.debug:
         msg:
           - "Warning!! Below are the listening ports and firewall rules"

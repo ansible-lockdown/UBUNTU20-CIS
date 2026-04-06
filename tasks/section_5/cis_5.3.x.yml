@@ -658,12 +658,12 @@
       check_mode: false
       register: discovered_passwd_hash_used
 
-    - name: "5.3.3.4.3 | AUDIT | Ensure pam_unix includes a strong password hashing algorithm | check hash found"
+    - name: "5.3.3.4.3 | AUDIT | Ensure pam_unix includes a strong password hashing algorithm | Alert on findings"
       when: "' $6$' not in discovered_passwd_hash_used.stdout"
       ansible.builtin.debug:
         msg: "Warning!! Passwords found not using {{ ubtu20cis_passwd_hash_algo }} algorithm - This requires manual intervention"
 
-    - name: "5.3.3.4.3 | WARN | Ensure password hashing algorithm is up to date with the latest standards | warn_count"
+    - name: "5.3.3.4.3 | WARN | Ensure password hashing algorithm is up to date with the latest standards | Warn Count"
       when: "' $6$' not in discovered_passwd_hash_used.stdout"
       ansible.builtin.import_tasks:
         file: warning_facts.yml

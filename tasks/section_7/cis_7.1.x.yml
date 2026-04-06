@@ -225,7 +225,7 @@
       ansible.builtin.set_fact:
         discovered_no_user_items_flatten: "{{ discovered_no_user_items.results | map(attribute='stdout_lines') | flatten }}"
 
-    - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Alert on unowned files and directories"
+    - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Alert on findings"
       when:
         - not ubtu20cis_no_owner_adjust
         - discovered_no_user_items_flatten | length > 0
@@ -323,7 +323,7 @@
       ansible.builtin.set_fact:
         discovered_suid_executables_flatten: "{{ discovered_suid_executables.results | map(attribute='stdout_lines') | flatten }}"
 
-    - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Alert SUID executables exist"
+    - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Alert on findings"
       when:
         - discovered_suid_executables_flatten | length > 0
         - not ubtu20cis_suid_adjust
@@ -343,7 +343,7 @@
       with_items:
         - "{{ discovered_suid_executables_flatten }}"
 
-    - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | SUID Warn Count"
+    - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Warn Count"
       when:
         - discovered_suid_executables_flatten | length > 0
         - not ubtu20cis_suid_adjust
@@ -367,7 +367,7 @@
       ansible.builtin.set_fact:
         discovered_sgid_executables_flatten: "{{ discovered_sgid_executables.results | map(attribute='stdout_lines') | flatten }}"
 
-    - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Alert SGID executables exist"
+    - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Alert on findings"
       when:
         - discovered_sgid_executables_flatten | length > 0
         - not ubtu20cis_sgid_adjust
@@ -377,7 +377,7 @@
           - "The files are listed below, please review the integrity of these binaries"
           - "{{ discovered_sgid_executables_flatten }}"
 
-    - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | SGID Warn Count"
+    - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Warn Count"
       when:
         - discovered_sgid_executables_flatten | length > 0
         - not ubtu20cis_sgid_adjust

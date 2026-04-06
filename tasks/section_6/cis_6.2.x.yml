@@ -10,14 +10,19 @@
     - rule_6.2.1.1
     - journald
   block:
-    - name: "6.2.1.1 | Ensure journald service is enabled | capture status"
+    - name: "6.2.1.1 | Ensure journald service is enabled | Discover status"
       ansible.builtin.command: systemctl is-enabled systemd-journald.service  # noqa: command-instead-of-module
       changed_when: false
       failed_when: discovered_journald_enabled.rc not in [ 0, 1, 2 ]
       check_mode: false
       register: discovered_journald_enabled
 
-    - name: "6.2.1.1 | Ensure journald service is enabled | warn count if not as expected"
+    - name: "6.2.1.1 | Ensure journald service is enabled | Alert on findings"
+      when: "'static' not in discovered_journald_enabled.stdout"
+      ansible.builtin.debug:
+        msg: "Warning!! Journald service is not enabled | Please enable systemd-journald.service to ensure logging is active"
+
+    - name: "6.2.1.1 | Ensure journald service is enabled | Warn Count"
       when: "'static' not in discovered_journald_enabled.stdout"
       ansible.builtin.import_tasks:
         file: warning_facts.yml

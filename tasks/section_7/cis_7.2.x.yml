@@ -74,7 +74,7 @@
       check_mode: false
       register: discovered_passwd_gid_check
 
-    - name: "7.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | Print warning about users with invalid GIDs missing GID entries in /etc/group"
+    - name: "7.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | Alert on findings"
       when: discovered_passwd_gid_check.stdout | length > 0
       ansible.builtin.debug:
         msg: "Warning!! The following users have non-existent GIDs (Groups): {{ discovered_passwd_gid_check.stdout_lines | join(', ') }}"
@@ -102,7 +102,7 @@
         split: ':'
         key: shadow
 
-    - name: "7.2.4 | AUDIT | Ensure shadow group is empty | Print warning about users in shadow group"
+    - name: "7.2.4 | AUDIT | Ensure shadow group is empty | Alert on findings"
       when: getent_group.shadow[2] | length > 0
       ansible.builtin.debug:
         msg: "Warning!! - You have users in the shadow group"
@@ -131,15 +131,15 @@
       check_mode: false
       register: discovered_user_uid_check
 
+    - name: "7.2.5 | AUDIT | Ensure no duplicate UIDs exist | Alert on findings"
+      when: discovered_user_uid_check.stdout | length > 0
+      ansible.builtin.debug:
+        msg: "Warning!! The following users have UIDs that are duplicates: {{ discovered_user_uid_check.stdout_lines }}"
+
     - name: "7.2.5 | AUDIT | Ensure no duplicate UIDs exist | Warn Count"
       when: discovered_user_uid_check.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
-
-    - name: "7.2.5 | AUDIT | Ensure no duplicate UIDs exist | Print warning about users with duplicate UIDs"
-      when: discovered_user_uid_check.stdout | length > 0
-      ansible.builtin.debug:
-        msg: "Warning!! The following users have UIDs that are duplicates: {{ discovered_user_uid_check.stdout_lines }}"
       vars:
         warn_control_id: '7.2.5'
 
@@ -160,7 +160,7 @@
       check_mode: false
       register: discovered_duplicate_gid_check
 
-    - name: "7.2.6 | AUDIT | Ensure no duplicate GIDs exist | Print warning about duplicate GIDs"
+    - name: "7.2.6 | AUDIT | Ensure no duplicate GIDs exist | Alert on findings"
       when: discovered_duplicate_gid_check.stdout | length > 0
       ansible.builtin.debug:
         msg: "Warning!! The following GIDs are duplicates: {{ discovered_duplicate_gid_check.stdout_lines }}"
@@ -189,12 +189,12 @@
       check_mode: false
       register: discovered_duplicate_username_check
 
-    - name: "7.2.7 | AUDIT | Ensure no duplicate user names exist | Print warning about users with duplicate User Names"
+    - name: "7.2.7 | AUDIT | Ensure no duplicate user names exist | Alert on findings"
       when: discovered_duplicate_username_check.stdout | length > 0
       ansible.builtin.debug:
         msg: "Warning!! The following user names are duplicates: {{ discovered_duplicate_username_check.stdout_lines }}"
 
-    - name: "7.2.7 | AUDIT | Ensure no duplicate user names exist | Set warning count"
+    - name: "7.2.7 | AUDIT | Ensure no duplicate user names exist | Warn Count"
       when: discovered_duplicate_username_check.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
@@ -220,12 +220,12 @@
       check_mode: false
       register: discovered_group_name_check
 
-    - name: "7.2.8 | AUDIT | Ensure no duplicate group names exist | Print warning about users with duplicate group names"
+    - name: "7.2.8 | AUDIT | Ensure no duplicate group names exist | Alert on findings"
       when: discovered_group_name_check.stdout | length > 0
       ansible.builtin.debug:
         msg: "Warning!! The following group names are duplicates: {{ discovered_group_name_check.stdout_lines }}"
 
-    - name: "7.2.8 | AUDIT | Ensure no duplicate group names exist | Set warning count"
+    - name: "7.2.8 | AUDIT | Ensure no duplicate group names exist | Warn Count"
       when: discovered_group_name_check.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml

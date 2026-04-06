@@ -18,11 +18,11 @@
     warn_control_id: '1.1.2.1.1'
     required_mount: '/tmp'
   block:
-    - name: "1.1.2.1.1 | AUDIT | Ensure /tmp is a separate partition | Absent"
+    - name: "1.1.2.1.1 | AUDIT | Ensure /tmp is a separate partition | Alert on findings"
       ansible.builtin.debug:
         msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
 
-    - name: "1.1.2.1.1 | WARN | Ensure /tmp is a separate partition | warn_count"
+    - name: "1.1.2.1.1 | WARN | Ensure /tmp is a separate partition | Warn Count"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 
@@ -125,11 +125,11 @@
     warn_control_id: '1.1.2.3.1'
     required_mount: '/home'
   block:
-    - name: "1.1.2.3.1 | AUDIT | Ensure separate partition exists for /home | Absent"
+    - name: "1.1.2.3.1 | AUDIT | Ensure separate partition exists for /home | Alert on findings"
       ansible.builtin.debug:
         msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
 
-    - name: "1.1.2.3.1 | WARN | Ensure separate partition exists for /home | warn_count"
+    - name: "1.1.2.3.1 | WARN | Ensure separate partition exists for /home | Warn Count"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 
@@ -174,11 +174,11 @@
     warn_control_id: '1.1.2.4.1'
     required_mount: '/var'
   block:
-    - name: "1.1.2.4.1 | AUDIT | Ensure separate partition exists for /var | Absent"
+    - name: "1.1.2.4.1 | AUDIT | Ensure separate partition exists for /var | Alert on findings"
       ansible.builtin.debug:
         msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
 
-    - name: "1.1.2.4.1 | WARN | Ensure separate partition exists for /var | warn_count"
+    - name: "1.1.2.4.1 | WARN | Ensure separate partition exists for /var | Warn Count"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 
@@ -223,11 +223,11 @@
     warn_control_id: '1.1.2.5.1'
     required_mount: '/var/tmp'
   block:
-    - name: "1.1.2.5.1 | AUDIT | Ensure separate partition exists for /var/tmp | Absent"
+    - name: "1.1.2.5.1 | AUDIT | Ensure separate partition exists for /var/tmp | Alert on findings"
       ansible.builtin.debug:
         msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
 
-    - name: "1.1.2.5.1 | WARN | Ensure separate partition exists for /var/tmp | warn_count"
+    - name: "1.1.2.5.1 | WARN | Ensure separate partition exists for /var/tmp | Warn Count"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 
@@ -274,11 +274,11 @@
     warn_control_id: '1.1.2.6.1'
     required_mount: '/var/log'
   block:
-    - name: "1.1.2.6.1 | AUDIT | Ensure separate partition exists for /var/log | Absent"
+    - name: "1.1.2.6.1 | AUDIT | Ensure separate partition exists for /var/log | Alert on findings"
       ansible.builtin.debug:
         msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
 
-    - name: "1.1.2.6.1 | WARN | Ensure separate partition exists for /var/log | warn_count"
+    - name: "1.1.2.6.1 | WARN | Ensure separate partition exists for /var/log | Warn Count"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 
@@ -325,11 +325,11 @@
     warn_control_id: '1.1.2.7.1'
     required_mount: '/var/log/audit'
   block:
-    - name: "1.1.2.7.1 | AUDIT | Ensure separate partition exists for /var/log/audit | Absent"
+    - name: "1.1.2.7.1 | AUDIT | Ensure separate partition exists for /var/log/audit | Alert on findings"
       ansible.builtin.debug:
         msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
 
-    - name: "1.1.2.7.1 | WARN | Ensure separate partition exists for /var/log/audit | warn_count"
+    - name: "1.1.2.7.1 | WARN | Ensure separate partition exists for /var/log/audit | Warn Count"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 

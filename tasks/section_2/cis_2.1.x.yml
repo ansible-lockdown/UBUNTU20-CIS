@@ -443,7 +443,7 @@
         line: 'inet_interfaces = loopback-only'
       notify: Restart postfix
 
-    - name: "2.1.21 | PATCH | Ensure mail transfer agents are configured for local-only mode | Message out other main agents"
+    - name: "2.1.21 | PATCH | Ensure mail transfer agents are configured for local-only mode | Alert on findings"
       when:
         - "'exim4' not in ansible_facts.packages"
         - "'postfix' not in ansible_facts.packages"
@@ -452,7 +452,7 @@
           - "Warning!! You are not using either exim4 or postfix"
           - "Please review your vendors documentation to configure local-only mode"
 
-    - name: "2.1.21 | WARN | Ensure mail transfer agent is configured for local-only mode | warn_count"
+    - name: "2.1.21 | WARN | Ensure mail transfer agent is configured for local-only mode | Warn Count"
       when:
         - "'exim4' not in ansible_facts.packages"
         - "'postfix' not in ansible_facts.packages"
@@ -478,14 +478,14 @@
       check_mode: false
       register: discovered_nonessential_services
 
-    - name: "2.1.22 | AUDIT | Ensure only approved services are listening on a network interface | Message out running services"
+    - name: "2.1.22 | AUDIT | Ensure only approved services are listening on a network interface | Alert on findings"
       when: discovered_nonessential_services.stdout | length > 0
       ansible.builtin.debug:
         msg:
           - "Warning!! Below are the running services. Please review and remove as well as mask un-needed services"
           - "{{ discovered_nonessential_services.stdout_lines }}"
 
-    - name: "2.1.22 | AUDIT | Ensure only approved services are listening on a network interface | Set warning count"
+    - name: "2.1.22 | AUDIT | Ensure only approved services are listening on a network interface | Warn Count"
       when: discovered_nonessential_services.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml

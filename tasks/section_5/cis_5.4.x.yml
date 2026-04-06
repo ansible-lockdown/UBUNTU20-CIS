@@ -200,7 +200,7 @@
       check_mode: false
       register: discovered_future_pw_users
 
-    - name: "5.4.1.6 | PATCH | Ensure all users last password change date is in the past | Warn about users"
+    - name: "5.4.1.6 | PATCH | Ensure all users last password change date is in the past | Alert on findings"
       when: discovered_future_pw_users.stdout | length > 0
       ansible.builtin.debug:
         msg:
@@ -313,7 +313,8 @@
       failed_when: false
       register: discovered_root_passwd_status
 
-    - name: "5.4.2.4 | AUDIT | Ensure root account access is controlled | Assert root password set"
+    - name: "5.4.2.4 | AUDIT | Ensure root account access is controlled | Alert on findings"
+      when: discovered_root_passwd_status.rc != 0
       ansible.builtin.assert:
         that: discovered_root_passwd_status.rc == 0
         fail_msg: "Warning!! Root password is not set or account is in an unexpected state - Please set a root password"
@@ -490,13 +491,20 @@
       check_mode: false
       register: discovered_unlocked_nologin_accounts
 
-    - name: "5.4.2.8 | PATCH | Ensure accounts without a valid login shell are locked | Lock accounts"
+    - name: "5.4.2.8 | PATCH | Ensure accounts without a valid login shell are locked | Lock accounts with invalid shells"
       when: discovered_unlocked_nologin_accounts.stdout | length > 0
       ansible.builtin.user:
         name: "{{ item }}"
         password_lock: true
       with_items: "{{ discovered_unlocked_nologin_accounts.stdout_lines }}"
       no_log: true
+
+    - name: "5.4.2.8 | AUDIT | Ensure accounts without a valid login shell are locked | Alert on findings"
+      when: discovered_unlocked_nologin_accounts.stdout | length > 0
+      ansible.builtin.debug:
+        msg:
+          - "Warning!! The following accounts do not have a valid login shell and should be locked"
+          - "{{ discovered_unlocked_nologin_accounts.stdout_lines }}"
 
     - name: "5.4.2.8 | AUDIT | Ensure accounts without a valid login shell are locked | Warn Count"
       when: discovered_unlocked_nologin_accounts.stdout | length > 0

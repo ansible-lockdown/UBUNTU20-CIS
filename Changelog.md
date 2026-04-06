@@ -91,7 +91,7 @@
 - Added missing `ubtu20cis_remote_log_host`, `ubtu20cis_remote_log_port`, `ubtu20cis_remote_log_protocol` to defaults/main.yml and bridge template (goss test 6.2.3.6 references these)
 - Added missing `ubtu20cis_ipv4_required` to bridge template (was in defaults but not passed to audit)
 
-### QA Fixes (April 3rd)
+### QA Fixes (April 2026)
 
 - Added `ubtu20cis_purge_apt` variable (default `false`) to control apt package purging; applied to prelink (1.5.4) and apport (1.5.5) removal tasks
 - Fixed handler key ordering in `Grub update`: moved `notify` after `changed_when`/`failed_when` per Lockdown conventions
@@ -108,6 +108,7 @@
 - Fixed 7.2.4: gave all three shadow group tasks unique names instead of duplicate "check users in group"
 - Fixed 5.4.2.6: added missing `automated` tag; expanded to configure umask in both `/root/.bash_profile` and `/root/.bashrc` using a block
 - Enabled goss audit in molecule converge (`setup_audit: true`, `run_audit: true`)
+- Standardize warn_control_id labeling/titles and logic
 
 ### Bug Fixes
 
