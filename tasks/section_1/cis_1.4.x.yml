@@ -21,7 +21,7 @@
         state: present
         insertafter: "{{ item.after | default(omit) }}"
         create: true
-        mode: 'u=rw,g=,o='
+        mode: 'go-rwx'
       loop:
         - {regexp: '^set superusers', line: 'set superusers="{{ ubtu20cis_grub_user }}"'}
         - {regexp: '^password_pbkdf2 {{ ubtu20cis_grub_user }} grub.pbkdf2.*', line: 'password_pbkdf2 {{ ubtu20cis_grub_user }} {{ ubtu20cis_bootloader_password_hash }}', after: 'set superusers="'}
@@ -60,4 +60,4 @@
         path: "{{ ubtu20cis_grub_file }}"
         owner: root
         group: root
-        mode: 'u=rw,g=,o='
+        mode: 'go-rwx'

@@ -51,13 +51,13 @@
         state: directory
         owner: root
         group: root
-        mode: 'u=rwx,g=rx,o=rx'
+        mode: 'go-w'
 
     - name: "2.3.2.1 | PATCH | Ensure systemd-timesyncd configured with authorized timeserver | sources"
       ansible.builtin.template:
         src: "{{ item }}.j2"
         dest: "/{{ item }}"
-        mode: 'u=rw,g=r,o=r'
+        mode: 'u-x,go-wx'
         owner: root
         group: root
       loop:
@@ -95,13 +95,13 @@
         state: directory
         owner: root
         group: root
-        mode: 'u=rwx,g=rx,o=rx'
+        mode: 'go-w'
 
     - name: "2.3.3.1 | PATCH | Ensure chrony is configured with authorized timeserver | sources"
       ansible.builtin.template:
         src: "{{ item }}.j2"
         dest: "/{{ item }}"
-        mode: 'g=r,o-rwx'
+        mode: 'g-wx,o-rwx'
         owner: root
         group: "root"
       loop:
@@ -117,7 +117,7 @@
         create: true
         owner: root
         group: "root"
-        mode: 'g=r,o-rwx'
+        mode: 'g-wx,o-rwx'
       notify: Restart timeservice
 
 - name: "2.3.3.2 | PATCH | Ensure chrony is running as user _chrony"

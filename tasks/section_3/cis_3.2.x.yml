@@ -16,7 +16,7 @@
         regexp: '^(#)?install dccp(\\s|$)'
         line: 'install dccp /bin/true'
         create: true
-        mode: 'u=rw,g=,o='
+        mode: 'go-rwx'
 
     - name: "3.2.1 | PATCH | Ensure dccp kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -24,7 +24,7 @@
         regexp: '^(#)?blacklist dccp(\\s|$)'
         line: 'blacklist dccp'
         create: true
-        mode: 'u=rw,g=,o='
+        mode: 'go-rwx'
 
 - name: "3.2.2 | PATCH | Ensure tipc kernel module is not available"
   when: ubtu20cis_rule_3_2_2
@@ -42,7 +42,7 @@
         regexp: '^(#)?install tipc(\\s|$)'
         line: install tipc /bin/true
         create: true
-        mode: 'u=rw,g=,o='
+        mode: 'go-rwx'
 
     - name: "3.2.2 | PATCH | Ensure tipc kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -50,7 +50,7 @@
         regexp: "^(#)?blacklist tipc(\\s|$)"
         line: 'blacklist tipc'
         create: true
-        mode: 'u=rw,g=,o='
+        mode: 'go-rwx'
 
 - name: "3.2.3 | PATCH | Ensure rds kernel module is not available"
   when: ubtu20cis_rule_3_2_3
@@ -68,7 +68,7 @@
         regexp: '^(#)?install rds(\\s|$)'
         line: 'install rds /bin/true'
         create: true
-        mode: 'u=rw,g=,o='
+        mode: 'go-rwx'
 
     - name: "3.2.3 | PATCH | Ensure rds kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -76,7 +76,7 @@
         regexp: "^(#)?blacklist rds(\\s|$)"
         line: 'blacklist rds'
         create: true
-        mode: 'u=rw,g=,o='
+        mode: 'go-rwx'
 
 - name: "3.2.4 | PATCH | Ensure sctp kernel module is not available"
   when: ubtu20cis_rule_3_2_4
@@ -94,7 +94,7 @@
         regexp: "^(#)?install sctp(\\s|$)"
         line: 'install sctp /bin/true'
         create: true
-        mode: 'u=rw,g=,o='
+        mode: 'go-rwx'
 
     - name: "3.2.4 | PATCH | Ensure sctp kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -102,4 +102,4 @@
         regexp: "^(#)?blacklist sctp(\\s|$)"
         line: 'blacklist sctp'
         create: true
-        mode: 'u=rw,g=,o='
+        mode: 'go-rwx'

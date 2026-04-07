@@ -209,7 +209,7 @@
         - item.path != "/var/log/wtmp"
       ansible.builtin.file:
         path: "{{ item.path }}"
-        mode: 'u=rw,g=r,o='
+        mode: 'u-x,g-wx,o-rwx'
       loop: "{{ discovered_logfiles.files }}"
       loop_control:
         label: "{{ item.path }}"

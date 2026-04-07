@@ -33,7 +33,7 @@
         "6.3.4.3 | PATCH | Ensure only authorized groups are assigned ownership of audit log files"
       ansible.builtin.file:
         path: "{{ discovered_audit_logfile.stdout }}"
-        mode: "{% if discovered_auditd_logfile.stat.mode > '0640' %}u=rw,g=r,o={% endif %}"
+        mode: "{% if discovered_auditd_logfile.stat.mode > '0640' %}u-x,g-wx,o-rwx{% endif %}"
         owner: root
         group: root
 
@@ -57,7 +57,7 @@
       ansible.builtin.file:
         path: "{{ discovered_audit_logfile.stdout | dirname }}"
         state: directory
-        mode: 'u=rwx,g=rx,o='
+        mode: 'g-w,o-rwx'
 
 - name: "6.3.4.5 | PATCH | Ensure audit configuration files mode is configured"
   when:
@@ -72,7 +72,7 @@
     - rule_6.3.4.5
   ansible.builtin.file:
     path: "{{ item.path }}"
-    mode: 'u=rw,g=r,o='
+    mode: 'u-x,g-wx,o-rwx'
   loop: "{{ prelim_auditd_conf_files.files | default([]) }}"
   loop_control:
     label: "{{ item.path }}"
@@ -135,7 +135,7 @@
       when: not item.stat.mode is match('07(0|5)0')
       ansible.builtin.file:
         path: "{{ item.item }}"
-        mode: 'u=rwx,g=rx,o='
+        mode: 'g-w,o-rwx'
       loop: "{{ discovered_audit_bins.results }}"
       loop_control:
         label: "{{ item.item }}"

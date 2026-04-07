@@ -28,7 +28,7 @@
     create: true
     owner: root
     group: root
-    mode: 'u=rw,g=r,o=r'
+    mode: 'u-x,go-wx'
 
 - name: "1.5.3 | PATCH | Ensure core dumps are restricted"
   when:
@@ -59,7 +59,7 @@
         create: true
         owner: root
         group: root
-        mode: 'u=rw,g=r,o=r'
+        mode: 'u-x,go-wx'
 
     - name: "1.5.3 | PATCH | Ensure core dumps are restricted | sysctl.conf"
       ansible.builtin.lineinfile:
@@ -68,7 +68,7 @@
         line: fs.suid_dumpable=0
         owner: root
         group: root
-        mode: 'u=rw,g=r,o=r'
+        mode: 'u-x,go-wx'
 
     - name: "1.5.3 | PATCH | Ensure core dumps are restricted | coredump.conf"
       when: "'systemd-coredump' in ansible_facts.packages"
@@ -79,7 +79,7 @@
         create: true
         owner: root
         group: root
-        mode: 'u=rw,g=r,o=r'
+        mode: 'u-x,go-wx'
       loop:
         - {regexp: '^Storage', line: 'Storage=none'}
         - {regexp: '^ProcessSizeMax', line: 'ProcessSizeMax=0'}
@@ -124,7 +124,7 @@
         create: true
         owner: root
         group: root
-        mode: 'u=rw,g=r,o=r'
+        mode: 'u-x,go-wx'
 
     - name: "1.5.5 | PATCH | Ensure Automatic Error Reporting is not enabled | stop service"
       when: "'apport' in ansible_facts.packages"

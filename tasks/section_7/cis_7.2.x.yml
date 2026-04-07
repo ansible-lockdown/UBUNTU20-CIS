@@ -248,7 +248,7 @@
         state: directory
         owner: "{{ item.id }}"
         group: "{{ item.gid }}"
-        mode: 'u=rwx,g=rx,o='
+        mode: 'g-w,o-rwx'
       loop: "{{ ubtu20cis_passwd | selectattr('uid', '>=', min_int_uid | int) | selectattr('uid', '<=', max_int_uid | int) | list }}"
       loop_control:
         label: "{{ item.id }}"

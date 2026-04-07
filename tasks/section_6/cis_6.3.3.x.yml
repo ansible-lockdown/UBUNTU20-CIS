@@ -14,7 +14,7 @@
     dest: /etc/audit/rules.d/50-scope.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.2 | PATCH | Ensure actions as another user are always logged"
@@ -31,7 +31,7 @@
     dest: /etc/audit/rules.d/50-user_emulation.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.3 | PATCH | Ensure events that modify the sudo log file are collected"
@@ -48,7 +48,7 @@
     dest: /etc/audit/rules.d/50-sudo.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.4 | PATCH | Ensure events that modify date and time information are collected"
@@ -65,7 +65,7 @@
     dest: /etc/audit/rules.d/50-time-change.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.5 | PATCH | Ensure events that modify the system's network environment are collected"
@@ -82,7 +82,7 @@
     dest: /etc/audit/rules.d/50-system-locale.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.6 | PATCH | Ensure use of privileged commands are collected"
@@ -107,7 +107,7 @@
         dest: /etc/audit/rules.d/50-privileged.rules
         owner: root
         group: root
-        mode: 'u=rw,g=,o='
+        mode: 'go-rwx'
       notify: Restart auditd
 
 - name: "6.3.3.7 | PATCH | Ensure unsuccessful file access attempts are collected"
@@ -124,7 +124,7 @@
     dest: /etc/audit/rules.d/50-access.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.8 | PATCH | Ensure events that modify user/group information are collected"
@@ -141,7 +141,7 @@
     dest: /etc/audit/rules.d/50-identity.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.9 | PATCH | Ensure discretionary access control permission modification events are collected"
@@ -158,7 +158,7 @@
     dest: /etc/audit/rules.d/50-perm_mod.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.10 | PATCH | Ensure successful file system mounts are collected"
@@ -175,7 +175,7 @@
     dest: /etc/audit/rules.d/50-mount.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.11 | PATCH | Ensure session initiation information is collected"
@@ -192,7 +192,7 @@
     dest: /etc/audit/rules.d/50-session.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.12 | PATCH | Ensure login and logout events are collected"
@@ -209,7 +209,7 @@
     dest: /etc/audit/rules.d/50-logins.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.13 | PATCH | Ensure file deletion events by users are collected"
@@ -226,7 +226,7 @@
     dest: /etc/audit/rules.d/50-delete.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.14 | PATCH | Ensure events that modify the system's Mandatory Access Controls are collected"
@@ -243,7 +243,7 @@
     dest: /etc/audit/rules.d/50-MAC-policy.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.15 | PATCH | Ensure successful and unsuccessful attempts to use the chcon command are collected"
@@ -260,7 +260,7 @@
     dest: /etc/audit/rules.d/50-perm_chng.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.16 | PATCH | Ensure successful and unsuccessful attempts to use the setfacl command are collected"
@@ -277,7 +277,7 @@
     dest: /etc/audit/rules.d/50-perm_chng.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.17 | PATCH | Ensure successful and unsuccessful attempts to use the chacl command are collected"
@@ -294,7 +294,7 @@
     dest: /etc/audit/rules.d/50-perm_chng.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.18 | PATCH | Ensure successful and unsuccessful attempts to use the usermod command are collected"
@@ -311,7 +311,7 @@
     dest: /etc/audit/rules.d/50-perm_chng.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.19 | PATCH | Ensure kernel module loading unloading and modification is collected"
@@ -328,7 +328,7 @@
     dest: /etc/audit/rules.d/50-kernel_modules.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.20 | PATCH | Ensure the audit configuration is immutable"
@@ -345,7 +345,7 @@
     dest: /etc/audit/rules.d/99-finalize.rules
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
   notify: Restart auditd
 
 - name: "6.3.3.21 | PATCH | Ensure the running and on disk configuration is the same"

@@ -13,7 +13,7 @@
     path: /etc/ssh/sshd_config
     owner: root
     group: root
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
 
 - name: "5.1.2 | PATCH | Ensure access to SSH private host key files is configured"
   when: ubtu20cis_rule_5_1_2
@@ -36,7 +36,7 @@
         path: "{{ item.path }}"
         owner: root
         group: root
-        mode: 'u=rw,g=,o='
+        mode: 'go-rwx'
       with_items:
         - "{{ discovered_ssh_host_priv_keys.files }}"
       loop_control:
@@ -63,7 +63,7 @@
         path: "{{ item.path }}"
         owner: root
         group: root
-        mode: 'u=rw,g=r,o=r'
+        mode: 'u-x,go-wx'
       with_items:
         - "{{ discovered_ssh_host_pub_keys.files }}"
       loop_control:

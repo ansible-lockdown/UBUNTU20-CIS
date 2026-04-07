@@ -1,6 +1,7 @@
 ---
 
 - name: "5.4.1.1 | PATCH | Ensure password expiration is configured"
+  no_log: true
   when: ubtu20cis_rule_5_4_1_1
   tags:
     - level1-server
@@ -35,6 +36,7 @@
       failed_when: false
 
 - name: "5.4.1.2 | PATCH | Ensure minimum password days is configured"
+  no_log: true
   when: ubtu20cis_rule_5_4_1_2
   tags:
     - level1-server
@@ -68,6 +70,7 @@
       failed_when: false
 
 - name: "5.4.1.3 | PATCH | Ensure password expiration warning days is configured"
+  no_log: true
   when: ubtu20cis_rule_5_4_1_3
   tags:
     - level1-server
@@ -135,6 +138,7 @@
         insertafter: '^# end of pam-auth-update config'
 
 - name: "5.4.1.5 | PATCH | Ensure inactive password lock is configured"
+  no_log: true
   when: ubtu20cis_rule_5_4_1_5
   tags:
     - level1-server
@@ -176,6 +180,7 @@
       failed_when: false
 
 - name: "5.4.1.6 | PATCH | Ensure all users last password change date is in the past"
+  no_log: true
   when: ubtu20cis_rule_5_4_1_6
   tags:
     - level1-server
@@ -541,7 +546,7 @@
     marker: "# {mark} ANSIBLE MANAGED"
     state: "{{ item.state }}"
     create: true
-    mode: 'u=rw,g=r,o=r'
+    mode: 'u-x,go-wx'
     block: |
       # Set session timeout - CIS ID 5.4.3.2
       # only set TMOUT if it isn't set yet to avoid a shell error

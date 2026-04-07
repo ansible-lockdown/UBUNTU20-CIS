@@ -29,7 +29,7 @@
     owner: root
     group: root
     state: touch
-    mode: 'u=rw,g=,o='
+    mode: 'go-rwx'
 
 - name: "2.4.1.3 | PATCH | Ensure access to /etc/cron.hourly is configured"
   when: ubtu20cis_rule_2_4_1_3
@@ -46,7 +46,7 @@
     owner: root
     group: root
     state: touch
-    mode: 'u=rwx,g=,o='
+    mode: 'u+rwx,go-rwx'
 
 - name: "2.4.1.4 | PATCH | Ensure access to /etc/cron.daily is configured"
   when: ubtu20cis_rule_2_4_1_4
@@ -63,7 +63,7 @@
     owner: root
     group: root
     state: touch
-    mode: 'u=rwx,g=,o='
+    mode: 'u+rwx,go-rwx'
 
 - name: "2.4.1.5 | PATCH | Ensure access to /etc/cron.weekly is configured"
   when: ubtu20cis_rule_2_4_1_5
@@ -80,7 +80,7 @@
     owner: root
     group: root
     state: touch
-    mode: 'u=rwx,g=,o='
+    mode: 'u+rwx,go-rwx'
 
 - name: "2.4.1.6 | PATCH | Ensure access to /etc/cron.monthly is configured"
   when: ubtu20cis_rule_2_4_1_6
@@ -97,7 +97,7 @@
     owner: root
     group: root
     state: touch
-    mode: 'u=rwx,g=,o='
+    mode: 'u+rwx,go-rwx'
 
 - name: "2.4.1.7 | PATCH | Ensure access to /etc/cron.yearly is configured"
   when: ubtu20cis_rule_2_4_1_7
@@ -114,7 +114,7 @@
     owner: root
     group: root
     state: touch
-    mode: 'u=rwx,g=,o='
+    mode: 'u+rwx,go-rwx'
 
 - name: "2.4.1.8 | PATCH | Ensure access to /etc/cron.d is configured"
   when: ubtu20cis_rule_2_4_1_8
@@ -131,7 +131,7 @@
     owner: root
     group: root
     state: touch
-    mode: 'u=rwx,g=,o='
+    mode: 'u+rwx,go-rwx'
 
 - name: "2.4.1.9 | PATCH | Ensure access to crontab is configured"
   when: ubtu20cis_rule_2_4_1_9
@@ -155,7 +155,7 @@
         force: false
         owner: root
         group: root
-        mode: 'u=rw,g=r,o='
+        mode: 'u-x,g-wx,o-rwx'
 
 - name: "2.4.2.1 | PATCH | Ensure access to at is configured"
   when: ubtu20cis_rule_2_4_2_1
@@ -179,4 +179,4 @@
         force: false
         owner: root
         group: root
-        mode: 'u=rw,g=r,o='
+        mode: 'u-x,g-wx,o-rwx'

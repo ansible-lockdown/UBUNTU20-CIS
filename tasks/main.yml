@@ -163,7 +163,7 @@
         state: directory
         owner: root
         group: root
-        mode: 'u=rwx,go=rx'
+        mode: 'go-w'
 
     - name: Create ansible facts file
       ansible.builtin.template:

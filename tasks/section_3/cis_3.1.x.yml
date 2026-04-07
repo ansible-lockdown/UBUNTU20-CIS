@@ -108,7 +108,7 @@
         regexp: 'install\s*{{ item }}\s*/bin/true'
         line: "install {{ item.line }} /bin/true"
         create: true
-        mode: 'u=rw,g=,o='
+        mode: 'go-rwx'
       loop:
         - "{{ prelim_wireless_interfaces.stdout_lines }}"
 
@@ -118,7 +118,7 @@
         regexp: 'blacklist\s*{{ item }}\s*'
         line: "blacklist {{ item.line }}"
         create: true
-        mode: 'u=rw,g=,o='
+        mode: 'go-rwx'
       loop:
         - "{{ prelim_wireless_interfaces.stdout_lines }}"
 

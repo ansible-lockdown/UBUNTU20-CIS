@@ -21,4 +21,8 @@ galaxy_info:
     - compliance
     - complianceascode
     - ubuntu20
+collections:
+  - community.general
+  - community.crypto
+  - ansible.posix
 dependencies: []

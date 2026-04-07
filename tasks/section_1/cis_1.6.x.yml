@@ -75,7 +75,7 @@
     path: /etc/motd
     owner: root
     group: root
-    mode: 'u=rw,g=r,o=r'
+    mode: 'u-x,go-wx'
 
 - name: "1.6.5 | PATCH | Ensure access to /etc/issue is configured"
   when: ubtu20cis_rule_1_6_5
@@ -91,7 +91,7 @@
     path: /etc/issue
     owner: root
     group: root
-    mode: 'u=rw,g=r,o=r'
+    mode: 'u-x,go-wx'
 
 - name: "1.6.6 | PATCH | Ensure access to /etc/issue.net is configured"
   when: ubtu20cis_rule_1_6_6
@@ -107,4 +107,4 @@
     path: /etc/issue.net
     owner: root
     group: root
-    mode: 'u=rw,g=r,o=r'
+    mode: 'u-x,go-wx'

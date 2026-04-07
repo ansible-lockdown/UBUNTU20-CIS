@@ -121,6 +121,7 @@
 - Fixed 6.2.1.1: added missing `Alert on findings` debug for journald service status
 - Fixed 7.2.5: reordered alert debug before warn count import (was warn count before alert)
 - Fixed 4.3.3–4.3.10: added `"Alert on findings"` suffix to all 8 nftables audit debug tasks
+- Migrated all `mode:` directives from `=` (absolute) to `-` (relative) symbolic notation to align with UBUNTU22-CIS conventions (~100 directives across 18 task files). Mapping: `u=rw,g=,o=` → `go-rwx`, `u=rw,g=r,o=r` → `u-x,go-wx`, `u=rwx,g=,o=` → `u+rwx,go-rwx`, `u=rwx,g=rx,o=rx` → `go-w`, `u=rw,g=r,o=` → `u-x,g-wx,o-rwx`, `u=rwx,g=rx,o=` → `g-w,o-rwx`. Also standardized 2 mixed-notation entries in `cis_2.3.x.yml`
 
 ### Bug Fixes
 
