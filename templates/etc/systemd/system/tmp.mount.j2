@@ -1,3 +1,5 @@
+{{ file_managed_by_ansible }}
+
 [Unit]
 Description=Temporary Directory /tmp
 ConditionPathIsSymbolicLink=!/tmp
@@ -9,4 +11,4 @@ After=swap.target
 What=tmpfs
 Where=/tmp
 Type=tmpfs
-Options: {% if ubtu20cis_rule_1_1_2_2 %}nodev,{% endif %}{% if ubtu20cis_rule_1_1_2_3 %}noexec,{% endif %}{% if ubtu20cis_rule_1_1_2_4 %}nosuid{% endif %}
+Options= {% if ubtu20cis_rule_1_1_2_1_2 %}nodev,{% endif %}{% if ubtu20cis_rule_1_1_2_1_3 %}nosuid,{% endif %}{% if ubtu20cis_rule_1_1_2_1_4 %}noexec{% endif %}

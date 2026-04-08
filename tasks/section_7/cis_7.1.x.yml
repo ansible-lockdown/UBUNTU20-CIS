@@ -1,0 +1,397 @@
+---
+
+- name: "7.1.1 | PATCH | Ensure access to /etc/passwd is configured"
+  when: ubtu20cis_rule_7_1_1
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_7.1.1
+    - permissions
+  ansible.builtin.file:
+    path: /etc/passwd
+    owner: root
+    group: root
+    mode: 'u-x,go-wx'
+
+- name: "7.1.2 | PATCH | Ensure access to /etc/passwd- is configured"
+  when: ubtu20cis_rule_7_1_2
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_7.1.2
+    - permissions
+  ansible.builtin.file:
+    path: /etc/passwd-
+    owner: root
+    group: root
+    mode: 'go-rwx'
+
+- name: "7.1.3 | PATCH | Ensure access to /etc/group is configured"
+  when: ubtu20cis_rule_7_1_3
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_7.1.3
+    - permissions
+  ansible.builtin.file:
+    path: /etc/group
+    owner: root
+    group: root
+    mode: 'u-x,go-wx'
+
+- name: "7.1.4 | PATCH | Ensure access to /etc/group- is configured"
+  when: ubtu20cis_rule_7_1_4
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_7.1.4
+    - permissions
+  ansible.builtin.file:
+    path: /etc/group-
+    owner: root
+    group: root
+    mode: 'u-x,go-wx'
+
+- name: "7.1.5 | PATCH | Ensure access to /etc/shadow is configured"
+  when: ubtu20cis_rule_7_1_5
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_7.1.5
+    - permissions
+  ansible.builtin.file:
+    path: /etc/shadow
+    owner: root
+    group: shadow
+    mode: 'u-x,g-wx,o-rwx'
+
+- name: "7.1.6 | PATCH | Ensure access to /etc/shadow- is configured"
+  when: ubtu20cis_rule_7_1_6
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_7.1.6
+    - permissions
+  ansible.builtin.file:
+    path: /etc/shadow-
+    owner: root
+    group: shadow
+    mode: 'u-x,g-wx,o-rwx'
+
+- name: "7.1.7 | PATCH | Ensure access to /etc/gshadow is configured"
+  when: ubtu20cis_rule_7_1_7
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_7.1.7
+    - permissions
+  ansible.builtin.file:
+    path: /etc/gshadow
+    owner: root
+    group: shadow
+    mode: 'u-x,g-wx,o-rwx'
+
+- name: "7.1.8 | PATCH | Ensure access to /etc/gshadow- is configured"
+  when: ubtu20cis_rule_7_1_8
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_7.1.8
+    - permissions
+  ansible.builtin.file:
+    path: /etc/gshadow-
+    owner: root
+    group: shadow
+    mode: 'u-x,g-wx,o-rwx'
+
+- name: "7.1.9 | PATCH | Ensure access to /etc/shells is configured"
+  when: ubtu20cis_rule_7_1_9
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_7.1.9
+    - permissions
+  ansible.builtin.file:
+    path: /etc/shells
+    owner: root
+    group: root
+    mode: 'u-x,go-wx'
+
+- name: "7.1.10 | PATCH | Ensure access to /etc/security/opasswd is configured"
+  when: ubtu20cis_rule_7_1_10
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_7.1.10
+    - permissions
+  block:
+    - name: "7.1.10 | AUDIT | Ensure access to /etc/security/opasswd is configured | stat opasswd"
+      ansible.builtin.stat:
+        path: /etc/security/opasswd
+      register: discovered_opasswd
+
+    - name: "7.1.10 | PATCH | Ensure access to /etc/security/opasswd is configured | opasswd"
+      when: discovered_opasswd.stat.exists
+      ansible.builtin.file:
+        path: /etc/security/opasswd
+        owner: root
+        group: root
+        mode: 'go-rwx'
+
+    - name: "7.1.10 | AUDIT | Ensure access to /etc/security/opasswd is configured | stat opasswd.old"
+      ansible.builtin.stat:
+        path: /etc/security/opasswd.old
+      register: discovered_opasswd_old
+
+    - name: "7.1.10 | PATCH | Ensure access to /etc/security/opasswd is configured | set opasswd.old if exists"
+      when: discovered_opasswd_old.stat.exists
+      ansible.builtin.file:
+        path: /etc/security/opasswd.old
+        owner: root
+        group: root
+        mode: 'go-rwx'
+
+- name: "7.1.11 | PATCH | Ensure world writable files and directories are secured"
+  when: ubtu20cis_rule_7_1_11
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_7.1.11
+    - permissions
+  block:
+    - name: "7.1.11 | AUDIT | Ensure world writable files and directories are secured | Get list of world-writable files"
+      ansible.builtin.command: find {{ item.mount }} -xdev -type f -perm -0002 -not -fstype nfs
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_world_writable_files
+      with_items:
+        - "{{ ansible_mounts }}"
+      loop_control:
+        label: "{{ item.mount }}"
+
+    - name: "7.1.11 | PATCH | Ensure world writable files and directories are secured | Adjust world-writable files if they exist"
+      when: ubtu20cis_no_world_write_adjust
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: o-w
+      with_items:
+        - "{{ discovered_world_writable_files.results | map(attribute='stdout_lines') | flatten }}"
+
+- name: "7.1.12 | PATCH | Ensure no files or directories without an owner and a group exist"
+  when: ubtu20cis_rule_7_1_12
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_7.1.12
+    - permissions
+  block:
+    - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Get unowned files or directories"
+      ansible.builtin.command: find {{ item.mount }} -xdev -nouser -not -fstype nfs
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_no_user_items
+      with_items:
+        - "{{ ansible_mounts }}"
+      loop_control:
+        label: "{{ item.mount }}"
+
+    - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Flatten no_user_items results for easier use"
+      ansible.builtin.set_fact:
+        discovered_no_user_items_flatten: "{{ discovered_no_user_items.results | map(attribute='stdout_lines') | flatten }}"
+
+    - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Alert on findings"
+      when:
+        - not ubtu20cis_no_owner_adjust
+        - discovered_no_user_items_flatten | length > 0
+      ansible.builtin.debug:
+        msg:
+          - "Warning!! You have unowned files and are configured to not auto-remediate for this task"
+          - "Please review the files/directories below and assign an owner"
+          - "{{ discovered_no_user_items_flatten }}"
+
+    - name: "7.1.12 | PATCH | Ensure no files or directories without an owner and a group exist | Set unowned files/directories to configured owner"
+      when:
+        - ubtu20cis_no_owner_adjust
+        - discovered_no_user_items_flatten | length > 0
+      ansible.builtin.file:
+        path: "{{ item }}"
+        owner: "{{ ubtu20cis_unowned_owner }}"
+      with_items:
+        - "{{ discovered_no_user_items_flatten }}"
+
+    - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Warn Count"
+      when:
+        - not ubtu20cis_no_owner_adjust
+        - discovered_no_user_items_flatten | length > 0
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
+      vars:
+        warn_control_id: '7.1.12_unowned'
+
+    - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Get ungrouped files or directories"
+      ansible.builtin.command: find {{ item.mount }} -xdev -nogroup -not -fstype nfs
+      with_items:
+        - "{{ ansible_mounts }}"
+      loop_control:
+        label: "{{ item.mount }}"
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_ungrouped_items
+
+    - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Flatten ungrouped_items results for easier use"
+      ansible.builtin.set_fact:
+        discovered_ungrouped_items_flatten: "{{ discovered_ungrouped_items.results | map(attribute='stdout_lines') | flatten }}"
+
+    - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Alert on ungrouped files and directories"
+      when:
+        - not ubtu20cis_no_group_adjust
+        - discovered_ungrouped_items_flatten | length > 0
+      ansible.builtin.debug:
+        msg:
+          - "Warning!! You have ungrouped files/directories and are configured to not auto-remediate for this task"
+          - "Please review the files/directories below and assign a group"
+          - "{{ discovered_ungrouped_items_flatten }}"
+
+    - name: "7.1.12 | PATCH | Ensure no files or directories without an owner and a group exist | Set ungrouped files/directories to configured group"
+      when:
+        - ubtu20cis_no_group_adjust
+        - discovered_ungrouped_items_flatten | length > 0
+      ansible.builtin.file:
+        path: "{{ item }}"
+        group: "{{ ubtu20cis_ungrouped_group }}"
+      with_items:
+        - "{{ discovered_ungrouped_items_flatten }}"
+
+    - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Warn Count"
+      when:
+        - not ubtu20cis_no_group_adjust
+        - discovered_ungrouped_items_flatten | length > 0
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
+      vars:
+        warn_control_id: '7.1.12_ungrouped'
+
+- name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed"
+  when: ubtu20cis_rule_7_1_13
+  tags:
+    - level1-server
+    - level1-workstation
+    - manual
+    - audit
+    - rule_7.1.13
+    - permissions
+  block:
+    - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Find SUID executables"
+      ansible.builtin.command: find {{ item.mount }} -xdev -type f -perm -4000 -not -fstype nfs
+      with_items:
+        - "{{ ansible_mounts }}"
+      loop_control:
+        label: "{{ item.mount }}"
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_suid_executables
+
+    - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Flatten suid_executables results for easier use"
+      ansible.builtin.set_fact:
+        discovered_suid_executables_flatten: "{{ discovered_suid_executables.results | map(attribute='stdout_lines') | flatten }}"
+
+    - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Alert on findings"
+      when:
+        - discovered_suid_executables_flatten | length > 0
+        - not ubtu20cis_suid_adjust
+      ansible.builtin.debug:
+        msg:
+          - "Warning!! You have SUID executables"
+          - "The files are listed below, please confirm the integrity of these binaries"
+          - "{{ discovered_suid_executables_flatten }}"
+
+    - name: "7.1.13 | PATCH | Ensure SUID and SGID files are reviewed | Remove SUID bit"
+      when:
+        - ubtu20cis_suid_adjust
+        - discovered_suid_executables_flatten | length > 0
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: 'u-s'
+      with_items:
+        - "{{ discovered_suid_executables_flatten }}"
+
+    - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Warn Count"
+      when:
+        - discovered_suid_executables_flatten | length > 0
+        - not ubtu20cis_suid_adjust
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
+      vars:
+        warn_control_id: '7.1.13_suid'
+
+    - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Find SGID executables"
+      ansible.builtin.command: find {{ item }} -xdev -type f -perm -2000 -not -fstype nfs
+      with_items:
+        - "{{ ansible_mounts }}"
+      loop_control:
+        label: "{{ item.mount }}"
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_sgid_executables
+
+    - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Flatten sgid_executables results for easier use"
+      ansible.builtin.set_fact:
+        discovered_sgid_executables_flatten: "{{ discovered_sgid_executables.results | map(attribute='stdout_lines') | flatten }}"
+
+    - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Alert on findings"
+      when:
+        - discovered_sgid_executables_flatten | length > 0
+        - not ubtu20cis_sgid_adjust
+      ansible.builtin.debug:
+        msg:
+          - "Warning!! You have SGID executables"
+          - "The files are listed below, please review the integrity of these binaries"
+          - "{{ discovered_sgid_executables_flatten }}"
+
+    - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Warn Count"
+      when:
+        - discovered_sgid_executables_flatten | length > 0
+        - not ubtu20cis_sgid_adjust
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
+      vars:
+        warn_control_id: '7.1.13_sgid'
+
+    - name: "7.1.13 | PATCH | Ensure SUID and SGID files are reviewed | Remove SGID bit"
+      when:
+        - ubtu20cis_sgid_adjust
+        - discovered_sgid_executables_flatten | length > 0
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: 'g-s'
+      with_items:
+        - "{{ discovered_sgid_executables_flatten }}"

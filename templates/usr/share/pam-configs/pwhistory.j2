@@ -1,0 +1,8 @@
+{{ file_managed_by_ansible }}
+
+Name: pwhistory password history checking
+Default: yes
+Priority: 1024
+Password-Type: Primary
+Password:
+        requisite                       pam_pwhistory.so enforce_for_root try_first_pass{% if ubtu20cis_rule_5_3_3_3_1 %} remember={{ ubtu20cis_pamd_pwhistory_remember }}{% endif %}{% if ubtu20cis_rule_5_3_3_3_2 %} enforce_for_root{% endif %}{% if ubtu20cis_rule_5_3_3_3_3 %} use_authtok{% endif %}

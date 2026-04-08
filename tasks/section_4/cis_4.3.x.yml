@@ -1,143 +1,213 @@
 ---
 
-- name: "4.3.1 | PATCH | Ensure sudo is installed"
+# ---------------
+# ---------------
+# NFTables is unsupported with this role. However we have the actions commented out as a guide
+# ---------------
+# ---------------
+
+- name: "4.3.1 | AUDIT | Ensure nftables is installed"
+  when:
+    - ubtu20cis_rule_4_3_1
+    - ubtu20cis_firewall_package == "nftables"
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - audit
+    - rule_4.3.1
+    - nftables
   ansible.builtin.package:
-      name: "{{ ubtu20cis_sudo_package }}"
-      state: present
-  when:
-      - ubtu20cis_rule_4_3_1
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.3.1
-      - sudo
+    name: nftables
+    state: present
 
-- name: "4.3.2 | PATCH | Ensure sudo commands use pty"
-  ansible.builtin.lineinfile:
-      path: /etc/sudoers
-      regexp: '^\s*Defaults\s+use_pty\s*$'
-      line: 'Defaults use_pty'
-      insertafter: '^\s*Defaults'
+- name: "4.3.2 | AUDIT | Ensure ufw is uninstalled or disabled with nftables"
   when:
-      - ubtu20cis_rule_4_3_2
+    - ubtu20cis_rule_4_3_2
+    - ubtu20cis_firewall_package == "nftables"
   tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.3.2
-      - sudo
+    - level1-server
+    - level1-workstation
+    - automated
+    - audit
+    - rule_4.3.2
+    - nftables
+  ansible.builtin.package:
+    name: ufw
+    state: absent
 
-- name: "4.3.3 | PATCH | Ensure sudo log file exists"
-  ansible.builtin.lineinfile:
-      path: /etc/sudoers
-      regexp: '^\s*Defaults\s+logfile\s*='
-      line: 'Defaults logfile="{{ ubtu20cis_sudo_logfile }}"'
-      insertafter: '^\s*Defaults'
+- name: "4.3.3 | AUDIT | Ensure iptables are flushed with nftables"
   when:
-      - ubtu20cis_rule_4_3_3
+    - ubtu20cis_rule_4_3_3
+    - ubtu20cis_firewall_package == "nftables"
   tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.3.3
-      - sudo
-
-- name: "4.3.4 | PATCH | Ensure users must provide password for escalation"
-  ansible.builtin.replace:
-      path: "{{ item }}"
-      regexp: '^([^#|{% if system_is_ec2 %}ec2-user{% endif %}].*)NOPASSWD(.*)'
-      replace: '\1PASSWD\2'
-      validate: '/usr/sbin/visudo -cf %s'
-  loop: "{{ ubtu20cis_sudoers_files.stdout_lines }}"
-  when:
-      - ubtu20cis_rule_4_3_4
-  tags:
-      - level2-server
-      - level2-workstation
-      - patch
-      - sudo
-      - rule_4.3.4
-
-- name: "4.3.5 | PATCH | Ensure re-authentication for privilege escalation is not disabled globally"
-  ansible.builtin.replace:
-      path: "{{ item }}"
-      regexp: '^([^#].*)!authenticate(.*)'
-      replace: '\1authenticate\2'
-      validate: '/usr/sbin/visudo -cf %s'
-  loop: "{{ ubtu20cis_sudoers_files.stdout_lines }}"
-  when:
-      - ubtu20cis_rule_4_3_5
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - sudo
-      - rule_4.3.5
-
-- name: "4.3.6 | PATCH | Ensure sudo authentication timeout is configured correctly"
+    - level1-server
+    - level1-workstation
+    - manual
+    - audit
+    - rule_4.3.3
+    - nftables
   block:
-      - name: "4.3.6 | AUDIT | Ensure sudo authentication timeout is configured correctly | Get files with timeout set"
-        ansible.builtin.shell: grep -is 'timestamp_timeout' /etc/sudoers /etc/sudoers.d/* | cut -d":" -f1 | uniq | sort
-        changed_when: false
-        failed_when: false
-        register: ubtu20cis_4_3_6_timeout_files
+    - name: "4.3.3 | AUDIT | Ensure iptables are flushed with nftables | Alert on findings"
+      ansible.builtin.debug:
+        msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
 
-      - name: "4.3.6 | PATCH | Ensure sudo authentication timeout is configured correctly | Set value if no results"
-        ansible.builtin.lineinfile:
-            path: /etc/sudoers
-            regexp: '^\s*Defaults\s+timestamp_timeout\s*='
-            line: "Defaults timestamp_timeout={{ ubtu20cis_sudo_timestamp_timeout }}"
-            validate: '/usr/sbin/visudo -cf %s'
-            insertafter: '^\s*Defaults'
-        when: ubtu20cis_4_3_6_timeout_files.stdout | length == 0
+    - name: "4.3.3 | AUDIT | Ensure iptables are flushed with nftables | Warn Count"
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
+      vars:
+        warn_control_id: '4.3.3'
 
-      - name: "4.3.6 | PATCH | Ensure sudo authentication timeout is configured correctly | Set value if has results"
-        ansible.builtin.replace:
-            path: "{{ item }}"
-            regexp: 'timestamp_timeout\s*=\s*(\d+)'
-            replace: "timestamp_timeout={{ ubtu20cis_sudo_timestamp_timeout }}"
-            validate: '/usr/sbin/visudo -cf %s'
-        loop: "{{ ubtu20cis_4_3_6_timeout_files.stdout_lines }}"
-        when: ubtu20cis_4_3_6_timeout_files.stdout | length > 0
+- name: "4.3.4 | AUDIT | Ensure a nftables table exists"
   when:
-      - ubtu20cis_rule_4_3_6
+    - ubtu20cis_rule_4_3_4
+    - ubtu20cis_firewall_package == "nftables"
   tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - sudo
-      - rule_4.3.6
-
-- name: "4.3.7 | PATCH | Ensure access to the su command is restricted"
+    - level1-server
+    - level1-workstation
+    - automated
+    - audit
+    - rule_4.3.4
+    - nftables
   block:
+    - name: "4.3.4 | AUDIT | Ensure a nftables table exists | Alert on findings"
+      ansible.builtin.debug:
+        msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
 
-      - name: "4.3.7 | PATCH | Ensure access to the su command is restricted | Ensure sugroup exists"
-        ansible.builtin.group:
-            name: "{{ ubtu20cis_sugroup }}"
-            state: present
-        register: ubtu20cis_4_3_7_sugroup
+    - name: "4.3.4 | AUDIT | Ensure a nftables table exists | Warn Count"
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
+      vars:
+        warn_control_id: '4.3.4'
 
-      - name: "4.3.7 | PATCH | Ensure access to the su command is restricted | remove users from group"
-        ansible.builtin.lineinfile:
-            path: /etc/group
-            regexp: '^{{ ubtu20cis_sugroup }}(:.:.*:).*$'
-            line: '{{ ubtu20cis_sugroup }}\g<1>'
-            backrefs: true
-
-      - name: "4.3.7 | PATCH | Ensure access to the su command is restricted | Setting pam_wheel to use_uid"
-        ansible.builtin.lineinfile:
-            path: /etc/pam.d/su
-            regexp: '^(#)?auth\s+required\s+pam_wheel\.so'
-            line: 'auth           required        pam_wheel.so use_uid group={{ ubtu20cis_sugroup }}'
+- name: "4.3.5 | AUDIT | Ensure nftables base chains exist"
   when:
-      - ubtu20cis_rule_4_3_7
+    - ubtu20cis_rule_4_3_5
+    - ubtu20cis_firewall_package == "nftables"
   tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - sudo
-      - rule_4.3.7
+    - level1-server
+    - level1-workstation
+    - automated
+    - audit
+    - rule_4.3.5
+    - nftables
+  block:
+    - name: "4.3.5 | AUDIT | Ensure nftables base chains exist | Alert on findings"
+      ansible.builtin.debug:
+        msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
+
+    - name: "4.3.5 | AUDIT | Ensure nftables base chains exist | Warn Count"
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
+      vars:
+        warn_control_id: '4.3.5'
+
+- name: "4.3.6 | AUDIT | Ensure nftables loopback traffic is configured"
+  when:
+    - ubtu20cis_rule_4_3_6
+    - ubtu20cis_firewall_package == "nftables"
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - audit
+    - rule_4.3.6
+    - nftables
+  block:
+    - name: "4.3.6 | AUDIT | Ensure nftables loopback traffic is configured | Alert on findings"
+      ansible.builtin.debug:
+        msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
+
+    - name: "4.3.6 | AUDIT | Ensure nftables loopback traffic is configured | Warn Count"
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
+      vars:
+        warn_control_id: '4.3.6'
+
+- name: "4.3.7 | AUDIT | Ensure nftables outbound and established connections are configured"
+  when:
+    - ubtu20cis_rule_4_3_7
+    - ubtu20cis_firewall_package == "nftables"
+  tags:
+    - level1-server
+    - level1-workstation
+    - manual
+    - audit
+    - rule_4.3.7
+    - nftables
+  block:
+    - name: "4.3.7 | AUDIT | Ensure nftables outbound and established connections are configured | Alert on findings"
+      ansible.builtin.debug:
+        msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
+
+    - name: "4.3.7 | AUDIT | Ensure nftables outbound and established connections are configured | Warn Count"
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
+      vars:
+        warn_control_id: '4.3.7'
+
+- name: "4.3.8 | AUDIT | Ensure nftables default deny firewall policy"
+  when:
+    - ubtu20cis_rule_4_3_8
+    - ubtu20cis_firewall_package == "nftables"
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - audit
+    - rule_4.3.8
+    - nftables
+  block:
+    - name: "4.3.8 | AUDIT | Ensure nftables default deny firewall policy | Alert on findings"
+      ansible.builtin.debug:
+        msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
+
+    - name: "4.3.8 | AUDIT | Ensure nftables default deny firewall policy | Warn Count"
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
+      vars:
+        warn_control_id: '4.3.8'
+
+- name: "4.3.9 | AUDIT | Ensure nftables service is enabled"
+  when:
+    - ubtu20cis_rule_4_3_9
+    - ubtu20cis_firewall_package == "nftables"
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - audit
+    - rule_4.3.9
+    - nftables
+  block:
+    - name: "4.3.9 | AUDIT | Ensure nftables service is enabled | Alert on findings"
+      ansible.builtin.debug:
+        msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
+
+    - name: "4.3.9 | AUDIT | Ensure nftables service is enabled | Warn Count"
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
+      vars:
+        warn_control_id: '4.3.9'
+
+- name: "4.3.10 | AUDIT | Ensure nftables rules are permanent"
+  when:
+    - ubtu20cis_rule_4_3_10
+    - ubtu20cis_firewall_package == "nftables"
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - audit
+    - rule_4.3.10
+    - nftables
+  block:
+    - name: "4.3.10 | AUDIT | Ensure nftables rules are permanent | Alert on findings"
+      ansible.builtin.debug:
+        msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables"
+
+    - name: "4.3.10 | AUDIT | Ensure nftables rules are permanent | Warn Count"
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
+      vars:
+        warn_control_id: '4.3.10'

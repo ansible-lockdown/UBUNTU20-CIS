@@ -1,7 +1,8 @@
 ---
+
 # vars file for UBUNTU20-CIS
 
-min_ansible_version: 2.10.1
+min_ansible_version: 2.12.1
 
 # default setting, this should not be changed
 # and is overridden if a task that changed sets the value if required.
@@ -10,3 +11,9 @@ change_requires_reboot: false
 # Used to control warning summary
 warn_control_list: ""
 warn_count: 0
+
+company_title: 'MindPoint Group - A Tyto Athene Company'
+file_managed_by_ansible: |-
+  # File managed by ansible as part of {{ benchmark }} benchmark
+  # As part of Ansible-lockdown
+  # Provided by {{ company_title }}
