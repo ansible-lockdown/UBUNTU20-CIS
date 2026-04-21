@@ -1,6 +1,5 @@
-## Ansible controlled file
-# Added as part of ansible-lockdown CIS baseline
-# provided by Mindpoint Group - A Tyto Athene Company / Ansible Lockdown
+{{ file_managed_by_ansible }}
+
 {% if ubtu20cis_chrony_timesource == 'pool' %}
 # pool chosen as source for time sync
 {% for pool in ubtu20cis_time_pool %}

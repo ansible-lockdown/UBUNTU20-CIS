@@ -1,418 +1,223 @@
 ---
 
-- name: "4.2.1 | PATCH | Ensure permissions on /etc/ssh/sshd_config are configured"
-  ansible.builtin.file:
-      path: /etc/ssh/sshd_config
-      owner: root
-      group: root
-      mode: 0600
+- name: "4.2.1 | PATCH | Ensure ufw is installed"
   when:
-      - ubtu20cis_rule_4_2_1
+    - ubtu20cis_rule_4_2_1
+    - ubtu20cis_firewall_package == "ufw"
   tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.1
-      - ssh
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_4.2.1
+    - apt
+    - ufw
+  ansible.builtin.package:
+    name: ufw
+    state: present
 
-- name: "4.2.2 | PATCH | Ensure permissions on SSH private host key files are configured"
+- name: "4.2.2 | PATCH | Ensure nftables is not in use with ufw"
+  when: ubtu20cis_rule_4_2_2
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_4.2.2
   block:
-      - name: "4.2.2 | AUDIT | Ensure permissions on SSH private host key files are configured | Find ssh_host private keys"
-        ansible.builtin.find:
-            paths: /etc/ssh
-            patterns: 'ssh_host_*_key'
-        register: ubtu20cis_4_2_2_ssh_host_priv_keys
+    - name: "4.2.2 | AUDIT | Ensure nftables is not in use with ufw | Check if nftables installed"
+      ansible.builtin.package_facts:
+        manager: auto
 
-      - name: "4.2.2 | PATCH | Ensure permissions on SSH private host key files are configured | Set permissions"
-        ansible.builtin.file:
-            path: "{{ item.path }}"
-            owner: root
-            group: root
-            mode: 0600
-        with_items:
-            - "{{ ubtu20cis_4_2_2_ssh_host_priv_keys.files }}"
-        loop_control:
-            label: "{{ item.path }}"
+    - name: "4.2.2 | PATCH | Ensure nftables is not in use with ufw | Remove nftables"
+      when:
+        - "'nftables' in ansible_facts.packages"
+        - ubtu20cis_firewall_package == "ufw"
+      ansible.builtin.package:
+        name: nftables
+        state: absent
+
+- name: "4.2.3 | PATCH | Ensure iptables-persistent is not installed with ufw"
   when:
-      - ubtu20cis_rule_4_2_2
+    - ubtu20cis_rule_4_2_3
+    - ubtu20cis_firewall_package == "ufw"
   tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.2
-      - ssh
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_4.2.3
+    - ufw
+  # Adding the allow OpenSSH rule while enabling ufw to allow ansible to run after enabling
+  ansible.builtin.package:
+    name: iptables-persistent
+    state: absent
 
-- name: "4.2.3 | PATCH | Ensure permissions on SSH public host key files are configured"
+- name: "4.2.4 | PATCH | Ensure ufw service is enabled"
+  when:
+    - ubtu20cis_rule_4_2_4
+    - ubtu20cis_firewall_package == "ufw"
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_4.2.4
+    - ufw
+  community.general.ufw:
+    rule: allow
+    name: OpenSSH
+    state: enabled
+
+- name: "4.2.5 | PATCH | Ensure ufw loopback traffic is configured"
+  when:
+    - ubtu20cis_rule_4_2_5
+    - ubtu20cis_firewall_package == "ufw"
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_4.2.5
+    - ufw
   block:
-      - name: "4.2.3 | AUDIT | Ensure permissions on SSH public host key files are configured | Find ssh_host public keys"
-        ansible.builtin.find:
-            paths: /etc/ssh
-            patterns: 'ssh_host_*_key.pub'
-        register: ubtu20cis_4_2_3_ssh_host_pub_keys
+    - name: "4.2.5 | PATCH | Ensure ufw loopback traffic is configured | Set allow in ufw rules"
+      community.general.ufw:
+        rule: allow
+        direction: in
+        interface: lo
+      notify: Reload ufw
 
-      - name: "4.2.3 | PATCH | Ensure permissions on SSH public host key files are configured | Set permissions"
-        ansible.builtin.file:
-            path: "{{ item.path }}"
-            owner: root
-            group: root
-            mode: 0644
-        with_items:
-            - "{{ ubtu20cis_4_2_3_ssh_host_pub_keys.files }}"
-        loop_control:
-            label: "{{ item.path }}"
+    - name: "4.2.5 | PATCH | Ensure ufw loopback traffic is configured | Set allow out ufw rules"
+      community.general.ufw:
+        rule: allow
+        direction: out
+        interface: lo
+      notify: Reload ufw
+
+    - name: "4.2.5 | PATCH | Ensure ufw loopback traffic is configured | Set deny ufw rules IPv4"
+      community.general.ufw:
+        rule: deny
+        direction: in
+        from_ip: 127.0.0.0/8
+      notify: Reload ufw
+
+    - name: "4.2.5 | PATCH | Ensure ufw loopback traffic is configured | Set deny ufw rules IPv6"
+      when: ubtu20cis_ipv6_required
+      community.general.ufw:
+        rule: deny
+        direction: in
+        from_ip: "::1"
+      notify: Reload ufw
+
+- name: "4.2.6 | PATCH | Ensure ufw outbound connections are configured"
   when:
-      - ubtu20cis_rule_4_2_3
+    - ubtu20cis_rule_4_2_6
+    - ubtu20cis_firewall_package == "ufw"
   tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.3
-      - ssh
-
-- name: "4.2.4 | PATCH | Ensure SSH access is limited"
+    - level1-server
+    - level1-workstation
+    - manual
+    - patch
+    - rule_4.2.6
+    - ufw
   block:
-      - name: "4.2.4 | PATCH | Ensure SSH access is limited | Add allowed users"
-        ansible.builtin.lineinfile:
-            path: /etc/ssh/sshd_config
-            regexp: '^AllowUsers|^#AllowUsers'
-            line: 'AllowUsers {{ ubtu20cis_sshd.allow_users }}'
-        notify: restart sshd
-        when: "ubtu20cis_sshd['allow_users']|default('') != ''"
+    - name: "4.2.6 | PATCH | Ensure ufw outbound connections are configured | Custom ports"
+      when: ubtu20cis_ufw_allow_out_ports != "all"
+      community.general.ufw:
+        rule: allow
+        direction: out
+        to_port: '{{ item }}'
+      with_items:
+        - "{{ ubtu20cis_ufw_allow_out_ports }}"
+      notify: Reload ufw
 
-      - name: "4.2.4 | PATCH | Ensure SSH access is limited | Add allowed groups"
-        ansible.builtin.lineinfile:
-            path: /etc/ssh/sshd_config
-            regexp: '^AllowGroups|^#AllowGroups'
-            line: 'AllowGroups {{ ubtu20cis_sshd.allow_groups }}'
-        notify: restart sshd
-        when: "ubtu20cis_sshd['allow_groups']|default('') != ''"
+    - name: "4.2.6 | PATCH | Ensure ufw outbound connections are configured | Allow all"
+      when: "'all' in ubtu20cis_ufw_allow_out_ports"
+      community.general.ufw:
+        rule: allow
+        direction: out
+      notify: Reload ufw
 
-      - name: "4.2.4 | PATCH | Ensure SSH access is limited | Add deny users"
-        ansible.builtin.lineinfile:
-            path: /etc/ssh/sshd_config
-            regexp: '^DenyUsers|^#DenyUsers'
-            line: 'DenyUsers {{ ubtu20cis_sshd.deny_users }}'
-        notify: restart sshd
-        when: "ubtu20cis_sshd['deny_users']|default('') != ''"
-
-      - name: "4.2.4 | PATCH | Ensure SSH access is limited | Add deny groups"
-        ansible.builtin.lineinfile:
-            path: /etc/ssh/sshd_config
-            regexp: '^DenyGroups|^#DenyGroups'
-            line: 'DenyGroups {{ ubtu20cis_sshd.deny_groups }}'
-        notify: restart sshd
-        when: "ubtu20cis_sshd['deny_groups']|default('') != ''"
+- name: "4.2.7 | AUDIT | Ensure ufw firewall rules exist for all open ports"
   when:
-      - ubtu20cis_rule_4_2_4
+    - ubtu20cis_rule_4_2_7
+    - ubtu20cis_firewall_package == "ufw"
   tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.4
-      - ssh
+    - level1-server
+    - level1-workstation
+    - manual
+    - audit
+    - rule_4.2.7
+    - ufw
+  block:
+    - name: "4.2.7 | AUDIT | Ensure ufw firewall rules exist for all open ports | Get list of open ports"
+      ansible.builtin.command: ss -4tuln
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_ufw_open_listen_ports
 
-- name: "4.2.5 | PATCH | Ensure SSH LogLevel is appropriate"
-  ansible.builtin.lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^LogLevel|^#LogLevel'
-      line: 'LogLevel {{ ubtu20cis_sshd.log_level }}'
-      insertafter: '^# Logging'
-  notify: restart sshd
+    - name: "4.2.7 | AUDIT | Ensure ufw firewall rules exist for all open ports | Get list of firewall rules"
+      ansible.builtin.command: ufw status
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_ufw_firewall_rules
+
+    - name: "4.2.7 | AUDIT | Ensure ufw firewall rules exist for all open ports | Alert on findings"
+      when: discovered_ufw_open_listen_ports.stdout != ''
+      ansible.builtin.debug:
+        msg:
+          - "Warning!! Below are the listening ports and firewall rules"
+          - "Please create firewall rule for any open ports if not already done"
+          - "*****---Open Listen Ports---*****"
+          - "{{ discovered_ufw_open_listen_ports.stdout_lines }}"
+          - "*****---Firewall Rules---*****"
+          - "{{ discovered_ufw_firewall_rules.stdout_lines }}"
+
+    - name: "4.2.7 | AUDIT | Ensure ufw firewall rules exist for all open ports | Warn Count"
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
+      vars:
+        warn_control_id: '4.2.7'
+
+# Opens user-defined incoming firewall ports via UFW.
+# Gated by the 'ufw_add_incoming' toggle (defaults/main.yml).
+# Loops over 'ubtu20cis_ufw_allow_in' — each item expects:
+#   { from: "<source_ip/cidr>", port: "<port>", proto: "<tcp|udp>" }
+- name: "OPTIONAL  | PATCH | UFW incoming ports"
+  when: ufw_add_incoming
+  tags:
+    - ufw
+    - ufw_in_ports
+  community.general.ufw:
+    rule: allow
+    direction: in
+    from_ip: '{{ item.from }}'
+    to_port: '{{ item.port }}'
+    proto: '{{ item.proto }}'
+  loop: "{{ ubtu20cis_ufw_allow_in }}"
+  loop_control:
+    label: "{{ item.port }}"
+  notify: Reload ufw
+
+- name: "4.2.8 | PATCH | Ensure ufw default deny firewall policy"
   when:
-      - ubtu20cis_rule_4_2_5
+    - ubtu20cis_rule_4_2_8
+    - ubtu20cis_firewall_package == "ufw"
   tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.5
-      - ssh
-
-- name: "4.2.6 | PATCH | Ensure SSH PAM is enabled"
-  ansible.builtin.lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^UsePAM|^#UsePAM'
-      line: 'UsePAM yes'
-      insertafter: '^# and ChallengeResponseAuthentication'
-  notify: restart sshd
-  when:
-      - ubtu20cis_rule_4_2_6
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.6
-      - ssh
-      - pam
-
-- name: "4.2.7 | PATCH | Ensure SSH root login is disabled"
-  ansible.builtin.lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^PermitRootLogin|^#PermitRootLogin'
-      line: 'PermitRootLogin no'
-  notify: restart sshd
-  when:
-      - ubtu20cis_rule_4_2_7
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.7
-      - ssh
-
-- name: "4.2.8 | PATCH | Ensure SSH HostbasedAuthentication is disabled"
-  ansible.builtin.lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^HostbasedAuthentication|^#HostbasedAuthentication'
-      line: 'HostbasedAuthentication no'
-  notify: restart sshd
-  when:
-      - ubtu20cis_rule_4_2_8
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.8
-      - ssh
-
-- name: "4.2.9 | PATCH | Ensure SSH PermitEmptyPasswords is disabled"
-  ansible.builtin.lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^PermitEmptyPasswords|^#PermitEmptyPasswords'
-      line: 'PermitEmptyPasswords no'
-      insertafter: '# To disable tunneled clear text passwords'
-  notify: restart sshd
-  when:
-      - ubtu20cis_rule_4_2_9
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.9
-      - ssh
-
-- name: "4.2.10 | PATCH | Ensure SSH PermitUserEnvironment is disabled"
-  ansible.builtin.lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^PermitUserEnvironment|^#PermitUserEnvironment'
-      line: 'PermitUserEnvironment no'
-  notify: restart sshd
-  when:
-      - ubtu20cis_rule_4_2_10
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.10
-      - ssh
-
-- name: "4.2.11 | PATCH | Ensure SSH IgnoreRhosts is enabled"
-  ansible.builtin.lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^IgnoreRhosts|^#IgnoreRhosts'
-      line: 'IgnoreRhosts yes'
-  notify: restart sshd
-  when:
-      - ubtu20cis_rule_4_2_11
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.11
-      - ssh
-
-- name: "4.2.12 | PATCH | Ensure SSH X11 forwarding is disabled"
-  ansible.builtin.lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^X11Forwarding|^#X11Forwarding'
-      line: 'X11Forwarding no'
-  notify: restart sshd
-  when:
-      - ubtu20cis_rule_4_2_12
-  tags:
-      - level2-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.12
-      - ssh
-
-- name: "4.2.13 | PATCH | Ensure only strong Ciphers are used"
-  ansible.builtin.lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^Ciphers|^#Ciphers'
-      line: 'Ciphers {{ ubtu20cis_sshd.ciphers }}'
-      insertafter: '^# Ciphers and keying'
-  notify: restart sshd
-  when:
-      - ubtu20cis_rule_4_2_13
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.13
-      - ssh
-
-- name: "4.2.14 | PATCH | Ensure only strong MAC algorithms are used"
-  ansible.builtin.lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^MACs|^#MACs'
-      line: 'MACs {{ ubtu20cis_sshd.macs }}'
-      insertafter: '^# Ciphers and keying'
-  notify: restart sshd
-  when:
-      - ubtu20cis_rule_4_2_14
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.14
-      - ssh
-
-- name: "4.2.15 | PATCH | Ensure only strong Key Exchange algorithms are used"
-  ansible.builtin.lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^KexAlgorithms|^#KexAlgorithms'
-      line: 'KexAlgorithms {{ ubtu20cis_sshd.kex_algorithms }}'
-      insertafter: '^# Ciphers and keying'
-  notify: restart sshd
-  when:
-      - ubtu20cis_rule_4_2_15
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.15
-      - ssh
-
-- name: "4.2.16 | PATCH | Ensure SSH AllowTcpForwarding is disabled"
-  ansible.builtin.lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^AllowTcpForwarding|^#AllowTcpForwarding'
-      line: 'AllowTcpForwarding no'
-  notify: restart sshd
-  when:
-      - ubtu20cis_rule_4_2_16
-  tags:
-      - level2-server
-      - level2-workstation
-      - automated
-      - patch
-      - rule_4.2.16
-      - ssh
-
-- name: "4.2.17 | PATCH | Ensure SSH warning banner is configured"
-  ansible.builtin.lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^Banner|^#Banner'
-      line: Banner /etc/issue.net
-      insertafter: '^# no default banner path'
-  notify: restart sshd
-  when:
-      - ubtu20cis_rule_4_2_17
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.17
-      - ssh
-
-- name: "4.2.18 | PATCH | Ensure SSH MaxAuthTries is set to 4 or less"
-  ansible.builtin.lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^MaxAuthTries|^#MaxAuthTries'
-      line: 'MaxAuthTries {{ ubtu20cis_sshd.max_auth_tries }}'
-      insertafter: '^# Authentication'
-  notify: restart sshd
-  when:
-      - ubtu20cis_rule_4_2_18
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.18
-      - ssh
-
-- name: "4.2.19 | PATCH | Ensure SSH MaxStartups is configured"
-  ansible.builtin.lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^MaxStartups|^#MaxStartups'
-      line: 'MaxStartups 10:30:60'
-  notify: restart sshd
-  when:
-      - ubtu20cis_rule_4_2_19
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.19
-      - ssh
-
-- name: "4.2.20 | PATCH | Ensure SSH LoginGraceTime is set to one minute or less"
-  ansible.builtin.lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^LoginGraceTime|^#LoginGraceTime'
-      line: 'LoginGraceTime {{ ubtu20cis_sshd.login_grace_time }}'
-      insertafter: '^# Authentication'
-  notify: restart sshd
-  when:
-      - ubtu20cis_rule_4_2_20
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.20
-      - ssh
-
-- name: "4.2.21 | PATCH | Ensure SSH MaxSessions is set to 10 or less"
-  ansible.builtin.lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^MaxSessions|^#MaxSessions'
-      line: 'MaxSessions {{ ubtu20cis_sshd.max_sessions }}'
-      insertafter: '^# Authentication'
-  notify: restart sshd
-  when:
-      - ubtu20cis_rule_4_2_21
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.21
-      - ssh
-
-- name: "4.2.22 | PATCH | Ensure SSH Idle Timeout Interval is configured"
-  ansible.builtin.lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: "{{ item.regexp }}"
-      line: "{{ item.line }}"
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_4.2.8
+    - ufw
+  community.general.ufw:
+    default: deny
+    direction: "{{ item }}"
   with_items:
-      - { regexp: '^ClientAliveInterval|^#ClientAliveInterval', line: 'ClientAliveInterval {{ ubtu20cis_sshd.client_alive_interval }}' }
-      - { regexp: '^ClientAliveCountMax|^#ClientAliveCountMax', line: 'ClientAliveCountMax {{ ubtu20cis_sshd.client_alive_count_max }}' }
-  notify: restart sshd
-  when:
-      - ubtu20cis_rule_4_2_22
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_4.2.22
-      - sshd
+    - incoming
+    - outgoing
+    - routed
+  notify: Reload ufw

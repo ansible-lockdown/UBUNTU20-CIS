@@ -1,0 +1,599 @@
+---
+
+- name: "5.4.1.1 | PATCH | Ensure password expiration is configured"
+  when: ubtu20cis_rule_5_4_1_1
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_5.4.1.1
+    - user
+    - login
+  no_log: true
+  block:
+    - name: "5.4.1.1 | PATCH | Ensure password expiration is configured | Set /etc/login.defs PASS_MAX_DAYS"
+      ansible.builtin.lineinfile:
+        path: /etc/login.defs
+        regexp: '^PASS_MAX_DAYS|^#PASS_MAX_DAYS'
+        line: 'PASS_MAX_DAYS {{ ubtu20cis_pass.max_days }}'
+        insertafter: '# Password aging controls'
+
+    - name: "5.4.1.1 | PATCH | Ensure password expiration is configured | Get existing users PASS_MAX_DAYS"
+      ansible.builtin.shell: "awk -F: '(/^[^:]+:[^!*]/ && ($5>{{ ubtu20cis_pass.max_days }} || $5<{{ ubtu20cis_pass.min_days }} || $5 == -1)){print $1}' /etc/shadow"  # noqa: command-instead-of-shell
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_passwd_max_days
+
+    - name: "5.4.1.1 | PATCH | Ensure password expiration is configured | Set existing users PASS_MAX_DAYS"
+      when:
+        - ubtu20cis_disruption_high
+        - (item != 'root') or (not ubtu20cis_uses_root)
+      ansible.builtin.command: chage --maxdays {{ ubtu20cis_pass.max_days }} {{ item }}
+      loop: "{{ discovered_passwd_max_days.stdout_lines }}"
+      changed_when: discovered_passwd_max_days.stdout | length > 0
+      failed_when: false
+
+- name: "5.4.1.2 | PATCH | Ensure minimum password days is configured"
+  when: ubtu20cis_rule_5_4_1_2
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_5.4.1.2
+    - user
+    - login
+  no_log: true
+  block:
+    - name: "5.4.1.2 | PATCH | Ensure minimum password days is configured | Set /etc/login.defs PASS_MIN_DAYS"
+      ansible.builtin.lineinfile:
+        path: /etc/login.defs
+        regexp: '^PASS_MIN_DAYS|^#PASS_MIN_DAYS'
+        line: 'PASS_MIN_DAYS {{ ubtu20cis_pass.min_days }}'
+
+    - name: "5.4.1.2 | PATCH | Ensure minimum password days is configured | Get existing users PASS_MIN_DAYS"
+      ansible.builtin.shell: "awk -F: '(/^[^:]+:[^!*]/ && ($4<{{ ubtu20cis_pass.min_days }})) {print $1}' /etc/shadow"  # noqa: command-instead-of-shell
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_passwd_min_days
+
+    - name: "5.4.1.2 | PATCH | Ensure minimum password days is configured | Set existing users PASS_MIN_DAYS"
+      when:
+        - ubtu20cis_disruption_high
+        - (item != 'root') or (not ubtu20cis_uses_root)
+      ansible.builtin.command: chage --mindays {{ ubtu20cis_pass.min_days }} {{ item }}
+      loop: "{{ discovered_passwd_min_days.stdout_lines }}"
+      changed_when: discovered_passwd_min_days.stdout |length > 0
+      failed_when: false
+
+- name: "5.4.1.3 | PATCH | Ensure password expiration warning days is configured"
+  when: ubtu20cis_rule_5_4_1_3
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_5.4.1.3
+    - user
+    - login
+  no_log: true
+  block:
+    - name: "5.4.1.3 | PATCH | Ensure password expiration warning days is configured | Set /etc/login.defs PASS_WARN_AGE"
+      ansible.builtin.lineinfile:
+        path: /etc/login.defs
+        regexp: '^PASS_WARN_AGE|^#PASS_WARN_AGE'
+        line: 'PASS_WARN_AGE {{ ubtu20cis_pass.warn_age }}'
+
+    - name: "5.4.1.3 | PATCH | Ensure password expiration warning days is configured | Get existing users PASS_WARN_AGE"
+      ansible.builtin.shell: "awk -F: '(/^[^:]+:[^!*]/ && $6<{{ ubtu20cis_pass.warn_age }}){print $1}' /etc/shadow"  # noqa: command-instead-of-shell
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_passwd_warn_days
+
+    - name: "5.4.1.3 | PATCH | Ensure password expiration warning days is configured | Set existing users PASS_WARN_AGE"
+      when:
+        - ubtu20cis_disruption_high
+        - (item != 'root') or (not ubtu20cis_uses_root)
+      ansible.builtin.command: chage --maxdays {{ ubtu20cis_pass.warn_age }} {{ item }}
+      loop: "{{ discovered_passwd_warn_days.stdout_lines }}"
+      changed_when: discovered_passwd_warn_days.stdout | length > 0
+      failed_when: false
+
+- name: "5.4.1.4 | PATCH | Ensure strong password hashing algorithm is configured"
+  when: ubtu20cis_rule_5_4_1_4
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_5.4.1.4
+    - pamd
+  block:
+    - name: "5.4.1.4 | AUDIT | Ensure strong password hashing algorithm is configured | Confirm pam_unix.so"
+      ansible.builtin.shell: grep -E '^\s*password\s+(\S+\s+)+pam_unix\.so\s+(\S+\s+)*(sha512|yescrypt)\s*(\S+\s*)*(\s+#.*)?$' /etc/pam.d/common-password  # noqa: command-instead-of-shell
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_pam_unix_encrypt_state
+
+    - name: "5.4.1.4 | PATCH | Ensure strong password hashing algorithm is configured | Set hashing if pam_unix.so exists"
+      when: discovered_pam_unix_encrypt_state.stdout | length > 0
+      community.general.pamd:
+        name: common-password
+        type: password
+        control: '[success=1 default=ignore]'
+        module_path: pam_unix.so
+        module_arguments: "{{ ubtu20cis_passwd_hash_algo }}"
+        state: args_present
+
+    - name: "5.4.1.4 | PATCH | Ensure strong password hashing algorithm is configured | Set hashing if pam_unix.so does not exist"
+      when: discovered_pam_unix_encrypt_state.stdout | length == 0
+      ansible.builtin.lineinfile:
+        path: /etc/pam.d/common-password
+        line: 'password        [success=1 default=ignore]      pam_unix.so {{ ubtu20cis_passwd_hash_algo }}'
+        insertafter: '^# end of pam-auth-update config'
+
+- name: "5.4.1.5 | PATCH | Ensure inactive password lock is configured"
+  when: ubtu20cis_rule_5_4_1_5
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_5.4.1.5
+    - user
+    - login
+  no_log: true
+  block:
+    - name: "5.4.1.5 | AUDIT | Ensure inactive password lock is configured | Get current inactive period"
+      ansible.builtin.shell: useradd -D | grep INACTIVE | cut -d= -f2  # noqa: command-instead-of-shell
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_inactive_period
+
+    - name: "5.4.1.5 | AUDIT | Ensure inactive password lock is configured | Get current users out of compliance"
+      ansible.builtin.shell: awk -F":" '(/^[^:]+:[^!*]/ && ($7<0 || $7>30)){print $1}' //etc/shadow  # noqa: command-instead-of-shell
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_inactive_users
+
+    - name: "5.4.1.5 | PATCH | Ensure inactive password lock is configured | Set inactive period for new users"
+      when: discovered_inactive_period.stdout != ubtu20cis_pass.inactive | string
+      ansible.builtin.command: useradd -D -f {{ ubtu20cis_pass.inactive }}
+      changed_when: true
+      failed_when: false
+
+    - name: "5.4.1.5 | PATCH | Ensure inactive password lock is configured | Set inactive period for existing users"
+      when:
+        - ubtu20cis_disruption_high
+        - discovered_inactive_users.stdout | length > 0
+      ansible.builtin.command: chage --inactive {{ ubtu20cis_pass.inactive }} {{ item }}
+      with_items:
+        - "{{ ubtu20cis_passwd | selectattr('uid', '>=', 1000) | map(attribute='id') | list | intersect(discovered_inactive_users.stdout_lines) | list }}"
+      changed_when: true
+      failed_when: false
+
+- name: "5.4.1.6 | PATCH | Ensure all users last password change date is in the past"
+  when: ubtu20cis_rule_5_4_1_6
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_5.4.1.6
+    - user
+    - login
+  no_log: true
+  block:
+    - name: "5.4.1.6 | AUDIT | Ensure all users last password change date is in the past | Get current date in Unix Time"
+      ansible.builtin.shell: echo $(($(date --utc --date "$1" +%s)/86400))  # noqa: command-instead-of-shell
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_current_time
+
+    - name: "5.4.1.6 | AUDIT | Ensure all users last password change date is in the past | Get list of users with last changed PW date in future"
+      ansible.builtin.shell: "cat /etc/shadow | awk -F: '{if($3>{{ discovered_current_time.stdout }})print$1}'"  # noqa: command-instead-of-shell
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_future_pw_users
+
+    - name: "5.4.1.6 | PATCH | Ensure all users last password change date is in the past | Alert on findings"
+      when: discovered_future_pw_users.stdout | length > 0
+      ansible.builtin.debug:
+        msg:
+          - "Warning!! The following accounts have the last PW change date in the future"
+          - "{{ discovered_future_pw_users.stdout_lines }}"
+
+    - name: "5.4.1.6 | PATCH | Ensure all users last password change date is in the past | Warn Count"
+      when: discovered_future_pw_users.stdout | length > 0
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
+      vars:
+        warn_control_id: '5.4.1.6'
+
+    - name: "5.4.1.6 | PATCH | Ensure all users last password change date is in the past | Lock accounts with future PW changed dates"
+      when:
+        - ubtu20cis_disruption_high
+        - discovered_future_pw_users.stdout | length > 0
+      ansible.builtin.command: passwd --expire {{ item }}
+      with_items:
+        - "{{ discovered_future_pw_users.stdout_lines }}"
+      changed_when: true
+      failed_when: false
+
+- name: "5.4.2.1 | PATCH | Ensure root is the only UID 0 account"
+  when:
+    - ubtu20cis_rule_5_4_2_1
+    - prelim_uid_zero_accounts_except_root.rc
+    - ubtu20cis_disruption_high
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_5.4.2.1
+  ansible.builtin.command: passwd -l {{ item }}
+  changed_when: false
+  failed_when: false
+  loop: "{{ prelim_uid_zero_accounts_except_root.stdout_lines }}"
+
+- name: "5.4.2.2 | PATCH | Ensure root is the only GID 0 account"
+  when:
+    - ubtu20cis_rule_5_4_2_2
+    - ubtu20cis_disruption_high
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_5.4.2.2
+  block:
+    - name: "5.4.2.2 | AUDIT | Ensure root is the only GID 0 account | Get members of gid 0"
+      ansible.builtin.shell: >-
+        awk -F: '($1 !~ /^(sync|shutdown|halt|operator)/ && $4=="0") {print $1}' /etc/passwd | grep -wv 'root'
+      changed_when: false
+      failed_when: discovered_gid0_members.rc not in [ 0, 1 ]
+      register: discovered_gid0_members
+
+    - name: "5.4.2.2 | PATCH | Ensure root is the only GID 0 account | Remove users not root from gid 0"
+      when:
+        - discovered_gid0_members is defined
+        - discovered_gid0_members.stdout | length > 0
+      ansible.builtin.user:
+        name: "{{ item }}"
+        group: "{{ item }}"
+      loop: "{{ discovered_gid0_members.stdout_lines }}"
+      loop_control:
+        label: "{{ item }}"
+
+- name: "5.4.2.3 | PATCH | Ensure group root is the only GID 0 group"
+  when: ubtu20cis_rule_5_4_2_3
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_5.4.2.3
+  block:
+    - name: "5.4.2.3 | AUDIT | Ensure group root is the only GID 0 group | Get groups with GID 0"
+      ansible.builtin.shell: "awk -F: '$3==\"0\"{print $1}' /etc/group | grep -vw 'root'"
+      changed_when: false
+      failed_when: discovered_gid0_groups.rc not in [ 0, 1 ]
+      register: discovered_gid0_groups
+
+    - name: "5.4.2.3 | AUDIT | Ensure group root is the only GID 0 group | Warning if other GID 0 groups"
+      when: discovered_gid0_groups.stdout | length > 0
+      ansible.builtin.debug:
+        msg:
+          - "Warning!! You have other groups assigned to GID 0 - Please resolve"
+          - "{{ discovered_gid0_groups.stdout_lines }}"
+
+    - name: "5.4.2.3 | AUDIT | Ensure group root is the only GID 0 group | Warn Count"
+      when: discovered_gid0_groups.stdout | length > 0
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
+      vars:
+        warn_control_id: '5.4.2.3'
+
+- name: "5.4.2.4 | PATCH | Ensure root account access is controlled"
+  when: ubtu20cis_rule_5_4_2_4
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_5.4.2.4
+  block:
+    - name: "5.4.2.4 | AUDIT | Ensure root account access is controlled | Check root password status"
+      ansible.builtin.shell: LC_ALL=C passwd -S root | grep -E "(Password set, SHA512 crypt|root P |root L |Password locked)"
+      changed_when: false
+      failed_when: false
+      register: discovered_root_passwd_status
+
+    - name: "5.4.2.4 | AUDIT | Ensure root account access is controlled | Alert on findings"
+      when: discovered_root_passwd_status.rc != 0
+      ansible.builtin.assert:
+        that: discovered_root_passwd_status.rc == 0
+        fail_msg: "Warning!! Root password is not set or account is in an unexpected state - Please set a root password"
+        success_msg: "Root password is set"
+
+    - name: "5.4.2.4 | AUDIT | Ensure root account access is controlled | Warn Count"
+      when: discovered_root_passwd_status.rc != 0
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
+      vars:
+        warn_control_id: '5.4.2.4'
+
+- name: "5.4.2.5 | PATCH | Ensure root path integrity"
+  when: ubtu20cis_rule_5_4_2_5
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_5.4.2.5
+  block:
+    - name: "5.4.2.5 | AUDIT | Ensure root path integrity | Get root paths"
+      ansible.builtin.shell: sudo -Hiu root env | grep '^PATH' | cut -d= -f2
+      changed_when: false
+      register: discovered_root_paths
+
+    - name: "5.4.2.5 | AUDIT | Ensure root path integrity | Get root paths split"
+      when: discovered_root_paths is defined
+      ansible.builtin.shell: sudo -Hiu root env | grep '^PATH' | cut -d= -f2 | tr ":" "\n"
+      changed_when: false
+      register: discovered_root_paths_split
+
+    - name: "5.4.2.5 | AUDIT | Ensure root path integrity | Set fact"
+      when: discovered_root_paths is defined
+      ansible.builtin.set_fact:
+        root_paths: "{{ discovered_root_paths.stdout }}"
+
+    - name: "5.4.2.5 | AUDIT | Ensure root path integrity | Check for empty dirs"
+      when: root_paths is defined
+      ansible.builtin.shell: "echo '{{ root_paths }}' | grep -q '::' && echo 'roots path contains an empty directory (::)'"
+      changed_when: false
+      failed_when: discovered_root_path_empty_dir.rc not in [ 0, 1 ]
+      register: discovered_root_path_empty_dir
+
+    - name: "5.4.2.5 | AUDIT | Ensure root path integrity | Check for trailing colon"
+      when: root_paths is defined
+      ansible.builtin.shell: "echo '{{ root_paths }}' | grep -q ':$' && echo 'roots path contains a trailing (:)'"
+      changed_when: false
+      failed_when: discovered_root_path_trailing_colon.rc not in [ 0, 1 ]
+      register: discovered_root_path_trailing_colon
+
+    - name: "5.4.2.5 | PATCH | Ensure root path integrity | Check and fix owner and permissions"
+      when: root_paths is defined
+      block:
+        - name: "5.4.2.5 | AUDIT | Ensure root path integrity | Stat path directories"
+          ansible.builtin.stat:
+            path: "{{ item }}"
+          register: discovered_root_path_perms
+          loop: "{{ discovered_root_paths_split.stdout_lines }}"
+
+        - name: "5.4.2.5 | PATCH | Ensure root path integrity | Set permissions"
+          when:
+            - item.stat.exists
+            - item.stat.isdir
+            - item.stat.pw_name != 'root' or item.stat.gr_name != 'root' or item.stat.woth or item.stat.wgrp
+            - item != 'root'
+            - not ubtu20cis_uses_root
+          ansible.builtin.file:
+            path: "{{ item.stat.path }}"
+            state: directory
+            owner: root
+            group: root
+            mode: 'go-w'
+            follow: false
+          loop: "{{ discovered_root_path_perms.results }}"
+          loop_control:
+            label: "{{ item }}"
+
+- name: "5.4.2.6 | PATCH | Ensure root user umask is configured"
+  when: ubtu20cis_rule_5_4_2_6
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - shadow_suite
+    - rule_5.4.2.6
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
+  block:
+    - name: "5.4.2.6 | PATCH | Ensure root user umask is configured | /root/.bash_profile"
+      ansible.builtin.lineinfile:
+        path: /root/.bash_profile
+        regexp: \s*umask
+        line: "umask {{ ubtu20cis_bash_umask }}"
+        create: true
+        owner: root
+        group: root
+        mode: 'g-wx,o-rwx'
+
+    - name: "5.4.2.6 | PATCH | Ensure root user umask is configured | /root/.bashrc"
+      ansible.builtin.lineinfile:
+        path: /root/.bashrc
+        regexp: \s*umask
+        line: "umask {{ ubtu20cis_bash_umask }}"
+        create: true
+        owner: root
+        group: root
+        mode: 'g-wx,o-rwx'
+
+- name: "5.4.2.7 | PATCH | Ensure system accounts do not have a valid login shell"
+  when:
+    - ubtu20cis_rule_5_4_2_7
+    - ubtu20cis_disruption_high
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_5.4.2.7
+    - user
+    - system
+  block:
+    - name: "5.4.2.7 | PATCH | Ensure system accounts do not have a valid login shell | Set system accounts to nologin"
+      when:
+        - item != "root"
+        - item != "sync"
+        - item != "shutdown"
+        - item != "halt"
+        - item != "irc"
+      ansible.builtin.user:
+        name: "{{ item }}"
+        shell: /sbin/nologin
+      with_items:
+        - "{{ ubtu20cis_passwd | selectattr('uid', '<', 1000) | map(attribute='id') | list }}"
+
+    - name: "5.4.2.7 | PATCH | Ensure system accounts do not have a valid login shell | Lock non-root system accounts"
+      when: item != "root"
+      ansible.builtin.user:
+        name: "{{ item }}"
+        password_lock: true
+      with_items:
+        - "{{ ubtu20cis_passwd | selectattr('uid', '<', 1000) | map(attribute='id') | list }}"
+      no_log: true
+
+- name: "5.4.2.8 | PATCH | Ensure accounts without a valid login shell are locked"
+  when: ubtu20cis_rule_5_4_2_8
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_5.4.2.8
+    - user
+  block:
+    - name: "5.4.2.8 | AUDIT | Ensure accounts without a valid login shell are locked | Get valid shells"
+      ansible.builtin.command: cat /etc/shells
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_valid_shells
+
+    - name: "5.4.2.8 | AUDIT | Ensure accounts without a valid login shell are locked | Find unlocked accounts with invalid shells"
+      ansible.builtin.shell: |
+        awk -F: '($2 != "!" && $2 != "!!" && $2 != "*" && $2 != "" && $1 != "root") {print $1 ":" $7}' /etc/shadow |
+        while IFS=: read -r user shell; do
+          user_shell=$(getent passwd "$user" | cut -d: -f7)
+          if ! grep -qx "$user_shell" /etc/shells 2>/dev/null; then
+            echo "$user"
+          fi
+        done
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_unlocked_nologin_accounts
+
+    - name: "5.4.2.8 | PATCH | Ensure accounts without a valid login shell are locked | Lock accounts with invalid shells"
+      when: discovered_unlocked_nologin_accounts.stdout | length > 0
+      ansible.builtin.user:
+        name: "{{ item }}"
+        password_lock: true
+      with_items: "{{ discovered_unlocked_nologin_accounts.stdout_lines }}"
+      no_log: true
+
+    - name: "5.4.2.8 | AUDIT | Ensure accounts without a valid login shell are locked | Alert on findings"
+      when: discovered_unlocked_nologin_accounts.stdout | length > 0
+      ansible.builtin.debug:
+        msg:
+          - "Warning!! The following accounts do not have a valid login shell and should be locked"
+          - "{{ discovered_unlocked_nologin_accounts.stdout_lines }}"
+
+    - name: "5.4.2.8 | AUDIT | Ensure accounts without a valid login shell are locked | Warn Count"
+      when: discovered_unlocked_nologin_accounts.stdout | length > 0
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
+      vars:
+        warn_control_id: '5.4.2.8'
+
+- name: "5.4.3.1 | PATCH | Ensure nologin is not listed in /etc/shells"
+  when: ubtu20cis_rule_5_4_3_1
+  tags:
+    - level2-server
+    - level2-workstation
+    - automated
+    - patch
+    - rule_5.4.3.1
+    - user
+  ansible.builtin.lineinfile:
+    path: /etc/shells
+    regex: nologin\b
+    state: absent
+
+- name: "5.4.3.2 | PATCH | Ensure default user shell timeout is configured"
+  when: ubtu20cis_rule_5_4_3_2
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_5.4.3.2
+    - user
+  ansible.builtin.blockinfile:
+    path: "{{ item.path }}"
+    marker: "# {mark} ANSIBLE MANAGED"
+    state: "{{ item.state }}"
+    create: true
+    mode: 'u-x,go-wx'
+    block: |
+      # Set session timeout - CIS ID 5.4.3.2
+      # only set TMOUT if it isn't set yet to avoid a shell error
+      : ${TMOUT={{ ubtu20cis_shell_session_timeout.timeout }}}
+      readonly TMOUT
+      export TMOUT
+  with_items:
+    - {path: "{{ ubtu20cis_shell_session_timeout.file }}", state: present}
+    - {path: /etc/profile, state: "{{ (ubtu20cis_shell_session_timeout.file == '/etc/profile') | ternary('present', 'absent') }}"}
+    - {path: /etc/bash.bashrc, state: present}
+
+- name: "5.4.3.3 | PATCH | Ensure default user umask is configured"
+  when: ubtu20cis_rule_5_4_3_3
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - rule_5.4.3.3
+    - user
+  block:
+    - name: "5.4.3.3 | AUDIT | Ensure default user umask is configured"
+      ansible.builtin.shell: grep -E '^session\s+optional\s+pam_umask.so' /etc/pam.d/common-session  # noqa: command-instead-of-shell
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_umask_pam_root_status
+
+    - name: "5.4.3.3 | PATCH | Ensure default user umask is configured"
+      when: discovered_umask_pam_root_status.stdout | length == 0
+      ansible.builtin.lineinfile:
+        path: /etc/pam.d/common-session
+        line: 'session optional                        pam_umask.so'
+        insertbefore: '^# end of pam-auth-update config'
+
+    - name: "5.4.3.3 | PATCH | Ensure default user umask is configured"
+      ansible.builtin.lineinfile:
+        path: "{{ item.path }}"
+        regexp: '(?i)(umask\s*\d\d\d)'
+        line: '{{ item.line }} {{ ubtu20cis_bash_umask }}'
+      with_items:
+        - {path: '/etc/bash.bashrc', line: 'umask'}
+        - {path: '/etc/profile', line: 'umask'}
+        - {path: '/etc/login.defs', line: 'UMASK'}
+
+    - name: "5.4.3.3 | PATCH | Ensure default user umask is configured"
+      ansible.builtin.lineinfile:
+        path: /etc/login.defs
+        regexp: '^USERGROUPS_ENAB'
+        line: USERGROUPS_ENAB no

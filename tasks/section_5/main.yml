@@ -1,38 +1,17 @@
 ---
-- name: "SECTION | 5.1.1.1 | Configure journald remote"
-  ansible.builtin.import_tasks:
-      file: cis_5.1.1.1.x.yml
-  when:
-      - ubtu20cis_syslog_service == 'journald'
 
-- name: "SECTION | 5.1.1 | Configure journald remote"
+- name: "SECTION | 5.1 | Configure SSH Server"
   ansible.builtin.import_tasks:
-      file: cis_5.1.1.x.yml
-  when:
-      - ubtu20cis_syslog_service == 'journald'
+    file: cis_5.1.x.yml
 
-- name: "SECTION | 5.1.2 | Configure rsyslog"
+- name: "SECTION | 5.2 | Configure Privilege Escalation"
   ansible.builtin.import_tasks:
-      file: cis_5.1.2.x.yml
-  when:
-      - ubtu20cis_syslog_service == 'rsyslog'
+    file: cis_5.2.x.yml
 
-- name: "SECTION | 5.1.3 | Configure logfiles"
+- name: "SECTION | 5.3 | Pluggable Authentication Modules"
   ansible.builtin.import_tasks:
-      file: cis_5.1.3.yml
+    file: cis_5.3.x.yml
 
-- name: "SECTION | 5.2.1.x | Configure auditd"
+- name: "SECTION | 5.4 | User Accounts and Environment"
   ansible.builtin.import_tasks:
-      file: cis_5.2.1.x.yml
-
-- name: "SECTION | 5.2.2.x | Configure auditd data retention"
-  ansible.builtin.import_tasks:
-      file: cis_5.2.2.x.yml
-
-- name: "SECTION | 5.2.3.x | Configure auditd rules"
-  ansible.builtin.import_tasks:
-      file: cis_5.2.3.x.yml
-
-- name: "SECTION | 5.2.4.x | Configure auditd file access"
-  ansible.builtin.import_tasks:
-      file: cis_5.2.4.x.yml
+    file: cis_5.4.x.yml
